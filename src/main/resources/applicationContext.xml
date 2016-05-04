@@ -20,6 +20,16 @@
                 <value>com.makao.entity</value>
             </list>
         </property>
+        <!-- <property name="mappingLocations">
+			<list>
+				<value>classpath*:/com/makao/hbm/*.hbm.xml</value>
+			</list>
+		</property>
+		<property name="annotatedPackages">
+			<list>
+				<value>com.makao.entity</value>
+			</list> 
+		</property> -->
         <property name="hibernateProperties">
 	        <props>
 	            <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>

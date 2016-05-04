@@ -40,5 +40,9 @@ public class UserServiceImpl implements IUserService {
 	public List<User> queryUserByName(String name) {
 		return this.userDao.queryUserByName(name);
 	}
+	@Override
+	public void testor() {
+		this.userDao.testor();
+	}
 
 }

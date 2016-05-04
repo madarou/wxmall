@@ -16,4 +16,6 @@ public interface IUserDao {
     public List<User> queryAllUser();
     
     public List<User> queryUserByName(String name);
+
+	public void testor();
 }

@@ -11,4 +11,6 @@ public interface IUserService {
 	public int updateUser(User user);
 	public List<User> queryAllUser();
 	public List<User> queryUserByName(String name);
+	
+	public void testor();
 }

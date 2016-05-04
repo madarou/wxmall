@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.Testor;
 import com.makao.entity.User;
 import com.makao.service.IUserService;
 
@@ -146,5 +149,11 @@ public class UserController {
 		users = this.userService.queryAllUser();
 		logger.info("查询所有人员信息完成");
         return users;
+    }
+	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+    public @ResponseBody
+    void testor() {
+		this.userService.testor();
     }
 }

@@ -22,7 +22,7 @@
 
 *为不能为空
 ------
-User
+User(买家用户)
 列名				类型				注释				备注
 id				int(11)							自动生成，自增
 userName		varchar(30)		用户微信昵称
@@ -30,8 +30,35 @@ openid			varchar(40)		微信openid		28位
 password		varchar(30)						如果只有从微信认证登录的方式，则不需要密码
 avatarUrl		varchar(50)		头像图片地址		微信认证登录后可获取，第一次获取到后也做本地存储
 areaId			int(11)			当前选定的区域id	用户登录后，直接根据area_id加载主页内容
-cartId			int(11)			购物车id
+areaName		varchar(30)		当前所在区域名		方便显示用，以及后面根据areaName和cityId查询其他表
+cityId			int(11)			用户所在城市		因为后面会根据城市确定在哪个表
+cartId(已删除)	int(11)			购物车id
 point			int(11)			用户当前积分
+phoneNumber		varchar(12)		手机号
+address			varchar(120)	常用地址
+rank			varchar(10)		用户等级			比如'新用户''中级用户''金牌用户'等，暂留的接口
+
+Vendor(区域卖点用户，登录卖家系统)
+列名				类型				注释				备注
+id				int(11)			
+userName		varchar(30)		
+password		varchar(30)		登录卖家系统的密码
+avatarUrl		varchar(50)		头像地址			暂时不用
+areaId			int(11)			卖家负责的网点
+cityId			int(11)			卖家所在城市
+cityArea		varchar(30)		城市名-区域名		方便直接显示
+lastip			varchar(30)		上次登录ip
+lasttime		datetime		上次登录时间
+islock			varchar(5)		是否锁定			被超级管理员锁定后不能登录
+
+Supervisor(超级管理员)
+列名				类型				注释				备注
+id				int(11)
+userName		varchar(30)
+password		varchar(30)
+avatarUrl 		varchar(30)		头像				暂时不用
+lastip			varchar(30)
+lasttime		datetime		
 
 City
 列名				类型				注释				备注
@@ -54,24 +81,29 @@ productTable	varchar(50)		该area对应的商品列表的名字，以areaName+'_
 								该area记录时建表。用cityId不用名还是防止重复城市名和区域名的情况出现
 closed			varchar(5)		当前是否暂停服务	值为'yes'或'no'，关门的可暂不显示，或设为灰色
 
-areaName_cityId_product
+AreaName_cityId_product
 列名				类型				注释				备注
 id				int(11)			
 productName		varchar(30)*
+catalog			varchar(50)		商品所属的类别		如水果、食材
 showWay			varchar(2)		商品展示方式		默认值为's'(小图),值为'b'时为大图展示，空值也小图
 price			varchar(10)		商品价格			实际卖价
 standard		varchar(50)		商品规格			如'一份250克'
 marketPrice		varchar(10)		对比的超市价格
+label			varchar(16)		商品标签			在商品左上角显示的如'新用户专享''绿色食品''小产区'等
 coverSUrl		varchar(50)		封面小图地址		小图也用于购物车里展示，所以必须有小图
 coverBUrl		varchar(50)		封面大图地址		大图封面也用于商品详细页面顶部展示，所以不管哪种展示，必须有大图
+inventory		int(11)			库存量
+sequence		int(11)			排序顺序			整形值，越大在商品列表里越靠前
 status			varchar(30)		货源状态			值可为空、'库存紧张'、'暂时缺货'
 description		varchar(100)	商品简述			详细页面，有的商品在名称下一行有简介,如'顺滑口感，齿颊留香'
 origin			varchar(30)		原产地			
-salesVolume		int(11)			月销量			
+salesVolume		int(11)			销量			
 likes			int(11)			点赞数
 detailUrl		varchar(50)		详细介绍图片地址
+isShow			varchar(5)		是否在商品列表显示	值为'yes'或'no'，与status有区别，是完全不在列表中显示
 
-areaName_cityId_comment
+AreaName_cityId_comment
 列名				类型				注释				备注
 id				int(11)
 userName		varchar(30)*	评论者名字			默认值'匿名用户'
@@ -84,9 +116,42 @@ productId		int(11)			被评论的商品主键	关联areaName_cityId_product的�
 												
 Cart(好像不用设计购物车表，因为没有提交成订单的购物车在用户退出页面重新进来或者切换area后会被清空，不用保存)
 
-order_cityId_on(将订单表按城市分开，同时根据订单是否确认收货，分为order_cityId_on和order_cityId_off，因为订单的查询条件
+Order_cityId_on(将订单表按城市分开，同时根据订单是否确认收货，分为order_cityId_on和order_cityId_off，因为订单的查询条件
 比较多，用户根据用户Id查，卖家根据areaId查，卖家要经常查询未完成订单准备出货，所以分开方便查询。另外，之所以不像前面按area分割订单
 表，是因为如果用户在跨area下的单要查找其历史订单则需跨表查询，按城市分则跨表几率小很多)
 列名				类型				注释				备注
 id				int(11)
-products		varchar(255)	
+number			varchar(20)		订单编号			根据年月日和时分秒以及一个随机生成的4为数组成
+productIds		varchar(200)	所有购买的商品id	以'商品id1=当时单价=数量,商品id2=当时单价=数量'连接
+productNames	varchar(255)	所有商品的名称		以'商品名称1=当时单价=数量,商品名称2=当时单价=数量'连接，所有商品名称中不能含有=
+orderTime		datetime		下单时间
+receiverName	varchar(20)		收货人姓名			
+phoneNumber		varchar(12)		收货人手机号
+address			varchar(120)	收货地址
+payType			varchar(20)		支付方式			现默认只有'微信安全支付'
+receiveType		varchar(20)		收货方式			现默认只有'送货上门'
+receiveTime		varchar(20)		收货时间段			如'2016-04-05 9时-12时'
+couponId		int(11)			使用的优惠券Id		
+couponPrice		varchar(10)		优惠券面值			方便在订单里直接显示而不用再多一次查询
+totalPrice		varchar(10)		总价				订单总价
+freight			varchar(10)		运费				暂时不用，为以后拓展保留
+comment			varchar(255)	用户备注
+status			varchar(10)		订单状态			'未确认'(商家未确认)，'已确认'(商家已确认订单)，'已配送'(以完成送货)
+												'已收货'(卖家已收货，没有手动收货的在距离配送一段时间内自动变成已收货)
+
+Order_cityId_off(卖家收货或系统一段时间自动收货后，即订单状态变成'已收货'后，将其原封不动的从order_cityId_on移到order_cityId_off)
+
+Coupon_cityId_on(未失效的优惠券，按城市划分，原因：1.因为不同城市消费标准不同，2.加快查询的速度)
+列名				类型				注释				备注
+id				int(11)
+name			varchar(30)		名称				如'10元代金券'
+amount			varchar(10)		优惠券面值
+coverSUrl		varchar(50)		小图地址			
+coverBUrl		varchar(50)		大图地址			
+point			int(11)			对应消耗的积分		
+from			date			起始有效期
+to				date			截止有效期
+restrict		int(11)			使用限制			至少消费到xx元才能使用，在购物车时根据此限制加载可用券，如'消费满10元'
+comment			varchar(50)		简单说明			如'新用户欢迎礼券','圣诞节专属礼券'等	
+
+Coupon_cityId_off(已过期或已使用的优惠券，增加一个使用日期，为空表示是过期的)
