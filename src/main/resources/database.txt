@@ -32,11 +32,25 @@ avatarUrl		varchar(50)		头像图片地址		微信认证登录后可获取，第
 areaId			int(11)			当前选定的区域id	用户登录后，直接根据area_id加载主页内容
 areaName		varchar(30)		当前所在区域名		方便显示用，以及后面根据areaName和cityId查询其他表
 cityId			int(11)			用户所在城市		因为后面会根据城市确定在哪个表
+cityName		varchar(30)		用户所在城市		方便前端加载显示
 cartId(已删除)	int(11)			购物车id
 point			int(11)			用户当前积分
-phoneNumber		varchar(12)		手机号
-address			varchar(120)	常用地址
+receiveName		varchar(30)		默认收货人			存这些是方便加载购物车是，不用多一次查询
+phoneNumber		varchar(12)		默认收货手机
+address			varchar(120)	默认收货地址
+addLabel		varchar(20)		默认收货标签
 rank			varchar(10)		用户等级			比如'新用户''中级用户''金牌用户'等，暂留的接口
+
+Address(收货地址)
+列名				类型				注释				备注
+id				int(11)
+userId			int(11)			关联的User表里的Id主键
+userName		varchar(30)		收货人姓名
+phoneNumber		varchat(30)		收货手机
+address			varchar(30)		收货地址			由城市名+区域名组成，城市和区域在前端根据用户当前所在位置传入，用户不能修改
+detailAddress	varchar(120)	具体地址			具体楼栋号和门牌号，用户自己填
+label			varchar(20)		地址标签			如'家''公司'
+isDefault(可去掉)	varcar(5)		是否是默认			如果默认地址记录在了User表里，那这里就不要了
 
 Vendor(区域卖点用户，登录卖家系统)
 列名				类型				注释				备注
@@ -125,7 +139,7 @@ number			varchar(20)		订单编号			根据年月日和时分秒以及一个随�
 productIds		varchar(200)	所有购买的商品id	以'商品id1=当时单价=数量,商品id2=当时单价=数量'连接
 productNames	varchar(255)	所有商品的名称		以'商品名称1=当时单价=数量,商品名称2=当时单价=数量'连接，所有商品名称中不能含有=
 orderTime		datetime		下单时间
-receiverName	varchar(20)		收货人姓名			
+receiverName	varchar(30)		收货人姓名			
 phoneNumber		varchar(12)		收货人手机号
 address			varchar(120)	收货地址
 payType			varchar(20)		支付方式			现默认只有'微信安全支付'
@@ -136,10 +150,30 @@ couponPrice		varchar(10)		优惠券面值			方便在订单里直接显示而不
 totalPrice		varchar(10)		总价				订单总价
 freight			varchar(10)		运费				暂时不用，为以后拓展保留
 comment			varchar(255)	用户备注
-status			varchar(10)		订单状态			'未确认'(商家未确认)，'已确认'(商家已确认订单)，'已配送'(以完成送货)
+status			varchar(10)		订单状态			'未确认'(商家未确认)，'买家已取消'(被买家取消)，'卖家已取消'(被卖家取消)'已确认'(商家已确认订单)，'已配送'(以完成送货)
 												'已收货'(卖家已收货，没有手动收货的在距离配送一段时间内自动变成已收货)
+cityarea		varchar(30)		城市+区域名		方便后台直接显示
 
-Order_cityId_off(卖家收货或系统一段时间自动收货后，即订单状态变成'已收货'后，将其原封不动的从order_cityId_on移到order_cityId_off)
+Order_cityId_off(卖家收货或系统一段时间自动收货后，即订单状态变成'已收货'后，或者订单被买家或卖家取消后将其原封不动的从order_cityId_on移到order_cityId_off)
+列名				类型				注释				备注
+id				int(11)
+orderId			int(11)			Order_cityId_on中的id主键
+finalStatus		varchar(10)		最终状态			'买家已取消'(被买家取消)，'卖家已取消'(被卖家取消)，'已收货'
+finalTime		datatime		最终时间			当前这条记录被添加进来时的时间
+
+Coupon_cityId(我的积分中心->积分兑换里显示的优惠券类型，是静态优惠券，即没有被兑换的，兑换之后会在下面Coupon_cityId_on中生成)
+列名				类型				注释				备注
+id				int(11)
+name			varchar(30)		名称				如'10元代金券'
+amount			varchar(10)		优惠券面值
+coverSUrl		varchar(50)		小图地址			
+coverBUrl		varchar(50)		大图地址			
+point			int(11)			对应消耗的积分		
+restrict		int(11)			使用限制			至少消费到xx元才能使用，在购物车时根据此限制加载可用券，如'消费满10元'
+comment			varchar(50)		简单说明			如'新用户欢迎礼券','圣诞节专属礼券'等	
+cityName		varchar(30)		所属的城市			便于后台加载所有券时显示
+isShow			varchar(5)		是否在前台显示		值为'yes'或'no'，类似上架或下架
+type			varchar(20)						值为'代金券兑换'，与Gift中的'礼品兑换'对应
 
 Coupon_cityId_on(未失效的优惠券，按城市划分，原因：1.因为不同城市消费标准不同，2.加快查询的速度)
 列名				类型				注释				备注
@@ -149,9 +183,61 @@ amount			varchar(10)		优惠券面值
 coverSUrl		varchar(50)		小图地址			
 coverBUrl		varchar(50)		大图地址			
 point			int(11)			对应消耗的积分		
-from			date			起始有效期
+from			date			起始有效期			领券的日期
 to				date			截止有效期
 restrict		int(11)			使用限制			至少消费到xx元才能使用，在购物车时根据此限制加载可用券，如'消费满10元'
 comment			varchar(50)		简单说明			如'新用户欢迎礼券','圣诞节专属礼券'等	
+cityName		varchar(30)		所属的城市			便于后台加载所有券时显示
+userId			int(11)			优惠券拥有者
 
 Coupon_cityId_off(已过期或已使用的优惠券，增加一个使用日期，为空表示是过期的)
+列名				类型				注释				备注
+overdueDate		date			券使用日期			为空表示过期
+
+Gift_cityId(所有礼品类型，因为礼品和优惠券不同，兑换了优惠券没使用会存on表，使用存off表，而兑换了礼品就表示使用了)
+列名				类型				注释				备注
+id				int(11)			
+name			varchar(30)		名称				如'20元话费充值'
+amount(应该不需要)	varchar(10)		面值				优惠券之所以有面值是因为在购物结算时可以按面值抵用，
+												而礼品只是用户领取后显示他领取了什么礼物，之后的操作都是由后台管理员根据
+												他领的礼品进行操作的，如'帮他充20元话费'
+coverSUrl		varchar(50)		小图地址			
+coverBUrl		varchar(50)		大图地址
+point			int(11)			消耗的积分
+comment			varchar(50)		简单介绍
+from			date			上线日期
+to				date			截止兑换日期		如果后台统一控制上下线的话，可以不要这个日期
+inventory		int(11)			礼品总量		
+remain			int(11)			剩余数量			如果为0，则可以灰掉，或者自动下线。这块要服务器缓存
+type			varchar(20)		类型				值为'礼品兑换'，与Coupon中的'代金券兑换对应'
+
+Gift_cityId_changed(已兑换的礼品，只用显示一些简单信息：礼品名称、消耗积分、兑换日期、当前状态(后台人员是否已处理))
+列名				类型				注释				备注
+id				int(11)			
+giftId			int(11)			引用Gift_cityId表中的主键，前台展示应该不会用到
+coverSUrl		varchar(50)		小图地址			
+coverBUrl		varchar(50)		大图地址
+point			int(11)			消耗的积分
+comment			varchar(50)		简单介绍
+changeDate		date			兑换日期
+status			varchar(10)		状态				'未完成'(用户已兑换，等待后台人员操作)、'已完成'(后台人员操作完成)		
+
+Point_cityId(静态积分，即记录每种操作分别对应多少的积分)
+列名				类型				注释				备注
+id				int(11)
+source			varchar(30)*	积分来源			比如'新用户关注''每日登陆''下单赠送'，还有'兑换礼品'或'兑换优惠券'消耗，不能重复，可做主键			
+point			int(11)			本次来源对应积分	可能为负，即消耗的积分
+
+UserPoint_cityId(实际积分记录，记录每个用户的积分获取和消耗历史)
+列名				类型				注释				备注
+id				int(11)
+source			varchar(30)		积分来源
+point			int(11)			获取或消耗的积分	是根据source在Point_cityId中查寻到的对应积分
+userId			int(11)			积分获取或消耗者
+date			date			获取或使用时间		对于每日登陆的积分，要先检查这个用户这个日期是否有登陆过
+												(从下面的LoginLog_date中查)，登陆过了就不再记录
+
+LoginLog_date(记录每日的用户登陆信息，只记录不重复的用户，不记录一个用户同一天的重复登陆，这块可能要多线程)
+列名				类型				注释				备注
+id				int(11)
+userId			int(11)			用户主键

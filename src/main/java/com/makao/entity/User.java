@@ -14,12 +14,17 @@ public class User implements Serializable{
 	private static final long serialVersionUID = 4237640736638993145L; 
 	
 	private Integer id;
-	
     private String userName;
-
+    private String openid;
     private String password;
-
-    private Integer age;
+    private String avatarUrl;//头像地址
+    private int areaId;//用户当前所在区域
+    private String areaName;
+    private int cityId;//用户所在区域
+    private String cityName;
+    private int point;//当前总积分
+    private String phoneNumber;//电话
+    private String address;//地址
     
     @Id
     @GeneratedValue
