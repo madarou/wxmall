@@ -46,7 +46,7 @@ Address(收货地址)
 id				int(11)
 userId			int(11)			关联的User表里的Id主键
 userName		varchar(30)		收货人姓名
-phoneNumber		varchat(30)		收货手机
+phoneNumber		varchat(12)		收货手机
 address			varchar(30)		收货地址			由城市名+区域名组成，城市和区域在前端根据用户当前所在位置传入，用户不能修改
 detailAddress	varchar(120)	具体地址			具体楼栋号和门牌号，用户自己填
 label			varchar(20)		地址标签			如'家''公司'
@@ -61,25 +61,25 @@ avatarUrl		varchar(50)		头像地址			暂时不用
 areaId			int(11)			卖家负责的网点
 cityId			int(11)			卖家所在城市
 cityArea		varchar(30)		城市名-区域名		方便直接显示
-lastip			varchar(30)		上次登录ip
-lasttime		datetime		上次登录时间
-islock			varchar(5)		是否锁定			被超级管理员锁定后不能登录
+lastIp			varchar(30)		上次登录ip
+lastTime		datetime		上次登录时间
+isLock			varchar(5)		是否锁定			被超级管理员锁定后不能登录
 
 Supervisor(超级管理员)
 列名				类型				注释				备注
 id				int(11)
 userName		varchar(30)
 password		varchar(30)
-avatarUrl 		varchar(30)		头像				暂时不用
-lastip			varchar(30)
-lasttime		datetime		
+avatarUrl 		varchar(50)		头像				暂时不用
+lastIp			varchar(30)
+lastTime		datetime		
 
 City
 列名				类型				注释				备注
 id				int(11)							自动生成，自增
 cityName		varchar(30)*		
 avatarUrl		varchar(50)		城市头像			在切换城市页面的城市列表展示
-areas			varchar(255)	城市辖区area集合	以'area1id-area1名,area2id-area2名'存储，方便在确定
+areas			varchar(255)	城市辖区area集合	以'area1id=area1名,area2id=area2名'存储，方便在确定
 												城市后直接展示
 
 Area
@@ -88,10 +88,10 @@ id				int(11)
 areaName		varchar(30)*
 cityId			int(11)*		所属的城市id
 cityName		varchar(30)*	所属城市名			便于进入商城后左上角直接展示，不用现查
-catalogs		varchar(50)		当前area下的商品类别名称集合，在导航栏显示用，以'名称1-名称2'存储，方便直接展示，
+catalogs		varchar(50)		当前area下的商品类别名称集合，在导航栏显示用，以'名称1=名称2'存储，方便直接展示，
 								因为各area的商品单独放一张product表，表内catalog不会重名，所以不用id,这里的
 								名称1、名称2可以直接当成catalog的主键
-productTable	varchar(50)		该area对应的商品列表的名字，以areaName+'_'+cityId+'_product'为名称，卖家
+productTable	varchar(50)		该area对应的商品列表的名字，以areaName+'_'+cityId+'_product'为名称，超级管理员增加
 								该area记录时建表。用cityId不用名还是防止重复城市名和区域名的情况出现
 closed			varchar(5)		当前是否暂停服务	值为'yes'或'no'，关门的可暂不显示，或设为灰色
 
@@ -115,7 +115,7 @@ origin			varchar(30)		原产地
 salesVolume		int(11)			销量			
 likes			int(11)			点赞数
 detailUrl		varchar(50)		详细介绍图片地址
-isShow			varchar(5)		是否在商品列表显示	值为'yes'或'no'，与status有区别，是完全不在列表中显示
+isShow			varchar(5)		是否在商品列表显示	值为'yes'(默认)或'no'，与status有区别，是完全不在列表中显示
 
 AreaName_cityId_comment
 列名				类型				注释				备注
@@ -157,8 +157,23 @@ cityarea		varchar(30)		城市+区域名		方便后台直接显示
 Order_cityId_off(卖家收货或系统一段时间自动收货后，即订单状态变成'已收货'后，或者订单被买家或卖家取消后将其原封不动的从order_cityId_on移到order_cityId_off)
 列名				类型				注释				备注
 id				int(11)
-orderId			int(11)			Order_cityId_on中的id主键
+number			varchar(20)		订单编号			根据年月日和时分秒以及一个随机生成的4为数组成
+productIds		varchar(200)	所有购买的商品id	以'商品id1=当时单价=数量,商品id2=当时单价=数量'连接
+productNames	varchar(255)	所有商品的名称		以'商品名称1=当时单价=数量,商品名称2=当时单价=数量'连接，所有商品名称中不能含有=
+orderTime		datetime		下单时间
+receiverName	varchar(30)		收货人姓名			
+phoneNumber		varchar(12)		收货人手机号
+address			varchar(120)	收货地址
+payType			varchar(20)		支付方式			现默认只有'微信安全支付'
+receiveType		varchar(20)		收货方式			现默认只有'送货上门'
+receiveTime		varchar(20)		收货时间段			如'2016-04-05 9时-12时'
+couponId		int(11)			使用的优惠券Id		
+couponPrice		varchar(10)		优惠券面值			方便在订单里直接显示而不用再多一次查询
+totalPrice		varchar(10)		总价				订单总价
+freight			varchar(10)		运费				暂时不用，为以后拓展保留
+comment			varchar(255)	用户备注
 finalStatus		varchar(10)		最终状态			'买家已取消'(被买家取消)，'卖家已取消'(被卖家取消)，'已收货'
+cityarea		varchar(30)		城市+区域名		方便后台直接显示
 finalTime		datatime		最终时间			当前这条记录被添加进来时的时间
 
 Coupon_cityId(我的积分中心->积分兑换里显示的优惠券类型，是静态优惠券，即没有被兑换的，兑换之后会在下面Coupon_cityId_on中生成)

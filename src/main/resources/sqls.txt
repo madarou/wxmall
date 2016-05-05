@@ -1,0 +1,26 @@
+---------
+因为有很多表是动态创建，所以要手动写建表的sql语句:
+AreaName_cityId_product:
+
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`productName` varchar(30) NOT NULL,
+						`catalog` varchar(30),
+						`showWay` varchar(2) DEFAULT 's',
+						`price` varchar(10),
+						`standard` varchar(50),
+						`marketPrice` varchar(10),
+						`label` varchar(16),
+						`coverSUrl` varchar(50),
+						`coverBUrl` varchar(50),
+						`inventory` int(11),
+						`sequence` int(11),
+						`status` varchar(30),
+						`description` varchar(100),
+						`origin` varchar(30),
+						`salesVolume` int(11),
+						`likes` int(11),
+						`detailUrl` varchar(50),
+						`isShow` varchar(5) DEFAULT 'yes',
+						PRIMARY KEY (`id`))";

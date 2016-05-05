@@ -166,9 +166,9 @@ public class UserDaoImpl implements IUserDao {
 		return res;
 	}
 
-	public void creatNewTable(String name) {
+	public void creatNewTable(String tableName) {
 		String sql = "CREATE TABLE IF NOT EXISTS `"
-				+ name
+				+ tableName
 				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',`name` varchar(10) COMMENT 'name',PRIMARY KEY (`id`))";
 		Session session = null;
 		Transaction tx = null;
