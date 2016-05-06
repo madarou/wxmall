@@ -3,14 +3,18 @@ package com.makao.entity;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @description: TODO
  * @author makao
  * @date 2016年5月5日
  */
+@Entity  
+@Table 
 public class Supervisor implements Serializable {
 	private static final long serialVersionUID = 2454130487430518191L;
 	private int id;

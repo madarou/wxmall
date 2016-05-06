@@ -13,13 +13,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.jdbc.Work;
-import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.makao.controller.UserController;
 import com.makao.dao.IUserDao;
 import com.makao.entity.Testor;
 import com.makao.entity.User;

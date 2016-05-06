@@ -4,14 +4,18 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @description: TODO
  * @author makao
  * @date 2016年5月5日
  */
+@Entity  
+@Table 
 public class Vendor implements Serializable {
 	private static final long serialVersionUID = 2882450560807218843L;
 	private int id;

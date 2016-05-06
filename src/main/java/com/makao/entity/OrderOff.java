@@ -143,6 +143,12 @@ public class OrderOff {
 	public void setFinalTime(Timestamp finalTime) {
 		this.finalTime = finalTime;
 	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 	public int getAreaId() {
 		return areaId;
 	}
