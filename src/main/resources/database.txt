@@ -135,13 +135,13 @@ Order_cityId_on(将订单表按城市分开，同时根据订单是否确认收�
 表，是因为如果用户在跨area下的单要查找其历史订单则需跨表查询，按城市分则跨表几率小很多)
 列名				类型				注释				备注
 id				int(11)
-number			varchar(20)		订单编号			根据年月日和时分秒以及一个随机生成的4为数组成
+number			varchar(20)*	订单编号			根据年月日和时分秒以及一个随机生成的4为数组成
 productIds		varchar(200)	所有购买的商品id	以'商品id1=当时单价=数量,商品id2=当时单价=数量'连接
 productNames	varchar(255)	所有商品的名称		以'商品名称1=当时单价=数量,商品名称2=当时单价=数量'连接，所有商品名称中不能含有=
 orderTime		datetime		下单时间
 receiverName	varchar(30)		收货人姓名			
 phoneNumber		varchar(12)		收货人手机号
-address			varchar(120)	收货地址
+address			varchar(120)	收货地址			只是用户填写的部分，后面有cityarea了
 payType			varchar(20)		支付方式			现默认只有'微信安全支付'
 receiveType		varchar(20)		收货方式			现默认只有'送货上门'
 receiveTime		varchar(20)		收货时间段			如'2016-04-05 9时-12时'
@@ -179,7 +179,7 @@ finalTime		datatime		最终时间			当前这条记录被添加进来时的时�
 Coupon_cityId(我的积分中心->积分兑换里显示的优惠券类型，是静态优惠券，即没有被兑换的，兑换之后会在下面Coupon_cityId_on中生成)
 列名				类型				注释				备注
 id				int(11)
-name			varchar(30)		名称				如'10元代金券'
+name			varchar(30)*	名称				如'10元代金券'
 amount			varchar(10)		优惠券面值
 coverSUrl		varchar(50)		小图地址			
 coverBUrl		varchar(50)		大图地址			

@@ -24,3 +24,149 @@ AreaName_cityId_product:
 						`detailUrl` varchar(50),
 						`isShow` varchar(5) DEFAULT 'yes',
 						PRIMARY KEY (`id`))";
+						
+
+AreaName_cityId_comment:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`userName` varchar(30) NOT NULL,
+						`userImgUrl` varchar(50),
+						`date` date,
+						`likes` int(11),
+						`content` varchar(255),
+						`productId` int(11),
+						PRIMARY KEY (`id`))";
+						
+						
+Order_cityId_on:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`number` varchar(20) NOT NULL,
+						`productIds` varchar(200),
+						`productNames` varchar(255),
+						`orderTime` datetime,
+						`receiverName` varchar(30),
+						`phoneNumber` varchar(12),
+						`address` varchar(120),
+						`payType` varchar(20),
+						`receiveType` varchar(20),
+						`receiveTime` varchar(20),
+						`couponId` int(11),
+						`couponPrice` varchar(10),
+						`totalPrice` varchar(10),
+						`freight` varchar(10),
+						`comment` varchar(255),
+						`status` varchar(10),
+						`cityarea` varchar(30),
+						PRIMARY KEY (`id`))";
+						
+				
+Order_cityId_off:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`number` varchar(20) NOT NULL,
+						`productIds` varchar(200),
+						`productNames` varchar(255),
+						`orderTime` datetime,
+						`receiverName` varchar(30),
+						`phoneNumber` varchar(12),
+						`address` varchar(120),
+						`payType` varchar(20),
+						`receiveType` varchar(20),
+						`receiveTime` varchar(20),
+						`couponId` int(11),
+						`couponPrice` varchar(10),
+						`totalPrice` varchar(10),
+						`freight` varchar(10),
+						`comment` varchar(255),
+						`finalStatus` varchar(10),
+						`cityarea` varchar(30),
+						`finalTime` datetime,
+						PRIMARY KEY (`id`))";
+						
+						
+Coupon_cityId:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`name` varchar(30) NOT NULL,
+						`amount` varchar(10),
+						`coverSUrl` varchar(50),
+						`coverBUrl` varchar(50),
+						`point` int(11),
+						`restrict` int(11),
+						`comment` varchar(50),
+						`cityName` varchar(30),
+						`isShow` varchar(5),
+						`type` varchar(20),
+						PRIMARY KEY (`id`))";
+						
+						
+Coupon_cityId_on:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`name` varchar(30) NOT NULL,
+						`amount` varchar(10),
+						`coverSUrl` varchar(50),
+						`coverBUrl` varchar(50),
+						`point` int(11),
+						`from` date,
+						`to` dat,
+						`restrict` int(11),
+						`comment` varchar(50),
+						`cityName` varchar(30),
+						`isShow` varchar(5),
+						`userId` int(11),
+						PRIMARY KEY (`id`))";
+						
+						
+Coupon_cityId_off:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`name` varchar(30) NOT NULL,
+						`amount` varchar(10),
+						`coverSUrl` varchar(50),
+						`coverBUrl` varchar(50),
+						`point` int(11),
+						`from` date,
+						`to` dat,
+						`restrict` int(11),
+						`comment` varchar(50),
+						`cityName` varchar(30),
+						`isShow` varchar(5),
+						`userId` int(11),
+						`overdueDate` date,
+						PRIMARY KEY (`id`))";
+						
+						
+Point_cityId:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`source` varchar(30) NOT NULL,
+						`point` int(11),
+						PRIMARY KEY (`id`))";
+						
+						
+UserPoint_cityId:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`source` varchar(30) NOT NULL,
+						`point` int(11),
+						`userId` int(11),
+						`date` date,
+						PRIMARY KEY (`id`))";
+						
+						
+LoginLog_date:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`userId` int(11),
+						PRIMARY KEY (`id`))";

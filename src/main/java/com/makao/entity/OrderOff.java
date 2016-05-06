@@ -15,7 +15,7 @@ public class OrderOff {
 	private Timestamp orderTime;//下单时间
 	private String receiverName;//收货人姓名
 	private String phoneNumber;//收货人手机号
-	private String address;//收货地址
+	private String address;//收货地址，只是用户填写的部分，后面有cityarea了
 	private String payType;//支付方式			现默认只有'微信安全支付'
 	private String receiveType;//收货方式			现默认只有'送货上门'
 	private String receiveTime;//收货时间段			如'2016-04-05 9时-12时'
