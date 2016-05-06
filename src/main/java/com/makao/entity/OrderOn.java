@@ -29,6 +29,8 @@ public class OrderOn {
 	//'已收货'(卖家已收货，没有手动收货的在距离配送一段时间内自动变成已收货)
 	private String status;
 	private String cityarea;//城市+区域名		方便后台直接显示
+	private int userId;//对应User表里的Id
+	private int areaId;//Area表里的Id，区域卖家登录时的查询条件
 	public int getId() {
 		return id;
 	}
@@ -137,4 +139,17 @@ public class OrderOn {
 	public void setCityarea(String cityarea) {
 		this.cityarea = cityarea;
 	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+	public int getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(int areaId) {
+		this.areaId = areaId;
+	}
+	
 }

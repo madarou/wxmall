@@ -27,6 +27,8 @@ public class OrderOff {
 	private String finalStatus;//最终状态			'买家已取消'(被买家取消)，'卖家已取消'(被卖家取消)，'已收货'
 	private String cityarea;//城市+区域名		方便后台直接显示
 	private Timestamp finalTime;//最终时间			当前这条记录被添加进来时的时间
+	private int userId;//对应User表里的Id
+	private int areaId;//Area表里的Id，区域卖家登录时的查询条件
 	public int getId() {
 		return id;
 	}
@@ -140,5 +142,11 @@ public class OrderOff {
 	}
 	public void setFinalTime(Timestamp finalTime) {
 		this.finalTime = finalTime;
+	}
+	public int getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(int areaId) {
+		this.areaId = areaId;
 	}
 }

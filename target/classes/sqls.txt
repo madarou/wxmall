@@ -60,6 +60,8 @@ Order_cityId_on:
 						`comment` varchar(255),
 						`status` varchar(10),
 						`cityarea` varchar(30),
+						`userId` int(11),
+						`areaId` int(11),
 						PRIMARY KEY (`id`))";
 						
 				
@@ -85,6 +87,8 @@ Order_cityId_off:
 						`finalStatus` varchar(10),
 						`cityarea` varchar(30),
 						`finalTime` datetime,
+						`userId` int(11),
+						`areaId` int(11),
 						PRIMARY KEY (`id`))";
 						
 						
@@ -115,7 +119,7 @@ Coupon_cityId_on:
 						`coverBUrl` varchar(50),
 						`point` int(11),
 						`from` date,
-						`to` dat,
+						`to` date,
 						`restrict` int(11),
 						`comment` varchar(50),
 						`cityName` varchar(30),
@@ -134,7 +138,7 @@ Coupon_cityId_off:
 						`coverBUrl` varchar(50),
 						`point` int(11),
 						`from` date,
-						`to` dat,
+						`to` date,
 						`restrict` int(11),
 						`comment` varchar(50),
 						`cityName` varchar(30),
@@ -169,4 +173,40 @@ LoginLog_date:
 				+ tableName
 				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
 						`userId` int(11),
+						PRIMARY KEY (`id`))";
+						
+						
+Gift_cityId:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`name` varchar(30) NOT NULL,
+						`coverSUrl` varchar(50),
+						`coverBUrl` varchar(50),
+						`point` int(11),
+						`comment` varchar(50),
+						`from` date,
+						`to` date,
+						`inventory` int(11),
+						`remain` int(11),
+						`type` varchar(20),
+						`areaId` int(11),
+						`areaName` varchar(30),
+						PRIMARY KEY (`id`))";
+						
+						
+Gift_cityId_changed:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`name` varchar(30),
+						`giftId` int(11),
+						`coverSUrl` varchar(50),
+						`coverBUrl` varchar(50),
+						`point` int(11),
+						`comment` varchar(50),
+						`changeDate` date,
+						`type` varchar(20),
+						`areaId` int(11),
+						`areaName` varchar(30),
 						PRIMARY KEY (`id`))";
