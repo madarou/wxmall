@@ -11,16 +11,16 @@ import com.makao.entity.Vendor;
  */
 public interface IVendorService {
 
-	com.makao.entity.Vendor getVendorById(Integer id);
+	int insert(Vendor vendor);
 
-	int deleteVendor(Integer id);
+	int update(Vendor vendor);
 
-	int insertVendor(Vendor vendor);
+	List<Vendor> queryByName(String name);
 
-	int updateVendor(Vendor vendor);
+	List<Vendor> queryAll();
 
-	List<Vendor> queryVendorByName(String name);
+	Vendor getById(int id);
 
-	List<Vendor> queryAllVendors();
+	int deleteById(int id);
 
 }

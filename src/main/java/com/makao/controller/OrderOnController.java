@@ -32,14 +32,14 @@ public class OrderOnController {
 	public @ResponseBody OrderOn get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取有效订单信息id=" + id);
-		OrderOn OrderOn = (OrderOn)this.orderOnService.getOrderOnById(id);
+		OrderOn OrderOn = (OrderOn)this.orderOnService.getById(id);
 		return OrderOn;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.orderOnService.deleteOrderOn(id);
+        int res = this.orderOnService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除有效订单信息成功id=" + id);
@@ -54,7 +54,7 @@ public class OrderOnController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody OrderOn OrderOn) {
-		int res = this.orderOnService.insertOrderOn(OrderOn);
+		int res = this.orderOnService.insert(OrderOn);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加有效订单成功id=" + OrderOn.getId());
@@ -70,7 +70,7 @@ public class OrderOnController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody OrderOn OrderOn) {
-		int res = this.orderOnService.updateOrderOn(OrderOn);
+		int res = this.orderOnService.update(OrderOn);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改有效订单信息成功id=" + OrderOn.getId());
@@ -88,7 +88,7 @@ public class OrderOnController {
     Object queryByName(@PathVariable("name")String name) {
 		List<OrderOn> OrderOns = null;
 		//则根据关键字查询
-		OrderOns = this.orderOnService.queryOrderOnByName(name);
+		OrderOns = this.orderOnService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询有效订单信息完成");
         return OrderOns;
     }
@@ -98,7 +98,7 @@ public class OrderOnController {
     Object queryAll() {
 		List<OrderOn> OrderOns = null;
 		//则查询返回所有
-		OrderOns = this.orderOnService.queryAllOrderOns();
+		OrderOns = this.orderOnService.queryAll();
 		logger.info("查询所有有效订单信息完成");
         return OrderOns;
     }

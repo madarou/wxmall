@@ -32,14 +32,14 @@ public class CouponOffController {
 	public @ResponseBody CouponOff get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取失效优惠券信息id=" + id);
-		CouponOff CouponOff = (CouponOff)this.couponOffService.getCouponOffById(id);
+		CouponOff CouponOff = (CouponOff)this.couponOffService.getById(id);
 		return CouponOff;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.couponOffService.deleteCouponOff(id);
+        int res = this.couponOffService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除失效优惠券信息成功id=" + id);
@@ -55,7 +55,7 @@ public class CouponOffController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody CouponOff CouponOff) {
-		int res = this.couponOffService.insertCouponOff(CouponOff);
+		int res = this.couponOffService.insert(CouponOff);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加失效优惠券成功id=" + CouponOff.getId());
@@ -71,7 +71,7 @@ public class CouponOffController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody CouponOff CouponOff) {
-		int res = this.couponOffService.updateCouponOff(CouponOff);
+		int res = this.couponOffService.update(CouponOff);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改失效优惠券信息成功id=" + CouponOff.getId());
@@ -89,7 +89,7 @@ public class CouponOffController {
     Object queryByName(@PathVariable("name")String name) {
 		List<CouponOff> CouponOffs = null;
 		//则根据关键字查询
-		CouponOffs = this.couponOffService.queryCouponOffByName(name);
+		CouponOffs = this.couponOffService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询失效优惠券信息完成");
         return CouponOffs;
     }
@@ -99,7 +99,7 @@ public class CouponOffController {
     Object queryAll() {
 		List<CouponOff> CouponOffs = null;
 		//则查询返回所有
-		CouponOffs = this.couponOffService.queryAllCouponOffs();
+		CouponOffs = this.couponOffService.queryAll();
 		logger.info("查询所有失效优惠券信息完成");
         return CouponOffs;
     }

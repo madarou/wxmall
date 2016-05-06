@@ -11,16 +11,16 @@ import com.makao.entity.Area;
  */
 public interface IAreaService {
 
-	int insertArea(Area area);
+	int insert(Area area);
 
-	int updateArea(Area area);
+	int update(Area area);
 
-	List<Area> queryAreaByName(String name);
+	List<Area> queryByName(String name);
 
-	List<Area> queryAllAreas();
+	List<Area> queryAll();
 
-	com.makao.entity.Area getAreaById(Integer id);
+	Area getById(int id);
 
-	int deleteArea(Integer id);
+	int deleteById(int id);
 
 }

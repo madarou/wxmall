@@ -32,14 +32,14 @@ public class AreaController {
 	public @ResponseBody Area get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取区域信息id=" + id);
-		Area Area = (Area)this.areaService.getAreaById(id);
+		Area Area = (Area)this.areaService.getById(id);
 		return Area;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.areaService.deleteArea(id);
+        int res = this.areaService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除区域信息成功id=" + id);
@@ -55,7 +55,7 @@ public class AreaController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Area Area) {
-		int res = this.areaService.insertArea(Area);
+		int res = this.areaService.insert(Area);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加区域成功id=" + Area.getId());
@@ -71,7 +71,7 @@ public class AreaController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Area Area) {
-		int res = this.areaService.updateArea(Area);
+		int res = this.areaService.update(Area);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改区域信息成功id=" + Area.getId());
@@ -89,7 +89,7 @@ public class AreaController {
     Object queryByName(@PathVariable("name")String name) {
 		List<Area> areas = null;
 		//则根据关键字查询
-		areas = this.areaService.queryAreaByName(name);
+		areas = this.areaService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询区域信息完成");
         return areas;
     }
@@ -99,7 +99,7 @@ public class AreaController {
     Object queryAll() {
 		List<Area> areas = null;
 		//则查询返回所有
-		areas = this.areaService.queryAllAreas();
+		areas = this.areaService.queryAll();
 		logger.info("查询所有区域信息完成");
         return areas;
     }

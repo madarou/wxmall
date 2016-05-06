@@ -32,14 +32,14 @@ public class ProductController {
 	public @ResponseBody Product get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取商品信息id=" + id);
-		Product Product = (Product)this.productService.getProductById(id);
+		Product Product = (Product)this.productService.getById(id);
 		return Product;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.productService.deleteProduct(id);
+        int res = this.productService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除商品信息成功id=" + id);
@@ -54,7 +54,7 @@ public class ProductController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Product Product) {
-		int res = this.productService.insertProduct(Product);
+		int res = this.productService.insert(Product);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加商品成功id=" + Product.getId());
@@ -70,7 +70,7 @@ public class ProductController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Product Product) {
-		int res = this.productService.updateProduct(Product);
+		int res = this.productService.update(Product);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改商品信息成功id=" + Product.getId());
@@ -88,7 +88,7 @@ public class ProductController {
     Object queryByName(@PathVariable("name")String name) {
 		List<Product> Products = null;
 		//则根据关键字查询
-		Products = this.productService.queryProductByName(name);
+		Products = this.productService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询商品信息完成");
         return Products;
     }
@@ -98,7 +98,7 @@ public class ProductController {
     Object queryAll() {
 		List<Product> Products = null;
 		//则查询返回所有
-		Products = this.productService.queryAllProducts();
+		Products = this.productService.queryAll();
 		logger.info("查询所有商品信息完成");
         return Products;
     }

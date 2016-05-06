@@ -11,16 +11,16 @@ import com.makao.entity.Product;
  */
 public interface IProductService {
 
-	com.makao.entity.Product getProductById(Integer id);
+	int insert(Product product);
 
-	int deleteProduct(Integer id);
+	int update(Product product);
 
-	int insertProduct(Product product);
+	List<Product> queryByName(String name);
 
-	int updateProduct(Product product);
+	List<Product> queryAll();
 
-	List<Product> queryProductByName(String name);
+	Product getById(int id);
 
-	List<Product> queryAllProducts();
+	int deleteById(int id);
 
 }

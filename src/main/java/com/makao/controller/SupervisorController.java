@@ -32,14 +32,14 @@ public class SupervisorController {
 	public @ResponseBody Supervisor get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取超级管理员信息id=" + id);
-		Supervisor Supervisor = (Supervisor)this.supervisorService.getSupervisorById(id);
+		Supervisor Supervisor = (Supervisor)this.supervisorService.getById(id);
 		return Supervisor;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.supervisorService.deleteSupervisor(id);
+        int res = this.supervisorService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除超级管理员信息成功id=" + id);
@@ -54,7 +54,7 @@ public class SupervisorController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Supervisor Supervisor) {
-		int res = this.supervisorService.insertSupervisor(Supervisor);
+		int res = this.supervisorService.insert(Supervisor);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加超级管理员成功id=" + Supervisor.getId());
@@ -70,7 +70,7 @@ public class SupervisorController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Supervisor Supervisor) {
-		int res = this.supervisorService.updateSupervisor(Supervisor);
+		int res = this.supervisorService.update(Supervisor);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改超级管理员信息成功id=" + Supervisor.getId());
@@ -88,7 +88,7 @@ public class SupervisorController {
     Object queryByName(@PathVariable("name")String name) {
 		List<Supervisor> Supervisors = null;
 		//则根据关键字查询
-		Supervisors = this.supervisorService.querySupervisorByName(name);
+		Supervisors = this.supervisorService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询超级管理员信息完成");
         return Supervisors;
     }
@@ -98,7 +98,7 @@ public class SupervisorController {
     Object queryAll() {
 		List<Supervisor> Supervisors = null;
 		//则查询返回所有
-		Supervisors = this.supervisorService.queryAllSupervisors();
+		Supervisors = this.supervisorService.queryAll();
 		logger.info("查询所有超级管理员信息完成");
         return Supervisors;
     }

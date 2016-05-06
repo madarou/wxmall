@@ -14,31 +14,31 @@ import com.makao.service.IUserService;
 public class UserServiceImpl implements IUserService {
 	@Resource
 	private IUserDao userDao;
-	public User getUserById(int userId) {
-		return this.userDao.selectByPrimaryKey(userId);
+	public User getById(int id) {
+		return this.userDao.getById(id);
 	}
 	@Override
-	public int insertUser(User user) {
+	public int insert(User user) {
 		return this.userDao.insert(user);
 	}
 	
 	@Override
-	public int deleteUser(int userId) {
-		return this.userDao.deleteByPrimaryKey(userId);
+	public int deleteById(int id) {
+		return this.userDao.deleteById(id);
 	}
 	
 	@Override
-	public int updateUser(User user) {
+	public int update(User user) {
 		return this.userDao.update(user);
 	}
 	
 	@Override
-	public List<User> queryAllUser() {
-		return this.userDao.queryAllUser();
+	public List<User> queryAll() {
+		return this.userDao.queryAll();
 	}
 	@Override
-	public List<User> queryUserByName(String name) {
-		return this.userDao.queryUserByName(name);
+	public List<User> queryByName(String name) {
+		return this.userDao.queryByName(name);
 	}
 	@Override
 	public void testor() {

@@ -11,16 +11,16 @@ import com.makao.entity.LoginLog;
  */
 public interface ILoginLogService {
 
-	com.makao.entity.LoginLog getLoginLogById(Integer id);
+	int insert(LoginLog loginLog);
 
-	int deleteLoginLog(Integer id);
+	int update(LoginLog loginLog);
 
-	int insertLoginLog(LoginLog loginLog);
+	List<LoginLog> queryByName(String name);
 
-	int updateLoginLog(LoginLog loginLog);
+	List<LoginLog> queryAll();
 
-	List<LoginLog> queryLoginLogByName(String name);
+	LoginLog getById(int id);
 
-	List<LoginLog> queryAllLoginLogs();
+	int deleteById(int id);
 
 }

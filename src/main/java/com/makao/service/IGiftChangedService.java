@@ -11,16 +11,16 @@ import com.makao.entity.GiftChanged;
  */
 public interface IGiftChangedService {
 
-	com.makao.entity.GiftChanged getGiftChangedById(Integer id);
+	int insert(GiftChanged giftChanged);
 
-	int deleteGiftChanged(Integer id);
+	int update(GiftChanged giftChanged);
 
-	int insertGiftChanged(GiftChanged giftChanged);
+	List<GiftChanged> queryByName(String name);
 
-	int updateGiftChanged(GiftChanged giftChanged);
+	List<GiftChanged> queryAll();
 
-	List<GiftChanged> queryGiftChangedByName(String name);
+	GiftChanged getById(int id);
 
-	List<GiftChanged> queryAllGiftChangeds();
+	int deleteById(int id);
 
 }

@@ -52,7 +52,7 @@ public class UserDaoImpl implements IUserDao {
 	}
 
 	@Override
-	public User selectByPrimaryKey(Integer id) {
+	public User getById(int id) {
 		// return (User) sessionFactory.getCurrentSession().createQuery(
 		// "from User u where u.id=?").setInteger(0, id)
 		// .uniqueResult();
@@ -76,7 +76,7 @@ public class UserDaoImpl implements IUserDao {
 	}
 
 	@Override
-	public int deleteByPrimaryKey(Integer id) {
+	public int deleteById(int id) {
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;
@@ -121,7 +121,7 @@ public class UserDaoImpl implements IUserDao {
 	}
 
 	@Override
-	public List<User> queryAllUser() {
+	public List<User> queryAll() {
 		Session session = null;
 		Transaction tx = null;
 		List<User> res = null;
@@ -142,7 +142,7 @@ public class UserDaoImpl implements IUserDao {
 	}
 
 	@Override
-	public List<User> queryUserByName(String name) {
+	public List<User> queryByName(String name) {
 		Session session = null;
 		Transaction tx = null;
 		List<User> res = null;

@@ -32,14 +32,14 @@ public class LoginLogController {
 	public @ResponseBody LoginLog get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取登录记录信息id=" + id);
-		LoginLog LoginLog = (LoginLog)this.loginLogService.getLoginLogById(id);
+		LoginLog LoginLog = (LoginLog)this.loginLogService.getById(id);
 		return LoginLog;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.loginLogService.deleteLoginLog(id);
+        int res = this.loginLogService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除登录记录信息成功id=" + id);
@@ -54,7 +54,7 @@ public class LoginLogController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody LoginLog LoginLog) {
-		int res = this.loginLogService.insertLoginLog(LoginLog);
+		int res = this.loginLogService.insert(LoginLog);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加登录记录成功id=" + LoginLog.getId());
@@ -70,7 +70,7 @@ public class LoginLogController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody LoginLog LoginLog) {
-		int res = this.loginLogService.updateLoginLog(LoginLog);
+		int res = this.loginLogService.update(LoginLog);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改登录记录信息成功id=" + LoginLog.getId());
@@ -88,7 +88,7 @@ public class LoginLogController {
     Object queryByName(@PathVariable("name")String name) {
 		List<LoginLog> LoginLogs = null;
 		//则根据关键字查询
-		LoginLogs = this.loginLogService.queryLoginLogByName(name);
+		LoginLogs = this.loginLogService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询登录记录信息完成");
         return LoginLogs;
     }
@@ -98,7 +98,7 @@ public class LoginLogController {
     Object queryAll() {
 		List<LoginLog> LoginLogs = null;
 		//则查询返回所有
-		LoginLogs = this.loginLogService.queryAllLoginLogs();
+		LoginLogs = this.loginLogService.queryAll();
 		logger.info("查询所有登录记录信息完成");
         return LoginLogs;
     }

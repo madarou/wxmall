@@ -32,14 +32,14 @@ public class VendorController {
 	public @ResponseBody Vendor get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取区域管理员信息id=" + id);
-		Vendor Vendor = (Vendor)this.vendorService.getVendorById(id);
+		Vendor Vendor = (Vendor)this.vendorService.getById(id);
 		return Vendor;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.vendorService.deleteVendor(id);
+        int res = this.vendorService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除区域管理员信息成功id=" + id);
@@ -54,7 +54,7 @@ public class VendorController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Vendor Vendor) {
-		int res = this.vendorService.insertVendor(Vendor);
+		int res = this.vendorService.insert(Vendor);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加区域管理员成功id=" + Vendor.getId());
@@ -70,7 +70,7 @@ public class VendorController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Vendor Vendor) {
-		int res = this.vendorService.updateVendor(Vendor);
+		int res = this.vendorService.update(Vendor);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改区域管理员信息成功id=" + Vendor.getId());
@@ -88,7 +88,7 @@ public class VendorController {
     Object queryByName(@PathVariable("name")String name) {
 		List<Vendor> Vendors = null;
 		//则根据关键字查询
-		Vendors = this.vendorService.queryVendorByName(name);
+		Vendors = this.vendorService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询区域管理员信息完成");
         return Vendors;
     }
@@ -98,7 +98,7 @@ public class VendorController {
     Object queryAll() {
 		List<Vendor> Vendors = null;
 		//则查询返回所有
-		Vendors = this.vendorService.queryAllVendors();
+		Vendors = this.vendorService.queryAll();
 		logger.info("查询所有区域管理员信息完成");
         return Vendors;
     }

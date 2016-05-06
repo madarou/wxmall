@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.CouponOn;
-import com.makao.entity.CouponOn;
 import com.makao.service.ICouponOnService;
 
 /**
@@ -33,14 +32,14 @@ public class CouponOnController {
 	public @ResponseBody CouponOn get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取有效优惠券信息id=" + id);
-		CouponOn CouponOn = (CouponOn)this.couponOnService.getCouponOnById(id);
+		CouponOn CouponOn = (CouponOn)this.couponOnService.getById(id);
 		return CouponOn;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.couponOnService.deleteCouponOn(id);
+        int res = this.couponOnService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除有效优惠券信息成功id=" + id);
@@ -56,7 +55,7 @@ public class CouponOnController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody CouponOn CouponOn) {
-		int res = this.couponOnService.insertCouponOn(CouponOn);
+		int res = this.couponOnService.insert(CouponOn);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加有效优惠券成功id=" + CouponOn.getId());
@@ -72,7 +71,7 @@ public class CouponOnController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody CouponOn CouponOn) {
-		int res = this.couponOnService.updateCouponOn(CouponOn);
+		int res = this.couponOnService.update(CouponOn);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改有效优惠券信息成功id=" + CouponOn.getId());
@@ -90,7 +89,7 @@ public class CouponOnController {
     Object queryByName(@PathVariable("name")String name) {
 		List<CouponOn> CouponOns = null;
 		//则根据关键字查询
-		CouponOns = this.couponOnService.queryCouponOnByName(name);
+		CouponOns = this.couponOnService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询有效优惠券信息完成");
         return CouponOns;
     }
@@ -100,7 +99,7 @@ public class CouponOnController {
     Object queryAll() {
 		List<CouponOn> CouponOns = null;
 		//则查询返回所有
-		CouponOns = this.couponOnService.queryAllCouponOns();
+		CouponOns = this.couponOnService.queryAll();
 		logger.info("查询所有有效优惠券信息完成");
         return CouponOns;
     }

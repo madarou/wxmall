@@ -32,14 +32,14 @@ public class GiftController {
 	public @ResponseBody Gift get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取奖品信息id=" + id);
-		Gift Gift = (Gift)this.giftService.getGiftById(id);
+		Gift Gift = (Gift)this.giftService.getById(id);
 		return Gift;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.giftService.deleteGift(id);
+        int res = this.giftService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除奖品信息成功id=" + id);
@@ -54,7 +54,7 @@ public class GiftController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Gift Gift) {
-		int res = this.giftService.insertGift(Gift);
+		int res = this.giftService.insert(Gift);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加奖品成功id=" + Gift.getId());
@@ -70,7 +70,7 @@ public class GiftController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Gift Gift) {
-		int res = this.giftService.updateGift(Gift);
+		int res = this.giftService.update(Gift);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改奖品信息成功id=" + Gift.getId());
@@ -88,7 +88,7 @@ public class GiftController {
     Object queryByName(@PathVariable("name")String name) {
 		List<Gift> Gifts = null;
 		//则根据关键字查询
-		Gifts = this.giftService.queryGiftByName(name);
+		Gifts = this.giftService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询奖品信息完成");
         return Gifts;
     }
@@ -98,7 +98,7 @@ public class GiftController {
     Object queryAll() {
 		List<Gift> Gifts = null;
 		//则查询返回所有
-		Gifts = this.giftService.queryAllGifts();
+		Gifts = this.giftService.queryAll();
 		logger.info("查询所有奖品信息完成");
         return Gifts;
     }

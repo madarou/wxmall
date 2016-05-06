@@ -11,16 +11,16 @@ import com.makao.entity.UserPoint;
  */
 public interface IUserPointService {
 
-	com.makao.entity.UserPoint getUserPointById(Integer id);
+	int insert(UserPoint userPoint);
 
-	int deleteUserPoint(Integer id);
+	int update(UserPoint userPoint);
 
-	int insertUserPoint(UserPoint userPoint);
+	List<UserPoint> queryByName(String name);
 
-	int updateUserPoint(UserPoint userPoint);
+	List<UserPoint> queryAll();
 
-	List<UserPoint> queryUserPointByName(String name);
+	UserPoint getById(int id);
 
-	List<UserPoint> queryAllUserPoints();
+	int deleteById(int id);
 
 }

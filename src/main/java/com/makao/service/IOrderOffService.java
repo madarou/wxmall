@@ -11,16 +11,16 @@ import com.makao.entity.OrderOff;
  */
 public interface IOrderOffService {
 
-	com.makao.entity.OrderOff getOrderOffById(Integer id);
+	int insert(OrderOff orderOff);
 
-	int deleteOrderOff(Integer id);
+	int update(OrderOff orderOff);
 
-	int insertOrderOff(OrderOff orderOff);
+	List<OrderOff> queryByName(String name);
 
-	int updateOrderOff(OrderOff orderOff);
+	List<OrderOff> queryAll();
 
-	List<OrderOff> queryOrderOffByName(String name);
+	OrderOff getById(int id);
 
-	List<OrderOff> queryAllOrderOffs();
+	int deleteById(int id);
 
 }

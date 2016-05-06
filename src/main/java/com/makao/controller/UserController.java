@@ -3,24 +3,16 @@ package com.makao.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.makao.entity.Testor;
 import com.makao.entity.User;
 import com.makao.service.IUserService;
 
@@ -48,7 +40,7 @@ public class UserController {
 	public @ResponseBody User get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取人员信息id=" + id);
-		User user = (User)this.userService.getUserById(id);
+		User user = (User)this.userService.getById(id);
 		return user;
 	}
 	
@@ -61,7 +53,7 @@ public class UserController {
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
         //实际删除的代码放这里
-        int res = this.userService.deleteUser(id);
+        int res = this.userService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除人员信息成功id=" + id);
@@ -84,7 +76,7 @@ public class UserController {
     public @ResponseBody
     Object add(@RequestBody User user) {
 		//注册用户的代码
-		int res = this.userService.insertUser(user);
+		int res = this.userService.insert(user);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("注册人员信息成功id=" + user.getId());
@@ -108,7 +100,7 @@ public class UserController {
     public @ResponseBody
     Object update(@RequestBody User user) {
 		//注册用户的代码
-		int res = this.userService.updateUser(user);
+		int res = this.userService.update(user);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改人员信息成功id=" + user.getId());
@@ -131,7 +123,7 @@ public class UserController {
     Object queryByName(@PathVariable("name")String name) {
 		List<User> users = null;
 		//则根据关键字查询
-		users = this.userService.queryUserByName(name);
+		users = this.userService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询人员信息完成");
         return users;
     }
@@ -146,7 +138,7 @@ public class UserController {
     Object queryAll() {
 		List<User> users = null;
 		//则查询返回所有
-		users = this.userService.queryAllUser();
+		users = this.userService.queryAll();
 		logger.info("查询所有人员信息完成");
         return users;
     }

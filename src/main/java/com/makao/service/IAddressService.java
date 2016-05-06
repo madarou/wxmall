@@ -11,16 +11,16 @@ import com.makao.entity.Address;
  */
 public interface IAddressService {
 
-	int insertAddress(Address address);
+	int insert(Address address);
 
-	int updateAddress(Address address);
+	int update(Address address);
 
-	List<Address> queryAddressByName(String name);
+	List<Address> queryByName(String name);
 
-	List<Address> queryAllAddresss();
+	List<Address> queryAll();
 
-	Address getAddressById(Integer id);
+	Address getById(int id);
 
-	int deleteAddress(Integer id);
+	int deleteById(int id);
 
 }

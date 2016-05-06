@@ -32,14 +32,14 @@ public class CityController {
 	public @ResponseBody City get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取城市信息id=" + id);
-		City city = (City)this.cityService.getCityById(id);
+		City city = (City)this.cityService.getById(id);
 		return city;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.cityService.deleteCity(id);
+        int res = this.cityService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除城市信息成功id=" + id);
@@ -55,7 +55,7 @@ public class CityController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody City city) {
-		int res = this.cityService.insertCity(city);
+		int res = this.cityService.insert(city);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加城市成功id=" + city.getId());
@@ -72,7 +72,7 @@ public class CityController {
     public @ResponseBody
     Object update(@RequestBody City city) {
 		//注册用户的代码
-		int res = this.cityService.updateCity(city);
+		int res = this.cityService.update(city);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改城市信息成功id=" + city.getId());
@@ -90,7 +90,7 @@ public class CityController {
     Object queryByName(@PathVariable("name")String name) {
 		List<City> cities = null;
 		//则根据关键字查询
-		cities = this.cityService.queryCityByName(name);
+		cities = this.cityService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询城市信息完成");
         return cities;
     }
@@ -100,7 +100,7 @@ public class CityController {
     Object queryAll() {
 		List<City> cities = null;
 		//则查询返回所有
-		cities = this.cityService.queryAllCities();
+		cities = this.cityService.queryAll();
 		logger.info("查询所有城市信息完成");
         return cities;
     }

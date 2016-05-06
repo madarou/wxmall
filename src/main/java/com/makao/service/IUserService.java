@@ -5,12 +5,12 @@ import java.util.List;
 import com.makao.entity.User;
 
 public interface IUserService {
-	public User getUserById(int userId);
-	public int insertUser(User user);
-	public int deleteUser(int userId);
-	public int updateUser(User user);
-	public List<User> queryAllUser();
-	public List<User> queryUserByName(String name);
+	public User getById(int userId);
+	public int insert(User user);
+	public int deleteById(int userId);
+	public int update(User user);
+	public List<User> queryAll();
+	public List<User> queryByName(String name);
 	
 	public void testor();
 }

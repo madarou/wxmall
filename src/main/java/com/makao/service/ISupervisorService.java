@@ -11,16 +11,16 @@ import com.makao.entity.Supervisor;
  */
 public interface ISupervisorService {
 
-	com.makao.entity.Supervisor getSupervisorById(Integer id);
+	int insert(Supervisor supervisor);
 
-	int deleteSupervisor(Integer id);
+	int update(Supervisor supervisor);
 
-	int insertSupervisor(Supervisor supervisor);
+	List<Supervisor> queryByName(String name);
 
-	int updateSupervisor(Supervisor supervisor);
+	List<Supervisor> queryAll();
 
-	List<Supervisor> querySupervisorByName(String name);
+	Supervisor getById(int id);
 
-	List<Supervisor> queryAllSupervisors();
+	int deleteById(int id);
 
 }

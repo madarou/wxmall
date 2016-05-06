@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Comment;
-import com.makao.entity.Comment;
 import com.makao.service.ICommentService;
 
 /**
@@ -33,14 +32,14 @@ public class CommentController {
 	public @ResponseBody Comment get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取评论信息id=" + id);
-		Comment Comment = (Comment)this.commentService.getCommentById(id);
+		Comment Comment = (Comment)this.commentService.getById(id);
 		return Comment;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.commentService.deleteComment(id);
+        int res = this.commentService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除评论信息成功id=" + id);
@@ -56,7 +55,7 @@ public class CommentController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Comment Comment) {
-		int res = this.commentService.insertComment(Comment);
+		int res = this.commentService.insert(Comment);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加评论成功id=" + Comment.getId());
@@ -72,7 +71,7 @@ public class CommentController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Comment Comment) {
-		int res = this.commentService.updateComment(Comment);
+		int res = this.commentService.update(Comment);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改评论信息成功id=" + Comment.getId());
@@ -90,7 +89,7 @@ public class CommentController {
     Object queryByName(@PathVariable("name")String name) {
 		List<Comment> Comments = null;
 		//则根据关键字查询
-		Comments = this.commentService.queryCommentByName(name);
+		Comments = this.commentService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询评论信息完成");
         return Comments;
     }
@@ -100,7 +99,7 @@ public class CommentController {
     Object queryAll() {
 		List<Comment> Comments = null;
 		//则查询返回所有
-		Comments = this.commentService.queryAllComments();
+		Comments = this.commentService.queryAll();
 		logger.info("查询所有评论信息完成");
         return Comments;
     }

@@ -32,14 +32,14 @@ public class PointController {
 	public @ResponseBody Point get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取积分信息id=" + id);
-		Point Point = (Point)this.pointService.getPointById(id);
+		Point Point = (Point)this.pointService.getById(id);
 		return Point;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.pointService.deletePoint(id);
+        int res = this.pointService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除积分信息成功id=" + id);
@@ -54,7 +54,7 @@ public class PointController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Point Point) {
-		int res = this.pointService.insertPoint(Point);
+		int res = this.pointService.insert(Point);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加积分成功id=" + Point.getId());
@@ -70,7 +70,7 @@ public class PointController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Point Point) {
-		int res = this.pointService.updatePoint(Point);
+		int res = this.pointService.update(Point);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改积分信息成功id=" + Point.getId());
@@ -88,7 +88,7 @@ public class PointController {
     Object queryByName(@PathVariable("name")String name) {
 		List<Point> Points = null;
 		//则根据关键字查询
-		Points = this.pointService.queryPointByName(name);
+		Points = this.pointService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询积分信息完成");
         return Points;
     }
@@ -98,7 +98,7 @@ public class PointController {
     Object queryAll() {
 		List<Point> Points = null;
 		//则查询返回所有
-		Points = this.pointService.queryAllPoints();
+		Points = this.pointService.queryAll();
 		logger.info("查询所有积分信息完成");
         return Points;
     }

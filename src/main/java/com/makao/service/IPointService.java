@@ -11,16 +11,16 @@ import com.makao.entity.Point;
  */
 public interface IPointService {
 
-	com.makao.entity.Point getPointById(Integer id);
+	int insert(Point point);
 
-	int deletePoint(Integer id);
+	int update(Point point);
 
-	int insertPoint(Point point);
+	List<Point> queryByName(String name);
 
-	int updatePoint(Point point);
+	List<Point> queryAll();
 
-	List<Point> queryPointByName(String name);
+	Point getById(int id);
 
-	List<Point> queryAllPoints();
+	int deleteById(int id);
 
 }

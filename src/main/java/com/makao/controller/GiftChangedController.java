@@ -32,14 +32,14 @@ public class GiftChangedController {
 	public @ResponseBody GiftChanged get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取已兑换奖品信息id=" + id);
-		GiftChanged GiftChanged = (GiftChanged)this.giftChangedService.getGiftChangedById(id);
+		GiftChanged GiftChanged = (GiftChanged)this.giftChangedService.getById(id);
 		return GiftChanged;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.giftChangedService.deleteGiftChanged(id);
+        int res = this.giftChangedService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除已兑换奖品信息成功id=" + id);
@@ -54,7 +54,7 @@ public class GiftChangedController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody GiftChanged GiftChanged) {
-		int res = this.giftChangedService.insertGiftChanged(GiftChanged);
+		int res = this.giftChangedService.insert(GiftChanged);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加已兑换奖品成功id=" + GiftChanged.getId());
@@ -70,7 +70,7 @@ public class GiftChangedController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody GiftChanged GiftChanged) {
-		int res = this.giftChangedService.updateGiftChanged(GiftChanged);
+		int res = this.giftChangedService.update(GiftChanged);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改已兑换奖品信息成功id=" + GiftChanged.getId());
@@ -88,7 +88,7 @@ public class GiftChangedController {
     Object queryByName(@PathVariable("name")String name) {
 		List<GiftChanged> GiftChangeds = null;
 		//则根据关键字查询
-		GiftChangeds = this.giftChangedService.queryGiftChangedByName(name);
+		GiftChangeds = this.giftChangedService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询已兑换奖品信息完成");
         return GiftChangeds;
     }
@@ -98,7 +98,7 @@ public class GiftChangedController {
     Object queryAll() {
 		List<GiftChanged> GiftChangeds = null;
 		//则查询返回所有
-		GiftChangeds = this.giftChangedService.queryAllGiftChangeds();
+		GiftChangeds = this.giftChangedService.queryAll();
 		logger.info("查询所有已兑换奖品信息完成");
         return GiftChangeds;
     }

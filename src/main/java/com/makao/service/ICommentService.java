@@ -11,16 +11,16 @@ import com.makao.entity.Comment;
  */
 public interface ICommentService {
 
-	int insertComment(Comment comment);
+	int insert(Comment comment);
 
-	int updateComment(Comment comment);
+	int update(Comment comment);
 
-	List<Comment> queryCommentByName(String name);
+	List<Comment> queryByName(String name);
 
-	List<Comment> queryAllComments();
+	List<Comment> queryAll();
 
-	com.makao.entity.Comment getCommentById(Integer id);
+	Comment getById(int id);
 
-	int deleteComment(Integer id);
+	int deleteById(int id);
 
 }

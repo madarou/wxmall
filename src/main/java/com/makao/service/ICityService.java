@@ -11,16 +11,16 @@ import com.makao.entity.City;
  */
 public interface ICityService {
 
-	int insertCity(City city);
+	int insert(City city);
 
-	int updateCity(City city);
+	int update(City city);
 
-	List<City> queryCityByName(String name);
+	List<City> queryByName(String name);
 
-	List<City> queryAllCities();
+	List<City> queryAll();
 
-	City getCityById(Integer id);
+	City getById(int id);
 
-	int deleteCity(Integer id);
+	int deleteById(int id);
 
 }

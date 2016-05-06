@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Address;
-import com.makao.entity.User;
 import com.makao.service.IAddressService;
 
 /**
@@ -33,14 +32,14 @@ public class AddressController {
 	public @ResponseBody Address get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取地址信息id=" + id);
-		Address address = (Address)this.addressService.getAddressById(id);
+		Address address = (Address)this.addressService.getById(id);
 		return address;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.addressService.deleteAddress(id);
+        int res = this.addressService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除地址信息成功id=" + id);
@@ -56,7 +55,7 @@ public class AddressController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Address Address) {
-		int res = this.addressService.insertAddress(Address);
+		int res = this.addressService.insert(Address);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加地址成功id=" + Address.getId());
@@ -72,7 +71,7 @@ public class AddressController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Address Address) {
-		int res = this.addressService.updateAddress(Address);
+		int res = this.addressService.update(Address);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改地址信息成功id=" + Address.getId());
@@ -90,7 +89,7 @@ public class AddressController {
     Object queryByName(@PathVariable("name")String name) {
 		List<Address> addresses = null;
 		//则根据关键字查询
-		addresses = this.addressService.queryAddressByName(name);
+		addresses = this.addressService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询地址信息完成");
         return addresses;
     }
@@ -100,7 +99,7 @@ public class AddressController {
     Object queryAll() {
 		List<Address> addresses = null;
 		//则查询返回所有
-		addresses = this.addressService.queryAllAddresss();
+		addresses = this.addressService.queryAll();
 		logger.info("查询所有地址信息完成");
         return addresses;
     }

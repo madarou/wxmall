@@ -11,16 +11,16 @@ import com.makao.entity.CouponOn;
  */
 public interface ICouponOnService {
 
-	int insertCouponOn(CouponOn couponOn);
+	int insert(CouponOn couponOn);
 
-	int updateCouponOn(CouponOn couponOn);
+	int update(CouponOn couponOn);
 
-	List<CouponOn> queryCouponOnByName(String name);
+	List<CouponOn> queryByName(String name);
 
-	List<CouponOn> queryAllCouponOns();
+	List<CouponOn> queryAll();
 
-	com.makao.entity.CouponOn getCouponOnById(Integer id);
+	CouponOn getById(int id);
 
-	int deleteCouponOn(Integer id);
+	int deleteById(int id);
 
 }

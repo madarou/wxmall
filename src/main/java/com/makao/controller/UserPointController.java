@@ -32,14 +32,14 @@ public class UserPointController {
 	public @ResponseBody UserPoint get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取用户积分信息id=" + id);
-		UserPoint UserPoint = (UserPoint)this.userPointService.getUserPointById(id);
+		UserPoint UserPoint = (UserPoint)this.userPointService.getById(id);
 		return UserPoint;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.userPointService.deleteUserPoint(id);
+        int res = this.userPointService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除用户积分信息成功id=" + id);
@@ -54,7 +54,7 @@ public class UserPointController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody UserPoint UserPoint) {
-		int res = this.userPointService.insertUserPoint(UserPoint);
+		int res = this.userPointService.insert(UserPoint);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加用户积分成功id=" + UserPoint.getId());
@@ -70,7 +70,7 @@ public class UserPointController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody UserPoint UserPoint) {
-		int res = this.userPointService.updateUserPoint(UserPoint);
+		int res = this.userPointService.update(UserPoint);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改用户积分信息成功id=" + UserPoint.getId());
@@ -88,7 +88,7 @@ public class UserPointController {
     Object queryByName(@PathVariable("name")String name) {
 		List<UserPoint> UserPoints = null;
 		//则根据关键字查询
-		UserPoints = this.userPointService.queryUserPointByName(name);
+		UserPoints = this.userPointService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询用户积分信息完成");
         return UserPoints;
     }
@@ -98,7 +98,7 @@ public class UserPointController {
     Object queryAll() {
 		List<UserPoint> UserPoints = null;
 		//则查询返回所有
-		UserPoints = this.userPointService.queryAllUserPoints();
+		UserPoints = this.userPointService.queryAll();
 		logger.info("查询所有用户积分信息完成");
         return UserPoints;
     }

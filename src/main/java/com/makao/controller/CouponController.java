@@ -32,14 +32,14 @@ public class CouponController {
 	public @ResponseBody Coupon get(@PathVariable("id") Integer id)
 	{
 		logger.info("获取优惠券信息id=" + id);
-		Coupon Coupon = (Coupon)this.couponService.getCouponById(id);
+		Coupon Coupon = (Coupon)this.couponService.getById(id);
 		return Coupon;
 	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
-        int res = this.couponService.deleteCoupon(id);
+        int res = this.couponService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除优惠券信息成功id=" + id);
@@ -55,7 +55,7 @@ public class CouponController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Coupon Coupon) {
-		int res = this.couponService.insertCoupon(Coupon);
+		int res = this.couponService.insert(Coupon);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加优惠券成功id=" + Coupon.getId());
@@ -71,7 +71,7 @@ public class CouponController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Coupon Coupon) {
-		int res = this.couponService.updateCoupon(Coupon);
+		int res = this.couponService.update(Coupon);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("修改优惠券信息成功id=" + Coupon.getId());
@@ -89,7 +89,7 @@ public class CouponController {
     Object queryByName(@PathVariable("name")String name) {
 		List<Coupon> Coupons = null;
 		//则根据关键字查询
-		Coupons = this.couponService.queryCouponByName(name);
+		Coupons = this.couponService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询优惠券信息完成");
         return Coupons;
     }
@@ -99,7 +99,7 @@ public class CouponController {
     Object queryAll() {
 		List<Coupon> Coupons = null;
 		//则查询返回所有
-		Coupons = this.couponService.queryAllCoupons();
+		Coupons = this.couponService.queryAll();
 		logger.info("查询所有优惠券信息完成");
         return Coupons;
     }

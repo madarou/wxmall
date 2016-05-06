@@ -5,17 +5,18 @@ import java.util.List;
 import com.makao.entity.User;
 
 public interface IUserDao {
-    public int deleteByPrimaryKey(Integer id);
 
     public int insert(User user);
 
-    public User selectByPrimaryKey(Integer id);
+    public User getById(int id);
 
     public int update(User user);
     
-    public List<User> queryAllUser();
+    public List<User> queryAll();
     
-    public List<User> queryUserByName(String name);
+    public List<User> queryByName(String name);
 
 	public void testor();
+
+	public int deleteById(int id);
 }
