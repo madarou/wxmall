@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -28,6 +30,7 @@ public class Vendor implements Serializable {
 	private String lastIp;//上次登录ip
 	private Timestamp lastTime;//上次登录时间
 	private String isLock;//账号是否冻结
+	//private Area area;
 	
 	@Id
     @GeneratedValue
@@ -100,4 +103,12 @@ public class Vendor implements Serializable {
 	public void setIsLock(String isLock) {
 		this.isLock = isLock;
 	}
+//	@ManyToOne
+//	@JoinColumn(name="areaId")
+//	public Area getArea() {
+//		return area;
+//	}
+//	public void setArea(Area area) {
+//		this.area = area;
+//	}
 }

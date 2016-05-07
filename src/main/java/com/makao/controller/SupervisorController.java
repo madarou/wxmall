@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
+import com.makao.entity.City;
 import com.makao.entity.Supervisor;
+import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
+import com.makao.service.ICityService;
 import com.makao.service.ISupervisorService;
+import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
 
 /**
@@ -32,6 +36,10 @@ public class SupervisorController {
 	private ISupervisorService supervisorService;
 	@Resource
 	private IAreaService areaService;
+	@Resource
+	private ICityService cityService;
+	@Resource
+	private IVendorService vendorService;
 	
 	/**
 	 * @param userName
@@ -154,20 +162,70 @@ public class SupervisorController {
         return Supervisors;
     }
 	
+	/**
+	 * @param area
+	 * @return
+	 * curl l -H "Content-type: application/json" -X POST -d '{"areaName":"张江","cityName":"上海","catalogs":"水果=食材=零食=省钱","cityId":1}' 'http://localhost:8080/wxmall/supervisor/newarea'
+	 */
 	@RequestMapping(value = "/newarea", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody Area area) {
-		int res = this.supervisorService.insert(Supervisor);
+    Object newArea(@RequestBody Area area) {
+		area.setProductTable(area.getAreaName()+"_"+area.getCityId()+"_product");
+		area.setClosed("no");
+		int res = this.areaService.insert(area);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("增加超级管理员成功id=" + Supervisor.getId());
-        	jsonObject.put("msg", "增加超级管理员成功");
+			logger.info("增加area成功id=" + area.getId());
+        	jsonObject.put("msg", "增加area成功");
 		}
 		else{
-			logger.info("增加超级管理员成功失败id=" + Supervisor.getId());
-        	jsonObject.put("msg", "增加超级管理员失败");
+			logger.info("增加area失败id=" + area.getId());
+        	jsonObject.put("msg", "增加area失败");
 		}
         return jsonObject;
     }
 	
+	/**
+	 * @param city
+	 * @return
+	 * curl l -H "Content-type: application/json" -X POST -d '{"cityName":"上海"}' 'http://localhost:8080/wxmall/supervisor/newcity'
+	 */
+	@RequestMapping(value = "/newcity", method = RequestMethod.POST)
+    public @ResponseBody
+    Object newCity(@RequestBody City city) {
+		int res = this.cityService.insert(city);
+		JSONObject jsonObject = new JSONObject();
+		if(res==0){
+			logger.info("增加city成功id=" + city.getId());
+        	jsonObject.put("msg", "增加city成功");
+		}
+		else{
+			logger.info("增加city失败id=" + city.getId());
+        	jsonObject.put("msg", "增加city失败");
+		}
+        return jsonObject;
+    }
+	
+	/**
+	 * @param vendor
+	 * @return
+	 * curl l -H "Content-type: application/json" -X POST -d '{"userName":"马靠","areaId":1,"cityId":1,"cityArea":"上海张江"}' 'http://localhost:8080/wxmall/supervisor/newvendor'
+	 */
+	@RequestMapping(value = "/newvendor", method = RequestMethod.POST)
+    public @ResponseBody
+    Object newVendor(@RequestBody Vendor vendor) {
+		vendor.setIsLock("no");
+		vendor.setPassword(EncryptUtils.passwordEncryptor.encryptPassword("shygxx"));
+		int res = this.vendorService.insert(vendor);
+		JSONObject jsonObject = new JSONObject();
+		if(res==0){
+			logger.info("增加vendor成功id=" + vendor.getId());
+        	jsonObject.put("msg", "增加vendor成功");
+		}
+		else{
+			logger.info("增加vendor失败id=" + vendor.getId());
+        	jsonObject.put("msg", "增加vendor失败");
+		}
+        return jsonObject;
+    }
 }

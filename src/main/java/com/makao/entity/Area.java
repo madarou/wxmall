@@ -1,11 +1,15 @@
 package com.makao.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -24,6 +28,7 @@ public class Area implements Serializable {
 	private String catalogs;//当前area下的商品类别名称集合，在导航栏显示用，以'名称1=名称2'存储，方便直接展示，因为各area的商品单独放一张product表，表内catalog不会重名
 	private String productTable;//该area对应的商品列表的名字，以areaName+'_'+cityId+'_product'为名称，超级管理员增加该area记录时建表。用cityId不用名还是防止重复城市名和区域名的情况出现
 	private String closed;//当前是否暂停服务，值为'yes'或'no'，关门的可暂不显示，或设为灰色
+	//private List<Vendor> vendors;
 	@Id
 	@GeneratedValue
 	public int getId() {
@@ -74,4 +79,11 @@ public class Area implements Serializable {
 	public void setClosed(String closed) {
 		this.closed = closed;
 	}
+//	@OneToMany(mappedBy="area")
+//	public List<Vendor> getVendors() {
+//		return vendors;
+//	}
+//	public void setVendors(List<Vendor> vendors) {
+//		this.vendors = vendors;
+//	}
 }
