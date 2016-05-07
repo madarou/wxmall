@@ -14,7 +14,7 @@ public interface ISupervisorDao {
     
     public List<Supervisor> queryAll();
     
-    public List<Supervisor> queryByName(String name);
+    public Supervisor queryByName(String userName);
 
 	public void testor();
 

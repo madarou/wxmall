@@ -55,7 +55,7 @@ isDefault(可去掉)	varcar(5)		是否是默认			如果默认地址记录在了
 Vendor(区域卖点用户，登录卖家系统)
 列名				类型				注释				备注
 id				int(11)			
-userName		varchar(30)		
+userName		varchar(30)						唯一，同时用来做登录名		
 password		varchar(30)		登录卖家系统的密码
 avatarUrl		varchar(50)		头像地址			暂时不用
 areaId			int(11)			卖家负责的网点
@@ -68,7 +68,7 @@ isLock			varchar(5)		是否锁定			被超级管理员锁定后不能登录
 Supervisor(超级管理员)
 列名				类型				注释				备注
 id				int(11)
-userName		varchar(30)
+userName		varchar(30)						唯一，同时用来做登录名
 password		varchar(30)
 avatarUrl 		varchar(50)		头像				暂时不用
 lastIp			varchar(30)

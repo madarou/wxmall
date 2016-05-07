@@ -53,7 +53,7 @@ public class User implements Serializable{
 		this.userName = userName;
 	}
 	
-	@Column(length=30)
+	@Column(length=35)
 	public String getPassword() {
 		return password;
 	}

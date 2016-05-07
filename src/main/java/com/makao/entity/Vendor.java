@@ -37,14 +37,14 @@ public class Vendor implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	@Column(length=30)
+	@Column(length=30,unique=true)
 	public String getUserName() {
 		return userName;
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	@Column(length=30)
+	@Column(length=35)
 	public String getPassword() {
 		return password;
 	}

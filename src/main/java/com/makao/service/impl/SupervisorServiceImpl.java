@@ -37,7 +37,7 @@ public class SupervisorServiceImpl implements ISupervisorService {
 		return this.supervisorDao.queryAll();
 	}
 	@Override
-	public List<Supervisor> queryByName(String name) {
+	public Supervisor queryByName(String name) {
 		return this.supervisorDao.queryByName(name);
 	}
 	

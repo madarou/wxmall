@@ -15,7 +15,7 @@ public interface ISupervisorService {
 
 	int update(Supervisor supervisor);
 
-	List<Supervisor> queryByName(String name);
+	Supervisor queryByName(String name);
 
 	List<Supervisor> queryAll();
 
