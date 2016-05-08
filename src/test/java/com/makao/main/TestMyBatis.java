@@ -1,4 +1,4 @@
-package org.zsl.testmybatis;
+package com.makao.main;
 
 import javax.annotation.Resource;
 
