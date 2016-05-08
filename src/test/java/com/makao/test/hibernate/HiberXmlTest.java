@@ -1,4 +1,4 @@
-package com.makao.hibernate;
+package com.makao.test.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -1,4 +1,4 @@
-package com.makao.main;
+package com.makao.test.main;
 
 import javax.annotation.Resource;
 

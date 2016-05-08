@@ -58,13 +58,13 @@ public class SupervisorController {
 	        return jsonObject; 
 		}
 		//密码加密，前端忙，前端加密暂时未作
-		logger.info("超级管理员登录name=" + userName);
+		logger.info("supervisor登录name=" + userName);
 		Supervisor supervisor = this.supervisorService.queryByName(userName);
 		if(supervisor!=null){
 			//if(supervisor.getPassword().equals(encryptedPassword)){
 			if(EncryptUtils.passwordEncryptor.checkPassword(password, supervisor.getPassword())){
 				jsonObject.put("msg", "登录成功");
-				logger.info("超级管理员登录成功name=" + userName);
+				logger.info("supervisor登录成功name=" + userName);
 				jsonObject.put("supervisor", supervisor);//实验表明这里supervisor不需要json化
 			}
 			else{
@@ -77,7 +77,7 @@ public class SupervisorController {
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Supervisor get(@PathVariable("id") Integer id)
 	{
-		logger.info("获取超级管理员信息id=" + id);
+		logger.info("获取supervisor信息id=" + id);
 		Supervisor Supervisor = (Supervisor)this.supervisorService.getById(id);
 		return Supervisor;
 	}
@@ -88,12 +88,12 @@ public class SupervisorController {
         int res = this.supervisorService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("删除超级管理员信息成功id=" + id);
-        	jsonObject.put("msg", "删除超级管理员信息成功");
+			logger.info("删除supervisor信息成功id=" + id);
+        	jsonObject.put("msg", "删除supervisor信息成功");
 		}
 		else{
-			logger.info("删除超级管理员信息失败id=" + id);
-        	jsonObject.put("msg", "删除超级管理员信息失败");
+			logger.info("删除supervisor信息失败id=" + id);
+        	jsonObject.put("msg", "删除supervisor信息失败");
 		}
         return jsonObject;
     }
@@ -111,12 +111,12 @@ public class SupervisorController {
 		int res = this.supervisorService.insert(Supervisor);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("增加超级管理员成功id=" + Supervisor.getId());
-        	jsonObject.put("msg", "增加超级管理员成功");
+			logger.info("增加supervisor成功id=" + Supervisor.getId());
+        	jsonObject.put("msg", "增加supervisor成功");
 		}
 		else{
-			logger.info("增加超级管理员成功失败id=" + Supervisor.getId());
-        	jsonObject.put("msg", "增加超级管理员失败");
+			logger.info("增加supervisor失败id=" + Supervisor.getId());
+        	jsonObject.put("msg", "增加supervisor失败");
 		}
         return jsonObject;
     }
@@ -127,12 +127,12 @@ public class SupervisorController {
 		int res = this.supervisorService.update(Supervisor);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("修改超级管理员信息成功id=" + Supervisor.getId());
-        	jsonObject.put("msg", "修改超级管理员信息成功");
+			logger.info("修改supervisor信息成功id=" + Supervisor.getId());
+        	jsonObject.put("msg", "修改supervisor信息成功");
 		}
 		else{
-			logger.info("修改超级管理员信息失败id=" + Supervisor.getId());
-        	jsonObject.put("msg", "修改超级管理员信息失败");
+			logger.info("修改supervisor信息失败id=" + Supervisor.getId());
+        	jsonObject.put("msg", "修改supervisor信息失败");
 		}
         return jsonObject;
     }
@@ -148,7 +148,7 @@ public class SupervisorController {
 		Supervisor supervisor = null;
 		//则根据关键字查询
 		supervisor = this.supervisorService.queryByName(name);
-		logger.info("根据关键字: '"+name+"' 查询超级管理员信息完成");
+		logger.info("根据关键字: '"+name+"' 查询supervisor信息完成");
         return supervisor;
     }
 	
@@ -158,7 +158,7 @@ public class SupervisorController {
 		List<Supervisor> Supervisors = null;
 		//则查询返回所有
 		Supervisors = this.supervisorService.queryAll();
-		logger.info("查询所有超级管理员信息完成");
+		logger.info("查询所有supervisor信息完成");
         return Supervisors;
     }
 	

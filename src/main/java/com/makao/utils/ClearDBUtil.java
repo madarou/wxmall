@@ -17,23 +17,35 @@ import java.util.Properties;
  * @date 2016年5月8日
  */
 public class ClearDBUtil {
-	private Properties prop = new Properties();
-	Map<String, String> properties_map = readProperties(ClassLoader.getSystemResource("").toString().replaceAll("file:", "").replaceAll("test-classes/", "")+"classes/jdbc.properties");
+	private static Properties prop = new Properties();
+	//public static Map<String, String> properties_map = readProperties(ClassLoader.getSystemResource("").toString().replaceAll("file:", "")+"jdbc.properties");
 	// JDBC driver name and database URL
-	public   final String JDBC_DRIVER = properties_map.get("driverClass");  
-	public   final String DB_URL = properties_map.get("jdbcUrl"); 
+	public static String JDBC_DRIVER = "com.mysql.jdbc.Driver";//properties_map.get("driverClass");  
+	public static String DB_URL = "jdbc:mysql://localhost:3306/wxmall";//properties_map.get("jdbcUrl"); 
 
 	   //  Database credentials
-	public final String USER = properties_map.get("username"); 
-	public final String PASS = properties_map.get("password"); 
+	public static String USER = "root";//properties_map.get("username"); 
+	public static String PASS = "660419";//properties_map.get("password"); 
 	   
 	   public static void main(String[] args) {
-		   ClearDBUtil cd = new ClearDBUtil();
-		   cd.clearDB();
-		   //System.out.println(ClassLoader.getSystemResource("").toString().replaceAll("file:", "").replaceAll("test-classes/", "")+"classes/jdbc.properties");
+		   //ClearDBUtil.dropDBTables("wxmall");
+		   //System.out.println(ClassLoader.getSystemResource("").toString().replaceAll("file:", "")+"jdbc.properties");
 	   }
-	   
-	   public void clearDB(){
+	   public static String test(){
+		   return ClassLoader.getSystemResource("").toString();
+	   }
+	 
+	  /**
+	 * @param databaseName
+	 * 清空databaseName数据库里的所有表，但不删除
+	 */
+	public static void clearDBTables(String databaseName){
+		  
+	  }
+	 /**
+	 * 删除databaseName数据库里的所有表
+	 */
+	public static void dropDBTables(String databaseName){
 		   Connection conn = null;
 		   Statement stmt = null;
 		   try{
@@ -51,7 +63,7 @@ public class ClearDBUtil {
 		      
 		      String sql = "SELECT concat('DROP TABLE IF EXISTS ', table_name, ';')"
 		      		+ " FROM information_schema.tables"
-		      		+ " WHERE table_schema = 'wxmall';";
+		      		+ " WHERE table_schema = '"+databaseName+"';";
 		      ResultSet rs = stmt.executeQuery(sql);
 		      while(rs.next()){
 		    	  System.out.println(rs.getString(1));
@@ -86,7 +98,7 @@ public class ClearDBUtil {
 	   
 
 	   
-	   private Map<String, String> readProperties(String path)
+	   private static Map<String, String> readProperties(String path)
 		{
 			InputStream is;
 			try {
