@@ -29,7 +29,7 @@ public class Vendor implements Serializable {
 	private String	cityArea;//城市名-区域名，方便直接使用
 	private String lastIp;//上次登录ip
 	private Timestamp lastTime;//上次登录时间
-	private String isLock;//账号是否冻结
+	private String isLock="no";//账号是否冻结
 	//private Area area;
 	
 	@Id

@@ -7,8 +7,8 @@ package com.makao.entity;
 public class Product {
 	private int id;
 	private String productName;
-	private String calalog;//商品所属的类别,如水果、食材
-	private String showWay;//商品展示方式,默认值为's'(小图),值为'b'时为大图展示，空值也小图
+	private String catalog;//商品所属的类别,如水果、食材
+	private String showWay="s";//商品展示方式,默认值为's'(小图),值为'b'时为大图展示，空值也小图
 	private String price;//实际卖价
 	private String standard;//商品规格,如'一份250克'
 	private String marketPrice;//对比的超市价格
@@ -23,7 +23,9 @@ public class Product {
 	private int salesVolume;//销量	
 	private int likes;//点赞数
 	private String detailUrl;//详细介绍图片地址
-	private String isShow;//否在商品列表显示	值为'yes'或'no'，与status有区别，是完全不在列表中显示
+	private String isShow="yes";//否在商品列表显示	值为'yes'或'no'，与status有区别，是完全不在列表中显示
+	private int areaId;//所属的网点名，方便直接查找确定其数据库表
+	private int cityId;//同上
 	public int getId() {
 		return id;
 	}
@@ -36,11 +38,11 @@ public class Product {
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	public String getCalalog() {
-		return calalog;
+	public String getCatalog() {
+		return catalog;
 	}
-	public void setCalalog(String calalog) {
-		this.calalog = calalog;
+	public void setCatalog(String catalog) {
+		this.catalog = catalog;
 	}
 	public String getShowWay() {
 		return showWay;
@@ -137,5 +139,17 @@ public class Product {
 	}
 	public void setIsShow(String isShow) {
 		this.isShow = isShow;
+	}
+	public int getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(int areaId) {
+		this.areaId = areaId;
+	}
+	public int getCityId() {
+		return cityId;
+	}
+	public void setCityId(int cityId) {
+		this.cityId = cityId;
 	}
 }

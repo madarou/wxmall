@@ -1,6 +1,6 @@
 ---------
 因为有很多表是动态创建，所以要手动写建表的sql语句:
-AreaName_cityId_product:
+Product_cityId_areaId:
 
 "CREATE TABLE IF NOT EXISTS `"
 				+ tableName
@@ -23,6 +23,8 @@ AreaName_cityId_product:
 						`likes` int(11),
 						`detailUrl` varchar(50),
 						`isShow` varchar(5) DEFAULT 'yes',
+						`areaId` int(11),
+						`cityId` int(11),
 						PRIMARY KEY (`id`))";
 						
 

@@ -95,13 +95,13 @@ productTable	varchar(50)		该area对应的商品列表的名字，以areaName+'_
 								该area记录时建表。用cityId不用名还是防止重复城市名和区域名的情况出现
 closed			varchar(5)		当前是否暂停服务	值为'yes'或'no'，关门的可暂不显示，或设为灰色
 
-AreaName_cityId_product
+Product_cityId_areaId
 列名				类型				注释				备注
 id				int(11)			
 productName		varchar(30)*
 catalog			varchar(50)		商品所属的类别		如水果、食材
 showWay			varchar(2)		商品展示方式		默认值为's'(小图),值为'b'时为大图展示，空值也小图
-price			varchar(10)		商品价格			实际卖价
+price			varchar(10)*	商品价格			实际卖价
 standard		varchar(50)		商品规格			如'一份250克'
 marketPrice		varchar(10)		对比的超市价格
 label			varchar(16)		商品标签			在商品左上角显示的如'新用户专享''绿色食品''小产区'等
@@ -116,6 +116,8 @@ salesVolume		int(11)			销量
 likes			int(11)			点赞数
 detailUrl		varchar(50)		详细介绍图片地址
 isShow			varchar(5)		是否在商品列表显示	值为'yes'(默认)或'no'，与status有区别，是完全不在列表中显示
+areaId			int(11)			所属区域
+cityId			int(11)			所属城市
 
 AreaName_cityId_comment
 列名				类型				注释				备注

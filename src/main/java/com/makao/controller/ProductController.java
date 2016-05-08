@@ -51,6 +51,12 @@ public class ProductController {
 		}
         return jsonObject;
     }
+	
+	/**
+	 * @param Product
+	 * @return
+	 * curl l -H "Content-type: application/json" -X POST -d '{"productName":"海南千禧小番茄","catalog":"水果","price":"12.00","standard":"一份足2斤","marketPrice":"30.00","inventory":12,"sequence":3,"status":"库存紧张","origin":"海南","salesVolume":7637,"likes":3972,"areaId":1,"cityId":1}' 'http://localhost:8080/wxmall/product/new'
+	 */
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Product Product) {
