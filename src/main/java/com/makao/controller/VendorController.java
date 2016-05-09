@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Vendor;
 import com.makao.service.IVendorService;
+import com.makao.utils.EncryptUtils;
 
 /**
  * @description: TODO
@@ -31,7 +32,7 @@ public class VendorController {
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Vendor get(@PathVariable("id") Integer id)
 	{
-		logger.info("获取区域管理员信息id=" + id);
+		logger.info("获取vendor信息id=" + id);
 		Vendor Vendor = (Vendor)this.vendorService.getById(id);
 		return Vendor;
 	}
@@ -42,27 +43,34 @@ public class VendorController {
         int res = this.vendorService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("删除区域管理员信息成功id=" + id);
-        	jsonObject.put("msg", "删除区域管理员信息成功");
+			logger.info("删除vendor信息成功id=" + id);
+        	jsonObject.put("msg", "删除vendor信息成功");
 		}
 		else{
-			logger.info("删除区域管理员信息失败id=" + id);
-        	jsonObject.put("msg", "删除区域管理员信息失败");
+			logger.info("删除vendor信息失败id=" + id);
+        	jsonObject.put("msg", "删除vendor信息失败");
 		}
         return jsonObject;
     }
+	/**
+	 * @param Vendor
+	 * @return
+	 * curl l -H "Content-type: application/json" -X POST -d '{"userName":"马靠","areaId":1,"cityId":1,"cityArea":"上海张江"}' 'http://localhost:8080/wxmall/vendor/new'
+	 */
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody Vendor Vendor) {
-		int res = this.vendorService.insert(Vendor);
+    Object add(@RequestBody Vendor vendor) {
+		vendor.setIsLock("no");
+		vendor.setPassword(EncryptUtils.passwordEncryptor.encryptPassword("shygxx"));
+		int res = this.vendorService.insert(vendor);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("增加区域管理员成功id=" + Vendor.getId());
-        	jsonObject.put("msg", "增加区域管理员成功");
+			logger.info("增加vendor成功id=" + vendor.getId());
+        	jsonObject.put("msg", "增加vendor成功");
 		}
 		else{
-			logger.info("增加区域管理员成功失败id=" + Vendor.getId());
-        	jsonObject.put("msg", "增加区域管理员失败");
+			logger.info("增加vendor成功失败id=" + vendor.getId());
+        	jsonObject.put("msg", "增加vendor失败");
 		}
         return jsonObject;
     }
@@ -73,12 +81,12 @@ public class VendorController {
 		int res = this.vendorService.update(Vendor);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("修改区域管理员信息成功id=" + Vendor.getId());
-        	jsonObject.put("msg", "修改区域管理员信息成功");
+			logger.info("修改vendor信息成功id=" + Vendor.getId());
+        	jsonObject.put("msg", "修改vendor信息成功");
 		}
 		else{
-			logger.info("修改区域管理员信息失败id=" + Vendor.getId());
-        	jsonObject.put("msg", "修改区域管理员信息失败");
+			logger.info("修改vendor信息失败id=" + Vendor.getId());
+        	jsonObject.put("msg", "修改vendor信息失败");
 		}
         return jsonObject;
     }
@@ -89,7 +97,7 @@ public class VendorController {
 		List<Vendor> Vendors = null;
 		//则根据关键字查询
 		Vendors = this.vendorService.queryByName(name);
-		logger.info("根据关键字: '"+name+"' 查询区域管理员信息完成");
+		logger.info("根据关键字: '"+name+"' 查询vendor信息完成");
         return Vendors;
     }
 	
@@ -99,7 +107,7 @@ public class VendorController {
 		List<Vendor> Vendors = null;
 		//则查询返回所有
 		Vendors = this.vendorService.queryAll();
-		logger.info("查询所有区域管理员信息完成");
+		logger.info("查询所有vendor信息完成");
         return Vendors;
     }
 }

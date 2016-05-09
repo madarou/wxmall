@@ -19,4 +19,6 @@ public interface IProductDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	public List<Product> queryByCityAreaId(String cityId, String areaId);
 }

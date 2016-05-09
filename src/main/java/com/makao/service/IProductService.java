@@ -23,4 +23,6 @@ public interface IProductService {
 
 	int deleteById(int id);
 
+	List<Product> queryByCityAreaId(String cityId, String areaId);
+
 }

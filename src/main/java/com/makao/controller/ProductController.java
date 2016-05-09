@@ -63,11 +63,11 @@ public class ProductController {
 		int res = this.productService.insert(Product);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("增加商品成功id=" + Product.getId());
+			logger.info("增加商品成功name=" + Product.getProductName());
         	jsonObject.put("msg", "增加商品成功");
 		}
 		else{
-			logger.info("增加商品成功失败id=" + Product.getId());
+			logger.info("增加商品成功失败name=" + Product.getProductName());
         	jsonObject.put("msg", "增加商品失败");
 		}
         return jsonObject;
@@ -96,6 +96,22 @@ public class ProductController {
 		//则根据关键字查询
 		Products = this.productService.queryByName(name);
 		logger.info("根据关键字: '"+name+"' 查询商品信息完成");
+        return Products;
+    }
+	
+	/**
+	 * @param areaId
+	 * @return
+	 * 根据cityId和areaId查出所有商品，即到指定的Product_cityId_areaId表里查
+	 * curl -X GET 'http://localhost:8080/wxmall/product/query/1/1'
+	 */
+	@RequestMapping(value = "/query/{cityId:\\d+}/{areaId:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object queryByCityAreaId(@PathVariable("cityId")String cityId,@PathVariable("areaId")String areaId) {
+		List<Product> Products = null;
+		//则根据关键字查询
+		Products = this.productService.queryByCityAreaId(cityId,areaId);
+		logger.info("根据关键字: '"+areaId+"' 查询商品信息完成");
         return Products;
     }
 	

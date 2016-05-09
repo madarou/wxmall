@@ -11,6 +11,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -19,7 +20,7 @@ import net.sf.json.JSONObject;
  * @date 2016年5月8日
  */
 public class HttpUtils {
-	public static JSONObject doGetStr(String url){
+	public static JSONObject doGetObject(String url){
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(url);
 		JSONObject jsonObject = null;
@@ -37,6 +38,26 @@ public class HttpUtils {
 			e.printStackTrace();
 		}
 		return jsonObject;
+	}
+	
+	public static JSONArray doGetArray(String url){
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpGet httpGet = new HttpGet(url);
+		JSONArray jsonArray = null;
+		try {
+			//执行http get请求，并获得response
+			HttpResponse response = httpClient.execute(httpGet);
+			HttpEntity entity = response.getEntity();
+			if(entity != null){
+				String result = EntityUtils.toString(entity,"UTF-8");
+				jsonArray = JSONArray.fromObject(result);
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return jsonArray;
 	}
 	
 	public static JSONObject doPostStr(String url, String outStr){

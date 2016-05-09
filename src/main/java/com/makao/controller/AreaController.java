@@ -31,7 +31,7 @@ public class AreaController {
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Area get(@PathVariable("id") Integer id)
 	{
-		logger.info("获取区域信息id=" + id);
+		logger.info("获取area信息id=" + id);
 		Area Area = (Area)this.areaService.getById(id);
 		return Area;
 	}
@@ -42,28 +42,35 @@ public class AreaController {
         int res = this.areaService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("删除区域信息成功id=" + id);
-        	jsonObject.put("msg", "删除区域信息成功");
+			logger.info("删除area信息成功id=" + id);
+        	jsonObject.put("msg", "删除area信息成功");
 		}
 		else{
-			logger.info("删除区域信息失败id=" + id);
-        	jsonObject.put("msg", "删除区域信息失败");
+			logger.info("删除area信息失败id=" + id);
+        	jsonObject.put("msg", "删除area信息失败");
 		}
         return jsonObject;
     }
 	
+	/**
+	 * @param Area
+	 * @return
+	 * curl l -H "Content-type: application/json" -X POST -d '{"areaName":"张江","cityName":"上海","catalogs":"水果=食材=零食=省钱","cityId":1}' 'http://localhost:8080/wxmall/area/new'
+	 */
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody Area Area) {
-		int res = this.areaService.insert(Area);
+    Object add(@RequestBody Area area) {
+		area.setProductTable(area.getAreaName()+"_"+area.getCityId()+"_product");
+		area.setClosed("no");
+		int res = this.areaService.insert(area);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("增加区域成功id=" + Area.getId());
-        	jsonObject.put("msg", "增加区域成功");
+			logger.info("增加area成功id=" + area.getId());
+        	jsonObject.put("msg", "增加area成功");
 		}
 		else{
-			logger.info("增加区域成功失败id=" + Area.getId());
-        	jsonObject.put("msg", "增加区域失败");
+			logger.info("增加area成功失败id=" + area.getId());
+        	jsonObject.put("msg", "增加area失败");
 		}
         return jsonObject;
     }
@@ -74,12 +81,12 @@ public class AreaController {
 		int res = this.areaService.update(Area);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("修改区域信息成功id=" + Area.getId());
-        	jsonObject.put("msg", "修改区域信息成功");
+			logger.info("修改area信息成功id=" + Area.getId());
+        	jsonObject.put("msg", "修改area信息成功");
 		}
 		else{
-			logger.info("修改区域信息失败id=" + Area.getId());
-        	jsonObject.put("msg", "修改区域信息失败");
+			logger.info("修改area信息失败id=" + Area.getId());
+        	jsonObject.put("msg", "修改area信息失败");
 		}
         return jsonObject;
     }
@@ -90,7 +97,7 @@ public class AreaController {
 		List<Area> areas = null;
 		//则根据关键字查询
 		areas = this.areaService.queryByName(name);
-		logger.info("根据关键字: '"+name+"' 查询区域信息完成");
+		logger.info("根据关键字: '"+name+"' 查询area信息完成");
         return areas;
     }
 	
@@ -100,7 +107,7 @@ public class AreaController {
 		List<Area> areas = null;
 		//则查询返回所有
 		areas = this.areaService.queryAll();
-		logger.info("查询所有区域信息完成");
+		logger.info("查询所有area信息完成");
         return areas;
     }
 }

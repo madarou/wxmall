@@ -40,6 +40,10 @@ public class ProductServiceImpl implements IProductService {
 	public List<Product> queryByName(String name) {
 		return this.productDao.queryByName(name);
 	}
+	@Override
+	public List<Product> queryByCityAreaId(String cityId, String areaId) {
+		return this.productDao.queryByCityAreaId(cityId,areaId);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -28,13 +28,13 @@ public class NewProductTest {
 		String newsupervisor = "http://localhost:8080/wxmall/supervisor/new";
 		String supervisor = "{\"userName\":\"darou\",\"password\":\"test\"}";
 		
-		String newcity = "http://localhost:8080/wxmall/supervisor/newcity";
+		String newcity = "http://localhost:8080/wxmall/city/new";
 		String city = "{\"cityName\":\"上海\"}";
 		
-		String newarea = "http://localhost:8080/wxmall/supervisor/newarea";
+		String newarea = "http://localhost:8080/wxmall/area/new";
 		String area = "{\"areaName\":\"张江\",\"cityName\":\"上海\",\"catalogs\":\"水果=食材=零食=省钱\",\"cityId\":1}";
 		
-		String newvendor = "http://localhost:8080/wxmall/supervisor/newvendor";
+		String newvendor = "http://localhost:8080/wxmall/vendor/new";
 		String vendor = "{\"userName\":\"马靠\",\"areaId\":1,\"cityId\":1,\"cityArea\":\"上海张江\"}";
 		
 		String newprodcut = "http://localhost:8080/wxmall/product/new";

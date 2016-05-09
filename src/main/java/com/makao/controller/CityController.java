@@ -31,7 +31,7 @@ public class CityController {
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody City get(@PathVariable("id") Integer id)
 	{
-		logger.info("获取城市信息id=" + id);
+		logger.info("获取city信息id=" + id);
 		City city = (City)this.cityService.getById(id);
 		return city;
 	}
@@ -42,28 +42,33 @@ public class CityController {
         int res = this.cityService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("删除城市信息成功id=" + id);
-        	jsonObject.put("msg", "删除城市信息成功");
+			logger.info("删除city信息成功id=" + id);
+        	jsonObject.put("msg", "删除city信息成功");
 		}
 		else{
-			logger.info("删除城市信息失败id=" + id);
-        	jsonObject.put("msg", "删除城市信息失败");
+			logger.info("删除city信息失败id=" + id);
+        	jsonObject.put("msg", "删除city信息失败");
 		}
         return jsonObject;
     }
 	
+	/**
+	 * @param city
+	 * @return
+	 * curl l -H "Content-type: application/json" -X POST -d '{"cityName":"上海"}' 'http://localhost:8080/wxmall/city/new'
+	 */
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody City city) {
 		int res = this.cityService.insert(city);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("增加城市成功id=" + city.getId());
-        	jsonObject.put("msg", "增加城市成功");
+			logger.info("增加city成功id=" + city.getId());
+        	jsonObject.put("msg", "增加city成功");
 		}
 		else{
-			logger.info("增加城市成功失败id=" + city.getId());
-        	jsonObject.put("msg", "增加城市失败");
+			logger.info("增加city成功失败id=" + city.getId());
+        	jsonObject.put("msg", "增加city失败");
 		}
         return jsonObject;
     }
@@ -75,12 +80,12 @@ public class CityController {
 		int res = this.cityService.update(city);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("修改城市信息成功id=" + city.getId());
-        	jsonObject.put("msg", "修改城市信息成功");
+			logger.info("修改city信息成功id=" + city.getId());
+        	jsonObject.put("msg", "修改city信息成功");
 		}
 		else{
-			logger.info("修改城市信息失败id=" + city.getId());
-        	jsonObject.put("msg", "修改城市信息失败");
+			logger.info("修改city信息失败id=" + city.getId());
+        	jsonObject.put("msg", "修改city信息失败");
 		}
         return jsonObject;
     }
@@ -91,7 +96,7 @@ public class CityController {
 		List<City> cities = null;
 		//则根据关键字查询
 		cities = this.cityService.queryByName(name);
-		logger.info("根据关键字: '"+name+"' 查询城市信息完成");
+		logger.info("根据关键字: '"+name+"' 查询city信息完成");
         return cities;
     }
 	
@@ -101,7 +106,7 @@ public class CityController {
 		List<City> cities = null;
 		//则查询返回所有
 		cities = this.cityService.queryAll();
-		logger.info("查询所有城市信息完成");
+		logger.info("查询所有city信息完成");
         return cities;
     }
 }
