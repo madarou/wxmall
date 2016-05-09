@@ -19,7 +19,7 @@ public interface IProductService {
 
 	List<Product> queryAll();
 
-	Product getById(int id);
+	Product getById(int id, int cityId, int areaId);
 
 	int deleteById(int id);
 

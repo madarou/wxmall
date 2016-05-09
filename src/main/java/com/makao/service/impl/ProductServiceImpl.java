@@ -14,8 +14,8 @@ import com.makao.service.IProductService;
 public class ProductServiceImpl implements IProductService {
 	@Resource
 	private IProductDao productDao;
-	public Product getById(int id) {
-		return this.productDao.getById(id);
+	public Product getById(int id, int cityId, int areaId) {
+		return this.productDao.getById(id, cityId, areaId);
 	}
 	@Override
 	public int insert(Product product) {

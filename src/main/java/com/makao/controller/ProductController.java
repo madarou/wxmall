@@ -28,11 +28,18 @@ public class ProductController {
 	@Resource
 	private IProductService productService;
 	
-	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
-	public @ResponseBody Product get(@PathVariable("id") Integer id)
+	/**
+	 * @param id
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * curl -X GET 'http://localhost:8080/wxmall/product/1/1/1'
+	 */
+	@RequestMapping(value="/{id:\\d+}/{cityId:\\d+}/{areaId:\\d+}",method = RequestMethod.GET)
+	public @ResponseBody Product get(@PathVariable("id") int id,@PathVariable("cityId") int cityId,@PathVariable("areaId") int areaId)
 	{
 		logger.info("获取商品信息id=" + id);
-		Product Product = (Product)this.productService.getById(id);
+		Product Product = (Product)this.productService.getById(id,cityId,areaId);
 		return Product;
 	}
 	

@@ -8,7 +8,7 @@ public interface IProductDao {
 
     public int insert(Product product);
 
-    public Product getById(int id);
+    public Product getById(int id, int cityId, int areaId);
 
     public int update(Product product);
     

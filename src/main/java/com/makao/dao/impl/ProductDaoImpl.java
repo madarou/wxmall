@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -87,9 +88,65 @@ public class ProductDaoImpl implements IProductDao {
 	}
 
 	@Override
-	public Product getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Product getById(int id, int cityId, int areaId) {
+		String tableName = "Product_"+cityId+"_"+areaId;
+		String sql = "SELECT * FROM `"
+				+ tableName
+				+ "` WHERE id = ?";
+		Session session = null;
+		Transaction tx = null;
+		List<Product> products = new ArrayList<Product>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.setInt(1, id);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							Product p = new Product();
+							p.setId(rs.getInt("id"));
+							p.setCatalog(rs.getString("catalog"));
+							p.setShowWay(rs.getString("showWay"));
+							p.setPrice(rs.getString("price"));
+							p.setStandard(rs.getString("standard"));
+							p.setMarketPrice(rs.getString("marketPrice"));
+							p.setLabel(rs.getString("label"));
+							p.setCoverSUrl(rs.getString("coverSUrl"));
+							p.setCoverBUrl(rs.getString("coverBUrl"));
+							p.setInventory(rs.getInt("inventory"));
+							p.setSequence(rs.getInt("sequence"));
+							p.setStatus(rs.getString("status"));
+							p.setDescription(rs.getString("description"));
+							p.setOrigin(rs.getString("origin"));
+							p.setSalesVolume(rs.getInt("salesVolume"));
+							p.setLikes(rs.getInt("likes"));
+							p.setDetailUrl(rs.getString("detailUrl"));
+							p.setIsShow(rs.getString("isShow"));
+							p.setAreaId(rs.getInt("areaId"));
+							p.setCityId(rs.getInt("cityId"));
+							products.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}	
+				}
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return products.size()>0 ? products.get(0) : null;
 	}
 
 	@Override
@@ -166,7 +223,7 @@ public class ProductDaoImpl implements IProductDao {
 							res.add(p);
 						}
 					}finally{
-						
+						doClose(ps);
 					}
 					
 				}
