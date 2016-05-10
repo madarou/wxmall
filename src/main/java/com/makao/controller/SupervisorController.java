@@ -3,6 +3,8 @@ package com.makao.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -48,7 +50,7 @@ public class SupervisorController {
 	 * curl l -H "Content-type: application/json" -X POST -d '{"userName":"darou","password":"test"}' 'http://localhost:8080/wxmall/supervisor/login'
 	 */
 	@RequestMapping(value="/login", method = RequestMethod.POST)
-	public @ResponseBody Object login(@RequestBody JSONObject paramObject)
+	public @ResponseBody Object login(@RequestBody JSONObject paramObject, HttpSession session)
 	{
 		String userName = paramObject.getString("userName");
 		String password = paramObject.getString("password");
@@ -64,6 +66,9 @@ public class SupervisorController {
 			//if(supervisor.getPassword().equals(encryptedPassword)){
 			if(EncryptUtils.passwordEncryptor.checkPassword(password, supervisor.getPassword())){
 				jsonObject.put("msg", "登录成功");
+				//session.setAttribute("supervisor", "sss");
+				session.getServletContext().setAttribute("supervisor", "1");
+				System.out.println(session.getServletContext().getAttribute("supervisor"));
 				logger.info("supervisor登录成功name=" + userName);
 				jsonObject.put("supervisor", supervisor);//实验表明这里supervisor不需要json化
 			}
