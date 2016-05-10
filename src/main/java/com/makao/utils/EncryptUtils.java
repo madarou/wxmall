@@ -14,6 +14,7 @@ import org.jasypt.util.password.BasicPasswordEncryptor;
  * @description: TODO
  * @author makao
  * @date 2016年5月7日
+ * 使用基本的BasicPasswordEncryptor来为密码加密
  */
 public class EncryptUtils {
 	public static BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
