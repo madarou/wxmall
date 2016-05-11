@@ -2,6 +2,8 @@ package com.makao.auth;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,16 +31,13 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
  * 		对于访问Supervisor专用接口注解的url，出上面的检查外，还要必须是supervisor身份
  */
 public class AuthInterceptor extends HandlerInterceptorAdapter {
-	private static Map<String , String> viewUrls = new HashMap<String , String>(); 
-	static  
-    {  
-        viewUrls.put("/user/regc/brandregnamecard/", "GET");  
-        viewUrls.put("/user/regc/regnamecard/", "GET");  
-    } 
+	private final long token_pirate_interval = 86400000;//token有效时间，暂设置为1天
+
 	@Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		String url = request.getRequestURI();  
+		String url = request.getRequestURI();//获取到的是/product/1这类地址
         String method = request.getMethod();
+
         //if(handler.getClass().isAssignableFrom(HandlerMethod.class)){
         	System.out.println("***********拦截器if************");
             AuthPassport authPassport = ((HandlerMethod) handler).getMethodAnnotation(AuthPassport.class);
@@ -48,17 +47,47 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 return true;
             else{                
                 //在这里实现自己的权限验证逻辑，这里模拟从servletContext中获取supervisor的登录信息
-            	Object o = request.getServletContext().getAttribute("supervisor");
-            	System.out.println("********从request中获取:"+o+"********");
-                if(o!=null)//如果验证成功返回true
-                    return true;
-                else//如果验证失败
-                {
-                    //返回到登录界面
-                    response.sendRedirect("login");
-                    return false;
-                }       
+            	//Object o = request.getServletContext().getAttribute("supervisor");
+            	
+            	//截取到请求地址的前几位，判断是supervisor登录还是vendor登录，从而定向对应登录页面让其重新登录
+        		//返回到登录界面
+            	String role = url.substring(getCharacterPosition(url,2),getCharacterPosition(url,3));
+        		String loginUrl = role + "login";
+            	//开始验证token
+            	//从header中获取token
+            	String token = request.getHeader("token");
+            	if(token==null || "".equals(token.trim())){//如果token为空
+               		//返回到登录界面
+                    response.sendRedirect(loginUrl);
+            		return false;
+            	}
+            	else{//如果token不为空
+            		Long loginTime = (Long)request.getServletContext().getAttribute(token);//登录时设置的时间
+            		if(loginTime==null){
+            			response.sendRedirect(loginUrl);
+                		return false;
+            		}
+            		if(System.currentTimeMillis()-loginTime > token_pirate_interval){//超过了有效期
+            			response.sendRedirect(loginUrl);
+                		return false;
+            		}
+            		if("s".equals(token.substring(token.length()-1))){
+            			if(!"/supervisor".equals(role)){//因为role前面还有个/
+            				//如果角色不对，禁止访问
+            				response.sendRedirect(loginUrl);
+                    		return false;
+            			}
+            		}
+            		if("v".equals(token.substring(token.length()-1))){
+            			if(!"/vendor".equals(role)){//因为role前面还有个/
+            				//如果角色不对，禁止访问
+            				response.sendRedirect(loginUrl);
+                    		return false;
+            			}
+            		}
+            	}     
             }
+            return true;
         //}
 //        else{
 //        	System.out.println("***********拦截器else************");
@@ -66,4 +95,24 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 //            return false;   
 //        }
      }
+	
+	/**
+	 * @param string
+	 * @param position
+	 * @return
+	 * 在string里找'/'第position次出现的坐标
+	 */
+	private static int getCharacterPosition(String string, int position){
+	    //这里是获取"/"符号的位置
+	    Matcher slashMatcher = Pattern.compile("/").matcher(string);
+	    int mIdx = 0;
+	    while(slashMatcher.find()) {
+	       mIdx++;
+	       //当"/"符号第三次出现的位置
+	       if(mIdx == position){
+	          break;
+	       }
+	    }
+	    return slashMatcher.start();
+	 }
 }

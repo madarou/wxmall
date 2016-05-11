@@ -30,11 +30,15 @@ public class TestMyBatis {
 //		userService = (IUserService) ac.getBean("userService");
 //	}
 
+//	@Test
+//	public void test1() {
+//		User user = userService.getById(1);
+//		// System.out.println(user.getUserName());
+//		// logger.info("值："+user.getUserName());
+//		logger.info(JSON.toJSONString(user));
+//	}
 	@Test
-	public void test1() {
-		User user = userService.getById(1);
-		// System.out.println(user.getUserName());
-		// logger.info("值："+user.getUserName());
-		logger.info(JSON.toJSONString(user));
+	public void test(){
+		System.out.println(System.currentTimeMillis());
 	}
 }
