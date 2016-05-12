@@ -73,12 +73,13 @@ public class SupervisorController {
 				//生成token
 				
 				String tokenstring = TokenUtils.setToken("supervisor");
-				//在放在header中返回给用户作为下次登录的凭证
-				response.setHeader("token", tokenstring);
+				//在放在header中返回给用户作为下次登录的凭证，这里不放到header中，因为这里只返回response body，所以还是放到jsonObject中
+				//response.setHeader("token", tokenstring);
 				//将生成的的token信息放到服务器缓存中，同时记录他这次登录的时间，用于定时失效
 				request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
 				logger.info("supervisor登录成功name=" + userName);
 				jsonObject.put("supervisor", supervisor);//实验表明这里supervisor不需要json化
+				jsonObject.put("token", tokenstring);
 			}
 			else{
 				jsonObject.put("msg", "密码错误");

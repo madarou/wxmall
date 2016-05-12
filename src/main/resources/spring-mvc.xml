@@ -11,6 +11,12 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
 	<context:component-scan base-package="com.makao.controller" />
+	
+	<!-- <mvc:resources location="/WEB-INF/html" mapping="/**/*.html"/>
+	<mvc:resources location="/WEB-INF/html/js" mapping="/**/*.js"/>
+	<mvc:resources location="/WEB-INF/html/css" mapping="/**/*.css"/>
+	<mvc:resources location="/WEB-INF/html/images" mapping="/**/*.png"/>
+	<mvc:resources location="/WEB-INF/html/images" mapping="/**/*.jpg"/> -->
 	<!--避免IE执行AJAX时，返回JSON出现下载文件 -->
 	<!-- <bean id="mappingJacksonHttpMessageConverter"
 		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
@@ -30,6 +36,29 @@
         </list>  
     	</property> 
 	</bean> 
+
+	<!--  <mvc:annotation-driven /> -->
+	<!-- 这种通配符*好像无效，必须一个一个配置
+	<mvc:resources mapping="/*/static/**" location="/WEB-INF/static/" /> -->
+	<mvc:resources mapping="/address/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/area/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/city/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/comment/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/coupon/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/couponOff/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/couponOn/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/giftChanged/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/loginLog/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOn/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/point/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/product/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/supervisor/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/test/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/user/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/userPoint/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/vendor/static/**" location="/WEB-INF/static/" />
+   	<mvc:default-servlet-handler/>
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">  
     <property name="messageConverters">  
         <list>  
@@ -48,8 +77,8 @@
 	<!-- 定义跳转的文件的前后缀 ，视图模式配置-->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<!-- 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 -->
-		<property name="prefix" value="/WEB-INF/jsp/" />
-		<property name="suffix" value=".jsp" />
+		<property name="prefix" value="/WEB-INF/html/" />
+		<property name="suffix" value=".html" />
 	</bean>
 	
 	<!-- 配置文件上传，如果没有使用文件上传可以不用配置，当然如果不配，那么配置文件中也不必引入上传组件包 -->
@@ -89,4 +118,5 @@
 	    如果不定义 mvc:mapping path 将拦截所有的URL请求
 	    <bean class="com.makao.auth.AuthInterceptor"></bean>
 	</mvc:interceptors> -->
+	
 </beans>

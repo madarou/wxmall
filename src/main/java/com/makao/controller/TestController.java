@@ -15,6 +15,15 @@ import com.makao.auth.AuthPassport;
 @Controller
 @RequestMapping("/test")
 public class TestController {
+	@RequestMapping(value="/supervisor")
+	public String supervisor(){
+		return "supervisor_index";
+	}
+	
+	@RequestMapping(value="/vendor")
+	public String vendor(){
+		return "vendor_index";
+	}
 	@RequestMapping(value="/login", method = {RequestMethod.GET})
     public ModelAndView login(){
 		ModelAndView modelAndView = new ModelAndView();  
@@ -32,4 +41,5 @@ public class TestController {
 	    modelAndView.setViewName("index");  
 	    return modelAndView;
 	}
+	
 }

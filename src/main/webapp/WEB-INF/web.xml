@@ -45,6 +45,23 @@
 		  <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>  
 	 </listener>
 
+<!-- 	<servlet-mapping>   
+    <servlet-name>default</servlet-name>  
+    <url-pattern>*.jpg</url-pattern>     
+</servlet-mapping> 
+<servlet-mapping>   
+    <servlet-name>default</servlet-name>  
+    <url-pattern>*.png</url-pattern>     
+</servlet-mapping>  
+<servlet-mapping>       
+    <servlet-name>default</servlet-name>    
+    <url-pattern>*.js</url-pattern>    
+</servlet-mapping>    
+<servlet-mapping>        
+    <servlet-name>default</servlet-name>       
+    <url-pattern>*.css</url-pattern>      
+</servlet-mapping>
+	 -->
 	<!-- Spring MVC servlet -->
 	<servlet>
 		<servlet-name>SpringMVC</servlet-name>
@@ -62,7 +79,7 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
-		<welcome-file>/index.jsp</welcome-file>
+		<welcome-file>/index.html</welcome-file>
 	</welcome-file-list>
 	<!-- 配置SESSION超时，单位是分钟 -->
 	<session-config>
