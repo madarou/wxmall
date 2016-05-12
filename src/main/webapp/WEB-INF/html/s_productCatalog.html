@@ -99,7 +99,7 @@
      <script>
      $(document).ready(function(){
 		 //弹出文本性提示框
-		 $("#showPopTxt").click(function(){
+		 $(".popAdd").click(function(){
 			 $(".pop_bg").fadeIn();
 			 });
 		 //弹出：确认按钮
@@ -182,7 +182,7 @@
      <!-- 搜索 -->
      <section style="text-align:right">
       <div class="btm_btn">
-        <input type="button" value="添加分类" class="input_btn trueBtn"/>
+        <input type="button" value="添加分类" class="input_btn trueBtn popAdd"/>
        </div>
      </section><br/>
 
@@ -190,12 +190,14 @@
       <table class="table">
        <tr>
         <th>分类名称</th>
+        <th>排序</th>
         <th>操作</th>
        </tr>
        <tr>
-        <td><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
+        <td></td>
+        <td></td>
         <td style="text-align:center">
-           <button class="linkStyle" id="showPopTxt">编辑</button>|
+           <button class="linkStyle popAdd" id="showPopTxt">编辑</button>|
            <button class="linkStyle" id="delPopTxt">删除</button>
         </td>
        </tr>
