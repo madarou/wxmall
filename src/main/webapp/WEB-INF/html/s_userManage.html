@@ -5,11 +5,7 @@
 <title>超级管理员系统</title>
 <meta name="author" content="DeathGhost" />
 <link rel="stylesheet" type="text/css" href="static/css/style.css" />
-<style type="text/css">
-    .btm_btn{text-align: center;}
-    .btm_btn .input_btn{display:inline-block;height:35px;border:none;background:none;padding:0 20px;}
-    .btm_btn .trueBtn{background:#19a97b;color:white;border:1px #19a97b solid;border-radius:2px;}
-</style>
+<style type="text/css">td{text-align: center;}</style>
 <!--[if lt IE 9]>
 <script src="static/js/html5.js"></script>
 <![endif]-->
@@ -67,13 +63,13 @@
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
     <dd><a href="s_productList.html">商品列表</a></dd>
-    <dd><a href="s_productCatalog.html" class="active">商品分类</a></dd>
+    <dd><a href="s_productCatalog.html">商品分类</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="s_userManage.html">会员中心</a></dd>
+    <dd><a href="s_userManage.html" class="active">会员中心</a></dd>
    </dl>
   </li>
   <li>
@@ -103,11 +99,11 @@
 			 $(".pop_bg").fadeIn();
 			 });
 		 //弹出：确认按钮
-		 $("#saveBtn").click(function(){
+		 $(".trueBtn").click(function(){
 			 $(".pop_bg").fadeOut();
 			 });
 		 //弹出：取消或关闭按钮
-		 $("#cancelBtn").click(function(){
+		 $(".falseBtn").click(function(){
 			 $(".pop_bg").fadeOut();
 			 });
 		 });
@@ -115,88 +111,58 @@
      <section class="pop_bg">
       <div class="pop_cont">
        <!--title-->
-       <h3>添加分类</h3>
+       <h3>修改会员信息</h3>
        <!--content-->
        <div class="pop_cont_input">
-        <ul>
-         <li>
-          <span>分类名称</span>
-          <input type="text" placeholder="如'水果'" class="textbox"/>
-         </li>
-         <li>
-          <span class="ttl">排&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序</span>
-          <input type="text" placeholder="请填写整数，从大到小排序" class="textbox"/>
-         </li>
-        </ul>
+          <ul>
+           <li>
+            <span>会员姓名</span>
+            <input type="text" placeholder="" class="textbox"/>
+           </li>
+           <li>
+            <span class="ttl">联系电话</span>
+            <input type="text" placeholder="" class="textbox"/>
+           </li>
+           <li>
+            <span class="ttl">会员积分</span>
+            <input type="text" placeholder="" class="textbox"/>
+           </li>
+           <li>
+            <span class="ttl">详细地址</span>
+            <input type="text" placeholder="" class="textbox"/>
+           </li>
+          </ul>
        </div>
        <!--以pop_cont_text分界-->
-       <div class="pop_cont_text">
-        这里是文字性提示信息！
-       </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
-        <input type="button" value="保存" id="saveBtn" class="input_btn trueBtn"/>
-        <input type="button" value="取消" id="cancelBtn" class="input_btn falseBtn"/>
+        <input type="button" value="确定" class="input_btn trueBtn"/>
+        <input type="button" value="关闭" class="input_btn falseBtn"/>
        </div>
       </div>
      </section>
      <!--结束：弹出框效果-->
 
-     <!-- 删除分类弹出框 -->
-     <!--弹出框效果-->
-     <script>
-     $(document).ready(function(){
-     //弹出文本性提示框
-     $("#delPopTxt").click(function(){
-       $(".del_pop_bg").fadeIn();
-       });
-     //弹出：确认按钮
-     $("#confirmDel").click(function(){
-       $(".del_pop_bg").fadeOut();
-       });
-     //弹出：取消或关闭按钮
-     $("#cancelDel").click(function(){
-       $(".del_pop_bg").fadeOut();
-       });
-     });
-     </script>
-     <section class="del_pop_bg">
-      <div class="pop_cont">
-       <!--title-->
-       <h3>温馨提示</h3>
-       <!--content-->
-       <div class="pop_cont_input">
-       <!--以pop_cont_text分界-->
-         <div class="pop_cont_text">
-          确认删除？删除后该分类下的所有记录将取消与该分类的关联
-         </div>
-         <!--bottom:operate->button-->
-         <div class="btm_btn">
-          <input type="button" value="继续删除" id="confirmDel" class="input_btn trueBtn"/>
-          <input type="button" value="取消" id="cancelDel" class="input_btn falseBtn"/>
-         </div>
-        </div>
-     </section>
-     <!-- 删除分类弹出框 -->
-
-     <!-- 搜索 -->
-     <section style="text-align:right">
-      <div class="btm_btn">
-        <input type="button" value="添加分类" class="input_btn trueBtn"/>
-       </div>
-     </section><br/>
-
      <section>
       <table class="table">
        <tr>
-        <th>分类名称</th>
+        <th>ID</th>
+        <th>姓名</th>
+        <th>联系电话</th>
+        <th>积分</th>
+        <th>详细地址</th>
+        <th>注册时间</th>
         <th>操作</th>
        </tr>
        <tr>
-        <td><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
-        <td style="text-align:center">
-           <button class="linkStyle" id="showPopTxt">编辑</button>|
-           <button class="linkStyle" id="delPopTxt">删除</button>
+        <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
+        <td>内容二</td>
+        <td>内容三</td>
+        <td>内容四</td>
+        <td>内容五</td>
+        <td>内容六</td>
+        <td>
+         <button class="linkStyle" id="showPopTxt">修改</button>
         </td>
        </tr>
       </table>

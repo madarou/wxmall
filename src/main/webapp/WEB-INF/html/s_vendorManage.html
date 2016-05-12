@@ -9,6 +9,7 @@
     .btm_btn{text-align: center;}
     .btm_btn .input_btn{display:inline-block;height:35px;border:none;background:none;padding:0 20px;}
     .btm_btn .trueBtn{background:#19a97b;color:white;border:1px #19a97b solid;border-radius:2px;}
+    td{text-align: center;}
 </style>
 <!--[if lt IE 9]>
 <script src="static/js/html5.js"></script>
@@ -67,7 +68,7 @@
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
     <dd><a href="s_productList.html">商品列表</a></dd>
-    <dd><a href="s_productCatalog.html" class="active">商品分类</a></dd>
+    <dd><a href="s_productCatalog.html">商品分类</a></dd>
    </dl>
   </li>
   <li>
@@ -79,7 +80,7 @@
   <li>
    <dl>
     <dt>账号管理</dt>
-    <dd><a href="s_vendorManage.html">账号管理</a></dd>
+    <dd><a href="s_vendorManage.html" class="active">账号管理</a></dd>
    </dl>
   </li>
   <li>
@@ -182,18 +183,29 @@
      <!-- 搜索 -->
      <section style="text-align:right">
       <div class="btm_btn">
-        <input type="button" value="添加分类" class="input_btn trueBtn"/>
+        <input type="button" value="添加账号" class="input_btn trueBtn"/>
        </div>
      </section><br/>
 
      <section>
       <table class="table">
        <tr>
-        <th>分类名称</th>
+        <th>账户名</th>
+        <th>密码</th>
+        <th>区域</th>
         <th>操作</th>
        </tr>
        <tr>
-        <td><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
+        <td>老张</td>
+        <td>********</td>
+        <td>
+          <select class="select" disabled="disabled">
+           <option>常州</option>
+          </select>
+           <select class="select" disabled="disabled">
+           <option>某某区</option>
+          </select>
+        </td>
         <td style="text-align:center">
            <button class="linkStyle" id="showPopTxt">编辑</button>|
            <button class="linkStyle" id="delPopTxt">删除</button>
