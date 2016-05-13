@@ -5,6 +5,12 @@
 <title>区域后台管理系统</title>
 <meta name="author" content="DeathGhost" />
 <link rel="stylesheet" type="text/css" href="static/css/style.css" />
+<style>
+  td{text-align: center;}
+  .btm_btn{text-align: center;}
+  .btm_btn .input_btn{display:inline-block;height:35px;border:none;background:none;padding:0 20px;}
+  .btm_btn .trueBtn{background:#19a97b;color:white;border:1px #19a97b solid;border-radius:2px;}
+</style>
 <!--[if lt IE 9]>
 <script src="static/js/html5.js"></script>
 <![endif]-->
@@ -161,42 +167,85 @@
      </section>
      <!--结束：弹出框效果-->
 
-     <section>
-      <div class="page_title">
-       <a class="fr top_rt_btn">刷新</a>
-      </div>
-      <table class="table">
-       <tr>
-        <th>项目1</th>
-        <th>项目2</th>
-        <th>项目3</th>
-        <th>项目4</th>
-        <th>项目5</th>
-        <th>项目6</th>
-        <th>项目7</th>
-       </tr>
-       <tr>
-        <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
-        <td>内容二</td>
-        <td>内容三</td>
-        <td>内容四</td>
-        <td>内容五</td>
-        <td>内容六</td>
-        <td>
-         <a href="#" class="inner_btn" id="showPopTxt">接单并打印</a>
-        </td>
-       </tr>
-      </table>
-      <aside class="paging">
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a>
-      </aside>
+   <section>
+      <ul class="ulColumn2">
+       <li>
+        <span class="item_name" style="width:120px;">商品名称：</span>
+        <input type="text" class="textbox textbox_295" placeholder="如'海南小番茄'"/>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">商品分类：</span>
+        <label class="single_selection"><input type="radio" name="name"/>食材</label>
+        <label class="single_selection"><input type="radio" name="name"/>零食</label>
+         <label class="single_selection"><input type="radio" name="name"/>省钱</label>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">商品标签：</span>
+        <label class="single_selection"><input type="radio" name="name"/>绿色食品</label>
+        <label class="single_selection"><input type="radio" name="name"/>小产区</label>
+        <label class="single_selection"><input type="radio" name="name"/>新人福利</label>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">商品规格：</span>
+        <input type="text" class="textbox textbox_295" placeholder="如'一份250克','一份足2斤'"/>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">售价(￥)：</span>
+        <input type="text" class="textbox textbox_295" placeholder=""/>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">市场价(￥)：</span>
+        <input type="text" class="textbox textbox_295" placeholder=""/>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">库存：</span>
+        <input type="text" class="textbox textbox_295" placeholder=""/>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">上架状态：</span>
+        <label class="single_selection"><input type="radio" name="name"/>上架</label>
+        <label class="single_selection"><input type="radio" name="name"/>下架</label>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">展现形式：</span>
+        <label class="single_selection"><input type="radio" name="name"/>正方形</label>
+        <label class="single_selection"><input type="radio" name="name"/>长方形</label>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">商品排序：</span>
+        <input type="text" class="textbox textbox_295" placeholder="输入整数，值越大越前"/>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">商品简介：</span>
+        <input type="text" class="textbox textbox_295" placeholder="一句话十字以内"/>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">缩略图：</span>
+        <label class="uploadImg">
+         <input type="file"/>
+         <span>正方形</span>
+        </label>
+
+        <label class="uploadImg">
+         <input type="file"/>
+         <span style="margin: 0 20px 0 20px;">长方形</span>
+        </label>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">商品详情：</span>
+        <label class="uploadImg">
+         <input type="file"/>
+         <span style="margin: 0 60px 0 60px;">详情</span>
+        </label>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;"></span>
+        <input type="button" value="保存" class="link_btn"/>
+       </li>
+      </ul>
      </section>
+
+    
 
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
