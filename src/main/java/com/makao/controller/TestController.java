@@ -17,12 +17,12 @@ import com.makao.auth.AuthPassport;
 public class TestController {
 	@RequestMapping(value="/supervisor")
 	public String supervisor(){
-		return "supervisor_index";
+		return "s";
 	}
 	
 	@RequestMapping(value="/vendor")
 	public String vendor(){
-		return "vendor_index";
+		return "v_orderOn";
 	}
 	@RequestMapping(value="/login", method = {RequestMethod.GET})
     public ModelAndView login(){

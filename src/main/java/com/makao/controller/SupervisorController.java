@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
@@ -33,7 +35,7 @@ import com.makao.utils.TokenUtils;
  * @date 2016年5月6日
  */
 @Controller
-@RequestMapping("/supervisor")
+//@RequestMapping("/supervisor")
 public class SupervisorController {
 	private static final Logger logger = Logger.getLogger(SupervisorController.class);
 	@Resource
@@ -51,41 +53,61 @@ public class SupervisorController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"userName":"darou","password":"test"}' 'http://localhost:8080/wxmall/supervisor/login'
 	 */
-	@RequestMapping(value="/login", method = RequestMethod.POST)
+	@RequestMapping(value="/supervisor/login", method = RequestMethod.POST)
 	public @ResponseBody Object login(@RequestBody JSONObject paramObject,HttpServletRequest request, HttpServletResponse response)
 	{
 		String userName = paramObject.getString("userName");
 		String password = paramObject.getString("password");
 		JSONObject jsonObject = new JSONObject();
-		if(userName==null || userName.trim().length() <=0 || password==null || password.trim().length() <=0){
-			jsonObject.put("msg", "用户或密码为空");
-	        return jsonObject; 
-		}
-		//密码加密，前端忙，前端加密暂时未作
-		logger.info("supervisor登录name=" + userName);
-		Supervisor supervisor = this.supervisorService.queryByName(userName);
-		if(supervisor!=null){
-			//if(supervisor.getPassword().equals(encryptedPassword)){
-			if(EncryptUtils.passwordEncryptor.checkPassword(password, supervisor.getPassword())){
-				jsonObject.put("msg", "登录成功");
-				//session.getServletContext().setAttribute("supervisor", "1");
-				//在登录成功时，生成token来记录用户登录信息
-				//生成token
-				
-				String tokenstring = TokenUtils.setToken("supervisor");
-				//在放在header中返回给用户作为下次登录的凭证，这里不放到header中，因为这里只返回response body，所以还是放到jsonObject中
-				//response.setHeader("token", tokenstring);
-				//将生成的的token信息放到服务器缓存中，同时记录他这次登录的时间，用于定时失效
-				request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
-				logger.info("supervisor登录成功name=" + userName);
-				jsonObject.put("supervisor", supervisor);//实验表明这里supervisor不需要json化
-				jsonObject.put("token", tokenstring);
-			}
-			else{
-				jsonObject.put("msg", "密码错误");
-			}
-		}
+//		if(userName==null || userName.trim().length() <=0 || password==null || password.trim().length() <=0){
+//			jsonObject.put("msg", "用户或密码为空");
+//	        return jsonObject; 
+//		}
+//		//密码加密，前端忙，前端加密暂时未作
+//		logger.info("supervisor登录name=" + userName);
+//		Supervisor supervisor = this.supervisorService.queryByName(userName);
+//		if(supervisor!=null){
+//			//if(supervisor.getPassword().equals(encryptedPassword)){
+//			if(EncryptUtils.passwordEncryptor.checkPassword(password, supervisor.getPassword())){
+//				jsonObject.put("msg", "登录成功");
+//				//session.getServletContext().setAttribute("supervisor", "1");
+//				//在登录成功时，生成token来记录用户登录信息
+//				//生成token
+//				
+//				String tokenstring = TokenUtils.setToken("supervisor");
+//				//在放在header中返回给用户作为下次登录的凭证，这里不放到header中，因为这里只返回response body，所以还是放到jsonObject中
+//				//response.setHeader("token", tokenstring);
+//				//将生成的的token信息放到服务器缓存中，同时记录他这次登录的时间，用于定时失效
+//				request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
+//				logger.info("supervisor登录成功name=" + userName);
+//				jsonObject.put("supervisor", supervisor);//实验表明这里supervisor不需要json化
+//				jsonObject.put("token", tokenstring);
+//			}
+//			else{
+//				jsonObject.put("msg", "密码错误");
+//			}
+//		}
+//		return jsonObject;
+		System.out.println(userName);
+		System.out.println(password);
+		jsonObject.put("msg", "登录成功");
+		jsonObject.put("id", 1);
+		jsonObject.put("token",TokenUtils.setToken("supervisor"));
 		return jsonObject;
+	}
+	
+	@RequestMapping(value="/supervisor/{id:\\d+}",method = RequestMethod.GET)
+	public String index(@PathVariable("id") int id, @RequestParam String token)
+	{
+		System.out.println(id);
+		System.out.println(token);
+		return "s_index";
+	}
+	
+	@RequestMapping(value="/supervisor",method = RequestMethod.GET)
+	public String main()
+	{
+		return "s_login";
 	}
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)

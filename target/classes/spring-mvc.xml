@@ -40,6 +40,7 @@
 	<!--  <mvc:annotation-driven /> -->
 	<!-- 这种通配符*好像无效，必须一个一个配置
 	<mvc:resources mapping="/*/static/**" location="/WEB-INF/static/" /> -->
+	<mvc:resources mapping="/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/address/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/area/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/city/static/**" location="/WEB-INF/static/" />
