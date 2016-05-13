@@ -35,7 +35,7 @@ import com.makao.utils.TokenUtils;
  * @date 2016年5月6日
  */
 @Controller
-//@RequestMapping("/supervisor")
+@RequestMapping("/supervisor")
 public class SupervisorController {
 	private static final Logger logger = Logger.getLogger(SupervisorController.class);
 	@Resource
@@ -53,7 +53,7 @@ public class SupervisorController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"userName":"darou","password":"test"}' 'http://localhost:8080/wxmall/supervisor/login'
 	 */
-	@RequestMapping(value="/supervisor/login", method = RequestMethod.POST)
+	@RequestMapping(value="/login", method = RequestMethod.POST)
 	public @ResponseBody Object login(@RequestBody JSONObject paramObject,HttpServletRequest request, HttpServletResponse response)
 	{
 		String userName = paramObject.getString("userName");
@@ -91,20 +91,26 @@ public class SupervisorController {
 		System.out.println(userName);
 		System.out.println(password);
 		jsonObject.put("msg", "登录成功");
+		String tokenstring = TokenUtils.setToken("supervisor");
 		jsonObject.put("id", 1);
-		jsonObject.put("token",TokenUtils.setToken("supervisor"));
+		jsonObject.put("token",tokenstring);
+		request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
 		return jsonObject;
 	}
 	
-	@RequestMapping(value="/supervisor/{id:\\d+}",method = RequestMethod.GET)
-	public String index(@PathVariable("id") int id, @RequestParam String token)
+	@RequestMapping(value="/index/{id:\\d+}",method = RequestMethod.GET)
+	public String index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
 	{
+		if(token==null){
+			return "s_login";
+		}
 		System.out.println(id);
 		System.out.println(token);
+		System.out.println(request.getServletContext().getAttribute(token));
 		return "s_index";
 	}
 	
-	@RequestMapping(value="/supervisor",method = RequestMethod.GET)
+	@RequestMapping(value="",method = RequestMethod.GET)
 	public String main()
 	{
 		return "s_login";

@@ -1,3 +1,5 @@
+<%@ page pageEncoding="utf-8" contentType="text/html; charset=utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,9 +34,7 @@ $(document).ready(function() {
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="登录成功"){
-	                	  console.log(data.id);
-	                	  alert(data.id);
-	                	  window.location="supervisor/"+data.id+"?token="+data.token;
+	                	  window.location="supervisor/index/"+data.id+"?token="+data.token;
 	                  }
 	          }
 	      });

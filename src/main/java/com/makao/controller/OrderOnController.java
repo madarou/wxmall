@@ -1,5 +1,6 @@
 package com.makao.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.OrderOn;
@@ -101,5 +103,23 @@ public class OrderOnController {
 		OrderOns = this.orderOnService.queryAll();
 		logger.info("查询所有有效订单信息完成");
         return OrderOns;
+    }
+	
+	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView query_All() {
+		//List<OrderOn> orderOns = null;
+		//则查询返回所有
+		//orderOns = this.orderOnService.queryAll();
+		//这里假设放一些东西进去
+		List<OrderOn> orderOns = new ArrayList<OrderOn>();
+		OrderOn oo = new OrderOn();
+		oo.setAddress("ddddddddd");
+		orderOns.add(oo);
+		logger.info("查询所有有效订单信息完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    modelAndView.addObject("ordersOn", orderOns);  
+	    modelAndView.setViewName("s_orderOn");  
+	    return modelAndView;
     }
 }

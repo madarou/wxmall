@@ -1,3 +1,5 @@
+<%@ page pageEncoding="utf-8" contentType="text/html; charset=utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,20 +50,20 @@
 
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
- <h2><a href="index.php">超级社区</a></h2>
+ <h2><a href="#">超级社区</a></h2>
  <ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="#">所有未处理订单</a></dd>
-    <dd><a href="#">所有已处理订单</a></dd>
+    <dd><a href="/orderOn/squeryall">所有未处理订单</a></dd>
+    <dd><a href="/orderOff/squeryall">所有已处理订单</a></dd>
    </dl>
   </li>
    <li>
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="#" class="active">商品列表</a></dd>
+    <dd><a href="#">商品列表</a></dd>
     <dd><a href="#">商品分类</a></dd>
    </dl>
   </li>
