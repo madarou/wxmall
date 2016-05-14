@@ -122,4 +122,22 @@ public class OrderOnController {
 	    modelAndView.setViewName("s_orderOn");  
 	    return modelAndView;
     }
+	
+	@RequestMapping(value = "/sareaquery", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaQuery() {
+		//List<OrderOn> orderOns = null;
+		//则查询返回所有
+		//orderOns = this.orderOnService.queryAll();
+		//这里假设放一些东西进去
+		List<OrderOn> orderOns = new ArrayList<OrderOn>();
+		OrderOn oo = new OrderOn();
+		oo.setAddress("ddddddddd");
+		orderOns.add(oo);
+		logger.info("查询所有有效订单信息完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    modelAndView.addObject("ordersOn", orderOns);  
+	    modelAndView.setViewName("v_orderOn");  
+	    return modelAndView;
+    }
 }

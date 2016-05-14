@@ -49,6 +49,7 @@
 	<mvc:resources mapping="/couponOff/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/couponOn/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/giftChanged/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/gift/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/loginLog/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/static/**" location="/WEB-INF/static/" />
@@ -60,6 +61,7 @@
 	<mvc:resources mapping="/user/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/userPoint/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/vendor/index/static/**" location="/WEB-INF/static/" />
    	<mvc:default-servlet-handler/>
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">  
     <property name="messageConverters">  

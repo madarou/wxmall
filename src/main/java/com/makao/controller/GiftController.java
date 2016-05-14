@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Gift;
@@ -101,5 +102,15 @@ public class GiftController {
 		Gifts = this.giftService.queryAll();
 		logger.info("查询所有奖品信息完成");
         return Gifts;
+    }
+	
+	@RequestMapping(value = "/sareagiftmanage", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView giftManage() {
+		logger.info("跳转到添加产品页面完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    //modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("v_giftManage");  
+	    return modelAndView;
     }
 }

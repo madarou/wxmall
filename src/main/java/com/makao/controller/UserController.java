@@ -160,6 +160,16 @@ public class UserController {
 	    return modelAndView;
     }
 	
+	@RequestMapping(value = "/sareadatamanage", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView dataManage() {
+		logger.info("跳转到添加产品页面完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    //modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("v_dataManage");  
+	    return modelAndView;
+    }
+	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
     public @ResponseBody
     void testor() {

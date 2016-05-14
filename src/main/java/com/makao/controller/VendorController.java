@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,6 +22,7 @@ import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
+import com.makao.utils.TokenUtils;
 
 /**
  * @description: TODO
@@ -31,6 +35,40 @@ public class VendorController {
 	private static final Logger logger = Logger.getLogger(VendorController.class);
 	@Resource
 	private IVendorService vendorService;
+	
+	@RequestMapping(value="/login", method = RequestMethod.POST)
+	public @ResponseBody Object login(@RequestBody JSONObject paramObject,HttpServletRequest request, HttpServletResponse response)
+	{
+		String userName = paramObject.getString("userName");
+		String password = paramObject.getString("password");
+		JSONObject jsonObject = new JSONObject();
+		System.out.println(userName);
+		System.out.println(password);
+		jsonObject.put("msg", "登录成功");
+		String tokenstring = TokenUtils.setToken("vendor");
+		jsonObject.put("id", 1);
+		jsonObject.put("token",tokenstring);
+		request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
+		return jsonObject;
+	}
+
+	@RequestMapping(value="/index/{id:\\d+}",method = RequestMethod.GET)
+	public String index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
+	{
+		if(token==null){
+			return "v_login";
+		}
+		System.out.println(id);
+		System.out.println(token);
+		System.out.println(request.getServletContext().getAttribute(token));
+		return "v_index";
+	}
+	
+	@RequestMapping(value="",method = RequestMethod.GET)
+	public String main()
+	{
+		return "v_login";
+	}
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Vendor get(@PathVariable("id") Integer id)
@@ -125,6 +163,16 @@ public class VendorController {
 		ModelAndView modelAndView = new ModelAndView();  
 	    modelAndView.addObject("ordersOn", orderOns);  
 	    modelAndView.setViewName("s_vendorManage");  
+	    return modelAndView;
+    }
+	
+	@RequestMapping(value = "/sareabindwx", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView bindWeixin() {
+		logger.info("跳转到添加产品页面完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    //modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("v_bindWeixin");  
 	    return modelAndView;
     }
 }

@@ -48,12 +48,12 @@
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
  <h2><a href="index.php">常州-某某区</a></h2>
- <ul>
+  <ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="v_orderOn.html">未处理订单</a></dd>
-    <dd><a href="v_orderOff.html">已处理订单</a></dd>
+    <dd><a href="/orderOn/sareaquery">未处理订单</a></dd>
+    <dd><a href="/orderOff/sareaquery" class="active">已处理订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
@@ -62,19 +62,19 @@
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="v_productAdd.html">商品添加</a></dd>
-    <dd><a href="v_productManage.html" class="active">商品管理</a></dd>
-    <dd><a href="v_productCatalog.html">分类管理</a></dd>
-    <dd><a href="v_promotionManage.html">综合配置</a></dd>
+    <dd><a href="/product/sareanew">商品添加</a></dd>
+    <dd><a href="/product/sareamanage">商品管理</a></dd>
+    <dd><a href="/product/sareacatalog">分类管理</a></dd>
+    <dd><a href="/product/sareapromotion">综合配置</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="v_dataManage.html">数据管理</a></dd>
+    <dd><a href="/user/sareadatamanage">数据管理</a></dd>
     <dd><a href="#">优惠券配置</a></dd>
-    <dd><a href="v_giftManage.html">礼品配置</a></dd>
-    <dd><a href="v_bindWeixin.html">绑定微信号</a></dd>
+    <dd><a href="/gift/sareagiftmanage">礼品配置</a></dd>
+    <dd><a href="/vendor/sareabindwx">绑定微信号</a></dd>
    </dl>
   </li>
   <li>

@@ -93,6 +93,46 @@ public class ProductController {
 	    return modelAndView;
     }
 	
+	@RequestMapping(value = "/sareanew", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaAdd() {
+		logger.info("跳转到添加产品页面完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    //modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("v_productAdd");  
+	    return modelAndView;
+    }
+	
+	@RequestMapping(value = "/sareamanage", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaManage() {
+		logger.info("跳转到添加产品页面完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    //modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("v_productManage");  
+	    return modelAndView;
+    }
+	
+	@RequestMapping(value = "/sareacatalog", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaCatalog() {
+		logger.info("跳转到添加产品页面完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    //modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("v_productCatalog");  
+	    return modelAndView;
+    }
+	
+	@RequestMapping(value = "/sareapromotion", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaPromotion() {
+		logger.info("跳转到添加产品页面完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    //modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("v_promotionManage");  
+	    return modelAndView;
+    }
+	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Product Product) {

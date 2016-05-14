@@ -25,7 +25,18 @@ $(document).ready(function() {
   createCode();
   //测试提交，对接程序删除即可
   $(".submit_btn").click(function(){
-	  location.href="index.html";
+	  $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "vendor/login",
+          data: JSON.stringify({"userName":$("#userName").val(),"password":$("#password").val()}),
+          dataType: "json",
+          success: function(data){
+                  if(data.msg=="登录成功"){
+                	  window.location="vendor/index/"+data.id+"?token="+data.token;
+                  }
+          }
+      });
 	  });
 });
 </script>
@@ -37,10 +48,10 @@ $(document).ready(function() {
   <em>Management System</em>
  </dt>
  <dd class="user_icon">
-  <input type="text" placeholder="账号" class="login_txtbx"/>
+  <input id="userName" type="text" placeholder="账号" class="login_txtbx"/>
  </dd>
  <dd class="pwd_icon">
-  <input type="password" placeholder="密码" class="login_txtbx"/>
+  <input id="password" type="password" placeholder="密码" class="login_txtbx"/>
  </dd>
  <dd class="val_icon">
   <div class="checkcode">
@@ -53,8 +64,8 @@ $(document).ready(function() {
   <input type="button" value="立即登陆" class="submit_btn"/>
  </dd>
  <dd>
-  <p>© 2015-2016 DeathGhost 版权所有</p>
-  <p>陕B2-20080224-1</p>
+  <p>© 2015-2016 优格信息 版权所有</p>
+  <p>021-34938353</p>
  </dd>
 </dl>
 </body>
