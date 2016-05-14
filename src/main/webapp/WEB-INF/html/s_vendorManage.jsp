@@ -1,3 +1,5 @@
+<%@ page pageEncoding="utf-8" contentType="text/html; charset=utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +11,7 @@
     .btm_btn{text-align: center;}
     .btm_btn .input_btn{display:inline-block;height:35px;border:none;background:none;padding:0 20px;}
     .btm_btn .trueBtn{background:#19a97b;color:white;border:1px #19a97b solid;border-radius:2px;}
+    td{text-align: center;}
 </style>
 <!--[if lt IE 9]>
 <script src="static/js/html5.js"></script>
@@ -58,28 +61,31 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="s_orderOn.html">所有未处理订单</a></dd>
-    <dd><a href="s_orderOff.html">所有已处理订单</a></dd>
+    <dd><a href="/orderOn/squeryall">所有未处理订单</a></dd>
+    <dd><a href="/orderOff/squeryall">所有已处理订单</a></dd>
    </dl>
   </li>
    <li>
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="s_productList.html">商品列表</a></dd>
-    <dd><a href="s_productCatalog.html" class="active">商品分类</a></dd>
+    <dd><a href="/product/squeryall">商品列表</a></dd>
+    <dd><a href="/product/scatalogs">商品分类</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="s_userManage.html">会员中心</a></dd>
+    <dd><a href="/user/squeryall">会员中心</a></dd>
+    <!-- <dd><a href="#">添加会员</a></dd>
+    <dd><a href="#">会员等级</a></dd>
+    <dd><a href="#">资金管理</a></dd> -->
    </dl>
   </li>
   <li>
    <dl>
     <dt>账号管理</dt>
-    <dd><a href="s_vendorManage.html">账号管理</a></dd>
+    <dd><a href="/vendor/squeryall" class="active">账号管理</a></dd>
    </dl>
   </li>
   <li>
@@ -99,7 +105,7 @@
      <script>
      $(document).ready(function(){
 		 //弹出文本性提示框
-		 $(".popAdd").click(function(){
+		 $("#showPopTxt").click(function(){
 			 $(".pop_bg").fadeIn();
 			 });
 		 //弹出：确认按钮
@@ -182,22 +188,31 @@
      <!-- 搜索 -->
      <section style="text-align:right">
       <div class="btm_btn">
-        <input type="button" value="添加分类" class="input_btn trueBtn popAdd"/>
+        <input type="button" value="添加账号" class="input_btn trueBtn"/>
        </div>
      </section><br/>
 
      <section>
       <table class="table">
        <tr>
-        <th>分类名称</th>
-        <th>排序</th>
+        <th>账户名</th>
+        <th>密码</th>
+        <th>区域</th>
         <th>操作</th>
        </tr>
        <tr>
-        <td></td>
-        <td></td>
+        <td>老张</td>
+        <td>********</td>
+        <td>
+          <select class="select" disabled="disabled">
+           <option>常州</option>
+          </select>
+           <select class="select" disabled="disabled">
+           <option>某某区</option>
+          </select>
+        </td>
         <td style="text-align:center">
-           <button class="linkStyle popAdd" id="showPopTxt">编辑</button>|
+           <button class="linkStyle" id="showPopTxt">编辑</button>|
            <button class="linkStyle" id="delPopTxt">删除</button>
         </td>
        </tr>

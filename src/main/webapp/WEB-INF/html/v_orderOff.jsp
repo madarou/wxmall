@@ -1,3 +1,5 @@
+<%@ page pageEncoding="utf-8" contentType="text/html; charset=utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,12 +7,6 @@
 <title>区域后台管理系统</title>
 <meta name="author" content="DeathGhost" />
 <link rel="stylesheet" type="text/css" href="static/css/style.css" />
-<style>
-  td{text-align: center;}
-  .btm_btn{text-align: center;}
-  .btm_btn .input_btn{display:inline-block;height:35px;border:none;background:none;padding:0 20px;}
-  .btm_btn .trueBtn{background:#19a97b;color:white;border:1px #19a97b solid;border-radius:2px;}
-</style>
 <!--[if lt IE 9]>
 <script src="static/js/html5.js"></script>
 <![endif]-->
@@ -102,11 +98,11 @@
        $(".pop_bg").fadeIn();
        });
      //弹出：确认按钮
-     $("#saveBtn").click(function(){
+     $(".trueBtn").click(function(){
        $(".pop_bg").fadeOut();
        });
      //弹出：取消或关闭按钮
-     $("#cancelBtn").click(function(){
+     $(".falseBtn").click(function(){
        $(".pop_bg").fadeOut();
        });
      });
@@ -114,70 +110,82 @@
      <section class="pop_bg">
       <div class="pop_cont">
        <!--title-->
-       <h3>添加礼品</h3>
+       <h3>订单详情</h3>
        <!--content-->
-        <section style="padding-right: 30px;">
-          <ul class="ulColumn2">
-            <li>
-              <span class="item_name" style="width:120px;">礼品图片：</span>
-              <label class="uploadImg">
-               <input type="file"/>
-               <span>上传图片</span>
-              </label>
-             </li>
-           <li>
-            <span class="item_name" style="width:120px;">礼品名称：</span>
-            <input type="text" class="textbox textbox_295" placeholder="请输入礼品名称(不超过8个字)"/>
-            
-           </li>
-          <li>
-            <span class="item_name" style="width:120px;">兑换积分：</span>
-            <input type="text" class="textbox textbox_295" placeholder="请输入兑换积分"/>
-         
-           </li>
-           <li>
-            <span class="item_name" style="width:120px;">礼品数量：</span>
-            <input type="text" class="textbox textbox_295" placeholder="请输入礼品数量"/>
-         
-           </li>
-           
-           <li>
-             <div class="btm_btn">
-              <input type="button" value="保存" id="saveBtn" class="input_btn trueBtn"/>
-              <input type="button" value="取消" id="cancelBtn" class="input_btn falseBtn"/>
-             </div>
-           </li>
-          </ul>
-         </section>
+       <div class="pop_cont_input">
+          <table class="table">
+              <tr>
+                <td>订单编号</td>
+                <td>2016283737282892</td>
+                <td>下单时间</td>
+                <td>2016-04-12</td>
+              </tr>
+              <tr>
+                <td>地址</td>
+                <td>开心公寓xxx号</td>
+                <td>收货人</td>
+                <td>郭德纲</td>
+              </tr>
+              <tr>
+                <td>联系电话</td>
+                <td>18763645373</td>
+                <td>送货方式</td>
+                <td>送货上门</td>
+              </tr>
+              <tr>
+                <td>支付方式</td>
+                <td>微信支付</td>
+                <td>是否付款</td>
+                <td>已付款</td>
+              </tr>
+              <tr>
+                <td>优惠券抵扣</td>
+                <td>￥13.00</td>
+                <td>备注</td>
+                <td>尽快送达</td>
+              </tr>
+              <tr>
+                <td>总价</td>
+                <td colspan="3">￥36.00</td>
+              </tr>
+          </table>
+       </div>
+       <!--以pop_cont_text分界-->
+       <div class="pop_cont_text">
+        提示：接单前请确认库存是否足够。
+       </div>
+       <!--bottom:operate->button-->
+       <div class="btm_btn">
+        <input type="button" value="确认并打印" class="input_btn trueBtn"/>
+        <input type="button" value="关闭" class="input_btn falseBtn"/>
+       </div>
       </div>
      </section>
      <!--结束：弹出框效果-->
 
-     <!-- 搜索 -->
-     <section style="text-align:right">
-      <div class="btm_btn">
-        <input type="button" id="showPopTxt" value="添加礼品" class="input_btn trueBtn"/>
-       </div>
-     </section><br/>
-
      <section>
+      <div class="page_title">
+       <a class="fr top_rt_btn">刷新</a>
+      </div>
       <table class="table">
        <tr>
-        <th>缩略图</th>
-        <th>名称</th>
-        <th>兑换积分</th>
-        <th>礼品数量</th>
-        <th>已兑换</th>
-        <th>操作</th>
+        <th>项目1</th>
+        <th>项目2</th>
+        <th>项目3</th>
+        <th>项目4</th>
+        <th>项目5</th>
+        <th>项目6</th>
+        <th>项目7</th>
        </tr>
        <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td style="text-align:center">
-           <button class="linkStyle">什么操作</button>
+        <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
+        <td>内容二</td>
+        <td>内容三</td>
+        <td>内容四</td>
+        <td>内容五</td>
+        <td>内容六</td>
+        <td>
+         <a href="#" class="inner_btn" id="showPopTxt">接单并打印</a>
         </td>
        </tr>
       </table>

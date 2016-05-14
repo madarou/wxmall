@@ -1,11 +1,18 @@
+<%@ page pageEncoding="utf-8" contentType="text/html; charset=utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>超级管理员系统</title>
+<title>区域后台管理系统</title>
 <meta name="author" content="DeathGhost" />
 <link rel="stylesheet" type="text/css" href="static/css/style.css" />
-<style type="text/css">td{text-align: center;}</style>
+<style>
+  td{text-align: center;}
+  .btm_btn{text-align: center;}
+  .btm_btn .input_btn{display:inline-block;height:35px;border:none;background:none;padding:0 20px;}
+  .btm_btn .trueBtn{background:#19a97b;color:white;border:1px #19a97b solid;border-radius:2px;}
+</style>
 <!--[if lt IE 9]>
 <script src="static/js/html5.js"></script>
 <![endif]-->
@@ -39,43 +46,41 @@
 <header>
  <h1><img src="static/images/admin_logo.png"/></h1>
  <ul class="rt_nav">
-  <li><a href="#" class="website_icon">订单管理</a></li>
-  <li><a href="#" class="admin_icon">会员管理</a></li>
-  <li><a href="#" class="admin_icon">商品管理</a></li>
-  <li><a href="#" class="set_icon">账号设置</a></li>
+  <li><a href="#" class="set_icon">订单提醒</a></li>
   <li><a href="login.php" class="quit_icon">安全退出</a></li>
  </ul>
 </header>
 
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
- <h2><a href="index.php">超级社区</a></h2>
+ <h2><a href="index.php">常州-某某区</a></h2>
  <ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="s_orderOn.html">所有未处理订单</a></dd>
-    <dd><a href="s_orderOff.html">所有已处理订单</a></dd>
+    <dd><a href="v_orderOn.html">未处理订单</a></dd>
+    <dd><a href="v_orderOff.html">已处理订单</a></dd>
+    <!-- <dd><a href="#">未支付订单</a></dd> -->
+    <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
   </li>
    <li>
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="s_productList.html" class="active">商品列表</a></dd>
-    <dd><a href="s_productCatalog.html">商品分类</a></dd>
+    <dd><a href="v_productAdd.html">商品添加</a></dd>
+    <dd><a href="v_productManage.html" class="active">商品管理</a></dd>
+    <dd><a href="v_productCatalog.html">分类管理</a></dd>
+    <dd><a href="v_promotionManage.html">综合配置</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="s_userManage.html">会员中心</a></dd>
-   </dl>
-  </li>
-  <li>
-   <dl>
-    <dt>账号管理</dt>
-    <dd><a href="s_vendorManage.html">账号管理</a></dd>
+    <dd><a href="v_dataManage.html">数据管理</a></dd>
+    <dd><a href="#">优惠券配置</a></dd>
+    <dd><a href="v_giftManage.html">礼品配置</a></dd>
+    <dd><a href="v_bindWeixin.html">绑定微信号</a></dd>
    </dl>
   </li>
   <li>
@@ -94,19 +99,19 @@
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
-		 //弹出文本性提示框
-		 $("#showPopTxt").click(function(){
-			 $(".pop_bg").fadeIn();
-			 });
-		 //弹出：确认按钮
-		 $(".trueBtn").click(function(){
-			 $(".pop_bg").fadeOut();
-			 });
-		 //弹出：取消或关闭按钮
-		 $(".falseBtn").click(function(){
-			 $(".pop_bg").fadeOut();
-			 });
-		 });
+     //弹出文本性提示框
+     $("#showPopTxt").click(function(){
+       $(".pop_bg").fadeIn();
+       });
+     //弹出：确认按钮
+     $(".trueBtn").click(function(){
+       $(".pop_bg").fadeOut();
+       });
+     //弹出：取消或关闭按钮
+     $(".falseBtn").click(function(){
+       $(".pop_bg").fadeOut();
+       });
+     });
      </script>
      <section class="pop_bg">
       <div class="pop_cont">
@@ -173,7 +178,7 @@
        <option>食材</option>
       </select>
       <input type="button" value="搜索" class="group_btn"/>
-      <a href="s_productAdd.html" style="margin-left: 30px">添加商品</a>
+      <a href="#" style="margin-left: 30px">添加商品</a>
      </section><br/>
 
      <section>

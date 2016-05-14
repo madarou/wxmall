@@ -1,3 +1,5 @@
+<%@ page pageEncoding="utf-8" contentType="text/html; charset=utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,6 +88,7 @@
   </li>
  </ul>
 </aside>
+
 <section class="rt_wrap content mCustomScrollbar">
  <div class="rt_content">
      <section>
@@ -97,7 +100,7 @@
      <script>
      $(document).ready(function(){
      //弹出文本性提示框
-     $(".popAdd").click(function(){
+     $("#showPopTxt").click(function(){
        $(".pop_bg").fadeIn();
        });
      //弹出：确认按钮
@@ -113,104 +116,70 @@
      <section class="pop_bg">
       <div class="pop_cont">
        <!--title-->
-       <h3>添加分类</h3>
+       <h3>添加礼品</h3>
        <!--content-->
-       <div class="pop_cont_input">
-        <ul>
-         <li>
-          <span>分类名称</span>
-          <input type="text" placeholder="如'水果'" class="textbox"/>
-         </li>
-         <li>
-          <span class="ttl">排&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序</span>
-          <input type="text" placeholder="请填写整数，从大到小排序" class="textbox"/>
-         </li>
-        </ul>
-       </div>
-       <!--以pop_cont_text分界-->
-       <div class="pop_cont_text">
-        这里是文字性提示信息！
-       </div>
-       <!--bottom:operate->button-->
-       <div class="btm_btn">
-        <input type="button" value="保存" id="saveBtn" class="input_btn trueBtn"/>
-        <input type="button" value="取消" id="cancelBtn" class="input_btn falseBtn"/>
-       </div>
+        <section style="padding-right: 30px;">
+          <ul class="ulColumn2">
+            <li>
+              <span class="item_name" style="width:120px;">礼品图片：</span>
+              <label class="uploadImg">
+               <input type="file"/>
+               <span>上传图片</span>
+              </label>
+             </li>
+           <li>
+            <span class="item_name" style="width:120px;">礼品名称：</span>
+            <input type="text" class="textbox textbox_295" placeholder="请输入礼品名称(不超过8个字)"/>
+            
+           </li>
+          <li>
+            <span class="item_name" style="width:120px;">兑换积分：</span>
+            <input type="text" class="textbox textbox_295" placeholder="请输入兑换积分"/>
+         
+           </li>
+           <li>
+            <span class="item_name" style="width:120px;">礼品数量：</span>
+            <input type="text" class="textbox textbox_295" placeholder="请输入礼品数量"/>
+         
+           </li>
+           
+           <li>
+             <div class="btm_btn">
+              <input type="button" value="保存" id="saveBtn" class="input_btn trueBtn"/>
+              <input type="button" value="取消" id="cancelBtn" class="input_btn falseBtn"/>
+             </div>
+           </li>
+          </ul>
+         </section>
       </div>
      </section>
      <!--结束：弹出框效果-->
 
-     <!-- 删除分类弹出框 -->
-     <!--弹出框效果-->
-     <script>
-     $(document).ready(function(){
-     //弹出文本性提示框
-     $("#delPopTxt").click(function(){
-       $(".del_pop_bg").fadeIn();
-       });
-     //弹出：确认按钮
-     $("#confirmDel").click(function(){
-       $(".del_pop_bg").fadeOut();
-       });
-     //弹出：取消或关闭按钮
-     $("#cancelDel").click(function(){
-       $(".del_pop_bg").fadeOut();
-       });
-     });
-     </script>
-     <section class="del_pop_bg">
-      <div class="pop_cont">
-       <!--title-->
-       <h3>温馨提示</h3>
-       <!--content-->
-       <div class="pop_cont_input">
-       <!--以pop_cont_text分界-->
-         <div class="pop_cont_text">
-          确认删除？删除后该分类下的所有记录将取消与该分类的关联
-         </div>
-         <!--bottom:operate->button-->
-         <div class="btm_btn">
-          <input type="button" value="继续删除" id="confirmDel" class="input_btn trueBtn"/>
-          <input type="button" value="取消" id="cancelDel" class="input_btn falseBtn"/>
-         </div>
-        </div>
-     </section>
-     <!-- 删除分类弹出框 -->
-
-     <!-- 搜索 -->
-     <section style="text-align:right">
-      <div class="btm_btn">
-        <input type="button" value="添加分类" class="input_btn trueBtn popAdd"/>
-       </div>
-     </section><br/>
-
      <section>
-      <table class="table">
-       <tr>
-        <th>分类名称</th>
-        <th>排序</th>
-        <th>操作</th>
-       </tr>
-       <tr>
-        <td></td>
-        <td></td>
-        <td style="text-align:center">
-           <button class="linkStyle popAdd" id="showPopTxt">编辑</button>|
-           <button class="linkStyle" id="delPopTxt">删除</button>
-        </td>
-       </tr>
-      </table>
-      <aside class="paging">
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a>
-      </aside>
-     </section>
-
+        <ul class="ulColumn2">
+         <li>
+          <span class="item_name" style="width:120px;">主推产品：</span>
+          <input type="text" class="textbox textbox_295" placeholder="商品详情连接"/>
+         </li>
+         <li>
+          <span class="item_name" style="width:120px;">商品分类：</span>
+          <label class="single_selection"><input type="radio" name="name"/>食材</label>
+          <label class="single_selection"><input type="radio" name="name"/>零食</label>
+          <label class="single_selection"><input type="radio" name="name"/>省钱</label>
+         </li>
+         <li>
+          <span class="item_name" style="width:120px;">缩略图：</span>
+          <label class="uploadImg">
+           <input type="file"/>
+           <span>上传图片</span>
+          </label>
+         </li>
+         <li>
+          <span class="item_name" style="width:120px;"></span>
+          <input type="submit" class="link_btn"/>
+         </li>
+        </ul>
+       </section>
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>

@@ -1,5 +1,6 @@
 package com.makao.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
@@ -109,5 +112,19 @@ public class VendorController {
 		Vendors = this.vendorService.queryAll();
 		logger.info("查询所有vendor信息完成");
         return Vendors;
+    }
+	
+	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
+    public @ResponseBody
+    Object query_All() {
+		List<User> orderOns = new ArrayList<User>();
+		User oo = new User();
+		oo.setAddress("ddddddddd");
+		orderOns.add(oo);
+		logger.info("查询所有有效订单信息完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    modelAndView.addObject("ordersOn", orderOns);  
+	    modelAndView.setViewName("s_vendorManage");  
+	    return modelAndView;
     }
 }

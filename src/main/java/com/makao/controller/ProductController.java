@@ -1,5 +1,6 @@
 package com.makao.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
 import com.makao.service.IProductService;
 
@@ -80,6 +83,16 @@ public class ProductController {
         return jsonObject;
     }
 	
+	@RequestMapping(value = "/snew", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView add() {
+		logger.info("跳转到添加产品页面完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    //modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("s_productAdd");  
+	    return modelAndView;
+    }
+	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Product Product) {
@@ -130,5 +143,35 @@ public class ProductController {
 		Products = this.productService.queryAll();
 		logger.info("查询所有商品信息完成");
         return Products;
+    }
+	
+	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView query_All() {
+		//这里假设放一些东西进去
+		List<Product> products = new ArrayList<Product>();
+		Product oo = new Product();
+		oo.setProductName("ddddddddd");
+		products.add(oo);
+		logger.info("查询所有有效订单信息完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("s_productList");  
+	    return modelAndView;
+    }
+	
+	@RequestMapping(value = "/scatalogs", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView query_Catalogs() {
+		//这里假设放一些东西进去
+		List<Product> products = new ArrayList<Product>();
+		Product oo = new Product();
+		oo.setProductName("ddddddddd");
+		products.add(oo);
+		logger.info("查询所有有效订单信息完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("s_productCatalog");  
+	    return modelAndView;
     }
 }

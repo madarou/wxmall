@@ -1,3 +1,5 @@
+<%@ page pageEncoding="utf-8" contentType="text/html; charset=utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,32 +52,35 @@
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
  <h2><a href="index.php">超级社区</a></h2>
- <ul>
+<ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="s_orderOn.html">所有未处理订单</a></dd>
-    <dd><a href="s_orderOff.html">所有已处理订单</a></dd>
+    <dd><a href="/orderOn/squeryall">所有未处理订单</a></dd>
+    <dd><a href="/orderOff/squeryall">所有已处理订单</a></dd>
    </dl>
   </li>
    <li>
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="s_productList.html">商品列表</a></dd>
-    <dd><a href="s_productCatalog.html">商品分类</a></dd>
+    <dd><a href="/product/squeryall" class="active">商品列表</a></dd>
+    <dd><a href="/product/scatalogs">商品分类</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="s_userManage.html" class="active">会员中心</a></dd>
+    <dd><a href="/user/squeryall">会员中心</a></dd>
+    <!-- <dd><a href="#">添加会员</a></dd>
+    <dd><a href="#">会员等级</a></dd>
+    <dd><a href="#">资金管理</a></dd> -->
    </dl>
   </li>
   <li>
    <dl>
     <dt>账号管理</dt>
-    <dd><a href="s_vendorManage.html">账号管理</a></dd>
+    <dd><a href="/vendor/squeryall">账号管理</a></dd>
    </dl>
   </li>
   <li>
@@ -111,47 +116,80 @@
      <section class="pop_bg">
       <div class="pop_cont">
        <!--title-->
-       <h3>修改会员信息</h3>
+       <h3>订单详情</h3>
        <!--content-->
        <div class="pop_cont_input">
-          <ul>
-           <li>
-            <span>会员姓名</span>
-            <input type="text" placeholder="" class="textbox"/>
-           </li>
-           <li>
-            <span class="ttl">联系电话</span>
-            <input type="text" placeholder="" class="textbox"/>
-           </li>
-           <li>
-            <span class="ttl">会员积分</span>
-            <input type="text" placeholder="" class="textbox"/>
-           </li>
-           <li>
-            <span class="ttl">详细地址</span>
-            <input type="text" placeholder="" class="textbox"/>
-           </li>
-          </ul>
+          <table class="table">
+              <tr>
+                <td>订单编号</td>
+                <td>2016283737282892</td>
+                <td>下单时间</td>
+                <td>2016-04-12</td>
+              </tr>
+              <tr>
+                <td>地址</td>
+                <td>开心公寓xxx号</td>
+                <td>收货人</td>
+                <td>郭德纲</td>
+              </tr>
+              <tr>
+                <td>联系电话</td>
+                <td>18763645373</td>
+                <td>送货方式</td>
+                <td>送货上门</td>
+              </tr>
+              <tr>
+                <td>支付方式</td>
+                <td>微信支付</td>
+                <td>是否付款</td>
+                <td>已付款</td>
+              </tr>
+              <tr>
+                <td>优惠券抵扣</td>
+                <td>￥13.00</td>
+                <td>备注</td>
+                <td>尽快送达</td>
+              </tr>
+              <tr>
+                <td>总价</td>
+                <td colspan="3">￥36.00</td>
+              </tr>
+          </table>
        </div>
        <!--以pop_cont_text分界-->
+       <div class="pop_cont_text">
+        提示：接单前请确认库存是否足够。
+       </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
-        <input type="button" value="确定" class="input_btn trueBtn"/>
+        <input type="button" value="确认并打印" class="input_btn trueBtn"/>
         <input type="button" value="关闭" class="input_btn falseBtn"/>
        </div>
       </div>
      </section>
      <!--结束：弹出框效果-->
 
+     <!-- 搜索 -->
+     <section style="text-align:right">
+      <input type="text" class="textbox textbox_225" placeholder="海南西红柿"/>
+      <select class="select">
+       <option>选择分类...</option>
+       <option>水果</option>
+       <option>食材</option>
+      </select>
+      <input type="button" value="搜索" class="group_btn"/>
+      <a href="/product/snew" style="margin-left: 30px">添加商品</a>
+     </section><br/>
+
      <section>
       <table class="table">
        <tr>
-        <th>ID</th>
-        <th>姓名</th>
-        <th>联系电话</th>
-        <th>积分</th>
-        <th>详细地址</th>
-        <th>注册时间</th>
+        <th>缩略图</th>
+        <th>商品名称</th>
+        <th>商品分类</th>
+        <th>出售价</th>
+        <th>库存</th>
+        <th>销量</th>
         <th>操作</th>
        </tr>
        <tr>
@@ -162,7 +200,9 @@
         <td>内容五</td>
         <td>内容六</td>
         <td>
-         <button class="linkStyle" id="showPopTxt">修改</button>
+         <a href="#">编辑</a>
+         <a href="#">上/下架</a>
+         <a href="#">复制商品链接</a>
         </td>
        </tr>
       </table>
