@@ -60,17 +60,17 @@ public class AreaController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Area area) {
-		area.setProductTable(area.getAreaName()+"_"+area.getCityId()+"_product");
+		//area.setProductTable("Product_"+area.getCityId()+"_"+area.getId());//这里先不设置，因为area没插入数据库前，不能确定其id
 		area.setClosed("no");
 		int res = this.areaService.insert(area);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加area成功id=" + area.getId());
-        	jsonObject.put("msg", "增加area成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("增加area成功失败id=" + area.getId());
-        	jsonObject.put("msg", "增加area失败");
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }
@@ -108,6 +108,9 @@ public class AreaController {
 		//则查询返回所有
 		areas = this.areaService.queryAll();
 		logger.info("查询所有area信息完成");
-        return areas;
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("msg", "200");
+		jsonObject.put("areas", areas);//不用序列化，方便前端jquery遍历
+        return jsonObject;
     }
 }

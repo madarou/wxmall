@@ -190,11 +190,82 @@
      $(document).ready(function(){
      //添加账号
      $("#addVendor").click(function(){
+    	 $("#vendorcity").empty();
+    	 $("#vendorcity").get(0).options.add(new Option("选择城市","选择城市"));
+    	 $("#vendorarea").empty();
+    	 $("#vendorarea").get(0).options.add(new Option("选择区域","选择区域"));
+    	 $.ajax({
+    		 type: "GET",
+	          contentType: "application/json",
+	          url: "/city/queryall",
+	          dataType: "json",
+	          success: function(data){
+	        	  //var cities = JSON.stringify(data.cities);
+	        	  if(data.msg=="200"){
+	        		  $.each(data.cities,function(i, val){
+	        			  $("#vendorcity").get(0).options.add(new Option(val.cityName,val.id));
+	        		  });
+	        	  }
+	          }
+    	 });
+    	 $.ajax({
+    		 type: "GET",
+	          contentType: "application/json",
+	          url: "/area/queryall",
+	          dataType: "json",
+	          success: function(data){
+	        	  //var areas = JSON.stringify(data.areas);
+	        	  if(data.msg=="200"){
+	        		  $.each(data.areas,function(i, val){
+	        			  $("#vendorarea").get(0).options.add(new Option(val.areaName,val.id));
+	        		  });
+	        	  }
+	          }
+    	 });
        $(".addvendor_pop_bg").fadeIn();
        });
     
      $("#vendorAdd").click(function(){
+    	 var vendorname = $.trim($("#vendorName").val());
+    	 if(vendorname==""){
+    		 alert("账户名不能为空");
+    		 return false;
+    	 }
+    	 var password = $.trim($("#password").val());
+    	 if(vendorname==""){
+    		 alert("密码不能为空");
+    		 return false;
+    	 }
+    	 var cityId = $("#vendorcity").val();//这种方式获取的是value
+    	 if(cityId=="选择城市"){
+    		 alert("请选择所属城市");
+    		 return false;
+    	 }
+    	 var cityname = $("#vendorcity").find("option:selected").text();//这种方式获取的是选项的text文本
+    	 var areaId = $("#vendorarea").val();//这种方式获取的是value
+    	 if(areaId=="选择区域"){
+    		 alert("请选择所属区域");
+    		 return false;
+    	 }
+    	 var areaname = $("#vendorarea").find("option:selected").text();
+    	 $.ajax({
+	          type: "POST",
+	          contentType: "application/json",
+	          url: "/vendor/new",
+	          data: JSON.stringify({"userName":vendorname,"cityId":cityId,"areaId":areaId,"cityArea":cityname+areaname}),
+	          dataType: "json",
+	          success: function(data){
+	                  if(data.msg=="200"){
+	                	  alert("增加区域管理员账号成功");
+	                  }
+	                  else{
+	                	  alert("增加区域管理员账号失败");
+	                  }
+	          }
+	      });
        $(".addvendor_pop_bg").fadeOut();
+       $("#vendorName").val("");
+       $("#password").val("");
        });
    
      $("#vendorCancel").click(function(){
@@ -210,7 +281,25 @@
        <div class="pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
-          添加账号
+          <section>
+		      <ul class="ulColumn2">
+		       <li>
+		        <span class="item_name">账号名称:</span>
+		        <input type="text" id="vendorName" placeholder=""/>
+		       </li>
+		       <li>
+		        <span class="item_name">账号密码:</span>
+		        <input type="text" id="password" placeholder=""/>
+		       </li>
+		       <li>
+		        <span class="item_name">负责区域:</span>
+		       		<select class="select" id="vendorcity">  
+				    </select>
+				    <select class="select" id="vendorarea">  
+				    </select>
+		       </li>
+		      </ul>
+		    </section>
          </div>
          <!--bottom:operate->button-->
          <div class="btm_btn">
@@ -249,7 +338,7 @@
 	          data: JSON.stringify({"cityName":cityname,"avatarUrl":imgname}),
 	          dataType: "json",
 	          success: function(data){
-	                  if(data.msg=="增加city成功"){
+	                  if(data.msg=="200"){
 	                	  alert("增加城市成功");
 	                  }
 	                  else{
@@ -353,10 +442,53 @@
      $(document).ready(function(){
      //添加账号
      $("#addArea").click(function(){
+    	 $("#cityselect").empty();
+    	 $("#cityselect").get(0).options.add(new Option("选择城市","选择城市"));
+    	 $.ajax({
+    		 type: "GET",
+	          contentType: "application/json",
+	          url: "/city/queryall",
+	          dataType: "json",
+	          success: function(data){
+	        	  var cities = JSON.stringify(data.cities);
+	        	  if(data.msg=="200"){
+	        		  $.each(data.cities,function(i, val){
+	        			  $("#cityselect").get(0).options.add(new Option(val.cityName,val.id));
+	        		  });
+	        	  }
+	          }
+    	 });
        $(".addarea_pop_bg").fadeIn();
        });
      $("#areaAdd").click(function(){
+    	 var areaname = $.trim($("#areaName").val());
+    	 if(areaname==""){
+    		 alert("区域名不能为空");
+    		 return false;
+    	 }
+    	 var cityId = $("#cityselect").val();//这种方式获取的是value
+    	 if(cityId=="选择城市"){
+    		 alert("请选择所属城市");
+    		 return false;
+    	 }
+    	 var cityname = $("#cityselect").find("option:selected").text();//这种方式获取的是选项的text文本
+    	 $.ajax({
+	          type: "POST",
+	          contentType: "application/json",
+	          url: "/area/new",
+	          data: JSON.stringify({"areaName":areaname,"cityName":cityname,"cityId":cityId}),
+	          dataType: "json",
+	          success: function(data){
+	                  if(data.msg=="200"){
+	                	  alert("增加区域成功");
+	                  }
+	                  else{
+	                	  alert("增加区域失败");
+	                  }
+	          }
+	      });
        $(".addarea_pop_bg").fadeOut();
+       $("#areaName").val("");
        });
 
      $("#areaCancel").click(function(){
@@ -372,7 +504,21 @@
        <div class="pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
-          添加区域
+          <section>
+		      <ul class="ulColumn2">
+		       <li>
+		        <span class="item_name">区域名称:</span>
+		        <input type="text" id="areaName" placeholder=""/>
+		        <!-- <span class="errorTips" id="nocityname"></span> -->
+		       </li>
+		       <li>
+		        <span class="item_name">所属城市:</span>
+		       		<select class="select" id="cityselect">
+				       
+				    </select>
+		       </li>
+		      </ul>
+		    </section>
          </div>
          <!--bottom:operate->button-->
          <div class="btm_btn">
@@ -399,8 +545,8 @@
         <th>区域</th>
         <th>操作</th>
        </tr>
-       <tr>
-        <td>老张</td>
+       <%-- <tr>
+        <td>${vendors }</td>
         <td>********</td>
         <td>
           <select class="select" disabled="disabled">
@@ -414,7 +560,18 @@
            <button class="linkStyle" id="showPopTxt">编辑</button>|
            <button class="linkStyle" id="delPopTxt">删除</button>
         </td>
-       </tr>
+       </tr> --%>
+       	<c:forEach var="item" items="${vendors}" varStatus="status">
+         	<tr>
+         		<td>${item.userName}</td>
+         		<td>${item.password}</td>
+         		<td>${item.cityArea}</td>
+         		<td style="text-align:center">
+		           <button class="linkStyle" id="showPopTxt">编辑</button>|
+		           <button class="linkStyle" id="delPopTxt">删除</button>
+		        </td>
+         	</tr>
+		</c:forEach> 
       </table>
       <aside class="paging">
        <a>第一页</a>

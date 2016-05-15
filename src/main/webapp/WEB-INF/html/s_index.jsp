@@ -15,7 +15,6 @@
 <script>
 	(function($){
 		$(window).load(function(){
-			
 			$("a[rel='load-content']").click(function(e){
 				e.preventDefault();
 				var url=$(this).attr("href");

@@ -1,12 +1,12 @@
 package com.makao.controller;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import net.sf.json.JSONArray;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -71,11 +71,11 @@ public class CityController {
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加city成功id=" + city.getId());
-        	jsonObject.put("msg", "增加city成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("增加city成功失败id=" + city.getId());
-        	jsonObject.put("msg", "增加city失败");
+        	jsonObject.put("msg", "200");
 		}
         return jsonObject;
     }
@@ -177,6 +177,9 @@ public class CityController {
 		//则查询返回所有
 		cities = this.cityService.queryAll();
 		logger.info("查询所有city信息完成");
-        return cities;
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("msg", "200");
+		jsonObject.put("cities", cities);//不用序列化，方便前端jquery遍历
+        return jsonObject;
     }
 }

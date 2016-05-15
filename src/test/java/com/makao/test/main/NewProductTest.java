@@ -43,11 +43,11 @@ public class NewProductTest {
 		result = HttpUtils.doPostStr(newsupervisor,supervisor);
 		assertEquals("增加supervisor成功",result.get("msg"));
 		result = HttpUtils.doPostStr(newcity,city);
-		assertEquals("增加city成功",result.get("msg"));
+		assertEquals("200",result.get("msg"));
 		result = HttpUtils.doPostStr(newarea,area);
-		assertEquals("增加area成功",result.get("msg"));
+		assertEquals("200",result.get("msg"));
 		result = HttpUtils.doPostStr(newvendor,vendor);
-		assertEquals("增加vendor成功",result.get("msg"));
+		assertEquals("200",result.get("msg"));
 		result = HttpUtils.doPostStr(newprodcut,product);
 		assertEquals("增加商品成功",result.get("msg"));
 	}

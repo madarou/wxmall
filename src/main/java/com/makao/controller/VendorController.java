@@ -107,11 +107,11 @@ public class VendorController {
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加vendor成功id=" + vendor.getId());
-        	jsonObject.put("msg", "增加vendor成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("增加vendor成功失败id=" + vendor.getId());
-        	jsonObject.put("msg", "增加vendor失败");
+        	jsonObject.put("msg", "200");
 		}
         return jsonObject;
     }
@@ -155,13 +155,11 @@ public class VendorController {
 	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
     public @ResponseBody
     Object query_All() {
-		List<User> orderOns = new ArrayList<User>();
-		User oo = new User();
-		oo.setAddress("ddddddddd");
-		orderOns.add(oo);
+		List<Vendor> vendors = null;
+		vendors = this.vendorService.queryAll();
 		logger.info("查询所有有效订单信息完成");
 		ModelAndView modelAndView = new ModelAndView();  
-	    modelAndView.addObject("ordersOn", orderOns);  
+	    modelAndView.addObject("vendors", vendors);  
 	    modelAndView.setViewName("s_vendorManage");  
 	    return modelAndView;
     }

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.makao.dao.IAreaDao;
 import com.makao.entity.Area;
+import com.makao.entity.City;
 
 /**
  * @description: TODO
@@ -42,6 +43,8 @@ public class AreaDaoImpl implements IAreaDao {
 			session.save(area);// 保存区域
 			//这是在数据库中建立AreaName_cityId_product表，要放到同一事务中，保证区域点增加时，其数据库表同时建立
 			String tableName = "Product_"+area.getCityId()+"_"+area.getId();
+			area.setProductTable(tableName);//这是才插入表明，因为前面save area之后就能通过area.getId()获取其表名了
+			session.update(area);
 			String sql = "CREATE TABLE IF NOT EXISTS `"
 					+ tableName
 					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
@@ -106,8 +109,23 @@ public class AreaDaoImpl implements IAreaDao {
 
 	@Override
 	public List<Area> queryAll() {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = null;
+		Transaction tx = null;
+		List<Area> res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = session.createQuery("from Area").list();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override

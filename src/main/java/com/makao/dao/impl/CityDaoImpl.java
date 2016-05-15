@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.makao.dao.ICityDao;
 import com.makao.entity.Area;
 import com.makao.entity.City;
+import com.makao.entity.User;
 
 /**
  * @description: TODO
@@ -63,8 +64,23 @@ public class CityDaoImpl implements ICityDao {
 
 	@Override
 	public List<City> queryAll() {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = null;
+		Transaction tx = null;
+		List<City> res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = session.createQuery("from City").list();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override
