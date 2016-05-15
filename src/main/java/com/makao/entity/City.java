@@ -32,7 +32,7 @@ public class City implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	@Column(length=30)
+	@Column(length=30,unique=true)
 	public String getCityName() {
 		return cityName;
 	}

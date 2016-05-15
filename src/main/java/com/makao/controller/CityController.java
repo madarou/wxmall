@@ -1,8 +1,12 @@
 package com.makao.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -10,11 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.City;
 import com.makao.service.ICityService;
+import com.makao.utils.OrderNumberUtils;
 
 /**
  * @description: TODO
@@ -70,6 +77,69 @@ public class CityController {
 			logger.info("增加city成功失败id=" + city.getId());
         	jsonObject.put("msg", "增加city失败");
 		}
+        return jsonObject;
+    }
+	
+	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+    public @ResponseBody
+    Object uploadImg(@RequestParam("upfile") CommonsMultipartFile[] files, HttpServletRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		if(files==null || files.length==0){
+			jsonObject.put("msg", "图片不符合");
+			return jsonObject;
+		}
+		CommonsMultipartFile upfile = files[0];
+		String fileName = upfile.getOriginalFilename();
+		//获取上传文件类型的扩展名,先得到.的位置，再截取从.的下一个位置到文件的最后，最后得到扩展名  
+        String ext = fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
+        System.out.println(request.getServletContext().getRealPath("/"));
+        if(!("jpg".equals(ext)) && !("png".equals(ext))){
+        	jsonObject.put("msg", "图片不符合");
+        	return jsonObject;
+        }
+        //使用订单号生成器生成一个唯一的编号作为图片的名称
+        String picUniqueName = OrderNumberUtils.generateOrderNumber();
+        //将图片存入文件系统upload文件夹
+        if(!upfile.isEmpty()){  
+        	System.out.println("正在上传图片fileName---------->" + upfile.getOriginalFilename());
+        	String imgFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/upload/";
+        	String realImgName = picUniqueName+"_"+upfile.getOriginalFilename();
+        	if(realImgName.length()>50){//名字长过数据库设置的50，则截掉后面
+        		realImgName = realImgName.substring(0, 47)+"."+ext;
+        	}
+            int pre = (int) System.currentTimeMillis();  
+            try {  
+//                //拿到输出流，同时重命名上传的文件  
+//                FileOutputStream os = new FileOutputStream(imgFolder + realImgName);  
+//                //拿到上传文件的输入流  
+//                FileInputStream in = (FileInputStream) upfile.getInputStream();  
+//                 
+//                //以写字节的方式写文件  
+//                int b = 0;  
+//                while((b=in.read()) != -1){  
+//                    os.write(b);  
+//                }  
+//                os.flush();  
+//                os.close();  
+//                in.close();  
+            	File tofile = new File(imgFolder + realImgName);
+            	upfile.transferTo(tofile);
+                int finaltime = (int) System.currentTimeMillis();  
+                System.out.println("上传图片用时:"+(finaltime - pre));  
+                logger.info("图片 "+realImgName+" 成功写入本地文件");
+                jsonObject.put("msg", "上传成功");
+                jsonObject.put("imgName", realImgName);
+                return jsonObject;
+                
+            } catch (Exception e) {  
+                e.printStackTrace();  
+                System.out.println("图片"+realImgName+"写入本地文件出错");  
+                logger.error("图片 "+realImgName+" 写入本地文件出错" + e);
+                jsonObject.put("msg", "上传失败");
+                return jsonObject;
+            }  
+		}
+        jsonObject.put("msg", "上传失败");
         return jsonObject;
     }
 	

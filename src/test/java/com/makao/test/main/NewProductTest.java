@@ -25,19 +25,19 @@ public class NewProductTest {
 	@Test
 	public void test() {
 		JSONObject result = null;
-		String newsupervisor = "http://localhost:8080/wxmall/supervisor/new";
+		String newsupervisor = "http://localhost:8080/supervisor/new";
 		String supervisor = "{\"userName\":\"darou\",\"password\":\"test\"}";
 		
-		String newcity = "http://localhost:8080/wxmall/city/new";
+		String newcity = "http://localhost:8080/city/new";
 		String city = "{\"cityName\":\"上海\"}";
 		
-		String newarea = "http://localhost:8080/wxmall/area/new";
+		String newarea = "http://localhost:8080/area/new";
 		String area = "{\"areaName\":\"张江\",\"cityName\":\"上海\",\"catalogs\":\"水果=食材=零食=省钱\",\"cityId\":1}";
 		
-		String newvendor = "http://localhost:8080/wxmall/vendor/new";
+		String newvendor = "http://localhost:8080/vendor/new";
 		String vendor = "{\"userName\":\"马靠\",\"areaId\":1,\"cityId\":1,\"cityArea\":\"上海张江\"}";
 		
-		String newprodcut = "http://localhost:8080/wxmall/product/new";
+		String newprodcut = "http://localhost:8080/product/new";
 		String product = "{\"productName\":\"海南千禧小番茄\",\"catalog\":\"水果\",\"price\":\"12.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"30.00\",\"inventory\":12,\"sequence\":3,\"status\":\"库存紧张\",\"origin\":\"海南\",\"salesVolume\":7637,\"likes\":3972,\"areaId\":1,\"cityId\":1}";
 	
 		result = HttpUtils.doPostStr(newsupervisor,supervisor);

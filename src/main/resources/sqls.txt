@@ -64,6 +64,7 @@ Order_cityId_on:
 						`cityarea` varchar(30),
 						`userId` int(11),
 						`areaId` int(11),
+						`cityId` int(11),
 						PRIMARY KEY (`id`))";
 						
 				
@@ -91,6 +92,7 @@ Order_cityId_off:
 						`finalTime` datetime,
 						`userId` int(11),
 						`areaId` int(11),
+						`cityId` int(11),
 						PRIMARY KEY (`id`))";
 						
 						

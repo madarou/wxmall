@@ -1,5 +1,6 @@
 package com.makao.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.OrderOn;
 import com.makao.service.IOrderOnService;
+import com.makao.utils.OrderNumberUtils;
 
 /**
  * @description: TODO
@@ -53,9 +55,19 @@ public class OrderOnController {
 		}
         return jsonObject;
     }
+	/**
+	 * @param OrderOn
+	 * @return
+	 * curl l -H "Content-type: application/json" -X POST -d '{"productIds":"2=3.50=3,3=4.00=1","productNames":"海南小番茄=3.50=3,广东蜜桃=4.00=1","receiverName":"郭德纲","phoneNumber":"17638372821","address":"上海复旦大学","couponId":3,"couponPrice":"2.00","totalPrice":"14.5","comment":"越快越好","status":"未确认","cityarea":"常州-某某区","userId":1,"areaId":1,"cityId":1}' 'http://localhost:8080/orderOn/new'
+	 * 
+	 */
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody OrderOn OrderOn) {
+		OrderOn.setNumber(OrderNumberUtils.generateOrderNumber());
+		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
+		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
+		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
 		int res = this.orderOnService.insert(OrderOn);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){

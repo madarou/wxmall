@@ -173,16 +173,17 @@
       </div>
       <table class="table">
        <tr>
-        <th>项目1</th>
-        <th>项目2</th>
-        <th>项目3</th>
-        <th>项目4</th>
-        <th>项目5</th>
-        <th>项目6</th>
-        <th>项目7</th>
+        <th>订单编号</th>
+        <th>总金额</th>
+        <th>优惠券抵扣</th>
+        <th>收货人</th>
+        <th>联系电话</th>
+        <th>下单时间</th>
+        <th>接单操作</th>
+        <th>订单状态</th>
        </tr>
        <tr>
-        <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
+        <td></td>
         <td>内容二</td>
         <td>内容三</td>
         <td>内容四</td>
@@ -191,9 +192,10 @@
         <td>
          <a href="#" class="inner_btn">接单并打印</a>
         </td>
+        <td>已确认</td>
        </tr>
        <tr>
-        <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
+        <td></td>
         <td>内容二</td>
         <td>内容三</td>
         <td>内容四</td>
@@ -202,9 +204,10 @@
         <td>
          <a href="#" class="inner_btn">接单并打印</a>
         </td>
+        <td>待确认</td>
        </tr>
        <tr>
-        <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
+        <td></td>
         <td>内容二</td>
         <td>内容三</td>
         <td>内容四</td>
@@ -213,6 +216,7 @@
         <td>
          <a href="#" class="inner_btn" id="showPopTxt">接单并打印</a>
         </td>
+         <td>待确认</td>
        </tr>
       </table>
       <aside class="paging">

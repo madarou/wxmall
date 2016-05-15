@@ -40,5 +40,16 @@ public class TestMyBatis {
 	@Test
 	public void test(){
 		System.out.println(System.currentTimeMillis());
+		
+		//订单号生成
+		System.out.println(generateOrderNumber());
+	}
+	public static String generateOrderNumber(){
+		int machineId = 1;
+		int hashCodeV = java.util.UUID.randomUUID().toString().hashCode();
+		if(hashCodeV < 0){
+			hashCodeV = - hashCodeV;
+		}
+		return machineId+String.format("%015d", hashCodeV);
 	}
 }

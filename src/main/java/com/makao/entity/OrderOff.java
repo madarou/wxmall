@@ -29,6 +29,7 @@ public class OrderOff {
 	private Timestamp finalTime;//最终时间			当前这条记录被添加进来时的时间
 	private int userId;//对应User表里的Id
 	private int areaId;//Area表里的Id，区域卖家登录时的查询条件
+	private int cityId;
 	public int getId() {
 		return id;
 	}
@@ -154,5 +155,11 @@ public class OrderOff {
 	}
 	public void setAreaId(int areaId) {
 		this.areaId = areaId;
+	}
+	public int getCityId() {
+		return cityId;
+	}
+	public void setCityId(int cityId) {
+		this.cityId = cityId;
 	}
 }

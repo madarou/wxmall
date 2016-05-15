@@ -31,6 +31,7 @@ public class OrderOn {
 	private String cityarea;//城市+区域名		方便后台直接显示
 	private int userId;//对应User表里的Id
 	private int areaId;//Area表里的Id，区域卖家登录时的查询条件
+	private int cityId;//用于在访问数据库时，直接确定数据库表名Order_cityId_on，直接从前端传来用
 	public int getId() {
 		return id;
 	}
@@ -150,6 +151,12 @@ public class OrderOn {
 	}
 	public void setAreaId(int areaId) {
 		this.areaId = areaId;
+	}
+	public int getCityId() {
+		return cityId;
+	}
+	public void setCityId(int cityId) {
+		this.cityId = cityId;
 	}
 	
 }

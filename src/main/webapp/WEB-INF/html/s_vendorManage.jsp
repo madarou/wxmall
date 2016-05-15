@@ -18,6 +18,7 @@
 <![endif]-->
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="static/js/ajaxfileupload.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -184,11 +185,209 @@
         </div>
      </section>
      <!-- 删除分类弹出框 -->
+	<!-- 添加账号 -->
+    <script>
+     $(document).ready(function(){
+     //添加账号
+     $("#addVendor").click(function(){
+       $(".addvendor_pop_bg").fadeIn();
+       });
+    
+     $("#vendorAdd").click(function(){
+       $(".addvendor_pop_bg").fadeOut();
+       });
+   
+     $("#vendorCancel").click(function(){
+       $(".addvendor_pop_bg").fadeOut();
+       });
+     });
+     </script>
+     <section class="addvendor_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>添加账号</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          添加账号
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="vendorAdd" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="vendorCancel" class="input_btn falseBtn"/>
+         </div>
+        </div>
+     </section>
+     <!-- 添加账号结束 -->
+     <!-- 添加城市 -->
+    <script>
+     $(document).ready(function(){
+   	//var counter = 0;
+     //添加城市
+     $("#addCity").click(function(){
+       $(".addcity_pop_bg").fadeIn();
+       });
 
-     <!-- 搜索 -->
+     $("#cityAdd").click(function(){
+    	 var cityname = $.trim($("#cityName").val());
+    	 if(cityname==""){
+    		 alert("城市名不能为空");
+    		 //$("#nocityname").text("城市名不能为空")
+    		 return false;
+    	 }
+    	 var imgname = $.trim($("#serverImgName").val());
+    	 if(imgname==""){
+    		 alert("请上传图片");
+    		 //$("#nopicname").text("请上传图片")
+    		 return false;
+    	 }
+    	 $.ajax({
+	          type: "POST",
+	          contentType: "application/json",
+	          url: "/city/new",
+	          data: JSON.stringify({"cityName":cityname,"avatarUrl":imgname}),
+	          dataType: "json",
+	          success: function(data){
+	                  if(data.msg=="增加city成功"){
+	                	  alert("增加城市成功");
+	                  }
+	                  else{
+	                	  alert("增加城市失败");
+	                  }
+	          }
+	      });
+	       $(".addcity_pop_bg").fadeOut();
+	     	//清空内容
+	       $("#upload").attr("src","");
+	       $("#serverImgName").val("");
+	       $("#cityName").val("");
+       });
+     
+     $("#cityCancel").click(function(){
+       $(".addcity_pop_bg").fadeOut();
+       });
+     
+     $("#upload").on('click', function() {  
+         $('#fileToUpload').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDiv').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/city/uploadImg',  
+             secureuri:false,  
+             fileElementId:'fileToUpload',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             data:{name:'logan'},//一同上传的数据  
+             success: function (data, status) {  
+                 //把图片替换  
+                 /* var obj = jQuery.parseJSON(data);  
+                 $("#upload").attr("src", "../image/"+obj.fileName);   */
+                 if(data.msg=="上传成功"){
+                     alert("图片可用");
+                     $("#serverImgName").val(data.imgName);
+                     $("#upload").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="图片不符合"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+     </script>
+     <section class="addcity_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>添加城市</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          <section>
+		      <ul class="ulColumn2">
+		       <li>
+		        <span class="item_name">城市名称:</span>
+		        <input type="text" id="cityName" placeholder=""/>
+		        <!-- <span class="errorTips" id="nocityname"></span> -->
+		       </li>
+		       <li>
+		        <span class="item_name">城市logo:</span>
+		        <!-- <label class="uploadImg" id="upload">
+		         <span>上传图片</span>
+		        </label> -->
+		        <img alt="上传图片" id="upload" src="" style="height:100px;width:100px;cursor:pointer">
+		        <div id="fileDiv">
+		        	<input id="fileToUpload" style="display: none" type="file" name="upfile">
+		        </div>
+		        <input type="hidden" id="serverImgName"/>
+		       <!--  <span class="errorTips" id="nopicname"></span> -->
+		       </li>
+		       <!-- <li>
+		        <span class="item_name" style="width:120px;"></span>
+		        <input type="submit" class="link_btn"/>
+		       </li> -->
+		      </ul>
+		    </section>
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="cityAdd" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cityCancel" class="input_btn falseBtn"/>
+         </div>
+        </div>
+     </section>
+     <!-- 添加城市结束 -->
+     <!-- 添加区域 -->
+    <script>
+     $(document).ready(function(){
+     //添加账号
+     $("#addArea").click(function(){
+       $(".addarea_pop_bg").fadeIn();
+       });
+     $("#areaAdd").click(function(){
+       $(".addarea_pop_bg").fadeOut();
+       });
+
+     $("#areaCancel").click(function(){
+       $(".addarea_pop_bg").fadeOut();
+       });
+     });
+     </script>
+     <section class="addarea_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>添加区域</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          添加区域
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="areaAdd" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="areaCancel" class="input_btn falseBtn"/>
+         </div>
+        </div>
+     </section>
+     <!-- 添加区域结束 -->
+     
      <section style="text-align:right">
       <div class="btm_btn">
-        <input type="button" value="添加账号" class="input_btn trueBtn"/>
+        <input type="button" value="添加账号" id="addVendor" class="input_btn trueBtn"/>
+        <input type="button" value="添加城市" id="addCity" class="input_btn trueBtn"/>
+        <input type="button" value="添加区域" id="addArea" class="input_btn trueBtn"/>
        </div>
      </section><br/>
 
