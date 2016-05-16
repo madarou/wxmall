@@ -12,7 +12,7 @@ public interface IOrderOnDao {
 
     public int update(OrderOn orderOn);
     
-    public List<OrderOn> queryAll();
+    public List<OrderOn> queryAll(String tableName);
     
     public List<OrderOn> queryByName(String name);
 

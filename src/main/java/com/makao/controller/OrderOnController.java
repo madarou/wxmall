@@ -2,6 +2,7 @@ package com.makao.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.City;
 import com.makao.entity.OrderOn;
+import com.makao.service.ICityService;
 import com.makao.service.IOrderOnService;
 import com.makao.utils.OrderNumberUtils;
 
@@ -31,6 +34,8 @@ public class OrderOnController {
 	private static final Logger logger = Logger.getLogger(OrderOnController.class);
 	@Resource
 	private IOrderOnService orderOnService;
+	@Resource
+	private ICityService cityService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody OrderOn get(@PathVariable("id") Integer id)
@@ -72,11 +77,11 @@ public class OrderOnController {
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加有效订单成功id=" + OrderOn.getId());
-        	jsonObject.put("msg", "增加有效订单成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("增加有效订单成功失败id=" + OrderOn.getId());
-        	jsonObject.put("msg", "增加有效订单失败");
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }
@@ -112,28 +117,27 @@ public class OrderOnController {
     Object queryAll() {
 		List<OrderOn> OrderOns = null;
 		//则查询返回所有
-		OrderOns = this.orderOnService.queryAll();
+		OrderOns = this.orderOnService.queryAll("Order_1_on");//暂时写成这样
 		logger.info("查询所有有效订单信息完成");
         return OrderOns;
     }
 	
 	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
-    public @ResponseBody
-    ModelAndView query_All() {
-		//List<OrderOn> orderOns = null;
-		//则查询返回所有
-		//orderOns = this.orderOnService.queryAll();
-		//这里假设放一些东西进去
-		List<OrderOn> orderOns = new ArrayList<OrderOn>();
-		OrderOn oo = new OrderOn();
-		oo.setAddress("ddddddddd");
-		orderOns.add(oo);
+    public @ResponseBody ModelAndView query_All() {
+		List<City> cites = this.cityService.queryAll();
+		List<OrderOn> orderOns = new LinkedList<OrderOn>();
+		for(City c : cites){
+			List<OrderOn> os = this.orderOnService.queryAll("Order_"+c.getId()+"_on");
+			if(os!=null)
+				orderOns.addAll(os);
+		}
 		logger.info("查询所有有效订单信息完成");
 		ModelAndView modelAndView = new ModelAndView();  
 	    modelAndView.addObject("ordersOn", orderOns);  
 	    modelAndView.setViewName("s_orderOn");  
 	    return modelAndView;
     }
+	
 	
 	@RequestMapping(value = "/sareaquery", method = RequestMethod.GET)
     public @ResponseBody

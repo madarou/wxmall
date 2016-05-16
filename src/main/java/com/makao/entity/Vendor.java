@@ -11,6 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * @description: TODO
  * @author makao
@@ -18,6 +21,7 @@ import javax.persistence.Table;
  */
 @Entity  
 @Table 
+@JsonInclude(Include.NON_NULL)
 public class Vendor implements Serializable {
 	private static final long serialVersionUID = 2882450560807218843L;
 	private int id;
@@ -26,10 +30,13 @@ public class Vendor implements Serializable {
 	private String avatarUrl;
 	private int areaId;
 	private int cityId;
-	private String	cityArea;//城市名-区域名，方便直接使用
+	//private String	cityArea;//城市名-区域名，方便直接使用
+	private String cityName;//城市名，方便直接显示
+	private String areaName;//区域名，方便直接显示
 	private String lastIp;//上次登录ip
 	private Timestamp lastTime;//上次登录时间
-	private String isLock="no";//账号是否冻结
+	private String isLock;//账号是否冻结
+	private String isDelete;//暂用该字段代替删除，防止物理删除后关联数据出错
 	//private Area area;
 	
 	@Id
@@ -76,13 +83,6 @@ public class Vendor implements Serializable {
 		this.cityId = cityId;
 	}
 	@Column(length=30)
-	public String getCityArea() {
-		return cityArea;
-	}
-	public void setCityArea(String cityArea) {
-		this.cityArea = cityArea;
-	}
-	@Column(length=30)
 	public String getLastIp() {
 		return lastIp;
 	}
@@ -102,6 +102,26 @@ public class Vendor implements Serializable {
 	}
 	public void setIsLock(String isLock) {
 		this.isLock = isLock;
+	}
+	@Column(length=30)
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+	@Column(length=30)
+	public String getAreaName() {
+		return areaName;
+	}
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+	public String getIsDelete() {
+		return isDelete;
+	}
+	public void setIsDelete(String isDelete) {
+		this.isDelete = isDelete;
 	}
 //	@ManyToOne
 //	@JoinColumn(name="areaId")

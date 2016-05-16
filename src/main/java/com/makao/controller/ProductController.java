@@ -1,6 +1,7 @@
 package com.makao.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.Area;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.makao.service.IAreaService;
 import com.makao.service.IProductService;
 
 /**
@@ -30,6 +33,8 @@ public class ProductController {
 	private static final Logger logger = Logger.getLogger(ProductController.class);
 	@Resource
 	private IProductService productService;
+	@Resource
+	private IAreaService areaService;
 	
 	/**
 	 * @param id
@@ -74,11 +79,11 @@ public class ProductController {
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加商品成功name=" + Product.getProductName());
-        	jsonObject.put("msg", "增加商品成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("增加商品成功失败name=" + Product.getProductName());
-        	jsonObject.put("msg", "增加商品失败");
+        	jsonObject.put("msg", "200");
 		}
         return jsonObject;
     }
@@ -188,12 +193,16 @@ public class ProductController {
 	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView query_All() {
+		//先查出所有area，从而找到所有cityId_areaId来确定Product_cityId_areaId表
+		List<Area> areas = this.areaService.queryAll();
+		List<Product> products = new LinkedList<Product>();
+		for(Area a : areas){
+			List<Product> ps = this.productService.queryByCityAreaId(a.getCityId()+"",a.getId()+"");
+			if(ps!=null)
+				products.addAll(ps);
+		}
 		//这里假设放一些东西进去
-		List<Product> products = new ArrayList<Product>();
-		Product oo = new Product();
-		oo.setProductName("ddddddddd");
-		products.add(oo);
-		logger.info("查询所有有效订单信息完成");
+		logger.info("查询所有商品信息完成");
 		ModelAndView modelAndView = new ModelAndView();  
 	    modelAndView.addObject("products", products);  
 	    modelAndView.setViewName("s_productList");  

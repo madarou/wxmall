@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.makao.dao.IOrderOnDao;
+import com.makao.entity.City;
 import com.makao.entity.OrderOn;
+import com.makao.entity.Product;
 
 /**
  * @description: TODO
@@ -105,9 +108,63 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	}
 
 	@Override
-	public List<OrderOn> queryAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<OrderOn> queryAll(String tableName) {
+		String sql = "SELECT * FROM "+ tableName;
+		Session session = null;
+		Transaction tx = null;
+		List<OrderOn> res = new LinkedList<OrderOn>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							OrderOn p = new OrderOn();
+							p.setId(rs.getInt("id"));
+							p.setNumber(rs.getString("number"));
+							p.setProductIds(rs.getString("productIds"));
+							p.setOrderTime(rs.getTimestamp("orderTime"));
+							p.setReceiverName(rs.getString("receiverName"));
+							p.setPhoneNumber(rs.getString("phoneNumber"));
+							p.setAddress(rs.getString("address"));
+							p.setPayType(rs.getString("payType"));
+							p.setReceiveType(rs.getString("receiveType"));
+							p.setReceiveTime(rs.getString("receiveTime"));
+							p.setCouponId(rs.getInt("couponId"));
+							p.setCouponPrice(rs.getString("couponPrice"));
+							p.setTotalPrice(rs.getString("totalPrice"));
+							p.setFreight(rs.getString("freight"));
+							p.setComment(rs.getString("comment"));
+							p.setStatus(rs.getString("status"));
+							p.setCityarea(rs.getString("cityarea"));
+							p.setUserId(rs.getInt("userId"));
+							p.setAreaId(rs.getInt("areaId"));
+							p.setCityId(rs.getInt("cityId"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override

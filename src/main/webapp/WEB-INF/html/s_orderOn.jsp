@@ -98,7 +98,7 @@
      <script>
      $(document).ready(function(){
 		 //弹出文本性提示框
-		 $("#showPopTxt").click(function(){
+		 $(".editOrder").click(function(){
 			 $(".pop_bg").fadeIn();
 			 });
 		 //弹出：确认按钮
@@ -182,42 +182,21 @@
         <th>接单操作</th>
         <th>订单状态</th>
        </tr>
-       <tr>
-        <td></td>
-        <td>内容二</td>
-        <td>内容三</td>
-        <td>内容四</td>
-        <td>内容五</td>
-        <td>内容六</td>
-        <td>
-         <a href="#" class="inner_btn">接单并打印</a>
-        </td>
-        <td>已确认</td>
-       </tr>
-       <tr>
-        <td></td>
-        <td>内容二</td>
-        <td>内容三</td>
-        <td>内容四</td>
-        <td>内容五</td>
-        <td>内容六</td>
-        <td>
-         <a href="#" class="inner_btn">接单并打印</a>
-        </td>
-        <td>待确认</td>
-       </tr>
-       <tr>
-        <td></td>
-        <td>内容二</td>
-        <td>内容三</td>
-        <td>内容四</td>
-        <td>内容五</td>
-        <td>内容六</td>
-        <td>
-         <a href="#" class="inner_btn" id="showPopTxt">接单并打印</a>
-        </td>
-         <td>待确认</td>
-       </tr>
+       	<c:forEach var="item" items="${ordersOn}" varStatus="status">
+         	<tr>
+         		<td>${item.number}</td>
+         		<td>${item.totalPrice}</td>
+         		<td>${item.couponPrice}</td>
+         		<td>${item.receiverName}</td>
+         		<td>${item.phoneNumber}</td>
+         		<td>${item.orderTime}</td>
+         		<td style="text-align:center">
+		           <button class="linkStyle editOrder" id="showPopTxt${item.id}">接单</button>|
+		           <button class="linkStyle delOrder" id="delPopTxt${item.id}">取消</button>
+		        </td>
+		        <td>${item.status}</td>
+         	</tr>
+		</c:forEach> 
       </table>
       <aside class="paging">
        <a>第一页</a>

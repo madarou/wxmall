@@ -101,45 +101,130 @@
         <h3 style="text-align:right;">欢迎您，某某管理员</h3>
         <hr/>
      </section>
+	
+	<!-- 瞬间消失的提示框 -->
+     <section class="loading_area">
+      <div class="loading_cont">
+       <div class="loading_icon"><i></i><i></i><i></i><i></i><i></i></div>
+       <div class="loading_txt"><mark id="tips">操作成功</mark></div>
+      </div>
+     </section>
+     <!-- 瞬间消失的提示框 -->
+     
 
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
+    	 var showTips = function(content){
+   			$("#tips").text(content);
+   			$(".loading_area").fadeIn();
+               $(".loading_area").fadeOut(1500);
+   		}
+    	 var vendorId_toEdit = 0;
+    	 var oldVendorName = "";
+    	 var oldVendorPwd = "";
+
 		 //弹出文本性提示框
-		 $("#showPopTxt").click(function(){
+		 $(".editvendor").click(function(){
+			 //获取被点击的行的id，即vendorId
+			 var clickedId = $(this).attr("id");
+       		 vendorId_toEdit = clickedId.charAt(clickedId.length-1);
+       		 //填充用户名和密码
+       		 var firstTD = $(this).parent().parent().find("td").first();//根据编辑按钮定位到用户名td
+       		 $("#editvendorName").val(firstTD.html());
+       		 oldVendorName = firstTD.html();
+       		 var secondTD = $(this).parent().parent().find("td").eq(1);//根据编辑按钮定位到用户名td
+      		 $("#editpassword").val(secondTD.html());
+      		 oldVendorPwd = secondTD.html();
+			 
 			 $(".pop_bg").fadeIn();
 			 });
 		 //弹出：确认按钮
 		 $("#saveBtn").click(function(){
+			 var newVendorName = $.trim($("#editvendorName").val());
+			 var newVendorPwd = $.trim($("#editpassword").val());
+			 if(oldVendorName==newVendorName && newVendorPwd==oldVendorPwd){//用户并未修改则不提交
+				 $(".pop_bg").fadeOut();
+				 oldVendorName = "";
+		    	 oldVendorPwd = "";
+				 return false;
+			 }
+			 
+			 if(newVendorPwd!=oldVendorPwd){//如果修改了密码，则全部提交
+				 $.ajax({
+		    		  type: "POST",
+		  	          contentType: "application/json",
+		  	          url: "/vendor/update",
+		  	          dataType: "json",
+		  	          data: JSON.stringify({"id":vendorId_toEdit,"userName":newVendorName,"password":newVendorPwd}),
+		  	          success: function(data){
+		  	        	  //var cities = JSON.stringify(data.cities);
+		  	        	  if(data.msg=="200"){
+		  	        		  //alert("删除区域管理员账号成功");
+		  	        		  showTips("修改管理员账号成功");
+		  	        		  window.location="/vendor/squeryall";
+		  	        	  }
+		  	          }
+		    	 	});
+			 }
+			 else if(oldVendorName!=newVendorName){//如果密码没修改，则不要提交密码，否则又会被加密
+				 $.ajax({
+		    		  type: "POST",
+		  	          contentType: "application/json",
+		  	          url: "/vendor/update",
+		  	          dataType: "json",
+		  	          data: JSON.stringify({"id":vendorId_toEdit,"userName":newVendorName,"password":""}),
+		  	          success: function(data){
+		  	        	  //var cities = JSON.stringify(data.cities);
+		  	        	  if(data.msg=="200"){
+		  	        		  //alert("删除区域管理员账号成功");
+		  	        		  showTips("修改管理员账号成功");
+		  	        		  window.location="/vendor/squeryall";
+		  	        	  }
+		  	          }
+		    	 	});
+			 }
 			 $(".pop_bg").fadeOut();
+			 oldVendorName = "";
+	    	 oldVendorPwd = "";
+	    	 vendorId_toEdit = 0;
 			 });
 		 //弹出：取消或关闭按钮
 		 $("#cancelBtn").click(function(){
 			 $(".pop_bg").fadeOut();
+			 oldVendorName = "";
+	    	 oldVendorPwd = "";
+	    	 vendorId_toEdit = 0;
 			 });
 		 });
      </script>
      <section class="pop_bg">
       <div class="pop_cont">
        <!--title-->
-       <h3>添加分类</h3>
+       <h3>编辑账户</h3>
        <!--content-->
-       <div class="pop_cont_input">
-        <ul>
-         <li>
-          <span>分类名称</span>
-          <input type="text" placeholder="如'水果'" class="textbox"/>
-         </li>
-         <li>
-          <span class="ttl">排&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序</span>
-          <input type="text" placeholder="请填写整数，从大到小排序" class="textbox"/>
-         </li>
-        </ul>
-       </div>
        <!--以pop_cont_text分界-->
        <div class="pop_cont_text">
-        这里是文字性提示信息！
-       </div>
+          <section>
+		      <ul class="ulColumn2">
+		       <li>
+		        <span class="item_name">账号名称:</span>
+		        <input type="text" id="editvendorName" placeholder=""/>
+		       </li>
+		       <li>
+		        <span class="item_name">账号密码:</span>
+		        <input type="text" id="editpassword" placeholder=""/>
+		       </li>
+		       <!-- <li>
+		        <span class="item_name">负责区域:</span>
+		       		<select class="select" id="editvendorcity">  
+				    </select>
+				    <select class="select" id="editvendorarea">  
+				    </select>
+		       </li> -->
+		      </ul>
+		    </section>
+         </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
         <input type="button" value="保存" id="saveBtn" class="input_btn trueBtn"/>
@@ -153,17 +238,47 @@
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
+    	 var showTips = function(content){
+  			$("#tips").text(content);
+  			$(".loading_area").fadeIn();
+              $(".loading_area").fadeOut(1500);
+  		}
+    	var vendorId_toDel = 0;//要删除的用户
      //弹出文本性提示框
-     $("#delPopTxt").click(function(){
+     $(".delvendor").click(function(){
        $(".del_pop_bg").fadeIn();
+       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
+       var clickedId = $(this).attr("id");
+       vendorId_toDel = clickedId.charAt(clickedId.length-1);
+
        });
      //弹出：确认按钮
      $("#confirmDel").click(function(){
+    	 if(vendorId_toDel==0){
+    		 alert("请重新选择要删除账户");
+    		 return false;
+    	 }
+        	$.ajax({
+    		  type: "DELETE",
+  	          contentType: "application/json",
+  	          url: "/vendor/"+vendorId_toDel,
+  	          dataType: "json",
+  	          success: function(data){
+  	        	  //var cities = JSON.stringify(data.cities);
+  	        	  if(data.msg=="200"){
+  	        		  //alert("删除区域管理员账号成功");
+  	        		  showTips("删除管理员账号成功");
+  	        		  window.location="/vendor/squeryall";
+  	        		  vendorId_toDel=0;
+  	        	  }
+  	          }
+    	 	});
        $(".del_pop_bg").fadeOut();
        });
      //弹出：取消或关闭按钮
      $("#cancelDel").click(function(){
        $(".del_pop_bg").fadeOut();
+       vendorId_toDel=0;
        });
      });
      </script>
@@ -175,7 +290,7 @@
        <div class="pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
-          确认删除？删除后该分类下的所有记录将取消与该分类的关联
+          确认删除该区域管理员账户?
          </div>
          <!--bottom:operate->button-->
          <div class="btm_btn">
@@ -188,6 +303,11 @@
 	<!-- 添加账号 -->
     <script>
      $(document).ready(function(){
+    	 var showTips = function(content){
+  			$("#tips").text(content);
+  			$(".loading_area").fadeIn();
+              $(".loading_area").fadeOut(1500);
+  		}
      //添加账号
      $("#addVendor").click(function(){
     	 $("#vendorcity").empty();
@@ -252,11 +372,13 @@
 	          type: "POST",
 	          contentType: "application/json",
 	          url: "/vendor/new",
-	          data: JSON.stringify({"userName":vendorname,"cityId":cityId,"areaId":areaId,"cityArea":cityname+areaname}),
+	          data: JSON.stringify({"userName":vendorname,"cityId":cityId,"areaId":areaId,"cityName":cityname,"areaName":areaname}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
-	                	  alert("增加区域管理员账号成功");
+	                	  //alert("增加区域管理员账号成功");
+	                	  showTips("增加管理员账号成功");
+	                	  window.location="/vendor/squeryall";
 	                  }
 	                  else{
 	                	  alert("增加区域管理员账号失败");
@@ -312,6 +434,11 @@
      <!-- 添加城市 -->
     <script>
      $(document).ready(function(){
+    	 var showTips = function(content){
+ 			$("#tips").text(content);
+ 			$(".loading_area").fadeIn();
+             $(".loading_area").fadeOut(1500);
+ 		}
    	//var counter = 0;
      //添加城市
      $("#addCity").click(function(){
@@ -339,7 +466,8 @@
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
-	                	  alert("增加城市成功");
+	                	  //alert("增加城市成功");
+	                	  showTips("增加城市成功");
 	                  }
 	                  else{
 	                	  alert("增加城市失败");
@@ -373,7 +501,7 @@
                  /* var obj = jQuery.parseJSON(data);  
                  $("#upload").attr("src", "../image/"+obj.fileName);   */
                  if(data.msg=="上传成功"){
-                     alert("图片可用");
+                     //alert("图片可用");
                      $("#serverImgName").val(data.imgName);
                      $("#upload").attr("src", "/static/upload/"+data.imgName);
                  }
@@ -440,7 +568,12 @@
      <!-- 添加区域 -->
     <script>
      $(document).ready(function(){
-     //添加账号
+    	 var showTips = function(content){
+  			$("#tips").text(content);
+  			$(".loading_area").fadeIn();
+              $(".loading_area").fadeOut(1500);
+  		}
+     //添加区域
      $("#addArea").click(function(){
     	 $("#cityselect").empty();
     	 $("#cityselect").get(0).options.add(new Option("选择城市","选择城市"));
@@ -480,7 +613,8 @@
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
-	                	  alert("增加区域成功");
+	                	  //alert("增加区域成功");
+	                	  showTips("增加区域成功");
 	                  }
 	                  else{
 	                	  alert("增加区域失败");
@@ -565,10 +699,10 @@
          	<tr>
          		<td>${item.userName}</td>
          		<td>${item.password}</td>
-         		<td>${item.cityArea}</td>
+         		<td>${item.cityName}-${item.areaName}</td>
          		<td style="text-align:center">
-		           <button class="linkStyle" id="showPopTxt">编辑</button>|
-		           <button class="linkStyle" id="delPopTxt">删除</button>
+		           <button class="linkStyle editvendor" id="showPopTxt${item.id}">编辑</button>|
+		           <button class="linkStyle delvendor" id="delPopTxt${item.id}">删除</button>
 		        </td>
          	</tr>
 		</c:forEach> 

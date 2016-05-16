@@ -111,6 +111,7 @@ public class ProductDaoImpl implements IProductDao {
 						while(rs.next()){
 							Product p = new Product();
 							p.setId(rs.getInt("id"));
+							p.setProductName(rs.getString("productName"));
 							p.setCatalog(rs.getString("catalog"));
 							p.setShowWay(rs.getString("showWay"));
 							p.setPrice(rs.getString("price"));
@@ -201,6 +202,7 @@ public class ProductDaoImpl implements IProductDao {
 						while(rs.next()){
 							Product p = new Product();
 							p.setId(rs.getInt("id"));
+							p.setProductName(rs.getString("productName"));
 							p.setCatalog(rs.getString("catalog"));
 							p.setShowWay(rs.getString("showWay"));
 							p.setPrice(rs.getString("price"));

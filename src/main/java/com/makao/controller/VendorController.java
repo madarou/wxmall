@@ -85,11 +85,11 @@ public class VendorController {
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除vendor信息成功id=" + id);
-        	jsonObject.put("msg", "删除vendor信息成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("删除vendor信息失败id=" + id);
-        	jsonObject.put("msg", "删除vendor信息失败");
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }
@@ -102,6 +102,7 @@ public class VendorController {
     public @ResponseBody
     Object add(@RequestBody Vendor vendor) {
 		vendor.setIsLock("no");
+		vendor.setIsDelete("no");
 		vendor.setPassword(EncryptUtils.passwordEncryptor.encryptPassword("shygxx"));
 		int res = this.vendorService.insert(vendor);
 		JSONObject jsonObject = new JSONObject();
@@ -118,19 +119,32 @@ public class VendorController {
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
-    Object update(@RequestBody Vendor Vendor) {
-		int res = this.vendorService.update(Vendor);
+    Object update(@RequestBody JSONObject paramObject) {
+		int id = paramObject.getIntValue("id");
+		String vendorname = paramObject.getString("userName");
+		String password = paramObject.getString("password");
+		Vendor vendor = this.vendorService.getById(id);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("修改vendor信息成功id=" + Vendor.getId());
-        	jsonObject.put("msg", "修改vendor信息成功");
+		if(vendor!=null){
+			vendor.setUserName(vendorname);
+			if(!"".equals(password))
+				vendor.setPassword(EncryptUtils.passwordEncryptor.encryptPassword(password));
+			int res = this.vendorService.update(vendor);
+			if(res==0){
+				logger.info("修改vendor信息成功id=" + vendor.getId());
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("修改vendor信息失败id=" + vendor.getId());
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
 		}
-		else{
-			logger.info("修改vendor信息失败id=" + Vendor.getId());
-        	jsonObject.put("msg", "修改vendor信息失败");
-		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
+	
 	
 	@RequestMapping(value = "/query/{name:\\S+}", method = RequestMethod.GET)
     public @ResponseBody
@@ -157,7 +171,7 @@ public class VendorController {
     Object query_All() {
 		List<Vendor> vendors = null;
 		vendors = this.vendorService.queryAll();
-		logger.info("查询所有有效订单信息完成");
+		logger.info("查询所有vendor信息完成");
 		ModelAndView modelAndView = new ModelAndView();  
 	    modelAndView.addObject("vendors", vendors);  
 	    modelAndView.setViewName("s_vendorManage");  

@@ -1,5 +1,9 @@
 package com.makao.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,6 +13,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.jdbc.Work;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +41,86 @@ public class CityDaoImpl implements ICityDao {
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
-			session.save(city);// 保存用户
+			session.save(city);// 保存
+			//为Order_cityId_on建表
+			String tableName = "Order_"+city.getId()+"_on";
+			String sql = "CREATE TABLE IF NOT EXISTS `"
+					+ tableName
+					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
+					+ "`number` varchar(20) NOT NULL,"
+					+ "`productIds` varchar(200),"
+					+ "`productNames` varchar(255),"
+					+ "`orderTime` datetime,"
+					+ "`receiverName` varchar(30),"
+					+ "`phoneNumber` varchar(12),"
+					+ "`address` varchar(120),"
+					+ "`payType` varchar(20),"
+					+ "`receiveType` varchar(20),"
+					+ "`receiveTime` varchar(20),"
+					+ "`couponId` int(11),"
+					+ "`couponPrice` varchar(10),"
+					+ "`totalPrice` varchar(10),"
+					+ "`freight` varchar(10),"
+					+ "`comment` varchar(255),"
+					+ "`status` varchar(10),"
+					+ "`cityarea` varchar(30),"
+					+ "`userId` int(11),"
+					+ "`areaId` int(11),"
+					+ "`cityId` int(11),"
+					+ "PRIMARY KEY (`id`))";
+			session.doWork(
+					// 定义一个匿名类，实现了Work接口
+					new Work() {
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = null;
+							try {
+								ps = connection.prepareStatement(sql);
+								ps.execute();
+							} finally {
+								doClose(ps);
+							}
+						}
+					});
+			//为Order_cityId_off建表
+			String tableName2 = "Order_"+city.getId()+"_off";
+			String sql2 = "CREATE TABLE IF NOT EXISTS `"
+					+ tableName2
+					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
+					+ "`number` varchar(20) NOT NULL,"
+					+ "`productIds` varchar(200),"
+					+ "`productNames` varchar(255),"
+					+ "`orderTime` datetime,"
+					+ "`receiverName` varchar(30),"
+					+ "`phoneNumber` varchar(12),"
+					+ "`address` varchar(120),"
+					+ "`payType` varchar(20),"
+					+ "`receiveType` varchar(20),"
+					+ "`receiveTime` varchar(20),"
+					+ "`couponId` int(11),"
+					+ "`couponPrice` varchar(10),"
+					+ "`totalPrice` varchar(10),"
+					+ "`freight` varchar(10),"
+					+ "`comment` varchar(255),"
+					+ "`finalStatus` varchar(10),"
+					+ "`cityarea` varchar(30),"
+					+ "`finalTime` datetime,"
+					+ "`userId` int(11),"
+					+ "`areaId` int(11),"
+					+ "`cityId` int(11),"
+					+ "PRIMARY KEY (`id`))";
+			session.doWork(
+					// 定义一个匿名类，实现了Work接口
+					new Work() {
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = null;
+							try {
+								ps = connection.prepareStatement(sql2);
+								ps.execute();
+							} finally {
+								doClose(ps);
+							}
+						}
+					});
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)
@@ -99,6 +183,46 @@ public class CityDaoImpl implements ICityDao {
 	public int deleteById(int id) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	protected void doClose(PreparedStatement stmt, ResultSet rs) {
+		if (rs != null) {
+			try {
+				rs.close();
+				rs = null;
+			} catch (Exception ex) {
+				rs = null;
+				logger.error(ex.getMessage(), ex);
+				ex.printStackTrace();
+			}
+		}
+		// Statement对象关闭时,会自动释放其管理的一个ResultSet对象
+		if (stmt != null) {
+			try {
+				stmt.close();
+				stmt = null;
+			} catch (Exception ex) {
+				stmt = null;
+				logger.error(ex.getMessage(), ex);
+			}
+		}
+		// 当Hibernate的事务由Spring接管时,session的关闭由Spring管理.不用手动关闭
+		// if(session != null){
+		// session.close();
+		// }
+	}
+
+	protected void doClose(PreparedStatement stmt) {
+		// Statement对象关闭时,会自动释放其管理的一个ResultSet对象
+		if (stmt != null) {
+			try {
+				stmt.close();
+				stmt = null;
+			} catch (Exception ex) {
+				stmt = null;
+				logger.error(ex.getMessage(), ex);
+			}
+		}
 	}
 
 }

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.makao.dao.IVendorDao;
 import com.makao.entity.Area;
 import com.makao.entity.City;
+import com.makao.entity.User;
 import com.makao.entity.Vendor;
 
 /**
@@ -52,14 +53,45 @@ public class VendorDaoImpl implements IVendorDao {
 
 	@Override
 	public Vendor getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = null;
+		Transaction tx = null;
+		Vendor res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = (Vendor) session.get(Vendor.class, id);
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override
 	public int update(Vendor vendor) {
-		// TODO Auto-generated method stub
-		return 0;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.update(vendor);// 保存用户
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			res = 1;
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override
@@ -70,7 +102,7 @@ public class VendorDaoImpl implements IVendorDao {
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
-			res = session.createQuery("from Vendor").list();
+			res = session.createQuery("from Vendor v where v.isDelete='no'").list();
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)
@@ -97,8 +129,26 @@ public class VendorDaoImpl implements IVendorDao {
 
 	@Override
 	public int deleteById(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//session.createQuery("delete Vendor v where v.id=?").setInteger(0, id).executeUpdate();
+			//这里不真正删除
+			session.createQuery("update Vendor v set v.isDelete='yes' where v.id=?").setInteger(0, id).executeUpdate();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			res = 1;
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 }

@@ -67,6 +67,20 @@
     <property name="messageConverters">  
         <list>  
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">  
+            	<property name="objectMapper">
+                        <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
+                            <property name="dateFormat">
+                                <bean class="java.text.SimpleDateFormat">
+                                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                                </bean>
+                            </property>
+                            <!-- <property name="serializationInclusion">
+                                把枚举类型转为一个bean才能注入, 不序列化空值属性
+                                <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+                                <util:constant static-field="com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL" />
+                            </property> -->
+                        </bean>                       
+                    </property>
                 <property name="supportedMediaTypes">  
                     <list>  
                         <value>text/html;charset=UTF-8</value>  

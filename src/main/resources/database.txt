@@ -60,10 +60,13 @@ password		varchar(30)		登录卖家系统的密码
 avatarUrl		varchar(50)		头像地址			暂时不用
 areaId			int(11)			卖家负责的网点
 cityId			int(11)			卖家所在城市
-cityArea		varchar(30)		城市名-区域名		方便直接显示
+cityArea(已删除)		varchar(30)		城市名-区域名		方便直接显示
+cityName		varchar(30)		城市名			方便直接显示
+areaName		varchra(30)		区域名			方便直接显示
 lastIp			varchar(30)		上次登录ip
 lastTime		datetime		上次登录时间
 isLock			varchar(5)		是否锁定			被超级管理员锁定后不能登录
+isDelete		varchar(5)		是否已删除			暂用该字段代替删除，防止物理删除后关联数据出错
 
 Supervisor(超级管理员)
 列名				类型				注释				备注

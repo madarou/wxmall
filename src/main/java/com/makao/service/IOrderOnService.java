@@ -17,7 +17,7 @@ public interface IOrderOnService {
 
 	List<OrderOn> queryByName(String name);
 
-	List<OrderOn> queryAll();
+	List<OrderOn> queryAll(String tableName);
 
 	OrderOn getById(int id);
 

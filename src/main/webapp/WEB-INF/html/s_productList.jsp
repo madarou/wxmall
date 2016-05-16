@@ -192,18 +192,21 @@
         <th>销量</th>
         <th>操作</th>
        </tr>
-       <tr>
-        <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
-        <td>内容二</td>
-        <td>内容三</td>
-        <td>内容四</td>
-        <td>内容五</td>
-        <td>内容六</td>
-        <td>
-         <a href="#">编辑</a>
-         <a href="#">上/下架</a>
-         <a href="#">复制商品链接</a>
-        </td>
+        <c:forEach var="item" items="${products}" varStatus="status">
+         	<tr>
+         		<td>缩略图</td>
+         		<td>${item.productName}</td>
+         		<td>${item.catalog}</td>
+         		<td>${item.price}</td>
+         		<td>${item.inventory}</td>
+         		<td>${item.salesVolume}</td>
+         		<td style="text-align:center">
+		           <button class="linkStyle editProduct" id="showPopTxt${item.id}">编辑</button>|
+		           <button class="linkStyle showProduct" id="delPopTxt${item.id}">上/下架</button>
+		           <button class="linkStyle copyProduct" id="delPopTxt${item.id}">复制链接</button>
+		        </td>
+         	</tr>
+		</c:forEach> 
        </tr>
       </table>
       <aside class="paging">

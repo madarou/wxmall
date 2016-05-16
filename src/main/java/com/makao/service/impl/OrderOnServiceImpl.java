@@ -33,8 +33,8 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	}
 	
 	@Override
-	public List<OrderOn> queryAll() {
-		return this.orderOnDao.queryAll();
+	public List<OrderOn> queryAll(String tableName) {
+		return this.orderOnDao.queryAll(tableName);
 	}
 	@Override
 	public List<OrderOn> queryByName(String name) {
