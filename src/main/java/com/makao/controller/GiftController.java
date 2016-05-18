@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -104,13 +105,17 @@ public class GiftController {
         return Gifts;
     }
 	
-	@RequestMapping(value = "/sareagiftmanage", method = RequestMethod.GET)
+	@RequestMapping(value = "/v_giftmanage/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    ModelAndView giftManage() {
-		logger.info("跳转到添加产品页面完成");
-		ModelAndView modelAndView = new ModelAndView();  
-	    //modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("v_giftManage");  
-	    return modelAndView;
+    ModelAndView giftManage(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("v_giftManage");
+		if (token == null) {
+			return modelAndView;
+		}
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		return modelAndView;
     }
 }

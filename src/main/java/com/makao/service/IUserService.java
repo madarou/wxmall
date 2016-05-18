@@ -13,4 +13,5 @@ public interface IUserService {
 	public List<User> queryByName(String name);
 	
 	public void testor();
+	public List<User> queryByAreaId(int areaId);
 }

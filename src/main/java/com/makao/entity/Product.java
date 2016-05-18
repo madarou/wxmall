@@ -22,6 +22,7 @@ public class Product {
 	private String origin;//原产地
 	private int salesVolume;//销量	
 	private int likes;//点赞数
+	private String subdetailUrl;//有些详细介绍前还有一个图片
 	private String detailUrl;//详细介绍图片地址
 	private String isShow="yes";//否在商品列表显示	值为'yes'或'no'，与status有区别，是完全不在列表中显示
 	private int areaId;//所属的网点名，方便直接查找确定其数据库表
@@ -151,5 +152,11 @@ public class Product {
 	}
 	public void setCityId(int cityId) {
 		this.cityId = cityId;
+	}
+	public String getSubdetailUrl() {
+		return subdetailUrl;
+	}
+	public void setSubdetailUrl(String subdetailUrl) {
+		this.subdetailUrl = subdetailUrl;
 	}
 }

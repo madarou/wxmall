@@ -55,8 +55,8 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/sareaquery">未处理订单</a></dd>
-    <dd><a href="/orderOff/sareaquery">已处理订单</a></dd>
+    <dd><a href="/orderOn/v_query/${id}?token=${token}">未处理订单</a></dd>
+    <dd><a href="/orderOff/v_query/${id}?token=${token}">已处理订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
@@ -65,19 +65,19 @@
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="/product/sareanew">商品添加</a></dd>
-    <dd><a href="/product/sareamanage">商品管理</a></dd>
-    <dd><a href="/product/sareacatalog">分类管理</a></dd>
-    <dd><a href="/product/sareapromotion">综合配置</a></dd>
+    <dd><a href="/product/v_new/${id}?token=${token}">商品添加</a></dd>
+    <dd><a href="/product/v_manage/${id}?token=${token}">商品管理</a></dd>
+    <dd><a href="/product/v_catalog/${id}?token=${token}">分类管理</a></dd>
+    <dd><a href="/product/v_promotion/${id}?token=${token}">综合配置</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="/user/sareadatamanage" class="active">数据管理</a></dd>
+    <dd><a href="/user/v_datamanage/${id}?token=${token}">数据管理</a></dd>
     <dd><a href="#">优惠券配置</a></dd>
-    <dd><a href="/gift/sareagiftmanage">礼品配置</a></dd>
-    <dd><a href="/vendor/sareabindwx">绑定微信号</a></dd>
+    <dd><a href="/gift/v_giftmanage/${id}?token=${token}">礼品配置</a></dd>
+    <dd><a href="/vendor/v_bindwx/${id}?token=${token}">绑定微信号</a></dd>
    </dl>
   </li>
   <li>
@@ -172,24 +172,28 @@
           <table class="table">
            <tr>
             <th>ID</th>
-            <th>姓名</th>
-            <th>联系电话</th>
-            <th>积分</th>
-            <th>详细地址</th>
-            <th>注册时间</th>
-            <th>操作</th>
+	        <th>姓名</th>
+	        <th>联系电话</th>
+	        <th>积分</th>
+	        <th>详细地址</th>
+	        <th>等级</th>
+	        <th>注册时间</th>
+	        <!-- <th>操作</th> -->
            </tr>
-           <tr>
-            <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
-            <td>内容二</td>
-            <td>内容三</td>
-            <td>内容四</td>
-            <td>内容五</td>
-            <td>内容六</td>
-            <td>
-             <button class="linkStyle" id="showPopTxt">修改</button>
-            </td>
-           </tr>
+           <c:forEach var="item" items="${users}" varStatus="status">
+         	<tr>
+         		<td>${item.id}</td>
+         		<td>${item.userName}</td>
+         		<td>${item.phoneNumber}</td>
+         		<td>${item.point}</td>
+         		<td>${item.address}</td>
+         		<td>${item.rank}</td>
+         		<td>${item.registTime}</td>
+         		<%-- <td style="text-align:center">
+		           <button class="linkStyle editUser" id="showPopTxt${item.id}">修改</button>
+		        </td> --%>
+         	</tr>
+		</c:forEach> 
           </table>
           <aside class="paging">
            <a>第一页</a>

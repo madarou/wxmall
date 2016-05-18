@@ -127,6 +127,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setOrigin(rs.getString("origin"));
 							p.setSalesVolume(rs.getInt("salesVolume"));
 							p.setLikes(rs.getInt("likes"));
+							p.setSubdetailUrl(rs.getString("subdetailUrl"));
 							p.setDetailUrl(rs.getString("detailUrl"));
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
@@ -181,7 +182,7 @@ public class ProductDaoImpl implements IProductDao {
 	}
 	
 	@Override
-	public List<Product> queryByCityAreaId(String cityId, String areaId) {
+	public List<Product> queryByCityAreaId(int cityId, int areaId) {
 		String tableName = "Product_"+cityId+"_"+areaId;
 		String sql = "SELECT * FROM "+tableName;
 		Session session = null;
@@ -281,6 +282,60 @@ public class ProductDaoImpl implements IProductDao {
 				logger.error(ex.getMessage(), ex);
 			}
 		}
+	}
+
+	@Override
+	public int insertToWhole(Product product) {
+		String tableName = "Product";
+		String sql = "INSERT INTO `"
+				+ tableName
+				+ "` (`productName`,`catalog`,`price`,`standard`,`marketPrice`,`inventory`,`sequence`,`status`,"
+				+ "`origin`,`salesVolume`,`likes`,`areaId`,`cityId`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.setString(1, product.getProductName());
+						ps.setString(2, product.getCatalog());
+						ps.setString(3, product.getPrice());
+						ps.setString(4, product.getStandard());
+						ps.setString(5, product.getMarketPrice());
+						ps.setInt(6, product.getInventory());
+						ps.setInt(7, product.getSequence());
+						ps.setString(8, product.getStatus());
+						ps.setString(9, product.getOrigin());
+						ps.setInt(10, product.getSalesVolume());
+						ps.setInt(11, product.getLikes());
+						ps.setInt(12, product.getAreaId());
+						ps.setInt(13, product.getCityId());
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+
 	}
 
 }

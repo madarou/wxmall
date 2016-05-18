@@ -19,4 +19,6 @@ public interface IUserDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	public List<User> queryByAreaId(int areaId);
 }

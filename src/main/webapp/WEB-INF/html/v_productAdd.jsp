@@ -54,12 +54,12 @@
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
  <h2><a href="index.php">常州-某某区</a></h2>
-  <ul>
+<ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/sareaquery">未处理订单</a></dd>
-    <dd><a href="/orderOff/sareaquery">已处理订单</a></dd>
+    <dd><a href="/orderOn/v_query/${id}?token=${token}">未处理订单</a></dd>
+    <dd><a href="/orderOff/v_query/${id}?token=${token}">已处理订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
@@ -68,19 +68,19 @@
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="/product/sareanew" class="active">商品添加</a></dd>
-    <dd><a href="/product/sareamanage">商品管理</a></dd>
-    <dd><a href="/product/sareacatalog">分类管理</a></dd>
-    <dd><a href="/product/sareapromotion">综合配置</a></dd>
+    <dd><a href="/product/v_new/${id}?token=${token}">商品添加</a></dd>
+    <dd><a href="/product/v_manage/${id}?token=${token}">商品管理</a></dd>
+    <dd><a href="/product/v_catalog/${id}?token=${token}">分类管理</a></dd>
+    <dd><a href="/product/v_promotion/${id}?token=${token}">综合配置</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="/user/sareadatamanage">数据管理</a></dd>
+    <dd><a href="/user/v_datamanage/${id}?token=${token}">数据管理</a></dd>
     <dd><a href="#">优惠券配置</a></dd>
-    <dd><a href="/gift/sareagiftmanage">礼品配置</a></dd>
-    <dd><a href="/vendor/sareabindwx">绑定微信号</a></dd>
+    <dd><a href="/gift/v_giftmanage/${id}?token=${token}">礼品配置</a></dd>
+    <dd><a href="/vendor/v_bindwx/${id}?token=${token}">绑定微信号</a></dd>
    </dl>
   </li>
   <li>
@@ -95,7 +95,14 @@
         <h3 style="text-align:right;">欢迎您，某某管理员</h3>
         <hr/>
      </section>
-
+	<!-- 瞬间消失的提示框 -->
+     <section class="loading_area">
+      <div class="loading_cont">
+       <div class="loading_icon"><i></i><i></i><i></i><i></i><i></i></div>
+       <div class="loading_txt"><mark id="tips">操作成功</mark></div>
+      </div>
+     </section>
+     <!-- 瞬间消失的提示框 -->
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
@@ -169,57 +176,101 @@
      </section>
      <!--结束：弹出框效果-->
 
+ 	<script>
+     $(document).ready(function(){
+    	 var loginUserId = $("#loginUserId").val();
+    	 var showTips = function(content){
+    			$("#tips").text(content);
+    			$(".loading_area").fadeIn();
+                $(".loading_area").fadeOut(500);
+    		}
+		 $("#prosave").click(function(){
+			 	var productName = $.trim($("#proname").val());
+			 	var catalog = $('input:radio[name=procatalog]:checked').html();
+			 	var label = $('input:radio[name=prolabel]:checked').html();
+			 	var standard = $.trim($("#prostandard").val());
+			 	var price = $.trim($("#proprice").val());
+			 	var marketPrice = $.trim($("#promarketprice").val());
+			 	var inventory = $.trim($("#proinventory").val());//分库里必须有库存值，没有则为0
+			 	var isShow = $('input:radio[name=proisshow]:checked').val();
+			 	var showWay = $('input:radio[name=proshowway]:checked').val();
+			 	var sequence = $.trim($("#prosequence").val());
+			 	var description = $.trim($("#prodescription").val());
+			 	
+			 	if(productName == "" || standard=="" || price=="" || marketPrice=="" || inventory== "" || sequence==""){
+			 		alert("产品名称、规格、价格、库存、市场价以及排序不能为空");
+			 		return false;
+			 	}
+			 	$.ajax({
+		    		  type: "POST",
+		  	          contentType: "application/json",
+		  	          url: "/product/vnew/"+loginUserId,
+		  	          dataType: "json",
+		  	          data: JSON.stringify({"productName":productName,"catalog":catalog,"label":label,"standard":standard,"price":price,
+		  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description}),
+		  	          success: function(data){
+		  	        	  if(data.msg=="200"){
+		  	        		  //alert("删除区域管理员账号成功");
+		  	        		  showTips("增加商品成功信息成功");
+		  	        		 // window.location="/user/squeryall";
+		  	        	  }
+		  	          }
+		    	 	});
+			 });
+		 });
+     </script>
    <section>
       <ul class="ulColumn2">
        <li>
         <span class="item_name" style="width:120px;">商品名称：</span>
-        <input type="text" class="textbox textbox_295" placeholder="如'海南小番茄'"/>
+        <input type="text" id="proname" class="textbox textbox_295" placeholder="如'海南小番茄'"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品分类：</span>
-        <label class="single_selection"><input type="radio" name="name"/>食材</label>
-        <label class="single_selection"><input type="radio" name="name"/>零食</label>
-         <label class="single_selection"><input type="radio" name="name"/>省钱</label>
+         <label class="single_selection"><input type="radio" name="procatalog" checked="true"/>水果</label>
+        <label class="single_selection"><input type="radio" name="procatalog"/>食材</label>
+        <label class="single_selection"><input type="radio" name="procatalog"/>零食</label>
+         <label class="single_selection"><input type="radio" name="procatalog"/>省钱</label>
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品标签：</span>
-        <label class="single_selection"><input type="radio" name="name"/>绿色食品</label>
-        <label class="single_selection"><input type="radio" name="name"/>小产区</label>
-        <label class="single_selection"><input type="radio" name="name"/>新人福利</label>
+        <label class="single_selection"><input type="radio" name="prolabel" checked="true"/>绿色食品</label>
+        <label class="single_selection"><input type="radio" name="prolabel"/>小产区</label>
+        <label class="single_selection"><input type="radio" name="prolabel"/>新人福利</label>
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品规格：</span>
-        <input type="text" class="textbox textbox_295" placeholder="如'一份250克','一份足2斤'"/>
+        <input type="text" id="prostandard" class="textbox textbox_295" placeholder="如'一份250克','一份足2斤'"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">售价(￥)：</span>
-        <input type="text" class="textbox textbox_295" placeholder=""/>
+        <input type="text" id="proprice" class="textbox textbox_295" placeholder=""/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">市场价(￥)：</span>
-        <input type="text" class="textbox textbox_295" placeholder=""/>
+        <input type="text" id="promarketprice" class="textbox textbox_295" placeholder=""/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">库存：</span>
-        <input type="text" class="textbox textbox_295" placeholder=""/>
+        <input type="text" id="proinventory" class="textbox textbox_295" placeholder="" value="0"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">上架状态：</span>
-        <label class="single_selection"><input type="radio" name="name"/>上架</label>
-        <label class="single_selection"><input type="radio" name="name"/>下架</label>
+        <label class="single_selection"><input type="radio" name="proisshow" value="yes" checked="true"/>上架</label>
+        <label class="single_selection"><input type="radio" name="proisshow" value="no"/>下架</label>
        </li>
        <li>
         <span class="item_name" style="width:120px;">展现形式：</span>
-        <label class="single_selection"><input type="radio" name="name"/>正方形</label>
-        <label class="single_selection"><input type="radio" name="name"/>长方形</label>
+        <label class="single_selection"><input type="radio" name="proshowway" value="s" checked="true"/>正方形</label>
+        <label class="single_selection"><input type="radio" name="proshowway" value="b"/>长方形</label>
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品排序：</span>
-        <input type="text" class="textbox textbox_295" placeholder="输入整数，值越大越前"/>
+        <input type="text" id="prosequence" class="textbox textbox_295" value="0" placeholder="输入整数，值越大越前"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品简介：</span>
-        <input type="text" class="textbox textbox_295" placeholder="一句话十字以内"/>
+        <input type="text" id="prodescription" class="textbox textbox_295" placeholder="一句话十字以内"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">缩略图：</span>
@@ -233,16 +284,23 @@
          <span style="margin: 0 20px 0 20px;">长方形</span>
         </label>
        </li>
+        <li>
+        <span class="item_name" style="width:120px;">商品详情：</span>
+        <label class="uploadImg">
+         <input type="file"/>
+         <span style="margin: 0 60px 0 60px;">详情1</span>
+        </label>
+       </li>
        <li>
         <span class="item_name" style="width:120px;">商品详情：</span>
         <label class="uploadImg">
          <input type="file"/>
-         <span style="margin: 0 60px 0 60px;">详情</span>
+         <span style="margin: 0 60px 0 60px;">详情2</span>
         </label>
        </li>
        <li>
         <span class="item_name" style="width:120px;"></span>
-        <input type="button" value="保存" class="link_btn"/>
+        <input type="button" id="prosave" value="保存" class="link_btn"/>
        </li>
       </ul>
      </section>
@@ -253,5 +311,6 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>

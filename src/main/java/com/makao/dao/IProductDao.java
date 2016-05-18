@@ -20,5 +20,7 @@ public interface IProductDao {
 
 	public int deleteById(int id);
 
-	public List<Product> queryByCityAreaId(String cityId, String areaId);
+	public List<Product> queryByCityAreaId(int cityId, int areaId);
+
+	public int insertToWhole(Product product);
 }

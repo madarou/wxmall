@@ -53,15 +53,20 @@ public class VendorController {
 	}
 
 	@RequestMapping(value="/index/{id:\\d+}",method = RequestMethod.GET)
-	public String index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
+	public ModelAndView index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
 	{
+		ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_index");  
 		if(token==null){
-			return "v_login";
+			return modelAndView;
 		}
 		System.out.println(id);
 		System.out.println(token);
 		System.out.println(request.getServletContext().getAttribute(token));
-		return "v_index";
+		
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token);   
+		return modelAndView;
 	}
 	
 	@RequestMapping(value="",method = RequestMethod.GET)
@@ -166,7 +171,7 @@ public class VendorController {
         return Vendors;
     }
 	
-	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
     public @ResponseBody
     Object query_All() {
 		List<Vendor> vendors = null;
@@ -178,13 +183,17 @@ public class VendorController {
 	    return modelAndView;
     }
 	
-	@RequestMapping(value = "/sareabindwx", method = RequestMethod.GET)
+	@RequestMapping(value = "/v_bindwx/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    ModelAndView bindWeixin() {
-		logger.info("跳转到添加产品页面完成");
-		ModelAndView modelAndView = new ModelAndView();  
-	    //modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("v_bindWeixin");  
-	    return modelAndView;
+    ModelAndView bindWeixin(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("v_bindWeixin");
+		if (token == null) {
+			return modelAndView;
+		}
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		return modelAndView;
     }
 }

@@ -23,6 +23,8 @@ public interface IProductService {
 
 	int deleteById(int id);
 
-	List<Product> queryByCityAreaId(String cityId, String areaId);
+	List<Product> queryByCityAreaId(int i, int j);
+
+	int insertToWhole(Product product);
 
 }

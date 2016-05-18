@@ -1,6 +1,7 @@
 package com.makao.entity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +34,7 @@ public class User implements Serializable{
     private String address;//常用地址
     private String addLabel;//默认收货地址的标签
     private String rank;//用户级别
+    private Timestamp registTime;//第一次进来时的时间，不能修改
     
     @Id
     @GeneratedValue
@@ -157,4 +159,13 @@ public class User implements Serializable{
 	public void setRank(String rank) {
 		this.rank = rank;
 	}
+	@Column
+	public Timestamp getRegistTime() {
+		return registTime;
+	}
+
+	public void setRegistTime(Timestamp registTime) {
+		this.registTime = registTime;
+	}
+	
 }

@@ -50,18 +50,27 @@
 	<mvc:resources mapping="/couponOn/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/giftChanged/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/gift/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/gift/v_giftmanage/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/loginLog/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/v_query/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOn/v_query/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/point/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/product/v_new/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/product/v_manage/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/product/v_catalog/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/product/v_promotion/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/supervisor/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/supervisor/index/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/test/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/user/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/user/v_datamanage/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/userPoint/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/index/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/vendor/v_bindwx/static/**" location="/WEB-INF/static/" />
    	<mvc:default-servlet-handler/>
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">  
     <property name="messageConverters">  

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,8 +20,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
 import com.makao.service.IProductService;
+import com.makao.service.IVendorService;
 
 /**
  * @description: TODO
@@ -35,6 +38,8 @@ public class ProductController {
 	private IProductService productService;
 	@Resource
 	private IAreaService areaService;
+	@Resource
+	private IVendorService vendorService;
 	
 	/**
 	 * @param id
@@ -72,9 +77,12 @@ public class ProductController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"number":"海南千禧小番茄","catalog":"水果","price":"12.00","standard":"一份足2斤","marketPrice":"30.00","inventory":12,"sequence":3,"status":"库存紧张","origin":"海南","salesVolume":7637,"likes":3972,"areaId":1,"cityId":1}' 'http://localhost:8080/wxmall/product/new'
 	 */
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@RequestMapping(value = "/vnew/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody Product Product) {
+    Object add(@PathVariable("vendorid") int vendorid,@RequestBody Product Product) {
+		Vendor vendor = this.vendorService.getById(vendorid);
+		Product.setAreaId(vendor.getAreaId());
+		Product.setCityId(vendor.getCityId());
 		int res = this.productService.insert(Product);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
@@ -88,56 +96,26 @@ public class ProductController {
         return jsonObject;
     }
 	
-	@RequestMapping(value = "/snew", method = RequestMethod.GET)
+
+	
+	@RequestMapping(value = "/snewproduct", method = RequestMethod.POST)
     public @ResponseBody
-    ModelAndView add() {
-		logger.info("跳转到添加产品页面完成");
-		ModelAndView modelAndView = new ModelAndView();  
-	    //modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("s_productAdd");  
-	    return modelAndView;
+    Object addBySupervisor(@RequestBody Product product) {
+		System.out.println(product.getProductName());
+		System.out.println(product.getInventory());
+		int res = this.productService.insertToWhole(product);
+		JSONObject jsonObject = new JSONObject();
+		logger.info("超级管理员添加产品页面完成："+product.getProductName());
+		if(res==0){
+			jsonObject.put("msg", "200");
+		}
+		else{
+			jsonObject.put("msg", "201");
+		}  
+	    return jsonObject;
     }
 	
-	@RequestMapping(value = "/sareanew", method = RequestMethod.GET)
-    public @ResponseBody
-    ModelAndView areaAdd() {
-		logger.info("跳转到添加产品页面完成");
-		ModelAndView modelAndView = new ModelAndView();  
-	    //modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("v_productAdd");  
-	    return modelAndView;
-    }
-	
-	@RequestMapping(value = "/sareamanage", method = RequestMethod.GET)
-    public @ResponseBody
-    ModelAndView areaManage() {
-		logger.info("跳转到添加产品页面完成");
-		ModelAndView modelAndView = new ModelAndView();  
-	    //modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("v_productManage");  
-	    return modelAndView;
-    }
-	
-	@RequestMapping(value = "/sareacatalog", method = RequestMethod.GET)
-    public @ResponseBody
-    ModelAndView areaCatalog() {
-		logger.info("跳转到添加产品页面完成");
-		ModelAndView modelAndView = new ModelAndView();  
-	    //modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("v_productCatalog");  
-	    return modelAndView;
-    }
-	
-	@RequestMapping(value = "/sareapromotion", method = RequestMethod.GET)
-    public @ResponseBody
-    ModelAndView areaPromotion() {
-		logger.info("跳转到添加产品页面完成");
-		ModelAndView modelAndView = new ModelAndView();  
-	    //modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("v_promotionManage");  
-	    return modelAndView;
-    }
-	
+
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Product Product) {
@@ -172,7 +150,7 @@ public class ProductController {
 	 */
 	@RequestMapping(value = "/query/{cityId:\\d+}/{areaId:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    Object queryByCityAreaId(@PathVariable("cityId")String cityId,@PathVariable("areaId")String areaId) {
+    Object queryByCityAreaId(@PathVariable("cityId")int cityId,@PathVariable("areaId")int areaId) {
 		List<Product> Products = null;
 		//则根据关键字查询
 		Products = this.productService.queryByCityAreaId(cityId,areaId);
@@ -190,14 +168,14 @@ public class ProductController {
         return Products;
     }
 	
-	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView query_All() {
 		//先查出所有area，从而找到所有cityId_areaId来确定Product_cityId_areaId表
 		List<Area> areas = this.areaService.queryAll();
 		List<Product> products = new LinkedList<Product>();
 		for(Area a : areas){
-			List<Product> ps = this.productService.queryByCityAreaId(a.getCityId()+"",a.getId()+"");
+			List<Product> ps = this.productService.queryByCityAreaId(a.getCityId(),a.getId());
 			if(ps!=null)
 				products.addAll(ps);
 		}
@@ -209,7 +187,7 @@ public class ProductController {
 	    return modelAndView;
     }
 	
-	@RequestMapping(value = "/scatalogs", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_catalogs", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView query_Catalogs() {
 		//这里假设放一些东西进去
@@ -223,4 +201,78 @@ public class ProductController {
 	    modelAndView.setViewName("s_productCatalog");  
 	    return modelAndView;
     }
+	
+	@RequestMapping(value = "/s_new", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView add() {
+		logger.info("跳转到添加产品页面完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    //modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("s_productAdd");  
+	    return modelAndView;
+    }
+	
+	@RequestMapping(value = "/v_new/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaAdd(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_productAdd");  
+		if(token==null){
+			return modelAndView;
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token);   
+		return modelAndView;
+    }
+	
+	@RequestMapping(value = "/v_manage/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaManage(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("v_productManage");
+		if (token == null) {
+			return modelAndView;
+		}
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		Vendor vendor = this.vendorService.getById(id);
+		List<Product> products = null;
+		if(vendor!=null)
+			products = this.productService.queryByCityAreaId(vendor.getCityId(),vendor.getAreaId());
+ 
+	    modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("s_productList"); 
+	    
+		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/v_catalog/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaCatalog(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("v_productCatalog");
+		if (token == null) {
+			return modelAndView;
+		}
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		return modelAndView;
+    }
+	
+	@RequestMapping(value = "/v_promotion/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaPromotion(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("v_promotionManage");
+		if (token == null) {
+			return modelAndView;
+		}
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		return modelAndView;
+    }
+	
 }

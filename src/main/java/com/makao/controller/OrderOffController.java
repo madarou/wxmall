@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -106,7 +107,7 @@ public class OrderOffController {
         return OrderOffs;
     }
 	
-	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView query_All() {
 		//List<OrderOn> orderOns = null;
@@ -124,21 +125,16 @@ public class OrderOffController {
 	    return modelAndView;
     }
 	
-	@RequestMapping(value = "/sareaquery", method = RequestMethod.GET)
+	@RequestMapping(value = "/v_query/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    ModelAndView areaQuery() {
-		//List<OrderOn> orderOns = null;
-		//则查询返回所有
-		//orderOns = this.orderOnService.queryAll();
-		//这里假设放一些东西进去
-		List<OrderOn> orderOns = new ArrayList<OrderOn>();
-		OrderOn oo = new OrderOn();
-		oo.setAddress("ddddddddd");
-		orderOns.add(oo);
-		logger.info("查询所有有效订单信息完成");
-		ModelAndView modelAndView = new ModelAndView();  
-	    modelAndView.addObject("ordersOn", orderOns);  
-	    modelAndView.setViewName("v_orderOff");  
-	    return modelAndView;
+    ModelAndView areaQuery(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOff");  
+		if(token==null){
+			return modelAndView;
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token);   
+		return modelAndView;
     }
 }

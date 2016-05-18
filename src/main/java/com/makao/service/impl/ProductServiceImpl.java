@@ -41,8 +41,12 @@ public class ProductServiceImpl implements IProductService {
 		return this.productDao.queryByName(name);
 	}
 	@Override
-	public List<Product> queryByCityAreaId(String cityId, String areaId) {
+	public List<Product> queryByCityAreaId(int cityId, int areaId) {
 		return this.productDao.queryByCityAreaId(cityId,areaId);
+	}
+	@Override
+	public int insertToWhole(Product product) {
+		return this.productDao.insertToWhole(product);
 	}
 	
 //	@Override

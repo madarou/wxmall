@@ -1,5 +1,6 @@
 package com.makao.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +12,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.OrderOn;
+import com.makao.entity.Product;
 import com.makao.entity.User;
+import com.makao.entity.Vendor;
 import com.makao.service.IUserService;
+import com.makao.service.IVendorService;
 
 @Controller
 @RequestMapping("/user")
@@ -26,6 +31,8 @@ public class UserController {
     private static final Logger logger = Logger.getLogger(UserController.class);
 	@Resource
 	private IUserService userService;
+	@Resource
+	private IVendorService vendorService;
 	
 //	@RequestMapping("/showUser")
 //	public String toIndex(HttpServletRequest request,Model model){
@@ -79,15 +86,16 @@ public class UserController {
     public @ResponseBody
     Object add(@RequestBody User user) {
 		//注册用户的代码
+		user.setRegistTime(new Timestamp(System.currentTimeMillis()));
 		int res = this.userService.insert(user);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("注册人员信息成功id=" + user.getId());
-        	jsonObject.put("msg", "注册人员信息成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("注册人员信息失败id=" + user.getId());
-        	jsonObject.put("msg", "注册人员信息失败");
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }
@@ -101,18 +109,34 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
-    Object update(@RequestBody User user) {
-		//注册用户的代码
-		int res = this.userService.update(user);
+    Object update(@RequestBody JSONObject paramObject) {
+		int id = paramObject.getIntValue("id");
+		String userName = paramObject.getString("userName");
+		String phoneNumber = paramObject.getString("phoneNumber");
+		int point = paramObject.getIntValue("point");
+		String address = paramObject.getString("address");
+		String rank = paramObject.getString("rank");
+		User user = this.userService.getById(id);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("修改人员信息成功id=" + user.getId());
-        	jsonObject.put("msg", "修改人员信息成功");
+		if(user!=null){
+			user.setUserName(userName);
+			user.setPhoneNumber(phoneNumber);
+			user.setPoint(point);
+			user.setAddress(address);
+			user.setRank(rank);
+			int res = this.userService.update(user);
+			if(res==0){
+				logger.info("修改人员信息成功id=" + user.getId());
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("修改人员信息失败id=" + user.getId());
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
 		}
-		else{
-			logger.info("修改人员信息失败id=" + user.getId());
-        	jsonObject.put("msg", "修改人员信息失败");
-		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 	
@@ -146,28 +170,37 @@ public class UserController {
         return users;
     }
 	
-	@RequestMapping(value = "/squeryall", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
     public @ResponseBody
     Object query_All() {
-		List<User> orderOns = new ArrayList<User>();
-		User oo = new User();
-		oo.setAddress("ddddddddd");
-		orderOns.add(oo);
-		logger.info("查询所有有效订单信息完成");
+		List<User> users = null;
+		users = this.userService.queryAll();
+		logger.info("查询所有用户信息完成");
 		ModelAndView modelAndView = new ModelAndView();  
-	    modelAndView.addObject("ordersOn", orderOns);  
+	    modelAndView.addObject("users", users);  
 	    modelAndView.setViewName("s_userManage");  
 	    return modelAndView;
     }
 	
-	@RequestMapping(value = "/sareadatamanage", method = RequestMethod.GET)
+	@RequestMapping(value = "/v_datamanage/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    ModelAndView dataManage() {
-		logger.info("跳转到添加产品页面完成");
-		ModelAndView modelAndView = new ModelAndView();  
-	    //modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("v_dataManage");  
-	    return modelAndView;
+    ModelAndView dataManage(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("v_dataManage");
+		if (token == null) {
+			return modelAndView;
+		}
+		//查询该area下所有用户，即当前area是该vendor负责的area
+		Vendor vendor = this.vendorService.getById(id);
+		List<User> users = null;
+		if(vendor!=null)
+			users = this.userService.queryByAreaId(vendor.getAreaId());
+		
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		modelAndView.addObject("users", users);
+		return modelAndView;
     }
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)

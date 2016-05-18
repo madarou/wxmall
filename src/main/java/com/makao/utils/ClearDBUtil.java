@@ -83,7 +83,7 @@ public class ClearDBUtil {
 		      //finally block used to close resources
 		      try{
 		         if(stmt!=null)
-		            conn.close();
+		        	 stmt.close();
 		      }catch(SQLException se){
 		      }// do nothing
 		      try{

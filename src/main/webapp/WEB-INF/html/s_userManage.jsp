@@ -56,22 +56,22 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/squeryall">所有未处理订单</a></dd>
-    <dd><a href="/orderOff/squeryall">所有已处理订单</a></dd>
+    <dd><a href="/orderOn/s_queryall">所有未处理订单</a></dd>
+    <dd><a href="/orderOff/s_queryall">所有已处理订单</a></dd>
    </dl>
   </li>
    <li>
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="/product/squeryall">商品列表</a></dd>
-    <dd><a href="/product/scatalogs">商品分类</a></dd>
+    <dd><a href="/product/s_queryall">商品列表</a></dd>
+    <dd><a href="/product/s_catalogs">商品分类</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="/user/squeryall" class="active">会员中心</a></dd>
+    <dd><a href="/user/s_queryall">会员中心</a></dd>
     <!-- <dd><a href="#">添加会员</a></dd>
     <dd><a href="#">会员等级</a></dd>
     <dd><a href="#">资金管理</a></dd> -->
@@ -80,7 +80,7 @@
   <li>
    <dl>
     <dt>账号管理</dt>
-    <dd><a href="/vendor/squeryall">账号管理</a></dd>
+    <dd><a href="/vendor/s_queryall">账号管理</a></dd>
    </dl>
   </li>
   <li>
@@ -99,17 +99,78 @@
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
+    	 var showTips = function(content){
+    			$("#tips").text(content);
+    			$(".loading_area").fadeIn();
+                $(".loading_area").fadeOut(1500);
+    		}
+    	 var userId_toEdit = 0;
+    	 var isEdit = false;//判断有没有修改字段，没有则不用提交表单
+    	 var oldname = "";
+    	 var oldphone = "";
+    	 var oldpoint = "";
+    	 var oldaddress = "";
+    	 var oldrank = "";
 		 //弹出文本性提示框
-		 $("#showPopTxt").click(function(){
+		 $(".editUser").click(function(){
+			//获取被点击的行的id，即vendorId
+			 var clickedId = $(this).attr("id");
+       		 userId_toEdit = clickedId.charAt(clickedId.length-1);
+       		 var tr = $(this).parent().parent();
+       		 var secondTD = tr.find("td").eq(1);
+       		 oldname = secondTD.html();
+       		 $("#editname").val(oldname);
+       		 var thirdTD = tr.find("td").eq(2);
+       		 oldphone = thirdTD.html();
+      		 $("#editphone").val(oldphone);
+      		 var forthTD = tr.find("td").eq(3);
+      		 oldpoint = forthTD.html();
+     		 $("#editpoint").val(oldpoint);
+     		 var fifthTD = tr.find("td").eq(4);
+     		 oldaddress = fifthTD.html();
+     		 $("#editaddress").val(oldaddress);
+     		 var sixTD = tr.find("td").eq(5);
+     		 oldrank = sixTD.html();
+    		 $("#editrank").val(oldrank);
+      		 
 			 $(".pop_bg").fadeIn();
 			 });
 		 //弹出：确认按钮
 		 $(".trueBtn").click(function(){
+			 if(oldname!=$("#editname").val() || oldphone!=$("#editphone").val() ||  oldpoint!=$("#editpoint").val()
+					 || oldaddress!=$("#editaddress").val() || oldrank!=$("#editrank").val()){
+				 isEdit = true;
+			 }
+			 if(isEdit == true){//如果有修改，则提交
+				 $.ajax({
+		    		  type: "POST",
+		  	          contentType: "application/json",
+		  	          url: "/user/update",
+		  	          dataType: "json",
+		  	          data: JSON.stringify({"id":userId_toEdit,"userName":$("#editname").val(),"phoneNumber":$("#editphone").val(),
+		  	        	"point":$("#editpoint").val(),"address":$("#editaddress").val(),"rank":$("#editrank").val()}),
+		  	          success: function(data){
+		  	        	  //var cities = JSON.stringify(data.cities);
+		  	        	  if(data.msg=="200"){
+		  	        		  //alert("删除区域管理员账号成功");
+		  	        		  showTips("修改会员信息成功");
+		  	        		  window.location="/user/squeryall";
+		  	        	  }
+		  	          }
+		    	 	});
+			 }
 			 $(".pop_bg").fadeOut();
 			 });
 		 //弹出：取消或关闭按钮
 		 $(".falseBtn").click(function(){
 			 $(".pop_bg").fadeOut();
+			 userId_toEdit = 0;
+	    	 isEdit = false;//判断有没有修改字段，没有则不用提交表单
+	    	 oldname = "";
+	    	 oldphone = "";
+	    	 oldpoint = "";
+	    	 oldaddress = "";
+	    	 oldrank = "";
 			 });
 		 });
      </script>
@@ -122,19 +183,24 @@
           <ul>
            <li>
             <span>会员姓名</span>
-            <input type="text" placeholder="" class="textbox"/>
+            <input type="text" id="editname" placeholder="" disabled="disabled" class="textbox"/>
+           
            </li>
            <li>
             <span class="ttl">联系电话</span>
-            <input type="text" placeholder="" class="textbox"/>
+            <input type="text" id="editphone" placeholder="" class="textbox"/>
            </li>
            <li>
             <span class="ttl">会员积分</span>
-            <input type="text" placeholder="" class="textbox"/>
+            <input type="text" id="editpoint" placeholder="" class="textbox"/>
            </li>
            <li>
             <span class="ttl">详细地址</span>
-            <input type="text" placeholder="" class="textbox"/>
+            <input type="text" id="editaddress" placeholder="" class="textbox"/>
+           </li>
+           <li>
+            <span class="ttl">会员等级</span>
+            <input type="text" id="editrank" placeholder="" class="textbox"/>
            </li>
           </ul>
        </div>
@@ -156,20 +222,24 @@
         <th>联系电话</th>
         <th>积分</th>
         <th>详细地址</th>
+        <th>等级</th>
         <th>注册时间</th>
         <th>操作</th>
        </tr>
-       <tr>
-        <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
-        <td>内容二</td>
-        <td>内容三</td>
-        <td>内容四</td>
-        <td>内容五</td>
-        <td>内容六</td>
-        <td>
-         <button class="linkStyle" id="showPopTxt">修改</button>
-        </td>
-       </tr>
+       <c:forEach var="item" items="${users}" varStatus="status">
+         	<tr>
+         		<td>${item.id}</td>
+         		<td>${item.userName}</td>
+         		<td>${item.phoneNumber}</td>
+         		<td>${item.point}</td>
+         		<td>${item.address}</td>
+         		<td>${item.rank}</td>
+         		<td>${item.registTime}</td>
+         		<td style="text-align:center">
+		           <button class="linkStyle editUser" id="showPopTxt${item.id}">修改</button>
+		        </td>
+         	</tr>
+		</c:forEach> 
       </table>
       <aside class="paging">
        <a>第一页</a>

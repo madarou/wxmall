@@ -64,6 +64,7 @@ public class AreaDaoImpl implements IAreaDao {
 					+ "`origin` varchar(30),"
 					+ "`salesVolume` int(11),"
 					+ "`likes` int(11),"
+					+ "`subdetailUrl` varchar(50),"
 					+ "`detailUrl` varchar(50),"
 					+ "`isShow` varchar(5) DEFAULT 'yes',"
 					+ "`areaId` int(11),"

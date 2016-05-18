@@ -117,6 +117,7 @@ description		varchar(100)	商品简述			详细页面，有的商品在名称下
 origin			varchar(30)		原产地			
 salesVolume		int(11)			销量			
 likes			int(11)			点赞数
+subdetailUrl	varchar(50)		有些详细介绍前还有一个图片
 detailUrl		varchar(50)		详细介绍图片地址
 isShow			varchar(5)		是否在商品列表显示	值为'yes'(默认)或'no'，与status有区别，是完全不在列表中显示
 areaId			int(11)			所属区域
