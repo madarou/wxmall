@@ -40,6 +40,10 @@ public class GiftServiceImpl implements IGiftService {
 	public List<Gift> queryByName(String name) {
 		return this.giftDao.queryByName(name);
 	}
+	@Override
+	public List<Gift> queryByCityAreaId(int cityId, int areaId) {
+		return this.giftDao.queryByCityAreaId(cityId, areaId);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -96,15 +96,52 @@
         <hr/>
      </section>
 
+	<!-- 瞬间消失的提示框 -->
+     <section class="loading_area">
+      <div class="loading_cont">
+       <div class="loading_icon"><i></i><i></i><i></i><i></i><i></i></div>
+       <div class="loading_txt"><mark id="tips">操作成功</mark></div>
+      </div>
+     </section>
+     <!-- 瞬间消失的提示框 -->
+     
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
+    	 var loginUserId = $("#loginUserId").val();
+    	 var showTips = function(content){
+ 			$("#tips").text(content);
+ 			$(".loading_area").fadeIn();
+             $(".loading_area").fadeOut(500);
+ 		}
      //弹出文本性提示框
      $("#showPopTxt").click(function(){
        $(".pop_bg").fadeIn();
        });
      //弹出：确认按钮
      $("#saveBtn").click(function(){
+    	 	var name = $.trim($("#name").val());
+		 	var point = $.trim($("#point").val());
+		 	var inventory = $.trim($("#inventory").val());
+		 	
+		 	if(name == "" || point=="" || inventory==""){
+		 		alert("名称、所需积分、数量不能为空");
+		 		return false;
+		 	}
+		 	$.ajax({
+	    		  type: "POST",
+	  	          contentType: "application/json",
+	  	          url: "/gift/vnew/"+loginUserId,
+	  	          dataType: "json",
+	  	          data: JSON.stringify({"name":name,"point":point,"inventory":inventory}),
+	  	          success: function(data){
+	  	        	  if(data.msg=="200"){
+	  	        		  //alert("删除区域管理员账号成功");
+	  	        		  showTips("增加礼品成功");
+	  	        		  window.location="/gift/v_giftmanage/"+loginUserId+"?token="+$("#token").val();
+	  	        	  }
+	  	          }
+	    	 	});
        $(".pop_bg").fadeOut();
        });
      //弹出：取消或关闭按钮
@@ -129,17 +166,17 @@
              </li>
            <li>
             <span class="item_name" style="width:120px;">礼品名称：</span>
-            <input type="text" class="textbox textbox_295" placeholder="请输入礼品名称(不超过8个字)"/>
+            <input type="text" class="textbox textbox_295" id="name" placeholder="请输入礼品名称(不超过8个字)"/>
             
            </li>
           <li>
             <span class="item_name" style="width:120px;">兑换积分：</span>
-            <input type="text" class="textbox textbox_295" placeholder="请输入兑换积分"/>
+            <input type="text" class="textbox textbox_295" id="point" placeholder="请输入兑换积分"/>
          
            </li>
            <li>
             <span class="item_name" style="width:120px;">礼品数量：</span>
-            <input type="text" class="textbox textbox_295" placeholder="请输入礼品数量"/>
+            <input type="text" class="textbox textbox_295" id="inventory" placeholder="请输入礼品数量"/>
          
            </li>
            
@@ -169,10 +206,9 @@
         <th>名称</th>
         <th>兑换积分</th>
         <th>礼品数量</th>
-        <th>已兑换</th>
         <th>操作</th>
        </tr>
-       <tr>
+       <!-- <tr>
         <td></td>
         <td></td>
         <td></td>
@@ -181,7 +217,18 @@
         <td style="text-align:center">
            <button class="linkStyle">什么操作</button>
         </td>
-       </tr>
+       </tr> -->
+       <c:forEach var="item" items="${gifts}" varStatus="status">
+         	<tr>
+         		<td>缩略图</td>
+         		<td>${item.name}</td>
+         		<td>${item.point}</td>
+         		<td>${item.inventory}</td>
+         		<td style="text-align:center">
+		           <button class="linkStyle editGift" id="showPopTxt${item.id}">编辑</button>
+		        </td>
+         	</tr>
+		</c:forEach> 
       </table>
       <aside class="paging">
        <a>第一页</a>
@@ -198,5 +245,7 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="token" value="${token}"></input>
 </body>
 </html>

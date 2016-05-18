@@ -16,7 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Gift;
+import com.makao.entity.Vendor;
 import com.makao.service.IGiftService;
+import com.makao.service.IVendorService;
 
 /**
  * @description: TODO
@@ -29,6 +31,8 @@ public class GiftController {
 	private static final Logger logger = Logger.getLogger(GiftController.class);
 	@Resource
 	private IGiftService giftService;
+	@Resource
+	private IVendorService vendorService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Gift get(@PathVariable("id") Integer id)
@@ -53,18 +57,23 @@ public class GiftController {
 		}
         return jsonObject;
     }
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@RequestMapping(value = "/vnew/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody Gift Gift) {
+    Object add(@PathVariable("vendorid") int vendorid,@RequestBody Gift Gift) {
+		Vendor vendor = this.vendorService.getById(vendorid);
+		Gift.setCityId(vendor.getCityId());
+		Gift.setAreaId(vendor.getAreaId());
+		Gift.setAreaName(vendor.getAreaName());
+		Gift.setType("礼品兑换");
 		int res = this.giftService.insert(Gift);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("增加奖品成功id=" + Gift.getId());
-        	jsonObject.put("msg", "增加奖品成功");
+			logger.info("增加奖品成功id=" + Gift.getName());
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("增加奖品成功失败id=" + Gift.getId());
-        	jsonObject.put("msg", "增加奖品失败");
+        	jsonObject.put("msg", "200");
 		}
         return jsonObject;
     }
@@ -114,8 +123,18 @@ public class GiftController {
 		if (token == null) {
 			return modelAndView;
 		}
+		Vendor vendor = this.vendorService.getById(id);
+		List<Gift> gifts = null;
+		if(vendor!=null){
+			//根据vendorId找到areaId和vendorId，到Gift_cityId中查找所有该areaId下的gift
+			int cityId = vendor.getCityId();
+			int areaId = vendor.getAreaId();
+			gifts = this.giftService.queryByCityAreaId(cityId,areaId);
+		}
+		
 		modelAndView.addObject("id", id);
 		modelAndView.addObject("token", token);
+		modelAndView.addObject("gifts", gifts);
 		return modelAndView;
     }
 }

@@ -242,6 +242,7 @@ remain			int(11)			剩余数量			如果为0，则可以灰掉，或者自动下
 type			varchar(20)		类型				值为'礼品兑换'，与Coupon中的'代金券兑换对应'
 areaId			int(11)			区域Id			属于哪个区域的gift
 areaName		varchar(30)		区域名
+cityId			int(11)			城市Id			属于哪个city的gift，主要用于确定Gift_cityId中的cityId来确定表
 
 Gift_cityId_changed(已兑换的礼品，只用显示一些简单信息：礼品名称、消耗积分、兑换日期、当前状态(后台人员是否已处理))
 列名				类型				注释				备注
@@ -256,6 +257,7 @@ changeDate		date			兑换日期
 status			varchar(10)		状态				'未完成'(用户已兑换，等待后台人员操作)、'已完成'(后台人员操作完成)
 areaId			int(11)			区域Id			属于哪个区域的gift
 areaName		varchar(30)		区域名		
+cityId			int(11)			城市Id			属于哪个city的gift，主要用于确定Gift_cityId中的cityId来确定表
 
 Point_cityId(静态积分，即记录每种操作分别对应多少的积分)
 列名				类型				注释				备注

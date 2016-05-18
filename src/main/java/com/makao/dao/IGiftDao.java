@@ -19,4 +19,6 @@ public interface IGiftDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	public List<Gift> queryByCityAreaId(int cityId, int areaId);
 }

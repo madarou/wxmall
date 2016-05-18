@@ -23,4 +23,6 @@ public interface IGiftService {
 
 	int deleteById(int id);
 
+	List<Gift> queryByCityAreaId(int cityId, int areaId);
+
 }

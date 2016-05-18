@@ -21,6 +21,7 @@ public class Gift {
 	private String type;//类型				值为'礼品兑换'，与Coupon中的'代金券兑换对应'
 	private int areaId;//区域Id			属于哪个区域的gift
 	private String areaName;//区域名
+	private int cityId;//属于哪个city的gift，主要用于确定Gift_cityId中的cityId来确定表
 	public int getId() {
 		return id;
 	}
@@ -99,4 +100,11 @@ public class Gift {
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
 	}
+	public int getCityId() {
+		return cityId;
+	}
+	public void setCityId(int cityId) {
+		this.cityId = cityId;
+	}
+	
 }

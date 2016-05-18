@@ -197,6 +197,7 @@ Gift_cityId:
 						`type` varchar(20),
 						`areaId` int(11),
 						`areaName` varchar(30),
+						`cityId` int(11),
 						PRIMARY KEY (`id`))";
 						
 						
@@ -214,4 +215,5 @@ Gift_cityId_changed:
 						`type` varchar(20),
 						`areaId` int(11),
 						`areaName` varchar(30),
+						`cityId` int(11),
 						PRIMARY KEY (`id`))";
