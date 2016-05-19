@@ -298,6 +298,7 @@
           <input type="button" value="取消" id="cancelDel" class="input_btn falseBtn"/>
          </div>
         </div>
+       </div>
      </section>
      <!-- 删除分类弹出框 -->
 	<!-- 添加账号 -->

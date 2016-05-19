@@ -56,17 +56,19 @@ public class CityDaoImpl implements ICityDao {
 					+ "`address` varchar(120),"
 					+ "`payType` varchar(20),"
 					+ "`receiveType` varchar(20),"
-					+ "`receiveTime` varchar(20),"
+					+ "`receiveTime` varchar(30),"
 					+ "`couponId` int(11),"
 					+ "`couponPrice` varchar(10),"
 					+ "`totalPrice` varchar(10),"
 					+ "`freight` varchar(10),"
 					+ "`comment` varchar(255),"
+					+ "`vcomment` varchar(255),"
 					+ "`status` varchar(10),"
 					+ "`cityarea` varchar(30),"
 					+ "`userId` int(11),"
 					+ "`areaId` int(11),"
 					+ "`cityId` int(11),"
+					+ "`refundStatus` varchar(10),"
 					+ "PRIMARY KEY (`id`))";
 			session.doWork(
 					// 定义一个匿名类，实现了Work接口
@@ -95,18 +97,20 @@ public class CityDaoImpl implements ICityDao {
 					+ "`address` varchar(120),"
 					+ "`payType` varchar(20),"
 					+ "`receiveType` varchar(20),"
-					+ "`receiveTime` varchar(20),"
+					+ "`receiveTime` varchar(30),"
 					+ "`couponId` int(11),"
 					+ "`couponPrice` varchar(10),"
 					+ "`totalPrice` varchar(10),"
 					+ "`freight` varchar(10),"
 					+ "`comment` varchar(255),"
+					+ "`vcomment` varchar(255),"
 					+ "`finalStatus` varchar(10),"
 					+ "`cityarea` varchar(30),"
 					+ "`finalTime` datetime,"
 					+ "`userId` int(11),"
 					+ "`areaId` int(11),"
 					+ "`cityId` int(11),"
+					+ "`refundStatus` varchar(10),"
 					+ "PRIMARY KEY (`id`))";
 			session.doWork(
 					// 定义一个匿名类，实现了Work接口

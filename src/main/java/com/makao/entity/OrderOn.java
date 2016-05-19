@@ -24,6 +24,7 @@ public class OrderOn {
 	private String totalPrice;//总价				订单总价
 	private String freight;//运费				暂时不用，为以后拓展保留
 	private String comment;//用户备注
+	private String vcomment;//卖家备注			如'由于**原因，取消该订单'
 	//订单状态			
 	//'未确认'(商家未确认)，'买家已取消'(被买家取消)，'卖家已取消'(被卖家取消)'已确认'(商家已确认订单)，'已配送'(以完成送货)
 	//'已收货'(卖家已收货，没有手动收货的在距离配送一段时间内自动变成已收货)
@@ -32,6 +33,8 @@ public class OrderOn {
 	private int userId;//对应User表里的Id
 	private int areaId;//Area表里的Id，区域卖家登录时的查询条件
 	private int cityId;//用于在访问数据库时，直接确定数据库表名Order_cityId_on，直接从前端传来用
+	private String refundStatus;//退款状态
+	
 	public int getId() {
 		return id;
 	}
@@ -157,6 +160,18 @@ public class OrderOn {
 	}
 	public void setCityId(int cityId) {
 		this.cityId = cityId;
+	}
+	public String getVcomment() {
+		return vcomment;
+	}
+	public void setVcomment(String vcomment) {
+		this.vcomment = vcomment;
+	}
+	public String getRefundStatus() {
+		return refundStatus;
+	}
+	public void setRefundStatus(String refundStatus) {
+		this.refundStatus = refundStatus;
 	}
 	
 }

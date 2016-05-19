@@ -20,8 +20,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.City;
 import com.makao.entity.OrderOn;
+import com.makao.entity.User;
+import com.makao.entity.Vendor;
 import com.makao.service.ICityService;
 import com.makao.service.IOrderOnService;
+import com.makao.service.IVendorService;
 import com.makao.utils.OrderNumberUtils;
 
 /**
@@ -37,6 +40,8 @@ public class OrderOnController {
 	private IOrderOnService orderOnService;
 	@Resource
 	private ICityService cityService;
+	@Resource
+	private IVendorService vendorService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody OrderOn get(@PathVariable("id") Integer id)
@@ -77,11 +82,11 @@ public class OrderOnController {
 		int res = this.orderOnService.insert(OrderOn);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("增加有效订单成功id=" + OrderOn.getId());
+			logger.info("增加有效订单成功id=" + OrderOn.getNumber());
         	jsonObject.put("msg", "200");
 		}
 		else{
-			logger.info("增加有效订单成功失败id=" + OrderOn.getId());
+			logger.info("增加有效订单成功失败id=" + OrderOn.getNumber());
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;
@@ -123,6 +128,28 @@ public class OrderOnController {
         return OrderOns;
     }
 	
+	@RequestMapping(value = "/vcancel/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vcancel(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		int orderid = paramObject.getIntValue("orderid");
+		String vcomment = paramObject.getString("vcomment");
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			int res = this.orderOnService.cancelOrder(vendor.getCityId(),orderid,vcomment);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
 	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
     public @ResponseBody ModelAndView query_All() {
 		List<City> cites = this.cityService.queryAll();
@@ -150,6 +177,44 @@ public class OrderOnController {
 		}
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token);   
+		return modelAndView;
+    }
+	
+	@RequestMapping(value = "/v_query_queue/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView v_query_queue(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOn_queue");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOn> orders = null;
+		if(vendor!=null)
+			orders = this.orderOnService.queryQueueByAreaId("Order_"+vendor.getCityId()+"_on",vendor.getAreaId());
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders);   
+		return modelAndView;
+    }
+	
+	@RequestMapping(value = "/v_query_process/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView v_query_process(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOn_process");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOn> orders = null;
+		if(vendor!=null)
+			orders = this.orderOnService.queryProcessByAreaId("Order_"+vendor.getCityId()+"_on",vendor.getAreaId());
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders);   
 		return modelAndView;
     }
 }

@@ -24,12 +24,15 @@ public class OrderOff {
 	private String totalPrice;//总价				订单总价
 	private String freight;//运费				暂时不用，为以后拓展保留
 	private String comment;//用户备注
+	private String vcomment;//卖家备注			如'由于**原因，取消该订单'
 	private String finalStatus;//最终状态			'买家已取消'(被买家取消)，'卖家已取消'(被卖家取消)，'已收货'
 	private String cityarea;//城市+区域名		方便后台直接显示
 	private Timestamp finalTime;//最终时间			当前这条记录被添加进来时的时间
 	private int userId;//对应User表里的Id
 	private int areaId;//Area表里的Id，区域卖家登录时的查询条件
 	private int cityId;
+	private String refundStatus;//退款状态
+	
 	public int getId() {
 		return id;
 	}
@@ -162,4 +165,17 @@ public class OrderOff {
 	public void setCityId(int cityId) {
 		this.cityId = cityId;
 	}
+	public String getVcomment() {
+		return vcomment;
+	}
+	public void setVcomment(String vcomment) {
+		this.vcomment = vcomment;
+	}
+	public String getRefundStatus() {
+		return refundStatus;
+	}
+	public void setRefundStatus(String refundStatus) {
+		this.refundStatus = refundStatus;
+	}
+	
 }

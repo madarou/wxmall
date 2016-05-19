@@ -40,6 +40,18 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public List<OrderOn> queryByName(String name) {
 		return this.orderOnDao.queryByName(name);
 	}
+	@Override
+	public List<OrderOn> queryQueueByAreaId(String tableName, int areaId) {
+		return this.orderOnDao.queryQueueByAreaId(tableName, areaId);
+	}
+	@Override
+	public int cancelOrder(int cityId, int orderid, String vcomment) {
+		return this.orderOnDao.cancelOrder(cityId, orderid, vcomment);
+	}
+	@Override
+	public List<OrderOn> queryProcessByAreaId(String tableName, int areaId) {
+		return this.orderOnDao.queryProcessByAreaId(tableName,areaId);
+	}
 	
 //	@Override
 //	public void testor() {

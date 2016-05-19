@@ -23,4 +23,10 @@ public interface IOrderOnService {
 
 	int deleteById(int id);
 
+	List<OrderOn> queryQueueByAreaId(String tableName, int areaId);
+
+	int cancelOrder(int cityId, int orderid, String vcomment);
+
+	List<OrderOn> queryProcessByAreaId(String tableName, int areaId);
+
 }

@@ -19,4 +19,10 @@ public interface IOrderOnDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	public List<OrderOn> queryQueueByAreaId(String tableName, int areaId);
+
+	public int cancelOrder(int cityId, int orderid, String vcomment);
+
+	public List<OrderOn> queryProcessByAreaId(String tableName, int areaId);
 }
