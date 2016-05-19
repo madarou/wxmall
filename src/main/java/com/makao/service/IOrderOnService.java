@@ -29,4 +29,8 @@ public interface IOrderOnService {
 
 	List<OrderOn> queryProcessByAreaId(String tableName, int areaId);
 
+	int distributeOrder(int cityId, int orderid);
+
+	int finishOrder(int cityId, int orderid);
+
 }

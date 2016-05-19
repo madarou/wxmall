@@ -13,7 +13,7 @@ import com.makao.test.utils.HttpUtils;
  * @date 2016年5月14日
  * 依赖于city，因为需要cityId确定表
  */
-public class CopyOfNewOrderOnProcessTest {
+public class NewOrderOnProcessTest {
 
 	@Test
 	public void test() throws InterruptedException {

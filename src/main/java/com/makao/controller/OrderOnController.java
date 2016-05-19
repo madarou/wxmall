@@ -128,6 +128,12 @@ public class OrderOnController {
         return OrderOns;
     }
 	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 订单被取消，填写备注
+	 */
 	@RequestMapping(value = "/vcancel/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vcancel(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
@@ -137,6 +143,60 @@ public class OrderOnController {
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){
 			int res = this.orderOnService.cancelOrder(vendor.getCityId(),orderid,vcomment);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 开始配送订单，即将其状态设为已处理
+	 */
+	@RequestMapping(value = "/vdistribute/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vdistribute(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		int orderid = paramObject.getIntValue("orderid");
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			int res = this.orderOnService.distributeOrder(vendor.getCityId(),orderid);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 完成配送订单，即将其状态设为已完成
+	 */
+	@RequestMapping(value = "/vfinish/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vfinish(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		int orderid = paramObject.getIntValue("orderid");
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			int res = this.orderOnService.finishOrder(vendor.getCityId(),orderid);
 			if(res==0){
 				jsonObject.put("msg", "200");
 				return jsonObject;

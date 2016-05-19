@@ -25,4 +25,8 @@ public interface IOrderOnDao {
 	public int cancelOrder(int cityId, int orderid, String vcomment);
 
 	public List<OrderOn> queryProcessByAreaId(String tableName, int areaId);
+
+	public int distributeOrder(int cityId, int orderid);
+
+	public int finishOrder(int cityId, int orderid);
 }

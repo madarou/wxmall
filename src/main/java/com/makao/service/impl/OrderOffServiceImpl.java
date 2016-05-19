@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.makao.dao.IOrderOffDao;
 import com.makao.entity.OrderOff;
+import com.makao.entity.OrderOn;
 import com.makao.service.IOrderOffService;
 
 @Service
@@ -39,6 +40,14 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	@Override
 	public List<OrderOff> queryByName(String name) {
 		return this.orderOffDao.queryByName(name);
+	}
+	@Override
+	public List<OrderOff> queryDoneByAreaId(String tableName, int areaId) {
+		return this.orderOffDao.queryDoneByAreaId(tableName, areaId);
+	}
+	@Override
+	public List<OrderOff> queryCancelByAreaId(String tableName, int areaId) {
+		return this.orderOffDao.queryCancelByAreaId(tableName, areaId);
 	}
 	
 //	@Override

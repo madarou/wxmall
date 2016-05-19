@@ -18,7 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
+import com.makao.entity.Vendor;
 import com.makao.service.IOrderOffService;
+import com.makao.service.IVendorService;
 
 /**
  * @description: TODO
@@ -31,6 +33,8 @@ public class OrderOffController {
 	private static final Logger logger = Logger.getLogger(OrderOffController.class);
 	@Resource
 	private IOrderOffService orderOffService;
+	@Resource
+	private IVendorService vendorService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody OrderOff get(@PathVariable("id") Integer id)
@@ -125,16 +129,53 @@ public class OrderOffController {
 	    return modelAndView;
     }
 	
-	@RequestMapping(value = "/v_query/{id:\\d+}", method = RequestMethod.GET)
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 查询所有已完成的订单
+	 */
+	@RequestMapping(value = "/v_query_done/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView areaQuery(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
 	    ModelAndView modelAndView = new ModelAndView();  
-		modelAndView.setViewName("v_orderOff");  
+		modelAndView.setViewName("v_orderOff_done");  
 		if(token==null){
 			return modelAndView;
 		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOff> orders = null;
+		if(vendor!=null)
+			orders = this.orderOffService.queryDoneByAreaId("Order_"+vendor.getCityId()+"_off",vendor.getAreaId());
 	    modelAndView.addObject("id", id);  
-	    modelAndView.addObject("token", token);   
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders);     
+		return modelAndView;
+    }
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 查询所有已取消的和已退货的订单
+	 */
+	@RequestMapping(value = "/v_query_cancel/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView vquerycancel(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOff_cancel");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOff> orders = null;
+		if(vendor!=null)
+			orders = this.orderOffService.queryCancelByAreaId("Order_"+vendor.getCityId()+"_off",vendor.getAreaId());
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders);     
 		return modelAndView;
     }
 }

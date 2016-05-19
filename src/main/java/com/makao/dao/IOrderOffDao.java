@@ -3,6 +3,7 @@ package com.makao.dao;
 import java.util.List;
 
 import com.makao.entity.OrderOff;
+import com.makao.entity.OrderOn;
 
 public interface IOrderOffDao {
 
@@ -19,4 +20,8 @@ public interface IOrderOffDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	public List<OrderOff> queryDoneByAreaId(String tableName, int areaId);
+
+	public List<OrderOff> queryCancelByAreaId(String tableName, int areaId);
 }

@@ -52,6 +52,14 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public List<OrderOn> queryProcessByAreaId(String tableName, int areaId) {
 		return this.orderOnDao.queryProcessByAreaId(tableName,areaId);
 	}
+	@Override
+	public int distributeOrder(int cityId, int orderid) {
+		return this.orderOnDao.distributeOrder(cityId, orderid);
+	}
+	@Override
+	public int finishOrder(int cityId, int orderid) {
+		return this.orderOnDao.finishOrder(cityId, orderid);
+	}
 	
 //	@Override
 //	public void testor() {

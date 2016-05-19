@@ -3,6 +3,7 @@ package com.makao.service;
 import java.util.List;
 
 import com.makao.entity.OrderOff;
+import com.makao.entity.OrderOn;
 
 /**
  * @description: TODO
@@ -22,5 +23,9 @@ public interface IOrderOffService {
 	OrderOff getById(int id);
 
 	int deleteById(int id);
+
+	List<OrderOff> queryDoneByAreaId(String string, int areaId);
+
+	List<OrderOff> queryCancelByAreaId(String tableName, int areaId);
 
 }
