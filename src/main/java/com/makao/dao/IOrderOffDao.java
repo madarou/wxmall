@@ -24,4 +24,12 @@ public interface IOrderOffDao {
 	public List<OrderOff> queryDoneByAreaId(String tableName, int areaId);
 
 	public List<OrderOff> queryCancelByAreaId(String tableName, int areaId);
+
+	public List<OrderOff> queryRefundByAreaId(String tableName, int areaId);
+
+	public int refundOrder(int cityId, int orderid);
+
+	public int finishRefundOrder(int cityId, int orderid);
+
+	public int cancelRefundOrder(int cityId, int orderid, String vcomment);
 }

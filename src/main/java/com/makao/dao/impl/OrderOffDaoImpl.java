@@ -35,8 +35,66 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	private SessionFactory sessionFactory;
 	@Override
 	public int insert(OrderOff orderOff) {
-		// TODO Auto-generated method stub
-		return 0;
+		String tableName = "Order_"+orderOff.getCityId()+"_off";
+		String sql = "INSERT INTO `"
+				+ tableName
+				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
+				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.setString(1, orderOff.getNumber());
+						ps.setString(2, orderOff.getProductIds());
+						ps.setString(3, orderOff.getProductNames());
+						ps.setTimestamp(4, orderOff.getOrderTime());
+						ps.setString(5, orderOff.getReceiverName());
+						ps.setString(6, orderOff.getPhoneNumber());
+						ps.setString(7, orderOff.getAddress());
+						ps.setString(8, orderOff.getPayType());
+						ps.setString(9, orderOff.getReceiveType());
+						ps.setString(10, orderOff.getReceiveTime());
+						ps.setInt(11, orderOff.getCouponId());
+						ps.setString(12, orderOff.getCouponPrice());
+						ps.setString(13, orderOff.getTotalPrice());
+						ps.setString(14, orderOff.getFreight());
+						ps.setString(15, orderOff.getComment());
+						ps.setString(16, orderOff.getVcomment());
+						ps.setString(17, orderOff.getFinalStatus());
+						ps.setString(18, orderOff.getCityarea());
+						ps.setTimestamp(19, orderOff.getFinalTime());
+						ps.setInt(20, orderOff.getUserId());
+						ps.setInt(21, orderOff.getAreaId());
+						ps.setInt(22, orderOff.getCityId());
+						ps.setString(23, orderOff.getRefundStatus());
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override
@@ -141,7 +199,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	
 	@Override
 	public List<OrderOff> queryCancelByAreaId(String tableName, int areaId) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('已退货','卖家取消') Order By `finalTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('已退货','卖家取消','已取消退货') Order By `finalTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();
@@ -203,6 +261,184 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		return res;
 
 	}
+	
+	@Override
+	public List<OrderOff> queryRefundByAreaId(String tableName, int areaId) {
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('退货申请中','退货中') Order By `finalTime`";
+		Session session = null;
+		Transaction tx = null;
+		List<OrderOff> res = new LinkedList<OrderOff>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							OrderOff p = new OrderOff();
+							p.setId(rs.getInt("id"));
+							p.setNumber(rs.getString("number"));
+							p.setProductIds(rs.getString("productIds"));
+							p.setProductNames(rs.getString("productNames"));
+							p.setOrderTime(rs.getTimestamp("orderTime"));
+							p.setReceiverName(rs.getString("receiverName"));
+							p.setPhoneNumber(rs.getString("phoneNumber"));
+							p.setAddress(rs.getString("address"));
+							p.setPayType(rs.getString("payType"));
+							p.setReceiveType(rs.getString("receiveType"));
+							p.setReceiveTime(rs.getString("receiveTime"));
+							p.setCouponId(rs.getInt("couponId"));
+							p.setCouponPrice(rs.getString("couponPrice"));
+							p.setTotalPrice(rs.getString("totalPrice"));
+							p.setFreight(rs.getString("freight"));
+							p.setComment(rs.getString("comment"));
+							p.setVcomment(rs.getString("vcomment"));
+							p.setFinalStatus(rs.getString("finalStatus"));
+							p.setCityarea(rs.getString("cityarea"));
+							p.setFinalTime(rs.getTimestamp("finalTime"));
+							p.setUserId(rs.getInt("userId"));
+							p.setAreaId(rs.getInt("areaId"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setRefundStatus(rs.getString("refundStatus"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
+	@Override
+	public int refundOrder(int cityId, int orderid) {
+		String tableName = "Order_"+cityId+"_off";
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `finalStatus`='退货中' WHERE `id`="+orderid;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
+	@Override
+	public int finishRefundOrder(int cityId, int orderid) {
+		String tableName = "Order_"+cityId+"_off";
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `finalStatus`='已退货',`refundStatus`='退款中' WHERE `id`="+orderid;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+	@Override
+	public int cancelRefundOrder(int cityId, int orderid, String vcomment) {
+		String tableName = "Order_"+cityId+"_off";
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `finalStatus`='已取消退货',`refundStatus`='无',`vcomment`='"+vcomment+"' WHERE `id`="+orderid;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
 
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
@@ -244,5 +480,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		}
 	}
 
+
+	
 
 }

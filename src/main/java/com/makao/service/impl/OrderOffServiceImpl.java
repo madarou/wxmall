@@ -49,6 +49,22 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	public List<OrderOff> queryCancelByAreaId(String tableName, int areaId) {
 		return this.orderOffDao.queryCancelByAreaId(tableName, areaId);
 	}
+	@Override
+	public List<OrderOff> queryRefundByAreaId(String tableName, int areaId) {
+		return this.orderOffDao.queryRefundByAreaId(tableName, areaId);
+	}
+	@Override
+	public int refundOrder(int cityId, int orderid) {
+		return this.orderOffDao.refundOrder(cityId,orderid);
+	}
+	@Override
+	public int finishRefundOrder(int cityId, int orderid) {
+		return this.orderOffDao.finishRefundOrder(cityId, orderid);
+	}
+	@Override
+	public int cancelRefundOrder(int cityId, int orderid, String vcomment) {
+		return this.orderOffDao.cancelRefundOrder(cityId, orderid, vcomment);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -28,4 +28,12 @@ public interface IOrderOffService {
 
 	List<OrderOff> queryCancelByAreaId(String tableName, int areaId);
 
+	List<OrderOff> queryRefundByAreaId(String tableName, int areaId);
+
+	int refundOrder(int cityId, int orderid);
+
+	int finishRefundOrder(int cityId, int orderid);
+
+	int cancelRefundOrder(int cityId, int orderid, String vcomment);
+
 }

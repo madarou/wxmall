@@ -93,7 +93,7 @@
         <hr/>
      </section>
 
-     <!--弹出框效果-->
+     <!--弹出订单详细框效果-->
      <script>
      $(document).ready(function(){
     	var orderId_toView = 0;
@@ -142,42 +142,6 @@
        <h3>订单详情</h3>
        <!--content-->
        <div class="pop_cont_input">
-         <!--  <table class="table">
-              <tr>
-                <td>订单编号</td>
-                <td>2016283737282892</td>
-                <td>下单时间</td>
-                <td>2016-04-12</td>
-              </tr>
-              <tr>
-                <td>地址</td>
-                <td>开心公寓xxx号</td>
-                <td>收货人</td>
-                <td>郭德纲</td>
-              </tr>
-              <tr>
-                <td>联系电话</td>
-                <td>18763645373</td>
-                <td>送货方式</td>
-                <td>送货上门</td>
-              </tr>
-              <tr>
-                <td>支付方式</td>
-                <td>微信支付</td>
-                <td>是否付款</td>
-                <td>已付款</td>
-              </tr>
-              <tr>
-                <td>优惠券抵扣</td>
-                <td>￥13.00</td>
-                <td>备注</td>
-                <td>尽快送达</td>
-              </tr>
-              <tr>
-                <td>总价</td>
-                <td colspan="3">￥36.00</td>
-              </tr>
-          </table> -->
           <table class="table">
           	<tr><td colspan="3">订单详情</td></tr>
           	<tr><td>联系方式</td><td colspan="2" id="oname_phone"></td></tr>
@@ -196,7 +160,8 @@
        </div>
        <!--以pop_cont_text分界-->
        <div class="pop_cont_text">
-        <!-- <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消'"/> -->
+        <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消'"/>
+        <button class="linkStyle" id="subComment">提交</button>
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
@@ -207,6 +172,7 @@
      </section>
      <!--结束：弹出框效果-->
      
+      <!-- 取消订单 -->
      <script>
      $(document).ready(function(){
     	 var showTips = function(content){
@@ -232,7 +198,7 @@
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/orderOn/vcancel/"+$("#loginUserId").val(),
+  	          url: "/orderOff/vcancel/"+$("#loginUserId").val(),
   	          dataType: "json",
   	          data: JSON.stringify({"orderid":orderId_toCancel,"vcomment":$.trim($("#vcomment").val())}),
   	          success: function(data){
@@ -253,7 +219,6 @@
        });
      });
      </script>
-     <!-- 取消订单 -->
 			<section class="del_pop_bg">
 				<div class="pop_cont">
 					<!--title-->
@@ -282,10 +247,94 @@
 				</div>
 			</section>
 			<!-- 取消订单 --> 
+			
+	  <!-- 点了配送或完成时的弹框 -->
+     <script>
+     $(document).ready(function(){
+    	var orderId_toHandle = 0;//要操作的订单
+    	var handleType;//是配送还是完成
+     //弹出文本性提示框
+     $(".handleOrder").click(function(){
+       $(".handle_pop_bg").fadeIn();
+       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
+       var clickedId = $(this).attr("id");
+       orderId_toHandle = clickedId.charAt(clickedId.length-1);
+		handleType = clickedId.substring(0,clickedId.length-1);
+       });
+     //弹出：确认按钮
+     $("#confirmHandle").click(function(){
+    	 if(orderId_toHandle==0){
+    		 alert("请重新选择要操作的订单");
+    		 return false;
+    	 }
+    	 if(handleType=="refund"){//如果是配送
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/orderOff/vrefund/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"orderid":orderId_toHandle}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  //alert("删除区域管理员账号成功");
+     	        		  alert("订单开始退货");
+     	        		  window.location.reload();//刷新页面
+     	        		  orderId_toCancel=0;
+     	        	  }
+     	          }
+       	 	});
+    	 }
+    	 else if(handleType=="finish"){//如果是完成
+    		 $.ajax({
+          		  type: "POST",
+        	          contentType: "application/json",
+        	          url: "/orderOff/vfinish/"+$("#loginUserId").val(),
+        	          dataType: "json",
+        	          data: JSON.stringify({"orderid":orderId_toHandle}),
+        	          success: function(data){
+        	        	  if(data.msg=="200"){
+        	        		  //alert("删除区域管理员账号成功");
+        	        		  alert("订单退货完成");
+        	        		  window.location.reload();//刷新页面
+        	        		  orderId_toCancel=0;
+        	        	  }
+        	          }
+          	 	});
+    	 }
+        	
+       $(".handle_pop_bg").fadeOut();
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelHandle").click(function(){
+       $(".handle_pop_bg").fadeOut();
+       orderId_toHandle=0;
+       });
+     });
+     </script>
+			<section class="handle_pop_bg">
+				<div class="pop_cont">
+					<!--title-->
+					<h3>温馨提示</h3>
+					<!--content-->
+					<div class="pop_cont_input">
+						<!--以pop_cont_text分界-->
+						<div class="pop_cont_text">确定要继续吗?
+						</div>
+						<!--bottom:operate->button-->
+						<div class="btm_btn">
+							<input type="button" value="确定" id="confirmHandle"
+								class="input_btn trueBtn" /> <input type="button" value="关闭"
+								id="cancelHandle" class="input_btn falseBtn" />
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- 配送或完成订单 --> 
+			
 	     
      <section>
       <div class="page_title">
-       <a class="fr top_rt_btn" href="/orderOn/v_query_queue/${id}?token=${token}">刷新</a>
+       <a class="fr top_rt_btn" href="/orderOff/v_query_refund/${id}?token=${token}">刷新</a>
       </div>
       <table class="table">
        <tr>
@@ -294,8 +343,9 @@
         <th>卡券抵扣</th>
         <th>收货人</th>
         <th>联系电话</th>
-        <th>下单时间</th>
+       <!--  <th>下单时间</th> -->
         <th>配送时段</th>
+        <th>接单操作</th>
         <th>订单状态</th>
        </tr>
        	<c:forEach var="item" items="${orders}" varStatus="status">
@@ -305,9 +355,19 @@
          		<td id="couponPrice${item.id}">${item.couponPrice}</td>
          		<td id="receiverName${item.id}">${item.receiverName}</td>
          		<td id="phoneNumber${item.id}">${item.phoneNumber}</td>
-         		<td id="orderTime${item.id}">${item.orderTime}</td>
+         		<td id="orderTime${item.id}" style="display:none">${item.orderTime}</td>
          		<td id="receiveTime${item.id}">${item.receiveTime}</td>
-		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt${item.id}">${item.status}</button></td>
+         		<td>
+         			<c:if test="${item.finalStatus=='退货申请中'}">
+         				<button class="linkStyle handleOrder" id="refund${item.id}">退货</button>|
+         				<button class="linkStyle" id="finishPopTxt${item.id}" style="color:grey;cursor:default">完成</button>
+         			</c:if>
+         			<c:if test="${item.finalStatus=='退货中'}">
+         				<button class="linkStyle" id="distributePopTxt${item.id}" style="color:grey;cursor:default">退货</button>|
+         				<button class="linkStyle handleOrder" id="finish${item.id}">完成</button>
+         			</c:if>
+         		</td>
+		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt${item.id}">${item.finalStatus}</button></td>
 		        <td id="productNames${item.id}" style="display:none">${item.productNames}</td>
 		        <td id="address${item.id}" style="display:none">${item.address}</td>
 		         <td id="comment${item.id}" style="display:none">${item.comment}</td>

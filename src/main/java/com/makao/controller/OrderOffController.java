@@ -1,5 +1,6 @@
 package com.makao.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import com.makao.entity.OrderOn;
 import com.makao.entity.Vendor;
 import com.makao.service.IOrderOffService;
 import com.makao.service.IVendorService;
+import com.makao.utils.OrderNumberUtils;
 
 /**
  * @description: TODO
@@ -59,18 +61,28 @@ public class OrderOffController {
 		}
         return jsonObject;
     }
+	/**
+	 * @param OrderOff
+	 * @return
+	 * 该方法只是测试时生成数据用，因为OrderOff里的东西都是在OrderOn里直接移过去的
+	 */
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody OrderOff OrderOff) {
+        OrderOff.setNumber(OrderNumberUtils.generateOrderNumber());
+		OrderOff.setOrderTime(new Timestamp(System.currentTimeMillis()));
+		OrderOff.setFinalTime(new Timestamp(System.currentTimeMillis()));
+		OrderOff.setPayType("微信安全支付");//现在只有这种支付方式
+		OrderOff.setReceiveType("送货上门");//现在只有这种收货方式
 		int res = this.orderOffService.insert(OrderOff);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("增加失效订单成功id=" + OrderOff.getId());
-        	jsonObject.put("msg", "增加失效订单成功");
+			logger.info("增加失效订单成功id=" + OrderOff.getNumber());
+        	jsonObject.put("msg", "200");
 		}
 		else{
-			logger.info("增加失效订单成功失败id=" + OrderOff.getId());
-        	jsonObject.put("msg", "增加失效订单失败");
+			logger.info("增加失效订单成功失败id=" + OrderOff.getNumber());
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }
@@ -109,6 +121,89 @@ public class OrderOffController {
 		OrderOffs = this.orderOffService.queryAll();
 		logger.info("查询所有失效订单信息完成");
         return OrderOffs;
+    }
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 处理退货订单，将其状态设置为退货中
+	 */
+	@RequestMapping(value = "/vrefund/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vrefund(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		int orderid = paramObject.getIntValue("orderid");
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			int res = this.orderOffService.refundOrder(vendor.getCityId(),orderid);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 设置退货订单的状态从退货中变成已退货
+	 */
+	@RequestMapping(value = "/vfinish/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vfinish(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		int orderid = paramObject.getIntValue("orderid");
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			int res = this.orderOffService.finishRefundOrder(vendor.getCityId(),orderid);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 将退货中的订单从退货申请中或者已退货变成已取消退货
+	 */
+	@RequestMapping(value = "/vcancel/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vcancel(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		int orderid = paramObject.getIntValue("orderid");
+		String vcomment = paramObject.getString("vcomment");
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			int res = this.orderOffService.cancelRefundOrder(vendor.getCityId(),orderid,vcomment);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
     }
 	
 	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
@@ -158,7 +253,7 @@ public class OrderOffController {
 	 * @param id
 	 * @param token
 	 * @return
-	 * 查询所有已取消的和已退货的订单
+	 * 查询所有已取消的、已退货和已取消退货的订单
 	 */
 	@RequestMapping(value = "/v_query_cancel/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
@@ -173,6 +268,31 @@ public class OrderOffController {
 		List<OrderOff> orders = null;
 		if(vendor!=null)
 			orders = this.orderOffService.queryCancelByAreaId("Order_"+vendor.getCityId()+"_off",vendor.getAreaId());
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders);     
+		return modelAndView;
+    }
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 查询退货中、已退货的订单
+	 */
+	@RequestMapping(value = "/v_query_refund/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView vqueryrefund(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOff_refund");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOff> orders = null;
+		if(vendor!=null)
+			orders = this.orderOffService.queryRefundByAreaId("Order_"+vendor.getCityId()+"_off",vendor.getAreaId());
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
 	    modelAndView.addObject("orders", orders);     
