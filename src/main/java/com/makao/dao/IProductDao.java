@@ -23,4 +23,6 @@ public interface IProductDao {
 	public List<Product> queryByCityAreaId(int cityId, int areaId);
 
 	public int insertToWhole(Product product);
+
+	public List<Product> queryRepProducts();
 }

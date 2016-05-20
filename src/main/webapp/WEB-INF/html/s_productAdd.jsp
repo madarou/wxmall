@@ -181,7 +181,7 @@
 			 	$.ajax({
 		    		  type: "POST",
 		  	          contentType: "application/json",
-		  	          url: "/product/snewproduct",
+		  	          url: "/product/snew",
 		  	          dataType: "json",
 		  	          data: JSON.stringify({"productName":productName,"catalog":catalog,"label":label,"standard":standard,"price":price,
 		  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description}),

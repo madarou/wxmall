@@ -54,12 +54,15 @@
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
  <h2><a href="index.php">常州-某某区</a></h2>
-<ul>
+ <ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/v_query/${id}?token=${token}">未处理订单</a></dd>
-    <dd><a href="/orderOff/v_query/${id}?token=${token}">已处理订单</a></dd>
+    <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队订单</a></dd>
+    <dd><a href="/orderOn/v_query_process/${id}?token=${token}">待处理订单</a></dd>
+    <dd><a href="/orderOff/v_query_done/${id}?token=${token}">已完成订单</a></dd>
+    <dd><a href="/orderOff/v_query_refund/${id}?token=${token}">待退货订单</a></dd>
+    <dd><a href="/orderOff/v_query_cancel/${id}?token=${token}">已取消订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
@@ -89,101 +92,144 @@
  </ul>
 </aside>
 
+
+ 	<!--是否要复制弹出框-->
+     <script>
+     $(document).ready(function(){
+    	var vendorId_toDel = 0;//要复制的商品id
+     //弹出文本性提示框
+     $(".copyProduct").click(function(){
+       $(".confirm_copy_pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       id_toCopy = clickedId.charAt(clickedId.length-1);
+       });
+     //弹出：确认按钮
+     $("#confirmCopy").click(function(){
+    	 if(id_toCopy==0){
+    		 alert("请重新选择要复制的产品");
+    		 return false;
+    	 }
+		 $(".confirm_copy_pop_bg").fadeOut();
+		 $(".repository_pop_bg").fadeOut();
+      	 $("#proname").val($("#copyName"+id_toCopy).text());
+      	$("#proprice").val($("#copyPrice"+id_toCopy).text());
+      	$("#promarketprice").val($("#copyMarketPrice"+id_toCopy).text());
+      	$("#prostandard").val($("#copyStandard"+id_toCopy).text());
+      	$("#prodescription").val($("#copyDescription"+id_toCopy).text());
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelCopy").click(function(){
+       $(".confirm_copy_pop_bg").fadeOut();
+       $(".repository_pop_bg").fadeOut();
+       id_toCopy=0;
+       });
+     });
+     </script>
+     <section class="confirm_copy_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>温馨提示</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          认要复制该商品信息到正在编辑的商品添加内容中么？<br/>
+		  注意：其中分类、序号、库存不会被复制请自行完善。
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确定" id="confirmCopy" class="input_btn trueBtn"/>
+          <input type="button" value="返回" id="cancelCopy" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
+     <!-- 是否要复制弹出框 -->
+
 <section class="rt_wrap content mCustomScrollbar">
  <div class="rt_content">
      <section>
         <h3 style="text-align:right;">欢迎您，某某管理员</h3>
         <hr/>
      </section>
-	<!-- 瞬间消失的提示框 -->
-     <section class="loading_area">
-      <div class="loading_cont">
-       <div class="loading_icon"><i></i><i></i><i></i><i></i><i></i></div>
-       <div class="loading_txt"><mark id="tips">操作成功</mark></div>
-      </div>
-     </section>
-     <!-- 瞬间消失的提示框 -->
+     
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
      //弹出文本性提示框
-     $("#showPopTxt").click(function(){
-       $(".pop_bg").fadeIn();
-       });
-     //弹出：确认按钮
-     $(".trueBtn").click(function(){
-       $(".pop_bg").fadeOut();
+     $("#proRepository").click(function(){
+       $(".repository_pop_bg").fadeIn();
        });
      //弹出：取消或关闭按钮
-     $(".falseBtn").click(function(){
-       $(".pop_bg").fadeOut();
+     $("#closeRep").click(function(){
+       $(".repository_pop_bg").fadeOut();
        });
      });
      </script>
-     <section class="pop_bg">
+     <section class="repository_pop_bg">
       <div class="pop_cont">
        <!--title-->
-       <h3>订单详情</h3>
+       <h3>总后台商品库</h3>
        <!--content-->
        <div class="pop_cont_input">
           <table class="table">
-              <tr>
-                <td>订单编号</td>
-                <td>2016283737282892</td>
-                <td>下单时间</td>
-                <td>2016-04-12</td>
-              </tr>
-              <tr>
-                <td>地址</td>
-                <td>开心公寓xxx号</td>
-                <td>收货人</td>
-                <td>郭德纲</td>
-              </tr>
-              <tr>
-                <td>联系电话</td>
-                <td>18763645373</td>
-                <td>送货方式</td>
-                <td>送货上门</td>
-              </tr>
-              <tr>
-                <td>支付方式</td>
-                <td>微信支付</td>
-                <td>是否付款</td>
-                <td>已付款</td>
-              </tr>
-              <tr>
-                <td>优惠券抵扣</td>
-                <td>￥13.00</td>
-                <td>备注</td>
-                <td>尽快送达</td>
-              </tr>
-              <tr>
-                <td>总价</td>
-                <td colspan="3">￥36.00</td>
-              </tr>
-          </table>
+	       <tr>
+	        <th>缩略图</th>
+	        <th>商品名称</th>
+	        <th>商品分类</th>
+	        <th>出售价</th>
+	        <th>市场价</th>
+	        <th>规格</th>
+	        <th>操作</th>
+	       </tr>
+	       <c:forEach var="item" items="${products}" varStatus="status">
+	         	<tr>
+	         		<td>缩略图</td>
+	         		<td id="copyName${item.id}">${item.productName}</td>
+	         		<td>${item.catalog}</td>
+	         		<td id="copyPrice${item.id}">${item.price}</td>
+	         		<td id="copyMarketPrice${item.id}">${item.marketPrice}</td>
+	         		<td id="copyStandard${item.id}">${item.standard}</td>
+	         		<td style="text-align:center">
+			           <button class="linkStyle copyProduct" id="showPopTxt${item.id}">复制</button>
+			        </td>
+			        <td id="copyDescription${item.id}">${item.description}</td>
+	         	</tr>
+			</c:forEach> 
+	      </table>
+	      <aside class="paging">
+	       <a>第一页</a>
+	       <a>1</a>
+	       <a>2</a>
+	       <a>3</a>
+	       <a>…</a>
+	       <a>1004</a>
+	       <a>最后一页</a>
+	      </aside>
        </div>
        <!--以pop_cont_text分界-->
        <div class="pop_cont_text">
-        提示：接单前请确认库存是否足够。
+        注意：其中分类、序号、库存不会被复制请自行完善。
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
-        <input type="button" value="确认并打印" class="input_btn trueBtn"/>
-        <input type="button" value="关闭" class="input_btn falseBtn"/>
+        <input type="button" value="关闭" id="closeRep" class="input_btn falseBtn"/>
        </div>
       </div>
      </section>
      <!--结束：弹出框效果-->
+          
+     <!-- 去商品库下载 -->
+     <section style="text-align:right">
+      <div class="btm_btn">
+        <input type="button" value="去商品库下载" id="proRepository" class="input_btn trueBtn"/>
+       </div>
+     </section>
+     <!-- 去商品库下载 -->
 
  	<script>
      $(document).ready(function(){
     	 var loginUserId = $("#loginUserId").val();
-    	 var showTips = function(content){
-    			$("#tips").text(content);
-    			$(".loading_area").fadeIn();
-                $(".loading_area").fadeOut(500);
-    		}
 		 $("#prosave").click(function(){
 			 	var productName = $.trim($("#proname").val());
 			 	var catalog = $('input:radio[name=procatalog]:checked').html();
@@ -210,8 +256,7 @@
 		  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description}),
 		  	          success: function(data){
 		  	        	  if(data.msg=="200"){
-		  	        		  //alert("删除区域管理员账号成功");
-		  	        		  showTips("增加商品成功信息成功");
+		  	        		  alert("商品添加成功");
 		  	        		 // window.location="/user/squeryall";
 		  	        	  }
 		  	          }
@@ -220,7 +265,7 @@
 		 });
      </script>
    <section>
-      <ul class="ulColumn2">
+      <ul class="ulColumn2" style="padding-left:22%">
        <li>
         <span class="item_name" style="width:120px;">商品名称：</span>
         <input type="text" id="proname" class="textbox textbox_295" placeholder="如'海南小番茄'"/>
@@ -303,10 +348,6 @@
         <input type="button" id="prosave" value="保存" class="link_btn"/>
        </li>
       </ul>
-     </section>
-
-    
-	</div>
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>

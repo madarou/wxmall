@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.makao.dao.IAreaDao;
+import com.makao.entity.Address;
 import com.makao.entity.Area;
 import com.makao.entity.City;
 
@@ -98,8 +99,23 @@ public class AreaDaoImpl implements IAreaDao {
 
 	@Override
 	public Area getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = null;
+		Transaction tx = null;
+		Area res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = (Area) session.get(Area.class, id);
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override

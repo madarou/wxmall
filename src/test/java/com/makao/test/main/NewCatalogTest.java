@@ -13,14 +13,9 @@ import com.makao.test.utils.HttpUtils;
  * @description: TODO
  * @author makao
  * @date 2016年5月8日
- * 1.清空数据库
-	2.增加supervisor
-	3.增加city
-	4.增加area(会建对应的product表)
-	5.增加vendor
-	6.增加product
+ * 
  */
-public class NewProductTest {
+public class NewCatalogTest {
 
 	@Test
 	public void test() {
@@ -37,9 +32,6 @@ public class NewProductTest {
 		String newvendor = "http://localhost:8080/vendor/new";
 		String vendor = "{\"userName\":\"马靠\",\"areaId\":1,\"cityId\":1,\"cityName\":\"上海\",\"areaName\":\"张江\"}";
 		
-		String newprodcut = "http://localhost:8080/product/vnew/1";
-		String product = "{\"productName\":\"海南千禧小番茄\",\"catalog\":\"水果\",\"price\":\"12.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"30.00\",\"inventory\":12,\"sequence\":3,\"status\":\"库存紧张\",\"origin\":\"海南\",\"salesVolume\":7637,\"likes\":3972,\"areaId\":1,\"cityId\":1}";
-	
 		result = HttpUtils.doPostStr(newsupervisor,supervisor);
 		assertEquals("增加supervisor成功",result.get("msg"));
 		result = HttpUtils.doPostStr(newcity,city);
@@ -47,8 +39,6 @@ public class NewProductTest {
 		result = HttpUtils.doPostStr(newarea,area);
 		assertEquals("200",result.get("msg"));
 		result = HttpUtils.doPostStr(newvendor,vendor);
-		assertEquals("200",result.get("msg"));
-		result = HttpUtils.doPostStr(newprodcut,product);
 		assertEquals("200",result.get("msg"));
 	}
 	

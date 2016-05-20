@@ -564,6 +564,7 @@
           <input type="button" value="取消" id="cityCancel" class="input_btn falseBtn"/>
          </div>
         </div>
+        </div>
      </section>
      <!-- 添加城市结束 -->
      <!-- 添加区域 -->
@@ -661,6 +662,7 @@
           <input type="button" value="取消" id="areaCancel" class="input_btn falseBtn"/>
          </div>
         </div>
+        </div>
      </section>
      <!-- 添加区域结束 -->
      
@@ -717,8 +719,6 @@
        <a>1004</a>
        <a>最后一页</a>
       </aside>
-     </section>
-
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>

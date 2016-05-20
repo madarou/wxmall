@@ -27,4 +27,6 @@ public interface IProductService {
 
 	int insertToWhole(Product product);
 
+	List<Product> queryRepProducts();
+
 }

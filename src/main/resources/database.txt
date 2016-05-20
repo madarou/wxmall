@@ -91,7 +91,7 @@ id				int(11)
 areaName		varchar(30)*
 cityId			int(11)*		所属的城市id
 cityName		varchar(30)*	所属城市名			便于进入商城后左上角直接展示，不用现查
-catalogs		varchar(50)		当前area下的商品类别名称集合，在导航栏显示用，以'名称1=名称2'存储，方便直接展示，
+catalogs		varchar(100)	当前area下的商品类别名称集合，在导航栏显示用，以'名称1=排序值1,名称2=排序值2'存储，方便直接展示，
 								因为各area的商品单独放一张product表，表内catalog不会重名，所以不用id,这里的
 								名称1、名称2可以直接当成catalog的主键
 productTable	varchar(50)		该area对应的商品列表的名字，以areaName+'_'+cityId+'_product'为名称，超级管理员增加

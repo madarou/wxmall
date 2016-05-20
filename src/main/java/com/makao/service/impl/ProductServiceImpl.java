@@ -48,6 +48,10 @@ public class ProductServiceImpl implements IProductService {
 	public int insertToWhole(Product product) {
 		return this.productDao.insertToWhole(product);
 	}
+	@Override
+	public List<Product> queryRepProducts() {
+		return this.productDao.queryRepProducts();
+	}
 	
 //	@Override
 //	public void testor() {

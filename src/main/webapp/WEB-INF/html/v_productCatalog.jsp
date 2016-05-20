@@ -193,15 +193,25 @@
         <th>排序</th>
         <th>操作</th>
        </tr>
-       <tr>
+       <!-- <tr>
         <td></td>
         <td></td>
         <td style="text-align:center">
            <button class="linkStyle popAdd" id="showPopTxt">编辑</button>|
            <button class="linkStyle" id="delPopTxt">删除</button>
         </td>
-       </tr>
-      </table>
+       </tr> -->
+       	<c:forEach var="item" items="${catalogs}" varStatus="status">
+         	<tr>
+         		<td>${item.name}</td>
+         		<td>${item.sequence}</td>
+         		<td style="text-align:center">
+		           <button class="linkStyle popAdd" id="showPopTxt">编辑</button>|
+		           <button class="linkStyle" id="delPopTxt">删除</button>
+		        </td>
+         	</tr>
+		</c:forEach> 
+       </table>
       <aside class="paging">
        <a>第一页</a>
        <a>1</a>

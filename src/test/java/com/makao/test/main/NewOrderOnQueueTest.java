@@ -26,7 +26,7 @@ public class NewOrderOnQueueTest {
 		String city = "{\"cityName\":\"上海\"}";
 		
 		String newarea = "http://localhost:8080/area/new";
-		String area = "{\"areaName\":\"张江\",\"cityName\":\"上海\",\"catalogs\":\"水果=食材=零食=省钱\",\"cityId\":1}";
+		String area = "{\"areaName\":\"张江\",\"cityName\":\"上海\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":1}";
 		
 		String newvendor = "http://localhost:8080/vendor/new";
 		String vendor = "{\"userName\":\"马靠\",\"areaId\":1,\"cityId\":1,\"cityName\":\"上海\",\"areaName\":\"张江\"}";

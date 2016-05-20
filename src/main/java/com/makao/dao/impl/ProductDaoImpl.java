@@ -244,6 +244,73 @@ public class ProductDaoImpl implements IProductDao {
 		return (res.size()>0 ? res : null);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IProductDao#queryRepProducts()
+	 * 从总商品库中查询所有商品
+	 */
+	@Override
+	public List<Product> queryRepProducts() {
+		String tableName = "Product";
+		String sql = "SELECT * FROM "+tableName;
+		Session session = null;
+		Transaction tx = null;
+		List<Product> res = new LinkedList<Product>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//res = session.createQuery("from User").list();
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							Product p = new Product();
+							p.setId(rs.getInt("id"));
+							p.setProductName(rs.getString("productName"));
+							p.setCatalog(rs.getString("catalog"));
+							p.setShowWay(rs.getString("showWay"));
+							p.setPrice(rs.getString("price"));
+							p.setStandard(rs.getString("standard"));
+							p.setMarketPrice(rs.getString("marketPrice"));
+							p.setLabel(rs.getString("label"));
+							p.setCoverSUrl(rs.getString("coverSUrl"));
+							p.setCoverBUrl(rs.getString("coverBUrl"));
+							p.setInventory(rs.getInt("inventory"));
+							p.setSequence(rs.getInt("sequence"));
+							p.setStatus(rs.getString("status"));
+							p.setDescription(rs.getString("description"));
+							p.setOrigin(rs.getString("origin"));
+							p.setSalesVolume(rs.getInt("salesVolume"));
+							p.setLikes(rs.getInt("likes"));
+							p.setDetailUrl(rs.getString("detailUrl"));
+							p.setIsShow(rs.getString("isShow"));
+							p.setAreaId(rs.getInt("areaId"));
+							p.setCityId(rs.getInt("cityId"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return (res.size()>0 ? res : null);
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
@@ -337,5 +404,7 @@ public class ProductDaoImpl implements IProductDao {
 		return res;
 
 	}
+
+
 
 }

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
+import com.makao.entity.Catalog;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
 import com.makao.entity.Vendor;
@@ -98,11 +99,9 @@ public class ProductController {
 	
 
 	
-	@RequestMapping(value = "/snewproduct", method = RequestMethod.POST)
+	@RequestMapping(value = "/snew/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object addBySupervisor(@RequestBody Product product) {
-		System.out.println(product.getProductName());
-		System.out.println(product.getInventory());
+    Object addBySupervisor(@PathVariable("supervisorid") int vendorid,@RequestBody Product product) {
 		int res = this.productService.insertToWhole(product);
 		JSONObject jsonObject = new JSONObject();
 		logger.info("超级管理员添加产品页面完成："+product.getProductName());
@@ -222,6 +221,11 @@ public class ProductController {
 		}
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token);   
+	    //Vendor vendor = this.vendorService.getById(id);
+	    //这里是返回后台商品库的所有商品，即从Product表中获取
+		List<Product> products = this.productService.queryRepProducts();
+ 
+	    modelAndView.addObject("products", products);  
 		return modelAndView;
     }
 	
@@ -242,7 +246,6 @@ public class ProductController {
 			products = this.productService.queryByCityAreaId(vendor.getCityId(),vendor.getAreaId());
  
 	    modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("s_productList"); 
 	    
 		return modelAndView;
 	}
@@ -258,6 +261,25 @@ public class ProductController {
 		}
 		modelAndView.addObject("id", id);
 		modelAndView.addObject("token", token);
+		Vendor vendor = this.vendorService.getById(id);
+		List<Catalog> catalogs = new ArrayList<Catalog>();
+		if(vendor!=null)
+		{
+			Area area = this.areaService.getById(vendor.getAreaId());
+			if(area!=null){
+				String catalogStr = area.getCatalogs();
+				if(!"".equals(catalogStr.trim())){
+					String[] catalogList = catalogStr.split(",");
+					for(String c : catalogList){
+						Catalog cc = new Catalog();
+						cc.setName(c.split("=")[0]);
+						cc.setSequence(c.split("=")[1]);
+						catalogs.add(cc);
+					}
+				}
+			}
+		}
+		modelAndView.addObject("catalogs", catalogs);
 		return modelAndView;
     }
 	
