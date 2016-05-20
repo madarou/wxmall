@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
+import com.makao.entity.Catalog;
+import com.makao.entity.Product;
+import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
+import com.makao.service.IVendorService;
 
 /**
  * @description: TODO
@@ -27,6 +31,8 @@ public class AreaController {
 	private static final Logger logger = Logger.getLogger(AreaController.class);
 	@Resource
 	private IAreaService areaService;
+	@Resource
+	private IVendorService vendorService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Area get(@PathVariable("id") Integer id)
@@ -113,4 +119,113 @@ public class AreaController {
 		jsonObject.put("areas", areas);//不用序列化，方便前端jquery遍历
         return jsonObject;
     }
+	
+
+	/**
+	 * @param vendorid
+	 * @param catalog
+	 * @return
+	 * 增加分类
+	 */
+	@RequestMapping(value = "/vnewcatalog/{vendorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object addcatalog(@PathVariable("vendorid") int vendorid,@RequestBody Catalog catalog) {
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(vendorid);
+		int areaId = vendor.getAreaId();
+		Area area = this.areaService.getById(areaId);
+		String[] catalogStr = area.getCatalogs().split(",");
+		for(String s : catalogStr){//检查重复性
+			if(catalog.getName().equals(s.split("=")[0].trim())){
+				jsonObject.put("msg", "202");
+				return jsonObject;
+			}
+		}
+		area.setCatalogs(area.getCatalogs()+","+catalog.getName()+"="+catalog.getSequence());
+		int res = this.areaService.update(area);
+		
+		if(res==0){
+			logger.info("增加分类成功name=" + catalog.getName());
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("增加分类成功失败name=" + catalog.getName());
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+	
+	/**
+	 * @param vendorid
+	 * @param catalog
+	 * @return
+	 * 修改分类，需要遍历Product表，修改所有catalog值为oldname的，更改Area表的内容,所有工作必须放在一个事务中完成
+	 * 之所以这样设计，是因为更改Catalog的需求很低很低
+	 */
+	@RequestMapping(value = "/veditcatalog/{vendorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object editcatalog(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
+		JSONObject jsonObject = new JSONObject();
+		String oldName = paramObject.getString("oldname");
+		String newName = paramObject.getString("newname");
+		String sequenceNew = paramObject.getString("sequence");
+		
+		Vendor vendor = this.vendorService.getById(vendorid);
+		int areaId = vendor.getAreaId();
+		int cityId = vendor.getCityId();
+		String productTable = "Product_"+cityId+"_"+areaId;
+		
+		Area area = this.areaService.getById(areaId);
+		String[] catalogStr = area.getCatalogs().split(",");
+		for(String s : catalogStr){//检查重复性
+			if(newName.equals(s.split("=")[0].trim())){
+				jsonObject.put("msg", "202");
+				return jsonObject;
+			}
+		}
+		//area.setCatalogs(area.getCatalogs()+","+catalog.getName()+"="+catalog.getSequence());
+		int res = this.areaService.editCatalog(area,oldName,newName,sequenceNew,productTable);
+		
+		if(res==0){
+			logger.info("修改分类成功name=" + newName);
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("修改分类成功失败name=" + newName);
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+	
+	/**
+	 * @param vendorid
+	 * @param paramObject
+	 * @return
+	 * 删除Area中的分类，同时将Product中属于该类的product值设为默认分类
+	 */
+	@RequestMapping(value = "/vdeletecatalog/{vendorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object deletecatalog(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
+		JSONObject jsonObject = new JSONObject();
+		String catalogName = paramObject.getString("name");
+		
+		Vendor vendor = this.vendorService.getById(vendorid);
+		int areaId = vendor.getAreaId();
+		int cityId = vendor.getCityId();
+		String productTable = "Product_"+cityId+"_"+areaId;
+		
+		Area area = this.areaService.getById(areaId);
+		int res = this.areaService.deleteCatalog(area,catalogName,productTable);
+		
+		if(res==0){
+			logger.info("删除分类成功name=" + catalogName);
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("删除分类成功失败name=" + catalogName);
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+
 }

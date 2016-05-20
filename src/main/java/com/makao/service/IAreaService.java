@@ -23,4 +23,9 @@ public interface IAreaService {
 
 	int deleteById(int id);
 
+	int editCatalog(Area area, String oldName, String newName,
+			String sequenceNew, String productTable);
+
+	int deleteCatalog(Area area, String catalogName, String productTable);
+
 }

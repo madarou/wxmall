@@ -96,7 +96,6 @@ public class ProductController {
 		}
         return jsonObject;
     }
-	
 
 	
 	@RequestMapping(value = "/snew/{supervisorid:\\d+}", method = RequestMethod.POST)

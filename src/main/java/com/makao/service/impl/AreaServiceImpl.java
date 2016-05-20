@@ -40,6 +40,16 @@ public class AreaServiceImpl implements IAreaService {
 	public List<Area> queryByName(String name) {
 		return this.areaDao.queryByName(name);
 	}
+	@Override
+	public int editCatalog(Area area, String oldName, String newName,
+			String sequenceNew, String productTable) {
+		return this.areaDao.editCatalog(area, oldName, newName,
+				sequenceNew, productTable);
+	}
+	@Override
+	public int deleteCatalog(Area area, String catalogName, String productTable) {
+		return this.areaDao.deleteCatalog(area, catalogName, productTable);
+	}
 	
 //	@Override
 //	public void testor() {

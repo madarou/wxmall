@@ -120,8 +120,24 @@ public class AreaDaoImpl implements IAreaDao {
 
 	@Override
 	public int update(Area area) {
-		// TODO Auto-generated method stub
-		return 0;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.update(area);
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override
@@ -162,6 +178,109 @@ public class AreaDaoImpl implements IAreaDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+
+	@Override
+	public int editCatalog(Area area, String oldName, String newName,
+			String sequenceNew, String productTable) {
+		Session session = null;
+		Transaction tx = null;
+		String sql = "UPDATE `"
+				+ productTable
+				+ "` SET `catalog`='"+newName+"' WHERE `catalog`='"+oldName+"'";
+		int res = 0;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			String[] catalogStr = area.getCatalogs().split(",");
+			StringBuilder sb = new StringBuilder();
+			for(String s : catalogStr){
+				if(oldName.equals(s.split("=")[0].trim())){
+					sb.append(newName+"="+sequenceNew+",");
+				}
+				else{
+					sb.append(s+",");
+				}
+			}
+			String catalogs = sb.toString();
+			area.setCatalogs(catalogs.substring(0, catalogs.length()-1));
+			session.update(area);
+			session.doWork(
+					// 定义一个匿名类，实现了Work接口
+					new Work() {
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = null;
+							try {
+								ps = connection.prepareStatement(sql);
+								ps.executeUpdate();
+							} finally {
+								doClose(ps);
+							}
+						}
+					});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+	@Override
+	public int deleteCatalog(Area area, String catalogName, String productTable) {
+		Session session = null;
+		Transaction tx = null;
+		String sql = "UPDATE `"
+				+ productTable
+				+ "` SET `catalog`='默认分类' WHERE `catalog`='"+catalogName+"'";
+		int res = 0;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			String[] catalogStr = area.getCatalogs().split(",");
+			StringBuilder sb = new StringBuilder();
+			for(String s : catalogStr){
+				if(catalogName.equals(s.split("=")[0].trim())){
+					continue;
+				}
+				else{
+					sb.append(s+",");
+				}
+			}
+			String catalogs = sb.toString();
+			area.setCatalogs(catalogs.substring(0, catalogs.length()-1));
+			session.update(area);
+			session.doWork(
+					// 定义一个匿名类，实现了Work接口
+					new Work() {
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = null;
+							try {
+								ps = connection.prepareStatement(sql);
+								ps.executeUpdate();
+							} finally {
+								doClose(ps);
+							}
+						}
+					});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {

@@ -54,12 +54,15 @@
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
  <h2><a href="index.php">常州-某某区</a></h2>
- <ul>
+<ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/v_query/${id}?token=${token}">未处理订单</a></dd>
-    <dd><a href="/orderOff/v_query/${id}?token=${token}">已处理订单</a></dd>
+     <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队订单</a></dd>
+    <dd><a href="/orderOn/v_query_process/${id}?token=${token}">待处理订单</a></dd>
+    <dd><a href="/orderOff/v_query_done/${id}?token=${token}">已完成订单</a></dd>
+    <dd><a href="/orderOff/v_query_refund/${id}?token=${token}">待退货订单</a></dd>
+    <dd><a href="/orderOff/v_query_cancel/${id}?token=${token}">已取消订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
@@ -87,7 +90,7 @@
    <p class="btm_infor">© 优格信息 版权所有</p>
   </li>
  </ul>
-</aside>
+ </aside>
 <section class="rt_wrap content mCustomScrollbar">
  <div class="rt_content">
      <section>
@@ -95,7 +98,7 @@
         <hr/>
      </section>
 
-     <!--弹出框效果-->
+     <!--添加分类弹出框效果-->
      <script>
      $(document).ready(function(){
      //弹出文本性提示框
@@ -104,6 +107,29 @@
        });
      //弹出：确认按钮
      $("#saveBtn").click(function(){
+      
+       var catname = $.trim($("#catname").val());
+       var catsequence = $.trim($("#catsequence").val());
+       if(catname == "" || catsequence == ""){
+    	   alert("分类名称、排序不能为空");
+    	   return false;
+       }
+       $.ajax({
+ 		  type: "POST",
+	          contentType: "application/json",
+	          url: "/area/vnewcatalog/"+$("#loginUserId").val(),
+	          dataType: "json",
+	          data: JSON.stringify({"name":catname,"sequence":catsequence}),
+	          success: function(data){
+	        	  if(data.msg=="200"){
+	        		  alert("分类添加成功");
+	        		  window.location.reload();
+	        	  }
+	        	  else if(data.msg=="202"){
+	        		  alert("分类名称不能重复");
+	        	  }
+	          }
+ 	 	});
        $(".pop_bg").fadeOut();
        });
      //弹出：取消或关闭按钮
@@ -121,11 +147,11 @@
         <ul>
          <li>
           <span>分类名称</span>
-          <input type="text" placeholder="如'水果'" class="textbox"/>
+          <input type="text" id="catname" placeholder="如'水果'" class="textbox"/>
          </li>
          <li>
           <span class="ttl">排&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序</span>
-          <input type="text" placeholder="请填写整数，从大到小排序" class="textbox"/>
+          <input type="text" id="catsequence" placeholder="请填写整数，从大到小排序" class="textbox"/>
          </li>
         </ul>
        </div>
@@ -142,22 +168,133 @@
      </section>
      <!--结束：弹出框效果-->
 
+     <!-- 修改分类弹出框 -->
+     <!--弹出框效果-->
+     <script>
+     $(document).ready(function(){
+    	var catName_toEdit="";//要修改的分类名
+    	 var nameOld = "";
+    	var sequenceOld = "";
+	     //弹出文本性提示框
+	     $(".popEdit").click(function(){
+	       $(".editcat_pop_bg").fadeIn();
+	       var clickedId = $(this).attr("id");
+	       catName_toEdit = clickedId.split("-")[1];
+	       nameOld = $("#name-"+catName_toEdit).text();
+	       sequenceOld = $("#sequence-"+catName_toEdit).text();
+	    	$("#cat_name").val(nameOld);
+	    	$("#cat_sequence").val(sequenceOld);
+	       });
+	     //弹出：确认按钮
+	     $("#saveEdit").click(function(){
+	    	 var nameNew = $.trim($("#cat_name").val());
+	    	 var sequenceNew = $.trim($("#cat_sequence").val());
+	         if(nameNew=="" || sequenceNew==""){
+	        	 alert("分类名称、排序不能为空");
+	        	 return false;
+	         }
+	         if(nameNew==nameOld && sequenceNew==sequenceOld){
+	        	 alert("并未做修改");
+	        	 return false;
+	         }
+	         $.ajax({
+	    		  type: "POST",
+	   	          contentType: "application/json",
+	   	          url: "/area/veditcatalog/"+$("#loginUserId").val(),
+	   	          dataType: "json",
+	   	          data: JSON.stringify({"oldname":nameOld,"newname":nameNew,"sequence":sequenceNew}),
+	   	          success: function(data){
+	   	        	  if(data.msg=="200"){
+	   	        		  alert("分类修改成功");
+	   	        		  window.location.reload();
+	   	        	  }
+	   	        	  else if(data.msg=="202"){
+	   	        		  alert("分类名称不能重复");
+	   	        	  }
+	   	          }
+	    	 	});
+	    	 $(".editcat_pop_bg").fadeOut();
+	       	 catName_toEdit="";
+	       	 nameOld ="";
+		     sequenceOld="";
+	       });
+	     //弹出：取消或关闭按钮
+	     $("#cancelEdit").click(function(){
+	       $(".editcat_pop_bg").fadeOut();
+	       catName_toEdit="";
+	       nameOld ="";
+	       sequenceOld="";
+	       });
+     });
+     </script>
+     <section class="editcat_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       		<h3>修改分类</h3>
+       		<!--content-->
+	       <div class="pop_cont_input">
+	        <ul>
+	         <li>
+	          <span>分类名称</span>
+	          <input type="text" id="cat_name" placeholder="如'水果'" class="textbox"/>
+	         </li>
+	         <li>
+	          <span class="ttl">排&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序</span>
+	          <input type="text" id="cat_sequence" placeholder="请填写整数，从大到小排序" class="textbox"/>
+	         </li>
+	        </ul>
+	       </div>
+	       <!--以pop_cont_text分界-->
+	       <div class="pop_cont_text">
+	        修改后该分类下的所有记录都将更改
+	       </div>
+	       <!--bottom:operate->button-->
+	       <div class="btm_btn">
+	        <input type="button" value="保存" id="saveEdit" class="input_btn trueBtn"/>
+	        <input type="button" value="取消" id="cancelEdit" class="input_btn falseBtn"/>
+	       </div>
+        </div>
+     </section>
+     <!-- 修改分类弹出框 -->
+     
      <!-- 删除分类弹出框 -->
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
-     //弹出文本性提示框
-     $("#delPopTxt").click(function(){
-       $(".del_pop_bg").fadeIn();
-       });
-     //弹出：确认按钮
-     $("#confirmDel").click(function(){
-       $(".del_pop_bg").fadeOut();
-       });
-     //弹出：取消或关闭按钮
-     $("#cancelDel").click(function(){
-       $(".del_pop_bg").fadeOut();
-       });
+    	var catName_toDel="";//要删除的分类名
+	     //弹出文本性提示框
+	     $(".popDel").click(function(){
+	       $(".del_pop_bg").fadeIn();
+	       var clickedId = $(this).attr("id");
+	       catName_toDel = clickedId.split("-")[1];
+	       });
+	     //弹出：确认按钮
+	     $("#confirmDel").click(function(){
+	       if(catName_toDel==""){
+	    	   alert("请重新选择要删除的分类");
+	    	   return false;
+	       }
+	       $.ajax({
+	    		  type: "POST",
+	   	          contentType: "application/json",
+	   	          url: "/area/vdeletecatalog/"+$("#loginUserId").val(),
+	   	          dataType: "json",
+	   	          data: JSON.stringify({"name":catName_toDel}),
+	   	          success: function(data){
+	   	        	  if(data.msg=="200"){
+	   	        		  alert("分类删除成功");
+	   	        		  window.location.reload();
+	   	        	  }
+	   	          }
+	    	 	});
+	       $(".del_pop_bg").fadeOut();
+	       catName_toDel="";
+	       });
+	     //弹出：取消或关闭按钮
+	     $("#cancelDel").click(function(){
+	       $(".del_pop_bg").fadeOut();
+	       catName_toDel="";
+	       });
      });
      </script>
      <section class="del_pop_bg">
@@ -175,6 +312,7 @@
           <input type="button" value="继续删除" id="confirmDel" class="input_btn trueBtn"/>
           <input type="button" value="取消" id="cancelDel" class="input_btn falseBtn"/>
          </div>
+        </div>
         </div>
      </section>
      <!-- 删除分类弹出框 -->
@@ -203,11 +341,11 @@
        </tr> -->
        	<c:forEach var="item" items="${catalogs}" varStatus="status">
          	<tr>
-         		<td>${item.name}</td>
-         		<td>${item.sequence}</td>
+         		<td id="name-${item.name}">${item.name}</td>
+         		<td id="sequence-${item.name}">${item.sequence}</td>
          		<td style="text-align:center">
-		           <button class="linkStyle popAdd" id="showPopTxt">编辑</button>|
-		           <button class="linkStyle" id="delPopTxt">删除</button>
+		           <button class="linkStyle popEdit" id="showPopTxt-${item.name}">编辑</button>|
+		           <button class="linkStyle popDel" id="delPopTxt-${item.name}">删除</button>
 		        </td>
          	</tr>
 		</c:forEach> 
@@ -222,10 +360,10 @@
        <a>最后一页</a>
       </aside>
      </section>
-
-     </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="token" value="${token}"></input>
 </body>
 </html>

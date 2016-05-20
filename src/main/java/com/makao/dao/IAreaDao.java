@@ -19,4 +19,9 @@ public interface IAreaDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	public int editCatalog(Area area, String oldName, String newName,
+			String sequenceNew, String productTable);
+
+	public int deleteCatalog(Area area, String catalogName, String productTable);
 }
