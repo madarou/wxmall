@@ -181,7 +181,7 @@
        <option>食材</option>
       </select>
       <input type="button" value="搜索" class="group_btn"/>
-      <a href="/product/sareanew" style="margin-left: 30px">添加商品</a>
+      <a href="/product/v_new/${id}?token=${token}" style="margin-left: 30px">添加商品</a>
      </section><br/>
 
      <section>

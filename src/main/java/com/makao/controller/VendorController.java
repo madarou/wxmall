@@ -1,6 +1,5 @@
 package com.makao.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;

@@ -430,6 +430,7 @@
           <input type="button" value="取消" id="vendorCancel" class="input_btn falseBtn"/>
          </div>
         </div>
+        </div>
      </section>
      <!-- 添加账号结束 -->
      <!-- 添加城市 -->

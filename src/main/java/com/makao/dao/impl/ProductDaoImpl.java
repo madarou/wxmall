@@ -39,9 +39,10 @@ public class ProductDaoImpl implements IProductDao {
 		String tableName = "Product_"+product.getCityId()+"_"+product.getAreaId();
 		String sql = "INSERT INTO `"
 				+ tableName
-				+ "` (`productName`,`catalog`,`price`,`standard`,`marketPrice`,`inventory`,`sequence`,`status`,"
-				+ "`origin`,`salesVolume`,`likes`,`areaId`,`cityId`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "` (`productName`,`catalog`,`label`,`standard`,`price`,`marketPrice`,`inventory`,`isShow`,"
+				+ "`showWay`,`sequence`,`description`,`origin`,`status`,"
+				+ "`salesVolume`,`likes`,`coverSUrl`,`coverBUrl`,`subdetailUrl`,`detailUrl`,`areaId`,`cityId`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -57,17 +58,25 @@ public class ProductDaoImpl implements IProductDao {
 						ps = connection.prepareStatement(sql);
 						ps.setString(1, product.getProductName());
 						ps.setString(2, product.getCatalog());
-						ps.setString(3, product.getPrice());
+						ps.setString(3, product.getLabel());
 						ps.setString(4, product.getStandard());
-						ps.setString(5, product.getMarketPrice());
-						ps.setInt(6, product.getInventory());
-						ps.setInt(7, product.getSequence());
-						ps.setString(8, product.getStatus());
-						ps.setString(9, product.getOrigin());
-						ps.setInt(10, product.getSalesVolume());
-						ps.setInt(11, product.getLikes());
-						ps.setInt(12, product.getAreaId());
-						ps.setInt(13, product.getCityId());
+						ps.setString(5, product.getPrice());
+						ps.setString(6, product.getMarketPrice());
+						ps.setInt(7, product.getInventory());
+						ps.setString(8, product.getIsShow());
+						ps.setString(9, product.getShowWay());
+						ps.setInt(10, product.getSequence());
+						ps.setString(11, product.getDescription());
+						ps.setString(12, product.getOrigin());
+						ps.setString(13, product.getStatus());
+						ps.setInt(14, product.getSalesVolume());
+						ps.setInt(15, product.getLikes());
+						ps.setString(16, product.getCoverSUrl());
+						ps.setString(17, product.getCoverBUrl());
+						ps.setString(18, product.getSubdetailUrl());
+						ps.setString(19, product.getDetailUrl());
+						ps.setInt(20, product.getAreaId());
+						ps.setInt(21, product.getCityId());
 						ps.executeUpdate();
 					} finally {
 						doClose(ps);
