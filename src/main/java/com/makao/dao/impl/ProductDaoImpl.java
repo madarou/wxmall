@@ -320,6 +320,88 @@ public class ProductDaoImpl implements IProductDao {
 		return (res.size()>0 ? res : null);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IProductDao#notShowProduct(java.lang.String, int)
+	 * 下架产品
+	 */
+	@Override
+	public int notShowProduct(String tableName, int prodcutId) {
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `isShow`='no' WHERE `id`="+prodcutId;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IProductDao#notShowProduct(java.lang.String, int)
+	 * 上架产品
+	 */
+	@Override
+	public int showProduct(String tableName, int prodcutId) {
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `isShow`='yes' WHERE `id`="+prodcutId;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {

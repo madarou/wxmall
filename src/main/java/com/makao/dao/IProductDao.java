@@ -25,4 +25,7 @@ public interface IProductDao {
 	public int insertToWhole(Product product);
 
 	public List<Product> queryRepProducts();
+
+	public int notShowProduct(String tableName, int prodcutId);
+	public int showProduct(String tableName, int prodcutId);
 }

@@ -29,4 +29,6 @@ public interface IProductService {
 
 	List<Product> queryRepProducts();
 
+	int notShowProduct(String tableName, int prodcutId);
+	int showProduct(String tableName, int prodcutId);
 }

@@ -18,6 +18,7 @@
 <![endif]-->
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="static/js/jquery.zclip.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -171,6 +172,90 @@
       </div>
      </section>
      <!--结束：弹出框效果-->
+     
+     <!-- 上架下架提示框 -->
+      <script>
+     $(document).ready(function(){
+    	var showHandle_Id = 0;//要上下架的商品id
+    	var showAction = "";
+     //弹出文本性提示框
+     $(".showOrNot").click(function(){
+       $(".del_pop_bg").fadeIn();
+       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
+       var clickedId = $(this).attr("id");
+       showAction = clickedId.split("-")[0];//值为notShow或show
+       showHandle_Id = clickedId.split("-")[1];
+       });
+     //弹出：确认按钮
+     $("#confirmDel").click(function(){
+    	 if(showHandle_Id==0){
+    		 alert("请重新选择下架的商品");
+    		 return false;
+    	 }
+    	 if(showAction=="notShow"){//下架操作
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/product/vnotshow/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"productId":showHandle_Id}),
+     	          success: function(data){
+     	        	  //var cities = JSON.stringify(data.cities);
+     	        	  if(data.msg=="200"){
+     	        		  alert("下架成功");
+     	        		  window.location.reload();
+     	        	  }
+     	          }
+       	 	}); 
+    	 }
+    	 else if(showAction=="show"){//上架操作
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/product/vshow/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"productId":showHandle_Id}),
+     	          success: function(data){
+     	        	  //var cities = JSON.stringify(data.cities);
+     	        	  if(data.msg=="200"){
+     	        		  alert("上架成功");
+     	        		  window.location.reload();
+     	        	  }
+     	          }
+       	 	}); 
+    	 }
+        	
+       $(".del_pop_bg").fadeOut();
+       showHandle_Id=0;
+       showAction = "";
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelDel").click(function(){
+       $(".del_pop_bg").fadeOut();
+       showHandle_Id=0;
+       showAction = "";
+       });
+     });
+     </script>
+     <section class="del_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>温馨提示</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          确认要继续操作吗?
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="confirmDel" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelDel" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
+      <!-- 上架下架提示框 -->
 
      <!-- 搜索 -->
      <section style="text-align:right">
@@ -180,7 +265,7 @@
        <option>水果</option>
        <option>食材</option>
       </select>
-      <input type="button" value="搜索" class="group_btn"/>
+      <input type="button" id="search" value="搜索" class="group_btn"/>
       <a href="/product/v_new/${id}?token=${token}" style="margin-left: 30px">添加商品</a>
      </section><br/>
 
@@ -197,19 +282,27 @@
        </tr>
        <c:forEach var="item" items="${products}" varStatus="status">
          	<tr>
-         		<td>缩略图</td>
+         		<td><img style="width:50px;height:50px" alt="缩略图" src="/static/upload/${item.coverSUrl}"></td>
          		<td>${item.productName}</td>
          		<td>${item.catalog}</td>
          		<td>${item.price}</td>
          		<td>${item.inventory}</td>
          		<td>${item.salesVolume}</td>
          		<td style="text-align:center">
-		           <button class="linkStyle editProduct" id="showPopTxt${item.id}">编辑</button>|
-		           <button class="linkStyle showProduct" id="delPopTxt${item.id}">上/下架</button>
-		           <button class="linkStyle copyProduct" id="delPopTxt${item.id}">复制链接</button>
+		           <button class="linkStyle editProduct" id="showPopTxt-${item.id}">编辑</button>|
+		           <c:choose> 
+		  				<c:when test="${item.isShow=='yes'||item.isShow==null}">   
+		  					<button class="linkStyle showOrNot" id="notShow-${item.id}">下架</button>
+						</c:when> 
+						<c:otherwise>   
+							<button class="linkStyle showOrNot" id="show-${item.id}">上架</button>
+						</c:otherwise> 
+					</c:choose>|
+		           <button class="linkStyle copyProduct" id="copy-${item.id}" style="position: relative;">复制链接</button>
 		        </td>
          	</tr>
 		</c:forEach> 
+		
       </table>
       <aside class="paging">
        <a>第一页</a>
@@ -225,5 +318,28 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+
+<script>
+//点击文本框复制其内容到剪贴板上方法
+$(document).ready(function(){
+	var copyHandle_Id = 0;
+	$(".copyProduct").zclip({
+		path: '/static/js/zclip/ZeroClipboard.swf',
+		copy: function(){
+			var clickedId = $(this).attr("id");
+		    copyHandle_Id = clickedId.split("-")[1];
+		    return "/product/"+copyHandle_Id+"/"+$("#loginUserId").val();
+		},
+		afterCopy: function(){
+			if(copyHandle_Id!=0){
+				alert("产品链接已复制到剪切板");
+				copyHandle_Id = 0
+			}
+		}
+	});
+})
+</script>
+
+<input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>

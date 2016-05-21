@@ -61,6 +61,18 @@ public class ProductController {
 		return Product;
 	}
 	
+	@RequestMapping(value="/{id:\\d+}/{vendorId:\\d+}",method = RequestMethod.GET)
+	public @ResponseBody Product get(@PathVariable("id") int id,@PathVariable("vendorId") int vendorId)
+	{
+		Product Product = null;
+		Vendor vendor = this.vendorService.getById(vendorId);
+		if(vendor!=null){
+			logger.info("获取商品信息id=" + id);
+			Product = (Product)this.productService.getById(id,vendor.getCityId(),vendor.getAreaId());
+		}
+		return Product;
+	}
+	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
@@ -86,18 +98,83 @@ public class ProductController {
     public @ResponseBody
     Object add(@PathVariable("vendorid") int vendorid,@RequestBody Product Product) {
 		Vendor vendor = this.vendorService.getById(vendorid);
-		Product.setAreaId(vendor.getAreaId());
-		Product.setCityId(vendor.getCityId());
-		int res = this.productService.insert(Product);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("增加商品成功name=" + Product.getProductName());
-        	jsonObject.put("msg", "200");
+		if(vendor!=null){
+			Product.setAreaId(vendor.getAreaId());
+			Product.setCityId(vendor.getCityId());
+			int res = this.productService.insert(Product);
+			if(res==0){
+				logger.info("增加商品成功name=" + Product.getProductName());
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("增加商品成功失败name=" + Product.getProductName());
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
 		}
-		else{
-			logger.info("增加商品成功失败name=" + Product.getProductName());
-        	jsonObject.put("msg", "200");
+		jsonObject.put("msg", "201");
+        return jsonObject;
+    }
+	
+	/**
+	 * @param vendorid
+	 * @param paramObject
+	 * @return
+	 * 下架产品
+	 */
+	@RequestMapping(value = "/vnotshow/{vendorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vnotshow(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
+		Vendor vendor = this.vendorService.getById(vendorid);
+		int prodcutId = paramObject.getInteger("productId");
+		JSONObject jsonObject = new JSONObject();
+		if(vendor!=null){
+			String tableName = "Product_"+vendor.getCityId()+"_"+vendor.getAreaId();
+			int res = this.productService.notShowProduct(tableName,prodcutId);
+			if(res==0){
+				logger.info("商品下架成功id=" + prodcutId);
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("商品下架失败id=" + prodcutId);
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
 		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+    }
+
+	/**
+	 * @param vendorid
+	 * @param paramObject
+	 * @return
+	 * 上架产品
+	 */
+	@RequestMapping(value = "/vshow/{vendorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vshow(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
+		Vendor vendor = this.vendorService.getById(vendorid);
+		int prodcutId = paramObject.getInteger("productId");
+		JSONObject jsonObject = new JSONObject();
+		if(vendor!=null){
+			String tableName = "Product_"+vendor.getCityId()+"_"+vendor.getAreaId();
+			int res = this.productService.showProduct(tableName,prodcutId);
+			if(res==0){
+				logger.info("商品上架成功id=" + prodcutId);
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("商品上架失败id=" + prodcutId);
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 
