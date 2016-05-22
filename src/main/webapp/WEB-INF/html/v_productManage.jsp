@@ -304,14 +304,14 @@
 		        <td style="display:none" id="pstandard-${item.id}">${item.standard}</td>
 		        <td style="display:none" id="pmarketprice-${item.id}">${item.marketPrice}</td>
 		        <td style="display:none" id="plabel-${item.id}">${item.label}</td>
-		        <td style="display:none" id="pcoverburl-${item.id}">/static/upload/${item.coverBUrl}</td>
+		        <td style="display:none" id="pcoverburl-${item.id}">${item.coverBUrl}</td>
 		        <td style="display:none" id="psequence-${item.id}">${item.sequence}</td>
 		        <td style="display:none" id="pstatus-${item.id}">${item.status}</td>
 		        <td style="display:none" id="pdescription-${item.id}">${item.description}</td>
 		        <td style="display:none" id="porigin-${item.id}">${item.origin}</td>
 		        <td style="display:none" id="plikes-${item.id}">${item.likes}</td>
-		        <td style="display:none" id="psubdetailurl-${item.id}">/static/upload/${item.subdetailUrl}</td>
-		        <td style="display:none" id="pdetailurl-${item.id}">/static/upload/${item.detailUrl}</td>
+		        <td style="display:none" id="psubdetailurl-${item.id}">${item.subdetailUrl}</td>
+		        <td style="display:none" id="pdetailurl-${item.id}">${item.detailUrl}</td>
 		        <td style="display:none" id="pshowstatus-${item.id}">${item.isShow}</td>
 		        <td style="display:none" id="pcityid-${item.id}">${item.cityId}</td>
 		        <td style="display:none" id="pareaid-${item.id}">${item.areaId}</td>
@@ -362,7 +362,7 @@ $(document).ready(function(){
     	var originO = "";
     	var catalogO = "";
     	var labelO = "";
-    	var stanardO = "";
+    	var standardO = "";
     	var marketPriceO = "";
     	var priceO = "";
     	var showWayO = "";
@@ -390,11 +390,11 @@ $(document).ready(function(){
        originO = $.trim($("#porigin-"+editHandle_Id).text());
        catalogO = $.trim($("#pcatalog-"+editHandle_Id).text());
        labelO = $.trim($("#plabel-"+editHandle_Id).text());
-       stanardO = $.trim($("#pstandard-"+editHandle_Id).text());
+       standardO = $.trim($("#pstandard-"+editHandle_Id).text());
        marketPriceO = $.trim($("#pmarketprice-"+editHandle_Id).text());
        priceO = $.trim($("#pprice-"+editHandle_Id).text());
        showWayO = $.trim($("#pshowway-"+editHandle_Id).text());
-       coverSUrlO = $("#pcoversurl-"+editHandle_Id).attr("src");;
+       coverSUrlO = $("#pcoversurl-"+editHandle_Id).attr("src").split("/")[3];;
        coverBUrlO = $.trim($("#pcoverburl-"+editHandle_Id).text());
        inventoryO = $.trim($("#pinventory-"+editHandle_Id).text());
        sequenceO = $.trim($("#psequence-"+editHandle_Id).text());
@@ -414,21 +414,23 @@ $(document).ready(function(){
        $("input[type=radio][value="+isShowO+"]").attr("checked",'checked');
        $("input[type=radio][value="+showWayO+"]").attr("checked",'checked');
        $("#proorigin").val(originO);
-       $("#prostandard").val(stanardO);
+       $("#prostandard").val(standardO);
        $("#promarketprice").val(marketPriceO);
        $("#proprice").val(priceO);
        $("#proinventory").val(inventoryO);
        $("#prosequence").val(sequenceO);
        $("#prodescription").val(descriptionO);
 
-       $("#uploads").attr("src", coverSUrlO);
-       $("#uploadb").attr("src", coverBUrlO);
-       if(subdetailUrlO!="/static/upload/"){
-    	   $("#uploadd1").attr("src", subdetailUrlO);
+       $("#uploads").attr("src", "/static/upload/"+coverSUrlO);
+       $("#serverImgNames").val(coverSUrlO);
+       $("#uploadb").attr("src", "/static/upload/"+coverBUrlO);
+       $("#serverImgNameb").val(coverBUrlO);
+       if(subdetailUrlO!=""){
+    	   $("#uploadd1").attr("src", "/static/upload/"+subdetailUrlO);
+    	   $("#serverImgNamed1").val(subdetailUrlO);
        }
-       $("#uploadd2").attr("src", detailUrlO);
-
-
+       $("#uploadd2").attr("src", "/static/upload/"+detailUrlO);
+       $("#serverImgNamed2").val(detailUrlO);
        });
      //弹出：确认按钮
      $("#confirmEdit").click(function(){
@@ -436,20 +438,55 @@ $(document).ready(function(){
     		 alert("请重新选择商品");
     		 return false;
     	 }
-    		/*  $.ajax({
+    	 	var productName = $.trim($("#proname").val());
+		 	var origin = $.trim($("#proorigin").val());
+		 	var catalog = $('input:radio[name=procatalog]:checked').val();
+		 	var label = $('input:radio[name=prolabel]:checked').val();
+		 	var standard = $.trim($("#prostandard").val());
+		 	var price = $.trim($("#proprice").val());
+		 	var marketPrice = $.trim($("#promarketprice").val());
+		 	var inventory = $.trim($("#proinventory").val());//分库里必须有库存值，没有则为0
+		 	var isShow = $('input:radio[name=proisshow]:checked').val();
+		 	var showWay = $('input:radio[name=proshowway]:checked').val();
+		 	var sequence = $.trim($("#prosequence").val());
+		 	var description = $.trim($("#prodescription").val());
+		 	
+		 	var coverSUrl = $("#serverImgNames").val();
+		 	var coverBUrl = $("#serverImgNameb").val();
+		 	var subdetailUrl = $("#serverImgNamed1").val();
+		 	var detailUrl = $("#serverImgNamed2").val();
+		 	
+		 	if(productName == "" || origin=="" || standard=="" || price=="" || marketPrice=="" || inventory== "" || sequence==""){
+		 		alert("产品名称、原产地、规格、价格、库存、市场价以及排序不能为空");
+		 		return false;
+		 	}
+		 	if(coverSUrl == "" || coverBUrl == "" || detailUrl==""){
+		 		alert("商品正方形、长方形缩略图、详情2图片必须上传");
+		 		return false;
+		 	}
+		 	if(productName == productNameO && origin==originO && standard==standardO && price==priceO && showWay==showWayO &&
+		 			marketPrice==marketPriceO && inventory== inventoryO && sequence==sequenceO && label==labelO &&
+		 			catalog==catalogO && isShow==isShowO && description==descriptionO && coverSUrl==coverSUrlO
+		 			&& coverBUrl==coverBUrlO && subdetailUrl==subdetailUrlO && detailUrl==detailUrlO){
+		 		alert("并未做修改");
+		 		return false;
+		 	}
+    	 
+    		$.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/product/vnotshow/"+$("#loginUserId").val(),
+     	          url: "/product/vedit/"+$("#loginUserId").val(),
      	          dataType: "json",
-     	          data: JSON.stringify({"productId":showHandle_Id}),
+     	          data: JSON.stringify({"id":editHandle_Id,"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
+	  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
+	  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl}),
      	          success: function(data){
-     	        	  //var cities = JSON.stringify(data.cities);
      	        	  if(data.msg=="200"){
-     	        		  alert("下架成功");
+     	        		  alert("商品修改成功");
      	        		  window.location.reload();
      	        	  }
      	          }
-       	 	}); */       	
+       	 	});     	
        $(".editproduct_pop_bg").fadeOut();
        	 editHandle_Id=0;
        });

@@ -120,6 +120,36 @@ public class ProductController {
 	
 	/**
 	 * @param vendorid
+	 * @param Product
+	 * @return
+	 * 修改商品信息
+	 */
+	@RequestMapping(value = "/vedit/{vendorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vedit(@PathVariable("vendorid") int vendorid,@RequestBody Product Product) {
+		Vendor vendor = this.vendorService.getById(vendorid);
+		JSONObject jsonObject = new JSONObject();
+		if(vendor!=null){
+			Product.setAreaId(vendor.getAreaId());
+			Product.setCityId(vendor.getCityId());
+			int res = this.productService.update(Product);
+			if(res==0){
+				logger.info("修改商品成功name=" + Product.getProductName());
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("修改商品成功失败name=" + Product.getProductName());
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+    }
+	
+	/**
+	 * @param vendorid
 	 * @param paramObject
 	 * @return
 	 * 下架产品

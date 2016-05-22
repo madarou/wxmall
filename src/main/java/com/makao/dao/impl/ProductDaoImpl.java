@@ -162,8 +162,61 @@ public class ProductDaoImpl implements IProductDao {
 
 	@Override
 	public int update(Product product) {
-		// TODO Auto-generated method stub
-		return 0;
+		String tableName = "Product_"+product.getCityId()+"_"+product.getAreaId();
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `productName`='"+product.getProductName()+"',"
+						+ "`catalog`='"+product.getCatalog()+"',"
+								+ "`label`='"+product.getLabel()+"',"
+										+ "`standard`='"+product.getStandard()+"',"
+												+ "`price`='"+product.getPrice()+"',"
+														+ "`marketPrice`="+product.getMarketPrice()+","
+																+ "`inventory`="+product.getInventory()+","
+																		+ "`isShow`='"+product.getIsShow()+"',"
+				+ "`showWay`='"+product.getShowWay()+"',"
+						+ "`sequence`="+product.getSequence()+","
+								+ "`description`='"+product.getDescription()+"',"
+										+ "`origin`='"+product.getOrigin()+"',"
+												+ "`status`='"+product.getStatus()+"',"
+				+ "`salesVolume`="+product.getSalesVolume()+","
+						+ "`likes`="+product.getLikes()+","
+								+ "`coverSUrl`='"+product.getCoverSUrl()+"',"
+										+ "`coverBUrl`='"+product.getCoverBUrl()+"',"
+												+ "`subdetailUrl`='"+product.getSubdetailUrl()+"',"
+														+ "`detailUrl`='"+product.getDetailUrl()+"',"
+																+ "`areaId`="+product.getAreaId()+","
+																		+ "`cityId`="+product.getCityId()
+																				+ " WHERE `id`=" + product.getId();
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override
