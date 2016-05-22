@@ -562,6 +562,12 @@ public class ProductController {
 		return modelAndView;
     }
 	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 除了产品列表，还需要catalog列表，因为里面有编辑产品的选项
+	 */
 	@RequestMapping(value = "/v_manage/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView areaManage(@PathVariable("id") int id,
@@ -575,10 +581,25 @@ public class ProductController {
 		modelAndView.addObject("token", token);
 		Vendor vendor = this.vendorService.getById(id);
 		List<Product> products = null;
-		if(vendor!=null)
+		List<Catalog> catalogs = new ArrayList<Catalog>();
+		if(vendor!=null){
 			products = this.productService.queryByCityAreaId(vendor.getCityId(),vendor.getAreaId());
- 
+			Area area = this.areaService.getById(vendor.getAreaId());
+			if(area!=null){
+				String catalogStr = area.getCatalogs();
+				if(!"".equals(catalogStr.trim())){
+					String[] catalogList = catalogStr.split(",");
+					for(String c : catalogList){
+						Catalog cc = new Catalog();
+						cc.setName(c.split("=")[0]);
+						cc.setSequence(c.split("=")[1]);
+						catalogs.add(cc);
+					}
+				}
+			}
+		}
 	    modelAndView.addObject("products", products);  
+	    modelAndView.addObject("catalogs", catalogs); 
 	    
 		return modelAndView;
 	}

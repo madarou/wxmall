@@ -282,12 +282,12 @@
        </tr>
        <c:forEach var="item" items="${products}" varStatus="status">
          	<tr>
-         		<td><img style="width:50px;height:50px" alt="缩略图" src="/static/upload/${item.coverSUrl}"></td>
-         		<td>${item.productName}</td>
-         		<td>${item.catalog}</td>
-         		<td>${item.price}</td>
-         		<td>${item.inventory}</td>
-         		<td>${item.salesVolume}</td>
+         		<td><img id="pcoversurl-${item.id}" style="width:50px;height:50px" alt="缩略图" src="/static/upload/${item.coverSUrl}"></td>
+         		<td id="pproductname-${item.id}">${item.productName}</td>
+         		<td id="pcatalog-${item.id}">${item.catalog}</td>
+         		<td id="pprice-${item.id}">${item.price}</td>
+         		<td id="pinventory-${item.id}">${item.inventory}</td>
+         		<td id="psalesvolume-${item.id}">${item.salesVolume}</td>
          		<td style="text-align:center">
 		           <button class="linkStyle editProduct" id="showPopTxt-${item.id}">编辑</button>|
 		           <c:choose> 
@@ -300,6 +300,21 @@
 					</c:choose>|
 		           <button class="linkStyle copyProduct" id="copy-${item.id}" style="position: relative;">复制链接</button>
 		        </td>
+		        <td style="display:none" id="pshowway-${item.id}">${item.showWay}</td>
+		        <td style="display:none" id="pstandard-${item.id}">${item.standard}</td>
+		        <td style="display:none" id="pmarketprice-${item.id}">${item.marketPrice}</td>
+		        <td style="display:none" id="plabel-${item.id}">${item.label}</td>
+		        <td style="display:none" id="pcoverburl-${item.id}">/static/upload/${item.coverBUrl}</td>
+		        <td style="display:none" id="psequence-${item.id}">${item.sequence}</td>
+		        <td style="display:none" id="pstatus-${item.id}">${item.status}</td>
+		        <td style="display:none" id="pdescription-${item.id}">${item.description}</td>
+		        <td style="display:none" id="porigin-${item.id}">${item.origin}</td>
+		        <td style="display:none" id="plikes-${item.id}">${item.likes}</td>
+		        <td style="display:none" id="psubdetailurl-${item.id}">/static/upload/${item.subdetailUrl}</td>
+		        <td style="display:none" id="pdetailurl-${item.id}">/static/upload/${item.detailUrl}</td>
+		        <td style="display:none" id="pshowstatus-${item.id}">${item.isShow}</td>
+		        <td style="display:none" id="pcityid-${item.id}">${item.cityId}</td>
+		        <td style="display:none" id="pareaid-${item.id}">${item.areaId}</td>
          	</tr>
 		</c:forEach> 
 		
@@ -339,6 +354,224 @@ $(document).ready(function(){
 	});
 })
 </script>
+<!-- 编辑产品 -->
+ <script>
+     $(document).ready(function(){
+    	var editHandle_Id = 0;//要编辑的商品id
+    	var productNameO = "";
+    	var originO = "";
+    	var catalogO = "";
+    	var labelO = "";
+    	var stanardO = "";
+    	var marketPriceO = "";
+    	var priceO = "";
+    	var showWayO = "";
+    	var coverSUrlO = "";
+    	var coverBUrlO = "";
+    	var inventoryO = 0;
+    	var sequenceO = 0;
+    	var statusO = "";
+    	var descriptionO = "";
+    	var salesVolumeO = 0;
+    	var likesO = 0;
+    	var subdetailUrlO = "";
+    	var detailUrlO = "";
+    	var isShowO = "";
+    	var areaIdO = 0;
+    	var cityIdO = 0;
+    	//弹出文本性提示框
+     $(".editProduct").click(function(){
+       $(".editproduct_pop_bg").fadeIn();
+       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
+       var clickedId = $(this).attr("id");
+       editHandle_Id = clickedId.split("-")[1];
+       //填充编辑框里的字段
+       productNameO = $.trim($("#pproductname-"+editHandle_Id).text());
+       originO = $.trim($("#porigin-"+editHandle_Id).text());
+       catalogO = $.trim($("#pcatalog-"+editHandle_Id).text());
+       labelO = $.trim($("#plabel-"+editHandle_Id).text());
+       stanardO = $.trim($("#pstandard-"+editHandle_Id).text());
+       marketPriceO = $.trim($("#pmarketprice-"+editHandle_Id).text());
+       priceO = $.trim($("#pprice-"+editHandle_Id).text());
+       showWayO = $.trim($("#pshowway-"+editHandle_Id).text());
+       coverSUrlO = $("#pcoversurl-"+editHandle_Id).attr("src");;
+       coverBUrlO = $.trim($("#pcoverburl-"+editHandle_Id).text());
+       inventoryO = $.trim($("#pinventory-"+editHandle_Id).text());
+       sequenceO = $.trim($("#psequence-"+editHandle_Id).text());
+       statusO = $.trim($("#pstatus-"+editHandle_Id).text());
+       descriptionO = $.trim($("#pdescription-"+editHandle_Id).text());
+       salesVolumeO = $.trim($("#psalesvolume-"+editHandle_Id).text());
+       likesO = $.trim($("#plikes-"+editHandle_Id).text());
+       subdetailUrlO = $.trim($("#psubdetailurl-"+editHandle_Id).text());
+       detailUrlO = $.trim($("#pdetailurl-"+editHandle_Id).text());
+       isShowO = $.trim($("#pshowstatus-"+editHandle_Id).text());
+       areaIdO = $.trim($("#pareaid-"+editHandle_Id).text());
+       cityIdO = $.trim($("#pcityid-"+editHandle_Id).text());
+
+       $("#proname").val(productNameO);
+       $("input[type=radio][value="+catalogO+"]").attr("checked",'checked');
+       $("input[type=radio][value="+labelO+"]").attr("checked",'checked');
+       $("input[type=radio][value="+isShowO+"]").attr("checked",'checked');
+       $("input[type=radio][value="+showWayO+"]").attr("checked",'checked');
+       $("#proorigin").val(originO);
+       $("#prostandard").val(stanardO);
+       $("#promarketprice").val(marketPriceO);
+       $("#proprice").val(priceO);
+       $("#proinventory").val(inventoryO);
+       $("#prosequence").val(sequenceO);
+       $("#prodescription").val(descriptionO);
+
+       $("#uploads").attr("src", coverSUrlO);
+       $("#uploadb").attr("src", coverBUrlO);
+       if(subdetailUrlO!="/static/upload/"){
+    	   $("#uploadd1").attr("src", subdetailUrlO);
+       }
+       $("#uploadd2").attr("src", detailUrlO);
+
+
+       });
+     //弹出：确认按钮
+     $("#confirmEdit").click(function(){
+    	 if(editHandle_Id==0){
+    		 alert("请重新选择商品");
+    		 return false;
+    	 }
+    		/*  $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/product/vnotshow/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"productId":showHandle_Id}),
+     	          success: function(data){
+     	        	  //var cities = JSON.stringify(data.cities);
+     	        	  if(data.msg=="200"){
+     	        		  alert("下架成功");
+     	        		  window.location.reload();
+     	        	  }
+     	          }
+       	 	}); */       	
+       $(".editproduct_pop_bg").fadeOut();
+       	 editHandle_Id=0;
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelEdit").click(function(){
+       $(".editproduct_pop_bg").fadeOut();
+       	 editHandle_Id=0;
+       });
+     });
+     </script>
+     <section class="editproduct_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>商品管理——编辑</h3>
+       <!--content-->
+       <div class="pop_cont_input" style="overflow: scroll;width:500px;height:450px;padding:0px">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text" style="padding:0px">
+             <section>
+		      <ul class="ulColumn2">
+		       <li>
+		        <span class="item_name" style="width:120px;">商品名称：</span>
+		        <input type="text" id="proname" class="textbox textbox_295" placeholder="如'海南小番茄'"/>
+		       </li>
+		        <li>
+		        <span class="item_name" style="width:120px;">原产地：</span>
+		        <input type="text" id="proorigin" class="textbox textbox_295" placeholder="如'海南'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" id="catalogs" style="width:120px;">商品分类：</span>
+		         <c:forEach var="item" items="${catalogs}" varStatus="status">
+		         	<label class="single_selection"><input type="radio" name="procatalog" value="${item.name}"/>${item.name}</label>
+		         </c:forEach>
+		         <a href="/product/v_catalog/${id}?token=${token}">添加分类</a>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">商品标签：</span>
+		        <label class="single_selection"><input type="radio" name="prolabel" value="无标签" checked="checked"/>无标签</label>
+		        <label class="single_selection"><input type="radio" name="prolabel" value="绿色食品"/>绿色食品</label>
+		        <label class="single_selection"><input type="radio" name="prolabel" value="小产区"/>小产区</label>
+		        <label class="single_selection"><input type="radio" name="prolabel" value="新人福利"/>新人福利</label>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">商品规格：</span>
+		        <input type="text" id="prostandard" class="textbox textbox_295" placeholder="如'一份250克','一份足2斤'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">售价(￥)：</span>
+		        <input type="text" id="proprice" class="textbox textbox_295" placeholder=""/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">市场价(￥)：</span>
+		        <input type="text" id="promarketprice" class="textbox textbox_295" placeholder=""/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">库存：</span>
+		        <input type="text" id="proinventory" class="textbox textbox_295" placeholder="" value="0"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">上架状态：</span>
+		        <label class="single_selection"><input type="radio" name="proisshow" value="yes" checked="checked"/>上架</label>
+		        <label class="single_selection"><input type="radio" name="proisshow" value="no"/>下架</label>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">展现形式：</span>
+		        <label class="single_selection"><input type="radio" name="proshowway" value="s" checked="checked"/>正方形</label>
+		        <label class="single_selection"><input type="radio" name="proshowway" value="b"/>长方形</label>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">商品排序：</span>
+		        <input type="text" id="prosequence" class="textbox textbox_295" value="0" placeholder="输入整数，值越大越前"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">商品简介：</span>
+		        <input type="text" id="prodescription" class="textbox textbox_295" placeholder="一句话十字以内"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">缩略图：</span>
+		        <span><img alt="正方形" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
+		        <span><img alt="长方形" id="uploadb" src="" style="height:100px;width:200px;cursor:pointer"/></span>
+				<div id="fileDivs">
+				     <input id="fileToUploads" style="display: none" type="file" name="upfiles">
+				</div>
+				<input type="hidden" id="serverImgNames"/>
+				<div id="fileDivb">
+				     <input id="fileToUploadb" style="display: none" type="file" name="upfileb">
+				</div>
+				<input type="hidden" id="serverImgNameb"/>
+		       </li>
+							<li><span class="item_name" style="width: 120px;">商品详情1：</span>
+								<img alt="详情1" id="uploadd1" src=""
+								style="height: 100px; width: 305px; cursor: pointer">
+								<div id="fileDivd1">
+									<input id="fileToUploadd1" style="display: none" type="file"
+										name="upfiled1">
+								</div> <input type="hidden" id="serverImgNamed1" />
+							</li>
+							<li>
+								<span class="item_name" style="width: 120px;">商品详情2：</span>
+								<img alt="详情2" id="uploadd2" src=""
+								style="height: 100px; width: 305px; cursor: pointer">
+								<div id="fileDivd2">
+									<input id="fileToUploadd2" style="display: none" type="file"
+										name="upfiled2">
+								</div> <input type="hidden" id="serverImgNamed2" />
+							</li>
+				<!-- <li>
+		        <span class="item_name" style="width:120px;"></span>
+		        <input type="button" id="prosave" value="保存" class="link_btn"/>
+		       </li> -->
+		      </ul>
+		     </section>
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="confirmEdit" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelEdit" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
+<!-- 编辑产品 -->
 
 <input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
