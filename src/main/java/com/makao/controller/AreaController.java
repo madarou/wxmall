@@ -132,26 +132,30 @@ public class AreaController {
     Object addcatalog(@PathVariable("vendorid") int vendorid,@RequestBody Catalog catalog) {
 		JSONObject jsonObject = new JSONObject();
 		Vendor vendor = this.vendorService.getById(vendorid);
-		int areaId = vendor.getAreaId();
-		Area area = this.areaService.getById(areaId);
-		String[] catalogStr = area.getCatalogs().split(",");
-		for(String s : catalogStr){//检查重复性
-			if(catalog.getName().equals(s.split("=")[0].trim())){
-				jsonObject.put("msg", "202");
-				return jsonObject;
+		if(vendor!=null){
+			int areaId = vendor.getAreaId();
+			Area area = this.areaService.getById(areaId);
+			String[] catalogStr = area.getCatalogs().split(",");
+			for(String s : catalogStr){//检查重复性
+				if(catalog.getName().equals(s.split("=")[0].trim())){
+					jsonObject.put("msg", "202");
+					return jsonObject;
+				}
+			}
+			area.setCatalogs(area.getCatalogs()+","+catalog.getName()+"="+catalog.getSequence());
+			int res = this.areaService.update(area);
+			
+			if(res==0){
+				logger.info("增加分类成功name=" + catalog.getName());
+	        	jsonObject.put("msg", "200");
+			}
+			else{
+				logger.info("增加分类成功失败name=" + catalog.getName());
+	        	jsonObject.put("msg", "201");
 			}
 		}
-		area.setCatalogs(area.getCatalogs()+","+catalog.getName()+"="+catalog.getSequence());
-		int res = this.areaService.update(area);
-		
-		if(res==0){
-			logger.info("增加分类成功name=" + catalog.getName());
-        	jsonObject.put("msg", "200");
-		}
-		else{
-			logger.info("增加分类成功失败name=" + catalog.getName());
-        	jsonObject.put("msg", "201");
-		}
+		logger.info("增加分类成功失败name=" + catalog.getName());
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 	

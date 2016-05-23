@@ -540,7 +540,7 @@
      });
      });
    </script>
-   <!-- 添加详情1图 -->
+   <!-- 添加详情2图 -->
 <input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>

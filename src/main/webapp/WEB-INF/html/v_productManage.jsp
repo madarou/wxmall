@@ -19,6 +19,7 @@
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="static/js/jquery.zclip.js" type="text/javascript"></script>
+<script src="static/js/ajaxfileupload.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -610,6 +611,167 @@ $(document).ready(function(){
      </section>
 <!-- 编辑产品 -->
 
+<!-- 添加s缩略图 -->
+    <script>
+     $(document).ready(function(){     
+     $("#uploads").on('click', function() {  
+         $('#fileToUploads').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDivs').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/product/uploadImgs',  
+             secureuri:false,  
+             fileElementId:'fileToUploads',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             //data:{name:'logan'},//一同上传的数据  
+             success: function (data, status) {  
+                 //把图片替换  
+                 /* var obj = jQuery.parseJSON(data);  
+                 $("#upload").attr("src", "../image/"+obj.fileName);   */
+                 if(data.msg=="200"){
+                     //alert("图片可用");
+                     $("#serverImgNames").val(data.imgName);
+                     $("#uploads").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="201"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+   </script>
+   <!-- 添加s缩略图 -->
+   
+   <!-- 添加b缩略图 -->
+    <script>
+     $(document).ready(function(){     
+     $("#uploadb").on('click', function() {  
+         $('#fileToUploadb').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDivb').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/product/uploadImgb',  
+             secureuri:false,  
+             fileElementId:'fileToUploadb',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             //data:{name:'logan'},//一同上传的数据  
+             success: function (data, status) {  
+                 if(data.msg=="200"){
+                     //alert("图片可用");
+                     $("#serverImgNameb").val(data.imgName);
+                     $("#uploadb").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="201"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+   </script>
+   <!-- 添加b缩略图 -->
+   <!-- 添加详情1图 -->
+    <script>
+     $(document).ready(function(){     
+     $("#uploadd1").on('click', function() {  
+         $('#fileToUploadd1').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDivd1').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/product/uploadImgd1',  
+             secureuri:false,  
+             fileElementId:'fileToUploadd1',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             //data:{name:'logan'},//一同上传的数据  
+             success: function (data, status) {  
+                 if(data.msg=="200"){
+                     //alert("图片可用");
+                     $("#serverImgNamed1").val(data.imgName);
+                     $("#uploadd1").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="201"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+   </script>
+   <!-- 添加详情1图 -->
+      <!-- 添加详情2图 -->
+    <script>
+     $(document).ready(function(){ 
+     $("#uploadd2").on('click', function() {  
+         $('#fileToUploadd2').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDivd2').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/product/uploadImgd2',  
+             secureuri:false,  
+             fileElementId:'fileToUploadd2',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             //data:{name:'logan'},//一同上传的数据  
+             success: function (data, status) {  
+                 if(data.msg=="200"){
+                     //alert("图片可用");
+                     $("#serverImgNamed2").val(data.imgName);
+                     $("#uploadd2").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="201"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+   </script>
+   <!-- 添加详情2图 -->
+   
 <input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>
