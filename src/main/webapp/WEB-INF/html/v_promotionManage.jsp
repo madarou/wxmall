@@ -109,9 +109,9 @@
        var clickedId = $(this).attr("id");
        bHandle_Id = clickedId.split("-")[1];
        productUrlO=$("#producturl-"+bHandle_Id).text();
-       imgUrlO=$("imgurl-"+bHandle_Id).text()
+       imgUrlO=$("#imgurl-"+bHandle_Id).text();
        $("#proUrl").val(productUrlO);
-       $("#upload").attr("src",imgUrlO);
+       $("#upload").attr("src","/static/upload/"+imgUrlO);
        });
      //弹出：确认按钮
      $("#saveBtn").click(function(){
