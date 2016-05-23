@@ -283,3 +283,14 @@ LoginLog_date(记录每日的用户登陆信息，只记录不重复的用户，
 列名				类型				注释				备注
 id				int(11)
 userId			int(11)			用户主键
+
+
+Banner(虽然每个area应该对应一个banner表，但每个area最多就几个分类，一个分类对应一条记录，所以内容会很少，所以考虑不拆分表)
+列名				类型				注释				备注
+id				int(11)
+catalogName		varchar(50)		分类名
+productUrl		varchar(50)		产品链接
+imgUrl			varchar(50)		banner图片地址
+status			vatchar(10)		上线还是下线
+cityId			int(11)
+areaId			int(11)

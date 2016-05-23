@@ -50,6 +50,10 @@ public class AreaServiceImpl implements IAreaService {
 	public int deleteCatalog(Area area, String catalogName, String productTable) {
 		return this.areaDao.deleteCatalog(area, catalogName, productTable);
 	}
+	@Override
+	public int newCatalog(Area area) {
+		return this.areaDao.newCatalog(area);
+	}
 	
 //	@Override
 //	public void testor() {

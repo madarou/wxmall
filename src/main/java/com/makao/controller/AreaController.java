@@ -143,18 +143,20 @@ public class AreaController {
 				}
 			}
 			area.setCatalogs(area.getCatalogs()+","+catalog.getName()+"="+catalog.getSequence());
-			int res = this.areaService.update(area);
+			int res = this.areaService.newCatalog(area);//这里之所以不用update(area)是因为对于catalog的增加还会涉及banner表的增加，而其他性的area的update并不需要
 			
 			if(res==0){
 				logger.info("增加分类成功name=" + catalog.getName());
 	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
 			}
 			else{
-				logger.info("增加分类成功失败name=" + catalog.getName());
+				logger.info("增加分类失败name=" + catalog.getName());
 	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
 			}
 		}
-		logger.info("增加分类成功失败name=" + catalog.getName());
+		logger.info("增加分类失败name=" + catalog.getName());
 		jsonObject.put("msg", "201");
         return jsonObject;
     }
@@ -195,7 +197,7 @@ public class AreaController {
         	jsonObject.put("msg", "200");
 		}
 		else{
-			logger.info("修改分类成功失败name=" + newName);
+			logger.info("修改分类失败name=" + newName);
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;
@@ -226,7 +228,7 @@ public class AreaController {
         	jsonObject.put("msg", "200");
 		}
 		else{
-			logger.info("删除分类成功失败name=" + catalogName);
+			logger.info("删除分类失败name=" + catalogName);
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;

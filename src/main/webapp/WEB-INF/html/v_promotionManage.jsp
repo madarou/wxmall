@@ -18,6 +18,7 @@
 <![endif]-->
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="static/js/ajaxfileupload.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -99,90 +100,270 @@
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
+    	 var bHandle_Id = 0;//要上下架的商品id
+    	 var productUrlO = "";
+    	 var imgUrlO = "";
      //弹出文本性提示框
-     $("#showPopTxt").click(function(){
+     $(".popEdit").click(function(){
        $(".pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       bHandle_Id = clickedId.split("-")[1];
+       productUrlO=$("#producturl-"+bHandle_Id).text();
+       imgUrlO=$("imgurl-"+bHandle_Id).text()
+       $("#proUrl").val(productUrlO);
+       $("#upload").attr("src",imgUrlO);
        });
      //弹出：确认按钮
      $("#saveBtn").click(function(){
+    	 if(bHandle_Id==0){
+    		 alert("请重新选择分类");
+    		 return false;
+    	 }
+    	 var productUrlN = $.trim($("#proUrl").val());
+    	 var imgUrlN = $("#serverImgName").val();
+    	 if(productUrlN == productUrlO && imgUrlN==imgUrlO){
+    		 alert("并未修改");
+    		 return false;
+    	 }
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/banner/vedit/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"bannerId":bHandle_Id,"productUrl":productUrlN,"imgUrl":imgUrlN}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  alert("编辑成功");
+     	        		  window.location.reload();
+     	        	  }
+     	        	  else if(data.msg=="201"){
+    	        		  alert("编辑失败");
+    	        		  window.location.reload();
+    	        	  }
+     	          }
+       	 	}); 
        $(".pop_bg").fadeOut();
+       bHandle_Id=0;
+       productUrlO = "";
+  	   imgUrlO = "";
        });
      //弹出：取消或关闭按钮
      $("#cancelBtn").click(function(){
        $(".pop_bg").fadeOut();
+       bHandle_Id=0;
+       productUrlO = "";
+  	   imgUrlO = "";
        });
      });
      </script>
      <section class="pop_bg">
       <div class="pop_cont">
        <!--title-->
-       <h3>添加礼品</h3>
+       <h3>设置置顶链接</h3>
        <!--content-->
-        <section style="padding-right: 30px;">
-          <ul class="ulColumn2">
-            <li>
-              <span class="item_name" style="width:120px;">礼品图片：</span>
-              <label class="uploadImg">
-               <input type="file"/>
-               <span>上传图片</span>
-              </label>
-             </li>
-           <li>
-            <span class="item_name" style="width:120px;">礼品名称：</span>
-            <input type="text" class="textbox textbox_295" placeholder="请输入礼品名称(不超过8个字)"/>
-            
-           </li>
-          <li>
-            <span class="item_name" style="width:120px;">兑换积分：</span>
-            <input type="text" class="textbox textbox_295" placeholder="请输入兑换积分"/>
-         
-           </li>
-           <li>
-            <span class="item_name" style="width:120px;">礼品数量：</span>
-            <input type="text" class="textbox textbox_295" placeholder="请输入礼品数量"/>
-         
-           </li>
-           
-           <li>
-             <div class="btm_btn">
-              <input type="button" value="保存" id="saveBtn" class="input_btn trueBtn"/>
-              <input type="button" value="取消" id="cancelBtn" class="input_btn falseBtn"/>
-             </div>
-           </li>
-          </ul>
-         </section>
+        <section style="margin:10px">
+	        <ul class="ulColumn2">
+	         <li>
+	          <span class="item_name">主&nbsp;推&nbsp;活&nbsp;动&nbsp;：</span>
+	          <input type="text" id="proUrl" class="textbox textbox_295" placeholder="商品详情连接"/>
+	         </li>
+	         <li>
+	          		<span class="item_name">banner图片：</span>
+						<img alt="请上传比例300*150，大小小于50M的图片" id="upload" src=""
+								style="height: 100px; width: 305px; cursor: pointer">
+						<div id="fileDiv">
+						<input id="fileToUpload" style="display: none" type="file"
+										name="upfile">
+					</div> <input type="hidden" id="serverImgName" />
+	         </li>
+	         <li>
+	          <div class="btm_btn">
+		          <input type="button" value="确定" id="saveBtn" class="input_btn trueBtn"/>
+		          <input type="button" value="返回" id="cancelBtn" class="input_btn falseBtn"/>
+		      </div>
+	         </li>
+	        </ul>
+	     </section>
       </div>
      </section>
      <!--结束：弹出框效果-->
-
+        <!-- 添加banner图 -->
+    <script>
+     $(document).ready(function(){ 
+     $("#upload").on('click', function() {  
+         $('#fileToUpload').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDiv').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/banner/uploadImg',  
+             secureuri:false,  
+             fileElementId:'fileToUpload',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             success: function (data, status) {  
+                 if(data.msg=="200"){
+                     //alert("图片可用");
+                     $("#serverImgName").val(data.imgName);
+                     $("#upload").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="201"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+   </script>
+   <!-- 添加banner图 -->
+     
      <section>
-        <ul class="ulColumn2">
-         <li>
-          <span class="item_name" style="width:120px;">主推产品：</span>
-          <input type="text" class="textbox textbox_295" placeholder="商品详情连接"/>
-         </li>
-         <li>
-          <span class="item_name" style="width:120px;">商品分类：</span>
-          <label class="single_selection"><input type="radio" name="name"/>食材</label>
-          <label class="single_selection"><input type="radio" name="name"/>零食</label>
-          <label class="single_selection"><input type="radio" name="name"/>省钱</label>
-         </li>
-         <li>
-          <span class="item_name" style="width:120px;">缩略图：</span>
-          <label class="uploadImg">
-           <input type="file"/>
-           <span>上传图片</span>
-          </label>
-         </li>
-         <li>
-          <span class="item_name" style="width:120px;"></span>
-          <input type="submit" class="link_btn"/>
-         </li>
-        </ul>
-       </section>
+      <table class="table">
+       <tr>
+        <th>分类名称</th>
+        <th>操作</th>
+        <th>状态</th>
+       </tr>
+       	<c:forEach var="item" items="${banners}" varStatus="status">
+         	<tr>
+         		<td id="name-${item.id}">${item.catalogName}</td>
+         		<td style="text-align:center">
+		           <button class="linkStyle popEdit" id="showPopTxt-${item.id}">编辑</button>
+		        </td>
+         		<td id="status-${item.id}">
+         			<c:choose> 
+		  				<c:when test="${item.status!=''&&item.status=='上线中'}">   
+		  					<button class="linkStyle upOrdown" id="down-${item.id}">下线</button>&nbsp;&nbsp;${item.status}
+						</c:when> 
+						<c:when test="${item.status!=''&&item.status=='下线中'}">   
+		  					<button class="linkStyle upOrdown" id="up-${item.id}">上线</button>&nbsp;&nbsp;${item.status}
+						</c:when> 
+						<c:otherwise>   
+							<button class="linkStyle" id="up-${item.id}">未配置</button>&nbsp;&nbsp;未配置
+						</c:otherwise> 
+					</c:choose>
+         		</td>
+         		<td id="producturl-${item.id}" style="display:none">${item.productUrl}</td>
+         		<td id="imgurl-${item.id}" style="display:none">${item.imgUrl}</td>
+         	</tr>
+		</c:forEach> 
+       </table>
+      <aside class="paging">
+       <a>第一页</a>
+       <a>1</a>
+       <a>2</a>
+       <a>3</a>
+       <a>…</a>
+       <a>1004</a>
+       <a>最后一页</a>
+      </aside>
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+
+
+     <!-- 上架下架提示框 -->
+      <script>
+     $(document).ready(function(){
+    	var upHandle_Id = 0;//要上下架的商品id
+    	var upAction = "";
+     //弹出文本性提示框
+     $(".upOrdown").click(function(){
+       $(".del_pop_bg").fadeIn();
+       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
+       var clickedId = $(this).attr("id");
+       upAction = clickedId.split("-")[0];
+       upHandle_Id = clickedId.split("-")[1];
+       });
+     //弹出：确认按钮
+     $("#confirmDel").click(function(){
+    	 if(upHandle_Id==0){
+    		 alert("请重新选择下架的商品");
+    		 return false;
+    	 }
+    
+    	 if(upAction=="down"){//下线操作
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/banner/vdown/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"bannerId":upHandle_Id}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  alert("下线成功");
+     	        		  window.location.reload();
+     	        	  }
+     	        	  else if(data.msg=="201"){
+    	        		  alert("下线失败");
+    	        		  window.location.reload();
+    	        	  }
+     	          }
+       	 	}); 
+    	 }
+    	 else if(upAction=="up"){//上线操作
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/banner/vup/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"bannerId":upHandle_Id}),
+     	          success: function(data){
+     	        	  //var cities = JSON.stringify(data.cities);
+     	        	  if(data.msg=="200"){
+     	        		  alert("上线成功");
+     	        		  window.location.reload();
+     	        	  }
+     	        	  else if(data.msg=="201"){
+     	        		  alert("上线失败");
+     	        		  window.location.reload();
+     	        	  }
+     	          }
+       	 	}); 
+    	 }
+        	
+       $(".del_pop_bg").fadeOut();
+       upHandle_Id=0;
+       upAction = "";
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelDel").click(function(){
+       $(".del_pop_bg").fadeOut();
+       upHandle_Id=0;
+       upAction = "";
+       });
+     });
+     </script>
+     <section class="del_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>温馨提示</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          确认要继续操作吗?
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="confirmDel" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelDel" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
+      <!-- 上架下架提示框 -->
+      
+<input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>

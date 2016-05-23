@@ -28,4 +28,6 @@ public interface IAreaService {
 
 	int deleteCatalog(Area area, String catalogName, String productTable);
 
+	int newCatalog(Area area);
+
 }

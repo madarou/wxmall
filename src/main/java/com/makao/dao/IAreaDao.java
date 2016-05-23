@@ -24,4 +24,6 @@ public interface IAreaDao {
 			String sequenceNew, String productTable);
 
 	public int deleteCatalog(Area area, String catalogName, String productTable);
+
+	public int newCatalog(Area area);
 }

@@ -285,6 +285,10 @@
 	   	        		  alert("分类删除成功");
 	   	        		  window.location.reload();
 	   	        	  }
+	   	        	  else if(data.msg=="201"){
+	   	        		  alert("分类删除失败");
+	   	        		  window.location.reload();
+	   	        	  }
 	   	          }
 	    	 	});
 	       $(".del_pop_bg").fadeOut();

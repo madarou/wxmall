@@ -21,11 +21,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
+import com.makao.entity.Banner;
 import com.makao.entity.Catalog;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
 import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
+import com.makao.service.IBannerService;
 import com.makao.service.IProductService;
 import com.makao.service.IVendorService;
 import com.makao.utils.OrderNumberUtils;
@@ -45,6 +47,8 @@ public class ProductController {
 	private IAreaService areaService;
 	@Resource
 	private IVendorService vendorService;
+	@Resource
+	private IBannerService bannerService;
 	
 	/**
 	 * @param id
@@ -667,6 +671,12 @@ public class ProductController {
 		return modelAndView;
     }
 	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 获取当前area下的Banner配置，并跳转到综合配置页面
+	 */
 	@RequestMapping(value = "/v_promotion/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView areaPromotion(@PathVariable("id") int id,
@@ -678,6 +688,12 @@ public class ProductController {
 		}
 		modelAndView.addObject("id", id);
 		modelAndView.addObject("token", token);
+		Vendor vendor = this.vendorService.getById(id);
+		List<Banner> banners = null;
+		if(vendor!=null){
+			banners = this.bannerService.queryByAreaId(vendor.getAreaId());
+		}
+		modelAndView.addObject("banners", banners);
 		return modelAndView;
     }
 	

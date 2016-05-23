@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.makao.dao.IAreaDao;
 import com.makao.entity.Address;
 import com.makao.entity.Area;
+import com.makao.entity.Banner;
 import com.makao.entity.City;
 
 /**
@@ -205,6 +206,8 @@ public class AreaDaoImpl implements IAreaDao {
 			String catalogs = sb.toString();
 			area.setCatalogs(catalogs.substring(0, catalogs.length()-1));
 			session.update(area);
+			session.createQuery("update Banner as b set b.catalogName=? where b.catalogName=? and b.areaId=?").
+				setString(0,newName).setString(1,oldName).setInteger(2, area.getId()).executeUpdate();
 			session.doWork(
 					// 定义一个匿名类，实现了Work接口
 					new Work() {
@@ -255,6 +258,7 @@ public class AreaDaoImpl implements IAreaDao {
 			String catalogs = sb.toString();
 			area.setCatalogs(catalogs.substring(0, catalogs.length()-1));
 			session.update(area);
+			session.createQuery("delete from Banner as b where b.catalogName=? and b.areaId=?").setString(0,catalogName).setInteger(1, area.getId()).executeUpdate();
 			session.doWork(
 					// 定义一个匿名类，实现了Work接口
 					new Work() {
@@ -281,6 +285,40 @@ public class AreaDaoImpl implements IAreaDao {
 		return res;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IAreaDao#newCatalog(com.makao.entity.Area)
+	 * 往area表里增加catalog字段内容，同时要往banner表里增加分类
+	 */
+	@Override
+	public int newCatalog(Area area) {
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			String[] catalogStr = area.getCatalogs().split(",");
+			for(String s : catalogStr){
+				Banner b = new Banner();
+				b.setCatalogName(s.split("=")[0].trim());
+				b.setStatus("未配置");
+				b.setCityId(area.getCityId());
+				b.setAreaId(area.getId());
+				session.save(b);
+			}
+			session.update(area);
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
