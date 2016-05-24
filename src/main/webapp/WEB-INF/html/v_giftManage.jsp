@@ -54,12 +54,15 @@
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
  <h2><a href="index.php">常州-某某区</a></h2>
-<ul>
+ <ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/v_query/${id}?token=${token}">未处理订单</a></dd>
-    <dd><a href="/orderOff/v_query/${id}?token=${token}">已处理订单</a></dd>
+    <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队订单</a></dd>
+    <dd><a href="/orderOn/v_query_process/${id}?token=${token}">待处理订单</a></dd>
+    <dd><a href="/orderOff/v_query_done/${id}?token=${token}">已完成订单</a></dd>
+    <dd><a href="/orderOff/v_query_refund/${id}?token=${token}">待退货订单</a></dd>
+    <dd><a href="/orderOff/v_query_cancel/${id}?token=${token}">已取消订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
@@ -205,27 +208,22 @@
         <th>缩略图</th>
         <th>名称</th>
         <th>兑换积分</th>
+        <th>兑换类型</th>
         <th>礼品数量</th>
+        <th>已兑换</th>
         <th>操作</th>
        </tr>
-       <!-- <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td style="text-align:center">
-           <button class="linkStyle">什么操作</button>
-        </td>
-       </tr> -->
        <c:forEach var="item" items="${gifts}" varStatus="status">
          	<tr>
          		<td>缩略图</td>
          		<td>${item.name}</td>
          		<td>${item.point}</td>
+         		<td>${item.type}</td>
          		<td>${item.inventory}</td>
+         		<td>${item.inventory-item.remain}</td>
          		<td style="text-align:center">
-		           <button class="linkStyle editGift" id="showPopTxt${item.id}">编辑</button>
+		           <button class="linkStyle editGift" id="showPopTxt-${item.id}">编辑</button>|
+		            <button class="linkStyle delGift" id="showPopTxt-${item.id}">删除</button>
 		        </td>
          	</tr>
 		</c:forEach> 
@@ -239,8 +237,6 @@
        <a>1004</a>
        <a>最后一页</a>
       </aside>
-     </section>
-
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>

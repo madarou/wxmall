@@ -73,7 +73,7 @@ public class GiftController {
 		}
 		else{
 			logger.info("增加奖品成功失败id=" + Gift.getId());
-        	jsonObject.put("msg", "200");
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }
