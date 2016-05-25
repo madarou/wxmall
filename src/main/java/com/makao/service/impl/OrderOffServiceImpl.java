@@ -65,6 +65,11 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	public int cancelRefundOrder(int cityId, int orderid, String vcomment) {
 		return this.orderOffDao.cancelRefundOrder(cityId, orderid, vcomment);
 	}
+
+	@Override
+	public List<OrderOff> queryAllCanceledAndReturned(String tableName) {
+		return this.orderOffDao.queryAllCanceledAndReturned(tableName);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -19,6 +19,9 @@ public class NewOrderOnProcessTest {
 	public void test() throws InterruptedException {
 		
 		JSONObject result = null;
+		String newsupervisor = "http://localhost:8080/supervisor/new";
+		String supervisor = "{\"userName\":\"darou\",\"password\":\"test\"}";
+		
 		String newuser = "http://localhost:8080/user/new";
 		String user = "{\"userName\":\"马靠\",\"openid\":\"fefewr13e2d23e23dwq\",\"areaId\":1,\"areaName\":\"张江\",\"cityId\":1,\"cityName\":\"上海\",\"point\":20,\"receiveName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海复旦大学\",\"addLabel\":\"家\",\"rank\":\"中级\"}";
 		
@@ -36,6 +39,8 @@ public class NewOrderOnProcessTest {
 		
 		String order2 = "{\"productIds\":\"3=4.00=1\",\"productNames\":\"广东蜜桃=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":3,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"status\":\"已处理\",\"cityarea\":\"常州-某某区\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		
+		result = HttpUtils.doPostStr(newsupervisor,supervisor);
+		assertEquals("增加supervisor成功",result.get("msg"));
 		result = HttpUtils.doPostStr(newuser,user);
 		assertEquals("200",result.get("msg"));
 		result = HttpUtils.doPostStr(newcity,city);

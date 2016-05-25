@@ -2,6 +2,7 @@ package com.makao.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,10 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.City;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
+import com.makao.entity.Supervisor;
 import com.makao.entity.Vendor;
+import com.makao.service.ICityService;
 import com.makao.service.IOrderOffService;
+import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.OrderNumberUtils;
 
@@ -37,6 +42,10 @@ public class OrderOffController {
 	private IOrderOffService orderOffService;
 	@Resource
 	private IVendorService vendorService;
+	@Resource
+	private ISupervisorService supervisorService;
+	@Resource
+	private ICityService cityService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody OrderOff get(@PathVariable("id") Integer id)
@@ -296,6 +305,36 @@ public class OrderOffController {
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
 	    modelAndView.addObject("orders", orders);     
+		return modelAndView;
+    }
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 查询所有已取消的和已退货的订单，在退款订单里显示，因为这些是需要退款的
+	 */
+	@RequestMapping(value = "/s_query_refund/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView squeryrefund(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("s_orderOff_refund");  
+		if(token==null){
+			return modelAndView;
+		}
+		Supervisor supervisor = this.supervisorService.getById(id);
+		List<City> cites = this.cityService.queryAll();
+		List<OrderOff> orderOffs = new LinkedList<OrderOff>();
+		if(supervisor!=null){
+			for(City c : cites){
+				List<OrderOff> os = this.orderOffService.queryAllCanceledAndReturned("Order_"+c.getId()+"_off");
+				if(os!=null)
+					orderOffs.addAll(os);
+			}
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orderOffs", orderOffs);     
 		return modelAndView;
     }
 }

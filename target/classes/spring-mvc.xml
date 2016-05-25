@@ -57,6 +57,7 @@
 	<mvc:resources mapping="/orderOff/v_query_done/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query_cancel/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query_refund/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/s_query_refund/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/v_query/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/v_query_queue/static/**" location="/WEB-INF/static/" />

@@ -32,4 +32,6 @@ public interface IOrderOffDao {
 	public int finishRefundOrder(int cityId, int orderid);
 
 	public int cancelRefundOrder(int cityId, int orderid, String vcomment);
+
+	public List<OrderOff> queryAllCanceledAndReturned(String tableName);
 }

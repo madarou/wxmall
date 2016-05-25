@@ -36,4 +36,6 @@ public interface IOrderOffService {
 
 	int cancelRefundOrder(int cityId, int orderid, String vcomment);
 
+	List<OrderOff> queryAllCanceledAndReturned(String string);
+
 }
