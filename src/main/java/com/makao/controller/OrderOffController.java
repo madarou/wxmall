@@ -163,6 +163,34 @@ public class OrderOffController {
 	 * @param id
 	 * @param paramObject
 	 * @return
+	 * 处理需要退款的订单，将其状态设置为已退款
+	 */
+	@RequestMapping(value = "/srefund/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object srefund(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		int orderid = paramObject.getIntValue("orderid");
+		int cityid = paramObject.getIntValue("cityid");
+		JSONObject jsonObject = new JSONObject();
+		Supervisor supervisor = this.supervisorService.getById(id);
+		if(supervisor!=null){
+			int res = this.orderOffService.finishRefundOrder(cityid,orderid);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
 	 * 设置退货订单的状态从退货中变成已退货
 	 */
 	@RequestMapping(value = "/vfinish/{id:\\d+}", method = RequestMethod.POST)
@@ -172,7 +200,7 @@ public class OrderOffController {
 		JSONObject jsonObject = new JSONObject();
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){
-			int res = this.orderOffService.finishRefundOrder(vendor.getCityId(),orderid);
+			int res = this.orderOffService.finishReturnOrder(vendor.getCityId(),orderid);
 			if(res==0){
 				jsonObject.put("msg", "200");
 				return jsonObject;

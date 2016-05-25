@@ -38,4 +38,6 @@ public interface IOrderOffService {
 
 	List<OrderOff> queryAllCanceledAndReturned(String string);
 
+	int finishReturnOrder(int cityId, int orderid);
+
 }

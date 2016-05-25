@@ -366,7 +366,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	}
 
 	@Override
-	public int finishRefundOrder(int cityId, int orderid) {
+	public int finishReturnOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_off";
 		String sql = "UPDATE `"
 				+ tableName
@@ -385,6 +385,44 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 					try {
 						ps = connection.prepareStatement(sql);
 						ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+	@Override
+	public int finishRefundOrder(int cityId, int orderid) {
+		String tableName = "Order_"+cityId+"_off";
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `refundStatus`='已退款' WHERE `id`="+orderid;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
 						ps.executeUpdate();
 					} finally {
 						doClose(ps);

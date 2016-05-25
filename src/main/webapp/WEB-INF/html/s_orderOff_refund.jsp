@@ -94,74 +94,64 @@
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
+    	 var orderId = 0;
 		 //弹出文本性提示框
-		 $("#showPopTxt").click(function(){
+		 $(".editOrder").click(function(){
 			 $(".pop_bg").fadeIn();
+			 var clickedId = $(this).attr("id");
+		     orderId = clickedId.split("-")[1];
 			 });
 		 //弹出：确认按钮
-		 $(".trueBtn").click(function(){
+		 $("#confirmEdit").click(function(){
+			 if(orderId==0){
+	    		 alert("请重新选择要操作的订单");
+	    		 return false;
+	    	 }
+			 var cityid = $("#cityId-"+orderId).text();
+	        	$.ajax({
+	    		  type: "POST",
+	  	          contentType: "application/json",
+	  	          url: "/orderOff/srefund/"+$("#loginUserId").val(),
+	  	          dataType: "json",
+	  	          data: JSON.stringify({"orderid":orderId,"cityid":cityid}),
+	  	          success: function(data){
+	  	        	  if(data.msg=="200"){
+	  	        		  alert("操作成功");
+	  	        		  window.location.reload();//刷新页面
+	  	        	  }
+	  	        	  else if(data.msg=="201"){
+	  	        		  alert("操作失败");
+	  	        	  }
+	  	          }
+	    	 	});
 			 $(".pop_bg").fadeOut();
+			 orderId=0;
 			 });
 		 //弹出：取消或关闭按钮
-		 $(".falseBtn").click(function(){
+		 $("#confirmEdit").click(function(){
 			 $(".pop_bg").fadeOut();
+			 orderId=0;
 			 });
 		 });
      </script>
      <section class="pop_bg">
-      <div class="pop_cont">
-       <!--title-->
-       <h3>订单详情</h3>
-       <!--content-->
-       <div class="pop_cont_input">
-          <table class="table">
-              <tr>
-                <td>订单编号</td>
-                <td>2016283737282892</td>
-                <td>下单时间</td>
-                <td>2016-04-12</td>
-              </tr>
-              <tr>
-                <td>地址</td>
-                <td>开心公寓xxx号</td>
-                <td>收货人</td>
-                <td>郭德纲</td>
-              </tr>
-              <tr>
-                <td>联系电话</td>
-                <td>18763645373</td>
-                <td>送货方式</td>
-                <td>送货上门</td>
-              </tr>
-              <tr>
-                <td>支付方式</td>
-                <td>微信支付</td>
-                <td>是否付款</td>
-                <td>已付款</td>
-              </tr>
-              <tr>
-                <td>优惠券抵扣</td>
-                <td>￥13.00</td>
-                <td>备注</td>
-                <td>尽快送达</td>
-              </tr>
-              <tr>
-                <td>总价</td>
-                <td colspan="3">￥36.00</td>
-              </tr>
-          </table>
-       </div>
-       <!--以pop_cont_text分界-->
-       <div class="pop_cont_text">
-        提示：接单前请确认库存是否足够。
-       </div>
-       <!--bottom:operate->button-->
-       <div class="btm_btn">
-        <input type="button" value="确认并打印" class="input_btn trueBtn"/>
-        <input type="button" value="关闭" class="input_btn falseBtn"/>
-       </div>
-      </div>
-     </section>
+				<div class="pop_cont">
+					<!--title-->
+					<h3>温馨提示</h3>
+					<!--content-->
+					<div class="pop_cont_input">
+						<!--以pop_cont_text分界-->
+						<div class="pop_cont_text">请确认已经通过微信支付后台进行退款再点此操作
+						</div>
+						<!--bottom:operate->button-->
+						<div class="btm_btn">
+							<input type="button" value="确认" id="confirmEdit"
+								class="input_btn trueBtn" /> <input type="button" value="关闭"
+								id="cancelEdit" class="input_btn falseBtn" />
+						</div>
+					</div>
+				</div>
+			</section>
      <!--结束：弹出框效果-->
 
      <section>
@@ -176,7 +166,9 @@
         <th>收货人</th>
         <th>联系电话</th>
         <th>下单时间</th>
+        <th>配送时段</th>
         <th>接单操作</th>
+        <th>退款状态</th>
         <th>订单状态</th>
        </tr>
        	<c:forEach var="item" items="${orderOffs}" varStatus="status">
@@ -187,11 +179,20 @@
          		<td>${item.receiverName}</td>
          		<td>${item.phoneNumber}</td>
          		<td>${item.orderTime}</td>
+         		<td>${item.receiveTime}</td>
          		<td style="text-align:center">
-		           <button class="linkStyle editOrder" id="showPopTxt${item.id}">接单</button>|
-		           <button class="linkStyle delOrder" id="delPopTxt${item.id}">取消</button>
+		            <c:choose> 
+		  				<c:when test="${item.refundStatus=='待退款'}">   
+		  					<button class="linkStyle editOrder" id="showPopTxt-${item.id}">立即处理</button>
+						</c:when> 
+						<c:otherwise>   
+							<button class="linkStyle" id="show-${item.id}" style="color:grey;cursor:default">处理完成</button>
+						</c:otherwise> 
+					</c:choose>
 		        </td>
+		        <td>${item.refundStatus}</td>
 		        <td>${item.finalStatus}</td>
+		        <td id="cityId-${item.id}" style="display:none">${item.cityId}</td>
          	</tr>
 		</c:forEach> 
       </table>
@@ -208,5 +209,6 @@
      <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>

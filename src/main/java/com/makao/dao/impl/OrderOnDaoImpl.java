@@ -417,7 +417,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(20, orderOn.getUserId());
 									ps.setInt(21, orderOn.getAreaId());
 									ps.setInt(22, orderOn.getCityId());
-									ps.setString(23, "退款中");
+									ps.setString(23, "待退款");
 									ps.executeUpdate();
 								} finally {
 									doClose(ps);

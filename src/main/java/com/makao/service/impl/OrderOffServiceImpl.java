@@ -70,6 +70,10 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	public List<OrderOff> queryAllCanceledAndReturned(String tableName) {
 		return this.orderOffDao.queryAllCanceledAndReturned(tableName);
 	}
+	@Override
+	public int finishReturnOrder(int cityId, int orderid) {
+		return this.orderOffDao.finishReturnOrder(cityId, orderid);
+	}
 	
 //	@Override
 //	public void testor() {
