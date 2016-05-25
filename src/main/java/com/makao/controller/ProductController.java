@@ -505,6 +505,10 @@ public class ProductController {
         return jsonObject;
     }
 	
+	/**
+	 * @return
+	 * 这个是从所有Product_cityId表里查所有分库里的商品
+	 */
 	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView query_All() {
@@ -520,6 +524,18 @@ public class ProductController {
 		logger.info("查询所有商品信息完成");
 		ModelAndView modelAndView = new ModelAndView();  
 	    modelAndView.addObject("products", products);  
+	    modelAndView.setViewName("s_productList");  
+	    return modelAndView;
+    }
+	
+	@RequestMapping(value = "/s_products", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView queryRepproducts() {
+		List<Product> ps = this.productService.queryRepProducts();
+		//这里假设放一些东西进去
+		logger.info("查询商品库信息完成");
+		ModelAndView modelAndView = new ModelAndView();  
+	    modelAndView.addObject("products", ps);  
 	    modelAndView.setViewName("s_productList");  
 	    return modelAndView;
     }

@@ -187,9 +187,7 @@
 		  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description}),
 		  	          success: function(data){
 		  	        	  if(data.msg=="200"){
-		  	        		  //alert("删除区域管理员账号成功");
 		  	        		  showTips("增加商品成功信息成功");
-		  	        		 // window.location="/user/squeryall";
 		  	        	  }
 		  	          }
 		    	 	});
@@ -282,9 +280,7 @@
        </li>
       </ul>
      </section>
-     </section>
 
-     </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>

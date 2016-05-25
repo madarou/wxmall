@@ -62,7 +62,7 @@
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="/product/s_queryall">商品列表</a></dd>
+    <dd><a href="/product/s_products">商品库</a></dd>
     <dd><a href="/product/s_catalogs">商品分类</a></dd>
    </dl>
   </li>

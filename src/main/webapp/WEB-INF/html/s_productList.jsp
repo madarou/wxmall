@@ -64,7 +64,7 @@
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="/product/s_queryall">商品列表</a></dd>
+	<dd><a href="/product/s_products">商品库</a></dd>
     <dd><a href="/product/s_catalogs">商品分类</a></dd>
    </dl>
   </li>
@@ -188,8 +188,7 @@
         <th>商品名称</th>
         <th>商品分类</th>
         <th>出售价</th>
-        <th>库存</th>
-        <th>销量</th>
+        <th>市场价</th>
         <th>操作</th>
        </tr>
         <c:forEach var="item" items="${products}" varStatus="status">
@@ -198,16 +197,14 @@
          		<td>${item.productName}</td>
          		<td>${item.catalog}</td>
          		<td>${item.price}</td>
-         		<td>${item.inventory}</td>
-         		<td>${item.salesVolume}</td>
+         		<td>${item.marketPrice}</td>
          		<td style="text-align:center">
 		           <button class="linkStyle editProduct" id="showPopTxt${item.id}">编辑</button>|
-		           <button class="linkStyle showProduct" id="delPopTxt${item.id}">上/下架</button>
-		           <button class="linkStyle copyProduct" id="delPopTxt${item.id}">复制链接</button>
+		           <button class="linkStyle delProduct" id="delPopTxt${item.id}">删除</button>
 		        </td>
          	</tr>
 		</c:forEach> 
-       </tr>
+   
       </table>
       <aside class="paging">
        <a>第一页</a>
@@ -218,8 +215,6 @@
        <a>1004</a>
        <a>最后一页</a>
       </aside>
-     </section>
-
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
