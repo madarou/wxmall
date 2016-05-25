@@ -455,6 +455,59 @@ public class ProductDaoImpl implements IProductDao {
 		return res;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IProductDao#updateRepProduct(com.makao.entity.Product)
+	 * 更新总表
+	 */
+	@Override
+	public int updateRepProduct(Product product) {
+		String tableName = "Product";
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `productName`='"+product.getProductName()+"',"
+										+ "`standard`='"+product.getStandard()+"',"
+												+ "`price`='"+product.getPrice()+"',"
+														+ "`marketPrice`="+product.getMarketPrice()+","
+								+ "`description`='"+product.getDescription()+"',"
+										+ "`origin`='"+product.getOrigin()+"',"
+								+ "`coverSUrl`='"+product.getCoverSUrl()+"',"
+										+ "`coverBUrl`='"+product.getCoverBUrl()+"',"
+												+ "`subdetailUrl`='"+product.getSubdetailUrl()+"',"
+														+ "`detailUrl`='"+product.getDetailUrl()+"'"
+																				+ " WHERE `id`=" + product.getId();
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
+
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
@@ -548,7 +601,5 @@ public class ProductDaoImpl implements IProductDao {
 		return res;
 
 	}
-
-
 
 }

@@ -31,4 +31,6 @@ public interface IProductService {
 
 	int notShowProduct(String tableName, int prodcutId);
 	int showProduct(String tableName, int prodcutId);
+
+	int updateRepProduct(Product product);
 }

@@ -99,15 +99,20 @@ public class SupervisorController {
 	}
 	
 	@RequestMapping(value="/index/{id:\\d+}",method = RequestMethod.GET)
-	public String index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
+	public ModelAndView index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
 	{
+		ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("s_index");  
 		if(token==null){
-			return "s_login";
+			return modelAndView;
 		}
 		System.out.println(id);
 		System.out.println(token);
 		System.out.println(request.getServletContext().getAttribute(token));
-		return "s_index";
+		
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token);   
+		return modelAndView;
 	}
 	
 	@RequestMapping(value="",method = RequestMethod.GET)

@@ -25,10 +25,12 @@ import com.makao.entity.Banner;
 import com.makao.entity.Catalog;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.makao.entity.Supervisor;
 import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
 import com.makao.service.IBannerService;
 import com.makao.service.IProductService;
+import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.OrderNumberUtils;
 
@@ -49,6 +51,8 @@ public class ProductController {
 	private IVendorService vendorService;
 	@Resource
 	private IBannerService bannerService;
+	@Resource
+	private ISupervisorService supervisorService;
 	
 	/**
 	 * @param id
@@ -152,6 +156,27 @@ public class ProductController {
         return jsonObject;
     }
 	
+	@RequestMapping(value = "/sedit/{superid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object sedit(@PathVariable("superid") int superid,@RequestBody Product Product) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+			int res = this.productService.updateRepProduct(Product);
+			if(res==0){
+				logger.info("修改商品成功name=" + Product.getProductName());
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("修改商品成功失败name=" + Product.getProductName());
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+    }
 	/**
 	 * @param vendorid
 	 * @param paramObject
@@ -312,7 +337,7 @@ public class ProductController {
         	String imgFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/upload/";
         	String realImgName = picUniqueName+"_"+upfile.getOriginalFilename();
         	if(realImgName.length()>50){//名字长过数据库设置的50，则截掉后面
-        		realImgName = realImgName.substring(0, 47)+"."+ext;
+        		realImgName = realImgName.substring(0, 46)+"."+ext;
         	}
             int pre = (int) System.currentTimeMillis();  
             try {  
@@ -368,7 +393,7 @@ public class ProductController {
         	String imgFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/upload/";
         	String realImgName = picUniqueName+"_"+upfile.getOriginalFilename();
         	if(realImgName.length()>50){//名字长过数据库设置的50，则截掉后面
-        		realImgName = realImgName.substring(0, 47)+"."+ext;
+        		realImgName = realImgName.substring(0, 46)+"."+ext;
         	}
             int pre = (int) System.currentTimeMillis();  
             try {  
@@ -424,7 +449,7 @@ public class ProductController {
         	String imgFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/upload/";
         	String realImgName = picUniqueName+"_"+upfile.getOriginalFilename();
         	if(realImgName.length()>50){//名字长过数据库设置的50，则截掉后面
-        		realImgName = realImgName.substring(0, 47)+"."+ext;
+        		realImgName = realImgName.substring(0, 46)+"."+ext;
         	}
             int pre = (int) System.currentTimeMillis();  
             try {  
@@ -480,7 +505,7 @@ public class ProductController {
         	String imgFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/upload/";
         	String realImgName = picUniqueName+"_"+upfile.getOriginalFilename();
         	if(realImgName.length()>50){//名字长过数据库设置的50，则截掉后面
-        		realImgName = realImgName.substring(0, 47)+"."+ext;
+        		realImgName = realImgName.substring(0, 46)+"."+ext;
         	}
             int pre = (int) System.currentTimeMillis();  
             try {  
@@ -528,19 +553,25 @@ public class ProductController {
 	    return modelAndView;
     }
 	
-	@RequestMapping(value = "/s_products", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_products/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    ModelAndView queryRepproducts() {
+    ModelAndView queryRepproducts(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		ModelAndView modelAndView = new ModelAndView();  
+	    modelAndView.setViewName("s_productList");  
+		if (token == null) {
+			return modelAndView;
+		}
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
 		List<Product> ps = this.productService.queryRepProducts();
 		//这里假设放一些东西进去
 		logger.info("查询商品库信息完成");
-		ModelAndView modelAndView = new ModelAndView();  
 	    modelAndView.addObject("products", ps);  
-	    modelAndView.setViewName("s_productList");  
 	    return modelAndView;
     }
 	
-	@RequestMapping(value = "/s_catalogs", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_catalogs/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView query_Catalogs() {
 		//这里假设放一些东西进去
@@ -559,7 +590,7 @@ public class ProductController {
 	 * @return
 	 * 
 	 */
-	@RequestMapping(value = "/s_new", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_new/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView add() {
 		logger.info("跳转到添加产品页面完成");

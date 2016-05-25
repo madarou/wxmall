@@ -61,6 +61,10 @@ public class ProductServiceImpl implements IProductService {
 	public int showProduct(String tableName, int prodcutId) {
 		return this.productDao.showProduct(tableName,prodcutId);
 	}
+	@Override
+	public int updateRepProduct(Product product) {
+		return this.productDao.updateRepProduct(product);
+	}
 	
 	
 //	@Override

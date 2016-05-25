@@ -54,31 +54,28 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/s_queryall">所有未处理订单</a></dd>
-    <dd><a href="/orderOff/s_queryall">所有已处理订单</a></dd>
+    <dd><a href="/orderOn/s_queryall/${id}?token=${token}">所有未处理订单</a></dd>
+    <dd><a href="/orderOff/s_queryall/${id}?token=${token}">所有已处理订单</a></dd>
    </dl>
   </li>
    <li>
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="/product/s_products">商品库</a></dd>
-    <dd><a href="/product/s_catalogs">商品分类</a></dd>
+    <dd><a href="/product/s_products/${id}?token=${token}">商品库</a></dd>
+    <dd><a href="/product/s_catalogs/${id}?token=${token}">商品分类</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="/user/s_queryall">会员中心</a></dd>
-    <!-- <dd><a href="#">添加会员</a></dd>
-    <dd><a href="#">会员等级</a></dd>
-    <dd><a href="#">资金管理</a></dd> -->
+    <dd><a href="/user/s_queryall/${id}?token=${token}">会员中心</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>账号管理</dt>
-    <dd><a href="/vendor/s_queryall">账号管理</a></dd>
+    <dd><a href="/vendor/s_queryall/${id}?token=${token}">账号管理</a></dd>
    </dl>
   </li>
   <li>

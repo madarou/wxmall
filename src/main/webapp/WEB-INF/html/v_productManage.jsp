@@ -349,7 +349,7 @@ $(document).ready(function(){
 		afterCopy: function(){
 			if(copyHandle_Id!=0){
 				alert("产品链接已复制到剪切板");
-				copyHandle_Id = 0
+				copyHandle_Id = 0;
 			}
 		}
 	});

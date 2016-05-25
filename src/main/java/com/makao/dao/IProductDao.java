@@ -28,4 +28,6 @@ public interface IProductDao {
 
 	public int notShowProduct(String tableName, int prodcutId);
 	public int showProduct(String tableName, int prodcutId);
+
+	public int updateRepProduct(Product product);
 }
