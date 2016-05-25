@@ -91,22 +91,48 @@
         <hr/>
      </section>
 
-     <!--弹出框效果-->
+      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
-		 //弹出文本性提示框
-		 $(".editOrder").click(function(){
-			 $(".pop_bg").fadeIn();
-			 });
-		 //弹出：确认按钮
-		 $(".trueBtn").click(function(){
-			 $(".pop_bg").fadeOut();
-			 });
-		 //弹出：取消或关闭按钮
-		 $(".falseBtn").click(function(){
-			 $(".pop_bg").fadeOut();
-			 });
-		 });
+    	var orderId_toView = 0;
+    	
+     //弹出文本性提示框
+     $(".viewOrder").click(function(){
+    	$("#productList").html('<tr><td colspan="3">购买商品信息</td></tr><tr><td>商品名称</td><td>单价</td><td>数量</td></tr>');
+       $(".pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       orderId_toView = clickedId.split("-")[1];
+       $("#oname_phone").text($("#receiverName-"+orderId_toView).text()+"  "+$("#phoneNumber-"+orderId_toView).text());
+       $("#onumber").text($("#viewPopTxt-"+orderId_toView).text());
+       $("#oreceiveTime").text($("#receiveTime-"+orderId_toView).text());
+       $("#oaddress").text($("#address-"+orderId_toView).text());
+       $("#ototalPrice").text($("#totalPrice-"+orderId_toView).text());
+       $("#ocouponPrice").text($("#couponPrice-"+orderId_toView).text());
+       $("#ocomment").text($("#comment-"+orderId_toView).text());
+       
+     //商品详细列表
+  	   var table= $("#productList");
+       var productNames = $("#productNames-"+orderId_toView).text();
+       var productList = productNames.split(",");
+       $.each(productList,function(index,item){
+    	   var pname = item.split("=")[0];
+    	   var pprice = item.split("=")[1];
+    	   var pnumber = item.split("=")[2];
+    	   table.append("<tr><td>"+pname+"</td><td>"+pprice+"</td><td>"+pnumber+"</td></tr>");
+       });
+       		
+       });
+     //弹出：确认按钮
+     $(".trueBtn").click(function(){
+       $(".pop_bg").fadeOut();
+       orderId_toView=0;
+       });
+     //弹出：取消或关闭按钮
+     $(".falseBtn").click(function(){
+       $(".pop_bg").fadeOut();
+       orderId_toView=0;
+       });
+     });
      </script>
      <section class="pop_bg">
       <div class="pop_cont">
@@ -115,50 +141,28 @@
        <!--content-->
        <div class="pop_cont_input">
           <table class="table">
-              <tr>
-                <td>订单编号</td>
-                <td>2016283737282892</td>
-                <td>下单时间</td>
-                <td>2016-04-12</td>
-              </tr>
-              <tr>
-                <td>地址</td>
-                <td>开心公寓xxx号</td>
-                <td>收货人</td>
-                <td>郭德纲</td>
-              </tr>
-              <tr>
-                <td>联系电话</td>
-                <td>18763645373</td>
-                <td>送货方式</td>
-                <td>送货上门</td>
-              </tr>
-              <tr>
-                <td>支付方式</td>
-                <td>微信支付</td>
-                <td>是否付款</td>
-                <td>已付款</td>
-              </tr>
-              <tr>
-                <td>优惠券抵扣</td>
-                <td>￥13.00</td>
-                <td>备注</td>
-                <td>尽快送达</td>
-              </tr>
-              <tr>
-                <td>总价</td>
-                <td colspan="3">￥36.00</td>
-              </tr>
+          	<tr><td colspan="3">订单详情</td></tr>
+          	<tr><td>联系方式</td><td colspan="2" id="oname_phone"></td></tr>
+          	<tr><td>订单编号</td><td colspan="2" id="onumber"></td></tr>
+          	<tr><td>配送时段</td><td colspan="2" id="oreceiveTime"></td></tr>
+          	<tr><td>详细地址</td><td colspan="2" id="oaddress"></td></tr>
+          	<tr><td>支付金额</td><td colspan="2" id="ototalPrice"></td></tr>
+          	<tr><td>卡券抵扣</td><td colspan="2" id="ocouponPrice"></td></tr>
+          	<tr><td>备注</td><td colspan="2" id="ocomment"></td></tr>
           </table>
+          <table class="table" id="productList">
+          	<tr><td colspan="3">购买商品信息</td></tr>
+          	<tr><td>商品名称</td><td>单价</td><td>数量</td></tr>
+          </table>
+          
        </div>
        <!--以pop_cont_text分界-->
        <div class="pop_cont_text">
-        提示：接单前请确认库存是否足够。
+        <!-- <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消'"/> -->
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
-        <input type="button" value="确认并打印" class="input_btn trueBtn"/>
-        <input type="button" value="关闭" class="input_btn falseBtn"/>
+            <input type="button" value="关闭" class="input_btn falseBtn"/>
        </div>
       </div>
      </section>
@@ -176,22 +180,24 @@
         <th>收货人</th>
         <th>联系电话</th>
         <th>下单时间</th>
-        <th>接单操作</th>
+        <th>配送时段</th>
+        <th>所属区域</th>
         <th>订单状态</th>
        </tr>
        	<c:forEach var="item" items="${ordersOn}" varStatus="status">
          	<tr>
-         		<td>${item.number}</td>
-         		<td>${item.totalPrice}</td>
-         		<td>${item.couponPrice}</td>
-         		<td>${item.receiverName}</td>
-         		<td>${item.phoneNumber}</td>
-         		<td>${item.orderTime}</td>
-         		<td style="text-align:center">
-		           <button class="linkStyle editOrder" id="showPopTxt${item.id}">接单</button>|
-		           <button class="linkStyle delOrder" id="delPopTxt${item.id}">取消</button>
-		        </td>
-		        <td>${item.status}</td>
+         		<td><button class="linkStyle viewOrder" id="viewPopTxt-${item.id}">${item.number}</button></td>
+         		<td id="totalPrice-${item.id}">￥${item.totalPrice}</td>
+         		<td id="couponPrice-${item.id}">${item.couponPrice}</td>
+         		<td id="receiverName-${item.id}">${item.receiverName}</td>
+         		<td id="phoneNumber-${item.id}">${item.phoneNumber}</td>
+         		<td id="orderTime-${item.id}">${item.orderTime}</td>
+         		<td id="receiveTime-${item.id}">${item.receiveTime}</td>
+         		<td id="cityara-${item.id}">${item.cityarea}</td>
+		        <td id="status-${item.id}">${item.status}</td>
+		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
+		        <td id="address-${item.id}" style="display:none">${item.address}</td>
+		        <td id="comment-${item.id}" style="display:none">${item.comment}</td>
          	</tr>
 		</c:forEach> 
       </table>
