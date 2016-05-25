@@ -271,6 +271,9 @@
 		  	        		  alert("商品添加成功");
 		  	        		  window.location.reload();
 		  	        	  }
+		  	        	  else if(data.msg=="201"){
+		  	        		  alert("商品添加失败");
+		  	        	  }
 		  	          }
 		    	 	});
 			 });

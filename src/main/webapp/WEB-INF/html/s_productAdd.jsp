@@ -17,6 +17,7 @@
 <![endif]-->
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="static/js/ajaxfileupload.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -153,38 +154,42 @@
 	
 	  <script>
      $(document).ready(function(){
-    	 var showTips = function(content){
-    			$("#tips").text(content);
-    			$(".loading_area").fadeIn();
-                $(".loading_area").fadeOut(500);
-    		}
 		 $("#prosave").click(function(){
 			 	var productName = $.trim($("#proname").val());
-			 	var catalog = $('input:radio[name=procatalog]:checked').html();
-			 	var label = $('input:radio[name=prolabel]:checked').html();
+			 	var origin = $.trim($("#proorigin").val());
 			 	var standard = $.trim($("#prostandard").val());
 			 	var price = $.trim($("#proprice").val());
 			 	var marketPrice = $.trim($("#promarketprice").val());
-			 	var inventory = $.trim($("#proinventory").val());//总库里面设一个默认值，没有也行
-			 	var isShow = $('input:radio[name=proisshow]:checked').val();
-			 	var showWay = $('input:radio[name=proshowway]:checked').val();
-			 	var sequence = $.trim($("#prosequence").val());
 			 	var description = $.trim($("#prodescription").val());
 			 	
-			 	if(productName == "" || standard=="" || price=="" || marketPrice=="" || sequence==""){
-			 		alert("产品名称、规格、价格、市场价以及排序不能为空");
+			 	var coverSUrl = $("#serverImgNames").val();
+			 	var coverBUrl = $("#serverImgNameb").val();
+			 	var subdetailUrl = $("#serverImgNamed1").val();
+			 	var detailUrl = $("#serverImgNamed2").val();
+			 	
+			 	if(productName == "" || standard=="" || price=="" || marketPrice==""){
+			 		alert("产品名称、规格、价格、市场价不能为空");
+			 		return false;
+			 	}
+			 	if(coverSUrl == "" || coverBUrl == "" || detailUrl==""){
+			 		alert("商品正方形、长方形缩略图、详情2图片必须上传");
 			 		return false;
 			 	}
 			 	$.ajax({
 		    		  type: "POST",
 		  	          contentType: "application/json",
-		  	          url: "/product/snew",
+		  	          url: "/product/snew/"+$("#loginUserId").val(),
 		  	          dataType: "json",
-		  	          data: JSON.stringify({"productName":productName,"catalog":catalog,"label":label,"standard":standard,"price":price,
-		  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description}),
+		  	          data: JSON.stringify({"productName":productName,"origin":origin,"standard":standard,"price":price,
+		  	        		"marketPrice":marketPrice,"description":description,
+		  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl}),
 		  	          success: function(data){
 		  	        	  if(data.msg=="200"){
-		  	        		  showTips("增加商品成功信息成功");
+		  	        		alert("商品添加成功");
+		  	        		  window.location.reload();
+		  	        	  }
+		  	        	  else if(data.msg=="201"){
+		  	        		  alert("商品添加失败");
 		  	        	  }
 		  	          }
 		    	 	});
@@ -193,23 +198,14 @@
      </script>
      
      <section>
-      <ul class="ulColumn2">
+      <ul class="ulColumn2" style="padding-left: 22%;">
        <li>
         <span class="item_name" style="width:120px;">商品名称：</span>
         <input type="text" id="proname" class="textbox textbox_295" placeholder="如'海南小番茄'"/>
        </li>
        <li>
-        <span class="item_name" style="width:120px;">商品分类：</span>
-         <label class="single_selection"><input type="radio" name="procatalog" checked="true"/>水果</label>
-        <label class="single_selection"><input type="radio" name="procatalog"/>食材</label>
-        <label class="single_selection"><input type="radio" name="procatalog"/>零食</label>
-         <label class="single_selection"><input type="radio" name="procatalog"/>省钱</label>
-       </li>
-       <li>
-        <span class="item_name" style="width:120px;">商品标签：</span>
-        <label class="single_selection"><input type="radio" name="prolabel" checked="true"/>绿色食品</label>
-        <label class="single_selection"><input type="radio" name="prolabel"/>小产区</label>
-        <label class="single_selection"><input type="radio" name="prolabel"/>新人福利</label>
+        <span class="item_name" style="width:120px;">原产地：</span>
+        <input type="text" id="proorigin" class="textbox textbox_295" placeholder="如'海南'"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品规格：</span>
@@ -224,53 +220,40 @@
         <input type="text" id="promarketprice" class="textbox textbox_295" placeholder=""/>
        </li>
        <li>
-        <span class="item_name" style="width:120px;">库存：</span>
-        <input type="text" id="proinventory" class="textbox textbox_295" placeholder="" value="500"/>
-       </li>
-       <li>
-        <span class="item_name" style="width:120px;">上架状态：</span>
-        <label class="single_selection"><input type="radio" name="proisshow" value="yes" checked="true"/>上架</label>
-        <label class="single_selection"><input type="radio" name="proisshow" value="no"/>下架</label>
-       </li>
-       <li>
-        <span class="item_name" style="width:120px;">展现形式：</span>
-        <label class="single_selection"><input type="radio" name="proshowway" value="s" checked="true"/>正方形</label>
-        <label class="single_selection"><input type="radio" name="proshowway" value="b"/>长方形</label>
-       </li>
-       <li>
-        <span class="item_name" style="width:120px;">商品排序：</span>
-        <input type="text" id="prosequence" class="textbox textbox_295" value="0" placeholder="输入整数，值越大越前"/>
-       </li>
-       <li>
         <span class="item_name" style="width:120px;">商品简介：</span>
         <input type="text" id="prodescription" class="textbox textbox_295" placeholder="一句话十字以内"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">缩略图：</span>
-        <label class="uploadImg">
-         <input type="file"/>
-         <span>正方形</span>
-        </label>
-
-        <label class="uploadImg">
-         <input type="file"/>
-         <span style="margin: 0 20px 0 20px;">长方形</span>
-        </label>
+        <span><img alt="正方形" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
+        <span><img alt="长方形" id="uploadb" src="" style="height:100px;width:200px;cursor:pointer"/></span>
+		<div id="fileDivs">
+		     <input id="fileToUploads" style="display: none" type="file" name="upfiles">
+		</div>
+		<input type="hidden" id="serverImgNames"/>
+		<div id="fileDivb">
+		     <input id="fileToUploadb" style="display: none" type="file" name="upfileb">
+		</div>
+		<input type="hidden" id="serverImgNameb"/>
        </li>
-        <li>
-        <span class="item_name" style="width:120px;">商品详情：</span>
-        <label class="uploadImg">
-         <input type="file"/>
-         <span style="margin: 0 60px 0 60px;">详情1</span>
-        </label>
-       </li>
-       <li>
-        <span class="item_name" style="width:120px;">商品详情：</span>
-        <label class="uploadImg">
-         <input type="file"/>
-         <span style="margin: 0 60px 0 60px;">详情2</span>
-        </label>
-       </li>
+					<li><span class="item_name" style="width: 120px;">商品详情1：</span>
+						<img alt="详情1" id="uploadd1" src=""
+						style="height: 100px; width: 305px; cursor: pointer">
+						<div id="fileDivd1">
+							<input id="fileToUploadd1" style="display: none" type="file"
+								name="upfiled1">
+						</div> <input type="hidden" id="serverImgNamed1" />
+					</li>
+					<li>
+						<span class="item_name" style="width: 120px;">商品详情2：</span>
+						<img alt="详情2" id="uploadd2" src=""
+						style="height: 100px; width: 305px; cursor: pointer">
+						<div id="fileDivd2">
+							<input id="fileToUploadd2" style="display: none" type="file"
+								name="upfiled2">
+						</div> <input type="hidden" id="serverImgNamed2" />
+					</li>
+		<li>
        <li>
         <span class="item_name" style="width:120px;"></span>
         <input type="button" id="prosave" value="保存" class="link_btn"/>
@@ -281,5 +264,168 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+
+ <!-- 添加s缩略图 -->
+    <script>
+     $(document).ready(function(){     
+     $("#uploads").on('click', function() {  
+         $('#fileToUploads').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDivs').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/product/uploadImgs',  
+             secureuri:false,  
+             fileElementId:'fileToUploads',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             //data:{name:'logan'},//一同上传的数据  
+             success: function (data, status) {  
+                 //把图片替换  
+                 /* var obj = jQuery.parseJSON(data);  
+                 $("#upload").attr("src", "../image/"+obj.fileName);   */
+                 if(data.msg=="200"){
+                     //alert("图片可用");
+                     $("#serverImgNames").val(data.imgName);
+                     $("#uploads").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="201"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+   </script>
+   <!-- 添加s缩略图 -->
+   
+   <!-- 添加b缩略图 -->
+    <script>
+     $(document).ready(function(){     
+     $("#uploadb").on('click', function() {  
+         $('#fileToUploadb').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDivb').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/product/uploadImgb',  
+             secureuri:false,  
+             fileElementId:'fileToUploadb',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             //data:{name:'logan'},//一同上传的数据  
+             success: function (data, status) {  
+                 if(data.msg=="200"){
+                     //alert("图片可用");
+                     $("#serverImgNameb").val(data.imgName);
+                     $("#uploadb").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="201"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+   </script>
+   <!-- 添加b缩略图 -->
+   <!-- 添加详情1图 -->
+    <script>
+     $(document).ready(function(){     
+     $("#uploadd1").on('click', function() {  
+         $('#fileToUploadd1').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDivd1').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/product/uploadImgd1',  
+             secureuri:false,  
+             fileElementId:'fileToUploadd1',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             //data:{name:'logan'},//一同上传的数据  
+             success: function (data, status) {  
+                 if(data.msg=="200"){
+                     //alert("图片可用");
+                     $("#serverImgNamed1").val(data.imgName);
+                     $("#uploadd1").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="201"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+   </script>
+   <!-- 添加详情1图 -->
+      <!-- 添加详情2图 -->
+    <script>
+     $(document).ready(function(){ 
+     $("#uploadd2").on('click', function() {  
+         $('#fileToUploadd2').click();  
+     });
+     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+     $('#fileDivd2').on('change',function() {  
+         $.ajaxFileUpload({  
+             url:'/product/uploadImgd2',  
+             secureuri:false,  
+             fileElementId:'fileToUploadd2',//file标签的id  
+             dataType: 'json',//返回数据的类型  
+             //data:{name:'logan'},//一同上传的数据  
+             success: function (data, status) {  
+                 if(data.msg=="200"){
+                     //alert("图片可用");
+                     $("#serverImgNamed2").val(data.imgName);
+                     $("#uploadd2").attr("src", "/static/upload/"+data.imgName);
+                 }
+                 else if(data.msg=="201"){
+                	 alert("图片不符合");
+                 }
+                 if(typeof(data.error) != 'undefined') {  
+                     if(data.error != '') {  
+                         alert(data.error);  
+                     } else {  
+                         alert(data.msg);  
+                     }  
+                 }
+              }, 
+             error: function (data, status, e) {  
+                 alert(e);  
+             }  
+         });  
+     });
+     });
+   </script>
+   <!-- 添加详情2图 -->
+   
+<input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>

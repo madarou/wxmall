@@ -592,11 +592,14 @@ public class ProductController {
 	 */
 	@RequestMapping(value = "/s_new/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    ModelAndView add() {
-		logger.info("跳转到添加产品页面完成");
+    ModelAndView add(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
 		ModelAndView modelAndView = new ModelAndView();  
-	    //modelAndView.addObject("products", products);  
-	    modelAndView.setViewName("s_productAdd");  
+		modelAndView.setViewName("s_productAdd");  
+		if(token==null){
+			return modelAndView;
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token);  
 	    return modelAndView;
     }
 	
