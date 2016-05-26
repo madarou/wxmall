@@ -92,13 +92,91 @@
         <hr/>
      </section>
 
+	<!--订单详情弹出框效果-->
+     <script>
+     $(document).ready(function(){
+    	var orderId_toView = 0;
+    	
+     //弹出文本性提示框
+     $(".viewOrder").click(function(){
+    	$("#productList").html('<tr><td colspan="3">购买商品信息</td></tr><tr><td>商品名称</td><td>单价</td><td>数量</td></tr>');
+       $(".pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       orderId_toView = clickedId.split("-")[1];
+       $("#oname_phone").text($("#receiverName-"+orderId_toView).text()+"  "+$("#phoneNumber-"+orderId_toView).text());
+       $("#onumber").text($("#viewPopTxt-"+orderId_toView).text());
+       $("#oreceiveTime").text($("#receiveTime-"+orderId_toView).text());
+       $("#oaddress").text($("#address-"+orderId_toView).text());
+       $("#ototalPrice").text($("#totalPrice-"+orderId_toView).text());
+       $("#ocouponPrice").text($("#couponPrice-"+orderId_toView).text());
+       $("#ocomment").text($("#comment-"+orderId_toView).text());
+       
+     //商品详细列表
+  	   var table= $("#productList");
+       var productNames = $("#productNames-"+orderId_toView).text();
+       var productList = productNames.split(",");
+       $.each(productList,function(index,item){
+    	   var pname = item.split("=")[0];
+    	   var pprice = item.split("=")[1];
+    	   var pnumber = item.split("=")[2];
+    	   table.append("<tr><td>"+pname+"</td><td>"+pprice+"</td><td>"+pnumber+"</td></tr>");
+       });
+       		
+       });
+     //弹出：确认按钮
+     $(".trueBtn").click(function(){
+       $(".pop_bg").fadeOut();
+       orderId_toView=0;
+       });
+     //弹出：取消或关闭按钮
+     $(".falseBtn").click(function(){
+       $(".pop_bg").fadeOut();
+       orderId_toView=0;
+       });
+     });
+     </script>
+     <section class="pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>订单详情</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+          <table class="table">
+          	<tr><td colspan="3">订单详情</td></tr>
+          	<tr><td>联系方式</td><td colspan="2" id="oname_phone"></td></tr>
+          	<tr><td>订单编号</td><td colspan="2" id="onumber"></td></tr>
+          	<tr><td>配送时段</td><td colspan="2" id="oreceiveTime"></td></tr>
+          	<tr><td>详细地址</td><td colspan="2" id="oaddress"></td></tr>
+          	<tr><td>支付金额</td><td colspan="2" id="ototalPrice"></td></tr>
+          	<tr><td>卡券抵扣</td><td colspan="2" id="ocouponPrice"></td></tr>
+          	<tr><td>备注</td><td colspan="2" id="ocomment"></td></tr>
+          </table>
+          <table class="table" id="productList">
+          	<tr><td colspan="3">购买商品信息</td></tr>
+          	<tr><td>商品名称</td><td>单价</td><td>数量</td></tr>
+          </table>
+          
+       </div>
+       <!--以pop_cont_text分界-->
+       <div class="pop_cont_text">
+        <!-- <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消'"/> -->
+       </div>
+       <!--bottom:operate->button-->
+       <div class="btm_btn">
+       <!--  <input type="button" value="确认并打印" class="input_btn trueBtn"/> -->
+        <input type="button" value="关闭" class="input_btn falseBtn"/>
+       </div>
+      </div>
+     </section>
+     <!--结束：订单详情弹出框效果-->
+     
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
     	 var orderId = 0;
 		 //弹出文本性提示框
 		 $(".editOrder").click(function(){
-			 $(".pop_bg").fadeIn();
+			 $(".del_pop_bg").fadeIn();
 			 var clickedId = $(this).attr("id");
 		     orderId = clickedId.split("-")[1];
 			 });
@@ -125,17 +203,17 @@
 	  	        	  }
 	  	          }
 	    	 	});
-			 $(".pop_bg").fadeOut();
+			 $(".del_pop_bg").fadeOut();
 			 orderId=0;
 			 });
 		 //弹出：取消或关闭按钮
-		 $("#confirmEdit").click(function(){
-			 $(".pop_bg").fadeOut();
+		 $("#cancelEdit").click(function(){
+			 $(".del_pop_bg").fadeOut();
 			 orderId=0;
 			 });
 		 });
      </script>
-     <section class="pop_bg">
+     <section class="del_pop_bg">
 				<div class="pop_cont">
 					<!--title-->
 					<h3>温馨提示</h3>
@@ -168,19 +246,19 @@
         <th>联系电话</th>
         <th>下单时间</th>
         <th>配送时段</th>
-        <th>接单操作</th>
+        <th>退款操作</th>
         <th>退款状态</th>
         <th>订单状态</th>
        </tr>
        	<c:forEach var="item" items="${orderOffs}" varStatus="status">
          	<tr>
-         		<td>${item.number}</td>
-         		<td>${item.totalPrice}</td>
-         		<td>${item.couponPrice}</td>
-         		<td>${item.receiverName}</td>
-         		<td>${item.phoneNumber}</td>
-         		<td>${item.orderTime}</td>
-         		<td>${item.receiveTime}</td>
+         		<td><button class="linkStyle viewOrder" id="viewPopTxt-${item.id}">${item.number}</button></td>
+         		<td id="totalPrice-${item.id}">￥${item.totalPrice}</td>
+         		<td id="couponPrice-${item.id}">${item.couponPrice}</td>
+         		<td id="receiverName-${item.id}">${item.receiverName}</td>
+         		<td id="phoneNumber-${item.id}">${item.phoneNumber}</td>
+         		<td id="orderTime-${item.id}">${item.orderTime}</td>
+         		<td id="receiveTime-${item.id}">${item.receiveTime}</td>
          		<td style="text-align:center">
 		            <c:choose> 
 		  				<c:when test="${item.refundStatus=='待退款'}">   
@@ -194,6 +272,9 @@
 		        <td>${item.refundStatus}</td>
 		        <td>${item.finalStatus}</td>
 		        <td id="cityId-${item.id}" style="display:none">${item.cityId}</td>
+		         <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
+		        <td id="address-${item.id}" style="display:none">${item.address}</td>
+		         <td id="comment-${item.id}" style="display:none">${item.comment}</td>
          	</tr>
 		</c:forEach> 
       </table>
