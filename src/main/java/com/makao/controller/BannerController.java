@@ -235,7 +235,7 @@ public class BannerController {
         	String imgFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/upload/";
         	String realImgName = picUniqueName+"_"+upfile.getOriginalFilename();
         	if(realImgName.length()>50){//名字长过数据库设置的50，则截掉后面
-        		realImgName = realImgName.substring(0, 47)+"."+ext;
+        		realImgName = realImgName.substring(0, 46)+"."+ext;
         	}
             int pre = (int) System.currentTimeMillis();  
             try {  

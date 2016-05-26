@@ -20,7 +20,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.City;
+import com.makao.entity.Supervisor;
 import com.makao.service.ICityService;
+import com.makao.service.ISupervisorService;
 import com.makao.utils.OrderNumberUtils;
 
 /**
@@ -34,6 +36,8 @@ public class CityController {
 	private static final Logger logger = Logger.getLogger(CityController.class);
 	@Resource
 	private ICityService cityService;
+	@Resource
+	private ISupervisorService supervisorService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody City get(@PathVariable("id") Integer id)
@@ -64,19 +68,25 @@ public class CityController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"cityName":"上海"}' 'http://localhost:8080/wxmall/city/new'
 	 */
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@RequestMapping(value = "/new/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody City city) {
-		int res = this.cityService.insert(city);
+    Object add(@PathVariable("id") int superid, @RequestBody City city) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("增加city成功id=" + city.getId());
-        	jsonObject.put("msg", "200");
+		if(supervisor!=null){
+			int res = this.cityService.insert(city);
+			if(res==0){
+				logger.info("增加city成功id=" + city.getId());
+	        	jsonObject.put("msg", "200");
+	        	 return jsonObject;
+			}
+			else{
+				logger.info("增加city成功失败id=" + city.getId());
+	        	jsonObject.put("msg", "201");
+	        	 return jsonObject;
+			}
 		}
-		else{
-			logger.info("增加city成功失败id=" + city.getId());
-        	jsonObject.put("msg", "200");
-		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 	
@@ -105,7 +115,7 @@ public class CityController {
         	String imgFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/upload/";
         	String realImgName = picUniqueName+"_"+upfile.getOriginalFilename();
         	if(realImgName.length()>50){//名字长过数据库设置的50，则截掉后面
-        		realImgName = realImgName.substring(0, 47)+"."+ext;
+        		realImgName = realImgName.substring(0, 46)+"."+ext;
         	}
             int pre = (int) System.currentTimeMillis();  
             try {  
@@ -170,16 +180,22 @@ public class CityController {
         return cities;
     }
 	
-	@RequestMapping(value = "/queryall", method = RequestMethod.GET)
+	@RequestMapping(value = "/queryall/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    Object queryAll() {
-		List<City> cities = null;
-		//则查询返回所有
-		cities = this.cityService.queryAll();
-		logger.info("查询所有city信息完成");
+    Object queryAll(@PathVariable("id") int superid) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("msg", "200");
-		jsonObject.put("cities", cities);//不用序列化，方便前端jquery遍历
+		if(supervisor!=null){
+			List<City> cities = null;
+			//则查询返回所有
+			cities = this.cityService.queryAll();
+			logger.info("查询所有city信息完成");
+			
+			jsonObject.put("msg", "200");
+			jsonObject.put("cities", cities);//不用序列化，方便前端jquery遍历
+			return jsonObject;
+		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 }

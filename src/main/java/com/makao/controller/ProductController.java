@@ -240,16 +240,23 @@ public class ProductController {
 	
 	@RequestMapping(value = "/snew/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object addBySupervisor(@PathVariable("supervisorid") int vendorid,@RequestBody Product product) {
-		int res = this.productService.insertToWhole(product);
+    Object addBySupervisor(@PathVariable("supervisorid") int superid,@RequestBody Product product) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
 		JSONObject jsonObject = new JSONObject();
-		logger.info("超级管理员添加产品页面完成："+product.getProductName());
-		if(res==0){
-			jsonObject.put("msg", "200");
+		if(supervisor!=null){
+			int res = this.productService.insertToWhole(product);
+			
+			logger.info("超级管理员添加产品页面完成："+product.getProductName());
+			if(res==0){
+				jsonObject.put("msg", "200");
+				 return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				 return jsonObject;
+			}  
 		}
-		else{
-			jsonObject.put("msg", "201");
-		}  
+		jsonObject.put("msg", "201");
 	    return jsonObject;
     }
 	

@@ -10,14 +10,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
 import com.makao.entity.Catalog;
+import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.makao.entity.Supervisor;
 import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
+import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 
 /**
@@ -33,6 +38,8 @@ public class AreaController {
 	private IAreaService areaService;
 	@Resource
 	private IVendorService vendorService;
+	@Resource
+	private ISupervisorService supervisorService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Area get(@PathVariable("id") Integer id)
@@ -63,21 +70,27 @@ public class AreaController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"areaName":"张江","cityName":"上海","catalogs":"水果=食材=零食=省钱","cityId":1}' 'http://localhost:8080/wxmall/area/new'
 	 */
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@RequestMapping(value = "/new/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody Area area) {
-		//area.setProductTable("Product_"+area.getCityId()+"_"+area.getId());//这里先不设置，因为area没插入数据库前，不能确定其id
-		area.setClosed("no");
-		int res = this.areaService.insert(area);
+    Object add(@PathVariable("id") int superid, @RequestBody Area area) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("增加area成功id=" + area.getId());
-        	jsonObject.put("msg", "200");
+		if(supervisor!=null){
+			area.setClosed("no");
+			int res = this.areaService.insert(area);
+			
+			if(res==0){
+				logger.info("增加area成功id=" + area.getId());
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("增加area成功失败id=" + area.getId());
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
 		}
-		else{
-			logger.info("增加area成功失败id=" + area.getId());
-        	jsonObject.put("msg", "201");
-		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 	
@@ -107,16 +120,21 @@ public class AreaController {
         return areas;
     }
 	
-	@RequestMapping(value = "/queryall", method = RequestMethod.GET)
+	@RequestMapping(value = "/queryall/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    Object queryAll() {
-		List<Area> areas = null;
-		//则查询返回所有
-		areas = this.areaService.queryAll();
-		logger.info("查询所有area信息完成");
+    Object queryAll(@PathVariable("id") int superid) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("msg", "200");
-		jsonObject.put("areas", areas);//不用序列化，方便前端jquery遍历
+		if(supervisor!=null){
+			List<Area> areas = null;
+			//则查询返回所有
+			areas = this.areaService.queryAll();
+			logger.info("查询所有area信息完成");
+			jsonObject.put("msg", "200");
+			jsonObject.put("areas", areas);//不用序列化，方便前端jquery遍历
+			 return jsonObject;
+		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 	
@@ -232,6 +250,19 @@ public class AreaController {
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;
+    }
+	
+	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView squeryall(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("s_areaManage");  
+		if(token==null){
+			return modelAndView;
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token);   
+		return modelAndView;
     }
 
 }

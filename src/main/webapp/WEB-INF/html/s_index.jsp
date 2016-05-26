@@ -75,6 +75,12 @@
   </li>
   <li>
    <dl>
+    <dt>区域管理</dt>
+    <dd><a href="/area/s_queryall/${id}?token=${token}">区域设置</a></dd>
+   </dl>
+  </li>
+  <li>
+   <dl>
     <dt>账号管理</dt>
     <dd><a href="/vendor/s_queryall/${id}?token=${token}">账号管理</a></dd>
    </dl>
