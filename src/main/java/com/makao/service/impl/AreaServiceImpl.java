@@ -54,6 +54,14 @@ public class AreaServiceImpl implements IAreaService {
 	public int newCatalog(Area area) {
 		return this.areaDao.newCatalog(area);
 	}
+	@Override
+	public int closeArea(int areaId) {
+		return this.areaDao.closeArea(areaId);
+	}
+	@Override
+	public int openArea(int areaId) {
+		return this.areaDao.openArea(areaId);
+	}
 	
 //	@Override
 //	public void testor() {

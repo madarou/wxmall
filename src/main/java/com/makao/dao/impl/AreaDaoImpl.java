@@ -320,6 +320,55 @@ public class AreaDaoImpl implements IAreaDao {
 		return res;
 	}
 	
+	
+	@Override
+	public int closeArea(int areaId) {
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			Area area = (Area) session.get(Area.class, areaId);
+			area.setClosed("yes");
+			session.update(area);
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+	@Override
+	public int openArea(int areaId) {
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			Area area = (Area) session.get(Area.class, areaId);
+			area.setClosed("no");
+			session.update(area);
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {

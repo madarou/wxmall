@@ -97,6 +97,9 @@ catalogs		varchar(100)	当前area下的商品类别名称集合，在导航栏�
 productTable	varchar(50)		该area对应的商品列表的名字，以areaName+'_'+cityId+'_product'为名称，超级管理员增加
 								该area记录时建表。用cityId不用名还是防止重复城市名和区域名的情况出现
 closed			varchar(5)		当前是否暂停服务	值为'yes'或'no'，关门的可暂不显示，或设为灰色
+longitude		varchar(12)		经度
+latitude		varchar(12)		纬度
+phoneNumber 	varchar(12)		电话
 
 Product_cityId_areaId
 列名				类型				注释				备注

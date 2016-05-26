@@ -76,7 +76,7 @@ public class AreaController {
 		Supervisor supervisor = this.supervisorService.getById(superid);
 		JSONObject jsonObject = new JSONObject();
 		if(supervisor!=null){
-			area.setClosed("no");
+			area.setClosed("yes");
 			int res = this.areaService.insert(area);
 			
 			if(res==0){
@@ -222,6 +222,54 @@ public class AreaController {
     }
 	
 	/**
+	 * @param superid
+	 * @param paramObject
+	 * @return
+	 * 下线区域
+	 */
+	@RequestMapping(value = "/sclose/{supervisorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object sclose(@PathVariable("supervisorid") int superid,@RequestBody JSONObject paramObject) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+			int areaId = paramObject.getInteger("areaId");
+			int res = this.areaService.closeArea(areaId);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				 return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				 return jsonObject;
+			}  
+		}
+		jsonObject.put("msg", "201");
+	    return jsonObject;
+    }
+	
+	@RequestMapping(value = "/sopen/{supervisorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object sopen(@PathVariable("supervisorid") int superid,@RequestBody JSONObject paramObject) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+			int areaId = paramObject.getInteger("areaId");
+			int res = this.areaService.openArea(areaId);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				 return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				 return jsonObject;
+			}  
+		}
+		jsonObject.put("msg", "201");
+	    return jsonObject;
+    }
+	
+	/**
 	 * @param vendorid
 	 * @param paramObject
 	 * @return
@@ -252,6 +300,8 @@ public class AreaController {
         return jsonObject;
     }
 	
+	
+	
 	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView squeryall(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
@@ -260,8 +310,16 @@ public class AreaController {
 		if(token==null){
 			return modelAndView;
 		}
+		Supervisor supervisor = this.supervisorService.getById(id);
+		List<Area> areas = null;
+		if(supervisor!=null){
+			//则查询返回所有
+			areas = this.areaService.queryAll();
+			logger.info("查询所有area信息完成");
+		}
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token);   
+		modelAndView.addObject("areas", areas);//不用序列化，方便前端jquery遍历
 		return modelAndView;
     }
 

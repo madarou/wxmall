@@ -30,4 +30,6 @@ public interface IAreaService {
 
 	int newCatalog(Area area);
 
+	int closeArea(int areaId);
+	int openArea(int areaId);
 }

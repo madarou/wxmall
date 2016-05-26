@@ -262,12 +262,20 @@
     		 alert("请选择所属城市");
     		 return false;
     	 }
+    	 var phoneNumber = $.trim($("#areaphoneNumber").val());
+    	 if(phoneNumber==""){
+    		 alert("请填写服务电话");
+    		 return false;
+    	 }
     	 var cityname = $("#cityselect").find("option:selected").text();//这种方式获取的是选项的text文本
+    	 var longitude = $.trim($("#arealongitude").val());
+    	 var latitude = $.trim($("#arealatitude").val());
+    	 
     	 $.ajax({
 	          type: "POST",
 	          contentType: "application/json",
 	          url: "/area/new/"+$("#loginUserId").val(),
-	          data: JSON.stringify({"areaName":areaname,"cityName":cityname,"cityId":cityId}),
+	          data: JSON.stringify({"areaName":areaname,"cityName":cityname,"cityId":cityId,"longitude":longitude,"latitude":latitude}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
@@ -309,6 +317,18 @@
 				       
 				    </select>
 		       </li>
+		       <li>
+		        <span class="item_name">区域经度:</span>
+		        <input type="text" id="arealongitude" placeholder=""/>
+		       </li>
+		        <li>
+		        <span class="item_name">区域纬度:</span>
+		        <input type="text" id="arealatitude" placeholder=""/>
+		       </li>
+		       <li>
+		        <span class="item_name">服务电话:</span>
+		        <input type="text" id="areaphoneNumber" placeholder=""/>
+		       </li>
 		      </ul>
 		    </section>
          </div>
@@ -322,6 +342,89 @@
      </section>
      <!-- 添加区域结束 -->
      
+      <!-- 上线下线提示框 -->
+      <script>
+     $(document).ready(function(){
+    	var openHandle_Id = 0;//要上下线的areaId
+    	var openAction = "";
+     //弹出文本性提示框
+     $(".openOrNot").click(function(){
+       $(".del_pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       openAction = clickedId.split("-")[0];//值为notShow或show
+       openHandle_Id = clickedId.split("-")[1];
+       });
+     //弹出：确认按钮
+     $("#confirmDel").click(function(){
+    	 if(openHandle_Id==0){
+    		 alert("请重新选择要操作的区域");
+    		 return false;
+    	 }
+    	 if(openAction=="close"){//下线操作
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/area/sclose/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"areaId":openHandle_Id}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  alert("下线成功");
+     	        		  window.location.reload();
+     	        	  }
+     	          }
+       	 	}); 
+    	 }
+    	 else if(openAction=="open"){//上线操作
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/area/sopen/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"areaId":openHandle_Id}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  alert("上线成功");
+     	        		  window.location.reload();
+     	        	  }
+     	          }
+       	 	}); 
+    	 }
+        	
+       $(".del_pop_bg").fadeOut();
+       openHandle_Id=0;
+       openAction = "";
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelDel").click(function(){
+       $(".del_pop_bg").fadeOut();
+       openHandle_Id=0;
+       openAction = "";
+       });
+     });
+     </script>
+     <section class="del_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>温馨提示</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          确认要将本区域相关信息暂时下线（上线）么？<br/>
+		  注意:其中所有相关信息将暂时不展示在客户端
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="confirmDel" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelDel" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
+      <!-- 上架下架提示框 -->
+      
+      
      <section style="text-align:right">
       <div class="btm_btn">
         <input type="button" value="添加城市" id="addCity" class="input_btn trueBtn"/>
@@ -343,7 +446,7 @@
          		<td>${item.areaName}</td>
          		<td style="text-align:center">
 		           <c:choose> 
-		  				<c:when test="${item.close=='yes'}">   
+		  				<c:when test="${item.closed=='yes'}">   
 		  					<button class="linkStyle" style="color:grey;cursor:default">下线中</button>|
 		  					<button class="linkStyle openOrNot" id="open-${item.id}">上线</button>
 						</c:when> 
