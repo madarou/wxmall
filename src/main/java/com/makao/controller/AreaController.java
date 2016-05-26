@@ -94,6 +94,43 @@ public class AreaController {
         return jsonObject;
     }
 	
+	@RequestMapping(value = "/edit/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object edit(@PathVariable("id") int superid, @RequestBody JSONObject paramObject) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+			int areaId = paramObject.getInteger("areaId");
+			String areaName = paramObject.getString("areaName");
+			String longitude = paramObject.getString("longitude");
+			String latitude = paramObject.getString("latitude");
+			String phoneNumber = paramObject.getString("phoneNumber");
+
+			Area area = this.areaService.getById(areaId);
+			if(area!=null){
+				area.setAreaName(areaName);
+				area.setLongitude(longitude);
+				area.setLatitude(latitude);
+				area.setPhoneNumber(phoneNumber);
+				int res = this.areaService.update(area);
+				if(res==0){
+					logger.info("修改area成功id=" + area.getId());
+		        	jsonObject.put("msg", "200");
+		        	return jsonObject;
+				}
+				else{
+					logger.info("修改area成功失败id=" + area.getId());
+		        	jsonObject.put("msg", "201");
+		        	return jsonObject;
+				}
+
+			}
+			
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+    }
+	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Area Area) {

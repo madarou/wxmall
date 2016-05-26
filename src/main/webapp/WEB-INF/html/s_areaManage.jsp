@@ -275,7 +275,7 @@
 	          type: "POST",
 	          contentType: "application/json",
 	          url: "/area/new/"+$("#loginUserId").val(),
-	          data: JSON.stringify({"areaName":areaname,"cityName":cityname,"cityId":cityId,"longitude":longitude,"latitude":latitude}),
+	          data: JSON.stringify({"areaName":areaname,"cityName":cityname,"cityId":cityId,"longitude":longitude,"latitude":latitude,"phoneNumber":phoneNumber}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
@@ -422,9 +422,139 @@
         </div>
        </div>
      </section>
-      <!-- 上架下架提示框 -->
+      <!-- 上线下线提示框 -->
       
-      
+       <!-- 编辑区域 -->
+    <script>
+     $(document).ready(function(){
+    	 var edit_areaId = 0;
+    	 var oldAreaName = "";
+    	 var oldLongitude = "";
+    	 var oldLatitude = "";
+    	 var oldPhoneNumber = "";
+     $(".editArea").click(function(){
+    	 var clickedId = $(this).attr("id");
+         edit_areaId = clickedId.split("-")[1];
+    	 
+    	 $("#ecityselect").empty();
+    	 var city_name = $("#cityName-"+edit_areaId).text();
+    	 var city_id = $("#cityid-"+edit_areaId).text();
+    	 $("#ecityselect").get(0).options.add(new Option(city_name,city_id));
+		oldAreaName = $("#areaName-"+edit_areaId).text();
+		oldLongitude = $("#longitude-"+edit_areaId).text();
+		oldLatitude = $("#latitude-"+edit_areaId).text();
+		oldPhoneNumber = $("#phoneNumber-"+edit_areaId).text();
+		$("#eareaName").val(oldAreaName);
+		$("#earealongitude").val(oldLongitude);
+		$("#earealatitude").val(oldLatitude);
+		$("#eareaphoneNumber").val(oldPhoneNumber);
+    	 
+       	$(".editarea_pop_bg").fadeIn();
+       });
+     $("#eareaAdd").click(function(){
+    	 var areaname = $.trim($("#eareaName").val());
+    	 if(areaname==""){
+    		 alert("区域名不能为空");
+    		 return false;
+    	 }
+
+    	 var phoneNumber = $.trim($("#eareaphoneNumber").val());
+    	 if(phoneNumber==""){
+    		 alert("请填写服务电话");
+    		 return false;
+    	 }
+    	 var longitude = $.trim($("#earealongitude").val());
+    	 var latitude = $.trim($("#earealatitude").val());
+    	 if(oldAreaName==areaname && oldLongitude==longitude && oldLatitude==latitude && oldPhoneNumber==phoneNumber){
+    		 alert("未作修改");
+    		 return false;
+    	 }
+    	 
+    	 $.ajax({
+	          type: "POST",
+	          contentType: "application/json",
+	          url: "/area/edit/"+$("#loginUserId").val(),
+	          data: JSON.stringify({"areaId":edit_areaId,"areaName":areaname,"longitude":longitude,"latitude":latitude,"phoneNumber":phoneNumber}),
+	          dataType: "json",
+	          success: function(data){
+	                  if(data.msg=="200"){
+	                	  alert("修改区域成功");
+	                	  window.location.reload();
+	                  }
+	                  else{
+	                	  alert("修改区域失败");
+	                  }
+	          }
+	      });
+       $(".editarea_pop_bg").fadeOut();
+       $("#eareaName").val("");
+       $("#eareaphoneNumber").val("");
+       $("#earealongitude").val("");
+       $("#earealatitude").val("");
+ 		oldAreaName = "";
+  	 	oldLongitude = "";
+  	 	oldLatitude = "";
+  	 	oldPhoneNumber = "";
+       });
+
+     $("#eareaCancel").click(function(){
+       $(".editarea_pop_bg").fadeOut();
+       $("#eareaName").val("");
+       $("#eareaphoneNumber").val("");
+       $("#earealongitude").val("");
+       $("#earealatitude").val("");
+       oldAreaName = "";
+ 	 	oldLongitude = "";
+ 	 	oldLatitude = "";
+ 	 	oldPhoneNumber = "";
+       });
+     });
+     </script>
+     <section class="editarea_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>修改区域</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          <section>
+		      <ul class="ulColumn2">
+		       <li>
+		        <span class="item_name">区域名称:</span>
+		        <input type="text" id="eareaName" placeholder=""/>
+		       </li>
+		       <li>
+		        <span class="item_name">所属城市:</span>
+		       		<select class="select" id="ecityselect" disabled="disabled">
+				       
+				    </select>
+		       </li>
+		       <li>
+		        <span class="item_name">区域经度:</span>
+		        <input type="text" id="earealongitude" placeholder=""/>
+		       </li>
+		        <li>
+		        <span class="item_name">区域纬度:</span>
+		        <input type="text" id="earealatitude" placeholder=""/>
+		       </li>
+		       <li>
+		        <span class="item_name">服务电话:</span>
+		        <input type="text" id="eareaphoneNumber" placeholder=""/>
+		       </li>
+		      </ul>
+		    </section>
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="eareaAdd" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="eareaCancel" class="input_btn falseBtn"/>
+         </div>
+        </div>
+        </div>
+     </section>
+     <!-- 编辑区域结束 -->
+     
      <section style="text-align:right">
       <div class="btm_btn">
         <input type="button" value="添加城市" id="addCity" class="input_btn trueBtn"/>
@@ -442,8 +572,8 @@
        </tr>
        	<c:forEach var="item" items="${areas}" varStatus="status">
          	<tr>
-         		<td>${item.cityName}</td>
-         		<td>${item.areaName}</td>
+         		<td id="cityName-${item.id}">${item.cityName}</td>
+         		<td id="areaName-${item.id}">${item.areaName}</td>
          		<td style="text-align:center">
 		           <c:choose> 
 		  				<c:when test="${item.closed=='yes'}">   
@@ -457,8 +587,12 @@
 					</c:choose>
 		        </td>
 		        <td style="text-align:center">
-		        	<button class="linkStyle editArea">编辑</button>
+		        	<button class="linkStyle editArea" id="editPop-${item.id}">编辑</button>
 		        </td>
+		        <td id="longitude-${item.id}" style="display:none">${item.longitude}</td>
+		        <td id="latitude-${item.id}" style="display:none">${item.latitude}</td>
+		        <td id="phoneNumber-${item.id}" style="display:none">${item.phoneNumber}</td>
+		        <td id="cityid-${item.id}" style="display:none">${item.cityId}</td>
          	</tr>
 		</c:forEach> 
       </table>
