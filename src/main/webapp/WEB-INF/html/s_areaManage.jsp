@@ -332,19 +332,29 @@
      <section>
       <table class="table">
        <tr>
-        <th>账户名</th>
-        <th>密码</th>
+        <th>城市</th>
         <th>区域</th>
+        <th>发布状态</th>
         <th>操作</th>
        </tr>
-       	<c:forEach var="item" items="${vendors}" varStatus="status">
+       	<c:forEach var="item" items="${areas}" varStatus="status">
          	<tr>
-         		<td>${item.userName}</td>
-         		<td>${item.password}</td>
-         		<td>${item.cityName}-${item.areaName}</td>
+         		<td>${item.cityName}</td>
+         		<td>${item.areaName}</td>
          		<td style="text-align:center">
-		           <button class="linkStyle editvendor" id="showPopTxt${item.id}">编辑</button>|
-		           <button class="linkStyle delvendor" id="delPopTxt${item.id}">删除</button>
+		           <c:choose> 
+		  				<c:when test="${item.close=='yes'}">   
+		  					<button class="linkStyle" style="color:grey;cursor:default">下线中</button>|
+		  					<button class="linkStyle openOrNot" id="open-${item.id}">上线</button>
+						</c:when> 
+						<c:otherwise>   
+							<button class="linkStyle" style="color:grey;cursor:default">上线中</button>|
+		  					<button class="linkStyle openOrNot" id="close-${item.id}">下线</button>
+						</c:otherwise> 
+					</c:choose>
+		        </td>
+		        <td style="text-align:center">
+		        	<button class="linkStyle editArea">编辑</button>
 		        </td>
          	</tr>
 		</c:forEach> 
