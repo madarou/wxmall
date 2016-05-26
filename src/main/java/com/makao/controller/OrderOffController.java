@@ -122,15 +122,15 @@ public class OrderOffController {
         return OrderOffs;
     }
 	
-	@RequestMapping(value = "/queryall", method = RequestMethod.GET)
-    public @ResponseBody
-    Object queryAll() {
-		List<OrderOff> OrderOffs = null;
-		//则查询返回所有
-		OrderOffs = this.orderOffService.queryAll();
-		logger.info("查询所有失效订单信息完成");
-        return OrderOffs;
-    }
+//	@RequestMapping(value = "/queryall", method = RequestMethod.GET)
+//    public @ResponseBody
+//    Object queryAll() {
+//		List<OrderOff> OrderOffs = null;
+//		//则查询返回所有
+//		OrderOffs = this.orderOffService.queryAll();
+//		logger.info("查询所有失效订单信息完成");
+//        return OrderOffs;
+//    }
 	
 	/**
 	 * @param id
@@ -243,21 +243,27 @@ public class OrderOffController {
 		return jsonObject;
     }
 	
-	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
-    public @ResponseBody
-    ModelAndView query_All() {
-		//List<OrderOn> orderOns = null;
-		//则查询返回所有
-		//orderOns = this.orderOnService.queryAll();
-		//这里假设放一些东西进去
-		List<OrderOff> orderOffs = new ArrayList<OrderOff>();
-		OrderOff oo = new OrderOff();
-		oo.setAddress("ddddddddd");
-		orderOffs.add(oo);
-		logger.info("查询所有失效订单信息完成");
+	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody ModelAndView query_All(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
 		ModelAndView modelAndView = new ModelAndView();  
-	    modelAndView.addObject("ordersOff", orderOffs);  
-	    modelAndView.setViewName("s_orderOff");  
+		modelAndView.setViewName("s_orderOff");  
+		if(token==null){
+			return modelAndView;
+		}
+		Supervisor supervisor = this.supervisorService.getById(id);
+		List<City> cites = this.cityService.queryAll();
+		List<OrderOff> orderOffs = new LinkedList<OrderOff>();
+		if(supervisor!=null){
+			for(City c : cites){
+				List<OrderOff> os = this.orderOffService.queryAll("Order_"+c.getId()+"_off");
+				if(os!=null)
+					orderOffs.addAll(os);
+			}
+		}
+		logger.info("查询所有已完成的订单信息完成");
+		modelAndView.addObject("id", id);  
+		modelAndView.addObject("token", token); 
+	    modelAndView.addObject("ordersOff", orderOffs);   
 	    return modelAndView;
     }
 	
@@ -340,7 +346,7 @@ public class OrderOffController {
 	 * @param id
 	 * @param token
 	 * @return
-	 * 查询所有已取消的和已退货的订单，在退款订单里显示，因为这些是需要退款的
+	 * 查询所有已取消(卖家取消)的和已退货的订单，在退款订单里显示，因为这些是需要退款的
 	 */
 	@RequestMapping(value = "/s_query_refund/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
@@ -362,7 +368,9 @@ public class OrderOffController {
 		}
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
-	    modelAndView.addObject("orderOffs", orderOffs);     
+	    modelAndView.addObject("orderOff", orderOffs);     
 		return modelAndView;
     }
+	
+	
 }

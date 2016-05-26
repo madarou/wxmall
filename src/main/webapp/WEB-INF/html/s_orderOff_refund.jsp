@@ -250,7 +250,7 @@
         <th>退款状态</th>
         <th>订单状态</th>
        </tr>
-       	<c:forEach var="item" items="${orderOffs}" varStatus="status">
+       	<c:forEach var="item" items="${orderOff}" varStatus="status">
          	<tr>
          		<td><button class="linkStyle viewOrder" id="viewPopTxt-${item.id}">${item.number}</button></td>
          		<td id="totalPrice-${item.id}">￥${item.totalPrice}</td>

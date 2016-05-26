@@ -18,7 +18,7 @@ public interface IOrderOffService {
 
 	List<OrderOff> queryByName(String name);
 
-	List<OrderOff> queryAll();
+	List<OrderOff> queryAll(String tableName);
 
 	OrderOff getById(int id);
 

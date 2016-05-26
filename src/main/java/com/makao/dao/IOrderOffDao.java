@@ -13,7 +13,7 @@ public interface IOrderOffDao {
 
     public int update(OrderOff orderOff);
     
-    public List<OrderOff> queryAll();
+    public List<OrderOff> queryAll(String tableName);
     
     public List<OrderOff> queryByName(String name);
 

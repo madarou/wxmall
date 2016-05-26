@@ -34,8 +34,8 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	}
 	
 	@Override
-	public List<OrderOff> queryAll() {
-		return this.orderOffDao.queryAll();
+	public List<OrderOff> queryAll(String tableName) {
+		return this.orderOffDao.queryAll(tableName);
 	}
 	@Override
 	public List<OrderOff> queryByName(String name) {
