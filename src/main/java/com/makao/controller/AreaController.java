@@ -175,6 +175,25 @@ public class AreaController {
         return jsonObject;
     }
 	
+	@RequestMapping(value = "/querybycity/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object queryByCity(@PathVariable("id") int superid, @RequestBody JSONObject paramObject) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+			int cityId = paramObject.getInteger("cityId");
+			List<Area> areas = null;
+			//则查询返回所有
+			areas = this.areaService.queryByCityId(cityId);
+			logger.info("查询所有area信息完成");
+			jsonObject.put("msg", "200");
+			jsonObject.put("areas", areas);//不用序列化，方便前端jquery遍历
+			 return jsonObject;
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+    }
+	
 
 	/**
 	 * @param vendorid

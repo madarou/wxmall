@@ -47,6 +47,15 @@ public class AreaDaoImpl implements IAreaDao {
 			String tableName = "Product_"+area.getCityId()+"_"+area.getId();
 			area.setProductTable(tableName);//这是才插入表明，因为前面save area之后就能通过area.getId()获取其表名了
 			session.update(area);
+			//同时更新所属的city表里的areas字段
+			City city = (City) session.get(City.class, area.getCityId());
+			String areas = city.getAreas();
+			if(areas==null||"".equals(areas)){
+				city.setAreas(area.getId()+"="+area.getAreaName());
+			}
+			else{
+				city.setAreas(areas+","+area.getId()+"="+area.getAreaName());
+			}
 			String sql = "CREATE TABLE IF NOT EXISTS `"
 					+ tableName
 					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
@@ -362,6 +371,27 @@ public class AreaDaoImpl implements IAreaDao {
 				tx.rollback();// 回滚
 			logger.error(e.getMessage(), e);
 			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+	@Override
+	public List<Area> queryByCityId(int cityId) {
+		Session session = null;
+		Transaction tx = null;
+		List<Area> res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = session.createQuery("from Area a where a.cityId=?").setInteger(0, cityId).list();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (null != session)
 				session.close();// 关闭回话

@@ -84,6 +84,7 @@
 	<mvc:resources mapping="/userPoint/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/index/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/vendor/s_queryall/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/v_bindwx/static/**" location="/WEB-INF/static/" />
    	<mvc:default-servlet-handler/>
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">  

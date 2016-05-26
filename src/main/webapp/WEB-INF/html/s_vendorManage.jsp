@@ -64,6 +64,7 @@
     <dt>订单信息</dt>
     <dd><a href="/orderOn/s_queryall/${id}?token=${token}">所有未处理订单</a></dd>
     <dd><a href="/orderOff/s_queryall/${id}?token=${token}">所有已处理订单</a></dd>
+    <dd><a href="/orderOff/s_query_refund/${id}?token=${token}">退款订单</a></dd>
    </dl>
   </li>
    <li>
@@ -71,13 +72,18 @@
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
     <dd><a href="/product/s_products/${id}?token=${token}">商品库</a></dd>
-    <dd><a href="/product/s_catalogs/${id}?token=${token}">商品分类</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
     <dd><a href="/user/s_queryall/${id}?token=${token}">会员中心</a></dd>
+   </dl>
+  </li>
+  <li>
+   <dl>
+    <dt>区域管理</dt>
+    <dd><a href="/area/s_queryall/${id}?token=${token}">区域设置</a></dd>
    </dl>
   </li>
   <li>
@@ -111,11 +117,6 @@
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
-    	 var showTips = function(content){
-   			$("#tips").text(content);
-   			$(".loading_area").fadeIn();
-               $(".loading_area").fadeOut(1500);
-   		}
     	 var vendorId_toEdit = 0;
     	 var oldVendorName = "";
     	 var oldVendorPwd = "";
@@ -124,7 +125,7 @@
 		 $(".editvendor").click(function(){
 			 //获取被点击的行的id，即vendorId
 			 var clickedId = $(this).attr("id");
-       		 vendorId_toEdit = clickedId.charAt(clickedId.length-1);
+       		 vendorId_toEdit = clickedId.split("-")[1];
        		 //填充用户名和密码
        		 var firstTD = $(this).parent().parent().find("td").first();//根据编辑按钮定位到用户名td
        		 $("#editvendorName").val(firstTD.html());
@@ -140,9 +141,7 @@
 			 var newVendorName = $.trim($("#editvendorName").val());
 			 var newVendorPwd = $.trim($("#editpassword").val());
 			 if(oldVendorName==newVendorName && newVendorPwd==oldVendorPwd){//用户并未修改则不提交
-				 $(".pop_bg").fadeOut();
-				 oldVendorName = "";
-		    	 oldVendorPwd = "";
+				 alert("并未做修改");
 				 return false;
 			 }
 			 
@@ -156,9 +155,8 @@
 		  	          success: function(data){
 		  	        	  //var cities = JSON.stringify(data.cities);
 		  	        	  if(data.msg=="200"){
-		  	        		  //alert("删除区域管理员账号成功");
-		  	        		  showTips("修改管理员账号成功");
-		  	        		  window.location="/vendor/squeryall";
+		  	        		  alert("修改管理员账号成功");
+		  	        		  window.location.reload();
 		  	        	  }
 		  	          }
 		    	 	});
@@ -173,9 +171,8 @@
 		  	          success: function(data){
 		  	        	  //var cities = JSON.stringify(data.cities);
 		  	        	  if(data.msg=="200"){
-		  	        		  //alert("删除区域管理员账号成功");
-		  	        		  showTips("修改管理员账号成功");
-		  	        		  window.location="/vendor/squeryall";
+		  	        		  alert("修改区域管理员账号成功");
+		  	        		  window.location.reload();
 		  	        	  }
 		  	          }
 		    	 	});
@@ -234,18 +231,13 @@
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
-    	 var showTips = function(content){
-  			$("#tips").text(content);
-  			$(".loading_area").fadeIn();
-              $(".loading_area").fadeOut(1500);
-  		}
     	var vendorId_toDel = 0;//要删除的用户
      //弹出文本性提示框
      $(".delvendor").click(function(){
        $(".del_pop_bg").fadeIn();
        //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
        var clickedId = $(this).attr("id");
-       vendorId_toDel = clickedId.charAt(clickedId.length-1);
+       vendorId_toDel = clickedId.split("-")[1];
 
        });
      //弹出：确认按钮
@@ -262,9 +254,8 @@
   	          success: function(data){
   	        	  //var cities = JSON.stringify(data.cities);
   	        	  if(data.msg=="200"){
-  	        		  //alert("删除区域管理员账号成功");
-  	        		  showTips("删除管理员账号成功");
-  	        		  window.location="/vendor/squeryall";
+  	        		  alert("删除区域管理员账号成功");
+  	        		  window.location.reload();
   	        		  vendorId_toDel=0;
   	        	  }
   	          }
@@ -300,11 +291,30 @@
 	<!-- 添加账号 -->
     <script>
      $(document).ready(function(){
-    	 var showTips = function(content){
-  			$("#tips").text(content);
-  			$(".loading_area").fadeIn();
-              $(".loading_area").fadeOut(1500);
-  		}
+    	  $('#vendorcity').change(function(){
+    	    	 //alert($(this).children('option:selected').val());
+    	    	 var cityId = $(this).children('option:selected').val();
+    	    	 if(cityId=="选择城市"){
+    	    		 $("#vendorarea").empty();
+    	        	 $("#vendorarea").get(0).options.add(new Option("选择区域","选择区域"));
+    	    		 return;
+    	    	 }
+    	    	 $.ajax({
+    	    		 type: "POST",
+    		          contentType: "application/json",
+    		          url: "/area/querybycity/"+$("#loginUserId").val(),
+    		          dataType: "json",
+    		          data:JSON.stringify({"cityId":cityId}),
+    		          success: function(data){
+    		        	  //var areas = JSON.stringify(data.areas);
+    		        	  if(data.msg=="200"){
+    		        		  $.each(data.areas,function(i, val){
+    		        			  $("#vendorarea").get(0).options.add(new Option(val.areaName,val.id));
+    		        		  });
+    		        	  }
+    		          }
+    	    	 });
+    	     });
      //添加账号
      $("#addVendor").click(function(){
     	 $("#vendorcity").empty();
@@ -314,7 +324,7 @@
     	 $.ajax({
     		 type: "GET",
 	          contentType: "application/json",
-	          url: "/city/queryall",
+	          url: "/city/queryall/"+$("#loginUserId").val(),
 	          dataType: "json",
 	          success: function(data){
 	        	  //var cities = JSON.stringify(data.cities);
@@ -325,10 +335,10 @@
 	        	  }
 	          }
     	 });
-    	 $.ajax({
+/*     	 $.ajax({
     		 type: "GET",
 	          contentType: "application/json",
-	          url: "/area/queryall",
+	          url: "/area/queryall/"+$("#loginUserId").val(),
 	          dataType: "json",
 	          success: function(data){
 	        	  //var areas = JSON.stringify(data.areas);
@@ -338,7 +348,7 @@
 	        		  });
 	        	  }
 	          }
-    	 });
+    	 }); */
        $(".addvendor_pop_bg").fadeIn();
        });
     
@@ -368,14 +378,13 @@
     	 $.ajax({
 	          type: "POST",
 	          contentType: "application/json",
-	          url: "/vendor/new",
+	          url: "/vendor/new/"+$("#loginUserId").val(),
 	          data: JSON.stringify({"userName":vendorname,"cityId":cityId,"areaId":areaId,"cityName":cityname,"areaName":areaname}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
-	                	  //alert("增加区域管理员账号成功");
-	                	  showTips("增加管理员账号成功");
-	                	  window.location="/vendor/squeryall";
+	                	  alert("增加区域管理员账号成功");
+	                	  window.location.reload();
 	                  }
 	                  else{
 	                	  alert("增加区域管理员账号失败");
@@ -429,245 +438,10 @@
         </div>
      </section>
      <!-- 添加账号结束 -->
-     <!-- 添加城市 -->
-    <script>
-     $(document).ready(function(){
-    	 var showTips = function(content){
- 			$("#tips").text(content);
- 			$(".loading_area").fadeIn();
-             $(".loading_area").fadeOut(1500);
- 		}
-   	//var counter = 0;
-     //添加城市
-     $("#addCity").click(function(){
-       $(".addcity_pop_bg").fadeIn();
-       });
-
-     $("#cityAdd").click(function(){
-    	 var cityname = $.trim($("#cityName").val());
-    	 if(cityname==""){
-    		 alert("城市名不能为空");
-    		 //$("#nocityname").text("城市名不能为空")
-    		 return false;
-    	 }
-    	 var imgname = $.trim($("#serverImgName").val());
-    	 if(imgname==""){
-    		 alert("请上传图片");
-    		 //$("#nopicname").text("请上传图片")
-    		 return false;
-    	 }
-    	 $.ajax({
-	          type: "POST",
-	          contentType: "application/json",
-	          url: "/city/new",
-	          data: JSON.stringify({"cityName":cityname,"avatarUrl":imgname}),
-	          dataType: "json",
-	          success: function(data){
-	                  if(data.msg=="200"){
-	                	  //alert("增加城市成功");
-	                	  showTips("增加城市成功");
-	                  }
-	                  else{
-	                	  alert("增加城市失败");
-	                  }
-	          }
-	      });
-	       $(".addcity_pop_bg").fadeOut();
-	     	//清空内容
-	       $("#upload").attr("src","");
-	       $("#serverImgName").val("");
-	       $("#cityName").val("");
-       });
-     
-     $("#cityCancel").click(function(){
-       $(".addcity_pop_bg").fadeOut();
-       });
-     
-     $("#upload").on('click', function() {  
-         $('#fileToUpload').click();  
-     });
-     //这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
-     $('#fileDiv').on('change',function() {  
-         $.ajaxFileUpload({  
-             url:'/city/uploadImg',  
-             secureuri:false,  
-             fileElementId:'fileToUpload',//file标签的id  
-             dataType: 'json',//返回数据的类型  
-             data:{name:'logan'},//一同上传的数据  
-             success: function (data, status) {  
-                 //把图片替换  
-                 /* var obj = jQuery.parseJSON(data);  
-                 $("#upload").attr("src", "../image/"+obj.fileName);   */
-                 if(data.msg=="上传成功"){
-                     //alert("图片可用");
-                     $("#serverImgName").val(data.imgName);
-                     $("#upload").attr("src", "/static/upload/"+data.imgName);
-                 }
-                 else if(data.msg=="图片不符合"){
-                	 alert("图片不符合");
-                 }
-                 if(typeof(data.error) != 'undefined') {  
-                     if(data.error != '') {  
-                         alert(data.error);  
-                     } else {  
-                         alert(data.msg);  
-                     }  
-                 }
-              }, 
-             error: function (data, status, e) {  
-                 alert(e);  
-             }  
-         });  
-     });
-     });
-     </script>
-     <section class="addcity_pop_bg">
-      <div class="pop_cont">
-       <!--title-->
-       <h3>添加城市</h3>
-       <!--content-->
-       <div class="pop_cont_input">
-       <!--以pop_cont_text分界-->
-         <div class="pop_cont_text">
-          <section>
-		      <ul class="ulColumn2">
-		       <li>
-		        <span class="item_name">城市名称:</span>
-		        <input type="text" id="cityName" placeholder=""/>
-		        <!-- <span class="errorTips" id="nocityname"></span> -->
-		       </li>
-		       <li>
-		        <span class="item_name">城市logo:</span>
-		        <!-- <label class="uploadImg" id="upload">
-		         <span>上传图片</span>
-		        </label> -->
-		        <img alt="上传图片" id="upload" src="" style="height:100px;width:100px;cursor:pointer">
-		        <div id="fileDiv">
-		        	<input id="fileToUpload" style="display: none" type="file" name="upfile">
-		        </div>
-		        <input type="hidden" id="serverImgName"/>
-		       <!--  <span class="errorTips" id="nopicname"></span> -->
-		       </li>
-		       <!-- <li>
-		        <span class="item_name" style="width:120px;"></span>
-		        <input type="submit" class="link_btn"/>
-		       </li> -->
-		      </ul>
-		    </section>
-         </div>
-         <!--bottom:operate->button-->
-         <div class="btm_btn">
-          <input type="button" value="确认" id="cityAdd" class="input_btn trueBtn"/>
-          <input type="button" value="取消" id="cityCancel" class="input_btn falseBtn"/>
-         </div>
-        </div>
-        </div>
-     </section>
-     <!-- 添加城市结束 -->
-     <!-- 添加区域 -->
-    <script>
-     $(document).ready(function(){
-    	 var showTips = function(content){
-  			$("#tips").text(content);
-  			$(".loading_area").fadeIn();
-              $(".loading_area").fadeOut(1500);
-  		}
-     //添加区域
-     $("#addArea").click(function(){
-    	 $("#cityselect").empty();
-    	 $("#cityselect").get(0).options.add(new Option("选择城市","选择城市"));
-    	 $.ajax({
-    		 type: "GET",
-	          contentType: "application/json",
-	          url: "/city/queryall",
-	          dataType: "json",
-	          success: function(data){
-	        	  var cities = JSON.stringify(data.cities);
-	        	  if(data.msg=="200"){
-	        		  $.each(data.cities,function(i, val){
-	        			  $("#cityselect").get(0).options.add(new Option(val.cityName,val.id));
-	        		  });
-	        	  }
-	          }
-    	 });
-       $(".addarea_pop_bg").fadeIn();
-       });
-     $("#areaAdd").click(function(){
-    	 var areaname = $.trim($("#areaName").val());
-    	 if(areaname==""){
-    		 alert("区域名不能为空");
-    		 return false;
-    	 }
-    	 var cityId = $("#cityselect").val();//这种方式获取的是value
-    	 if(cityId=="选择城市"){
-    		 alert("请选择所属城市");
-    		 return false;
-    	 }
-    	 var cityname = $("#cityselect").find("option:selected").text();//这种方式获取的是选项的text文本
-    	 $.ajax({
-	          type: "POST",
-	          contentType: "application/json",
-	          url: "/area/new",
-	          data: JSON.stringify({"areaName":areaname,"cityName":cityname,"cityId":cityId}),
-	          dataType: "json",
-	          success: function(data){
-	                  if(data.msg=="200"){
-	                	  //alert("增加区域成功");
-	                	  showTips("增加区域成功");
-	                  }
-	                  else{
-	                	  alert("增加区域失败");
-	                  }
-	          }
-	      });
-       $(".addarea_pop_bg").fadeOut();
-       $("#areaName").val("");
-       });
-
-     $("#areaCancel").click(function(){
-       $(".addarea_pop_bg").fadeOut();
-       });
-     });
-     </script>
-     <section class="addarea_pop_bg">
-      <div class="pop_cont">
-       <!--title-->
-       <h3>添加区域</h3>
-       <!--content-->
-       <div class="pop_cont_input">
-       <!--以pop_cont_text分界-->
-         <div class="pop_cont_text">
-          <section>
-		      <ul class="ulColumn2">
-		       <li>
-		        <span class="item_name">区域名称:</span>
-		        <input type="text" id="areaName" placeholder=""/>
-		        <!-- <span class="errorTips" id="nocityname"></span> -->
-		       </li>
-		       <li>
-		        <span class="item_name">所属城市:</span>
-		       		<select class="select" id="cityselect">
-				       
-				    </select>
-		       </li>
-		      </ul>
-		    </section>
-         </div>
-         <!--bottom:operate->button-->
-         <div class="btm_btn">
-          <input type="button" value="确认" id="areaAdd" class="input_btn trueBtn"/>
-          <input type="button" value="取消" id="areaCancel" class="input_btn falseBtn"/>
-         </div>
-        </div>
-        </div>
-     </section>
-     <!-- 添加区域结束 -->
      
      <section style="text-align:right">
       <div class="btm_btn">
         <input type="button" value="添加账号" id="addVendor" class="input_btn trueBtn"/>
-        <input type="button" value="添加城市" id="addCity" class="input_btn trueBtn"/>
-        <input type="button" value="添加区域" id="addArea" class="input_btn trueBtn"/>
        </div>
      </section><br/>
 
@@ -679,30 +453,14 @@
         <th>区域</th>
         <th>操作</th>
        </tr>
-       <%-- <tr>
-        <td>${vendors }</td>
-        <td>********</td>
-        <td>
-          <select class="select" disabled="disabled">
-           <option>常州</option>
-          </select>
-           <select class="select" disabled="disabled">
-           <option>某某区</option>
-          </select>
-        </td>
-        <td style="text-align:center">
-           <button class="linkStyle" id="showPopTxt">编辑</button>|
-           <button class="linkStyle" id="delPopTxt">删除</button>
-        </td>
-       </tr> --%>
        	<c:forEach var="item" items="${vendors}" varStatus="status">
          	<tr>
          		<td>${item.userName}</td>
          		<td>${item.password}</td>
          		<td>${item.cityName}-${item.areaName}</td>
          		<td style="text-align:center">
-		           <button class="linkStyle editvendor" id="showPopTxt${item.id}">编辑</button>|
-		           <button class="linkStyle delvendor" id="delPopTxt${item.id}">删除</button>
+		           <button class="linkStyle editvendor" id="showPopTxt-${item.id}">编辑</button>|
+		           <button class="linkStyle delvendor" id="delPopTxt-${item.id}">删除</button>
 		        </td>
          	</tr>
 		</c:forEach> 
@@ -720,5 +478,6 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>

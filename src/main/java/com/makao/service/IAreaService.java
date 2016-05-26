@@ -32,4 +32,6 @@ public interface IAreaService {
 
 	int closeArea(int areaId);
 	int openArea(int areaId);
+
+	List<Area> queryByCityId(int cityId);
 }

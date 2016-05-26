@@ -29,4 +29,6 @@ public interface IAreaDao {
 
 	public int closeArea(int areaId);
 	public int openArea(int areaId);
+
+	public List<Area> queryByCityId(int cityId);
 }

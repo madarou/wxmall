@@ -58,6 +58,7 @@
     <dt>订单信息</dt>
     <dd><a href="/orderOn/s_queryall/${id}?token=${token}">所有未处理订单</a></dd>
     <dd><a href="/orderOff/s_queryall/${id}?token=${token}">所有已处理订单</a></dd>
+    <dd><a href="/orderOff/s_query_refund/${id}?token=${token}">退款订单</a></dd>
    </dl>
   </li>
    <li>
@@ -65,13 +66,18 @@
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
     <dd><a href="/product/s_products/${id}?token=${token}">商品库</a></dd>
-    <dd><a href="/product/s_catalogs/${id}?token=${token}">商品分类</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
     <dd><a href="/user/s_queryall/${id}?token=${token}">会员中心</a></dd>
+   </dl>
+  </li>
+  <li>
+   <dl>
+    <dt>区域管理</dt>
+    <dd><a href="/area/s_queryall/${id}?token=${token}">区域设置</a></dd>
    </dl>
   </li>
   <li>
@@ -85,7 +91,6 @@
   </li>
  </ul>
 </aside>
-
 <section class="rt_wrap content mCustomScrollbar">
  <div class="rt_content">
      <section>

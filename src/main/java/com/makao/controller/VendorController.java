@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.Supervisor;
 import com.makao.entity.Vendor;
+import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
 import com.makao.utils.TokenUtils;
@@ -33,6 +35,8 @@ public class VendorController {
 	private static final Logger logger = Logger.getLogger(VendorController.class);
 	@Resource
 	private IVendorService vendorService;
+	@Resource
+	private ISupervisorService supervisorService;
 	
 	@RequestMapping(value="/login", method = RequestMethod.POST)
 	public @ResponseBody Object login(@RequestBody JSONObject paramObject,HttpServletRequest request, HttpServletResponse response)
@@ -101,22 +105,28 @@ public class VendorController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"userName":"马靠","areaId":1,"cityId":1,"cityArea":"上海张江"}' 'http://localhost:8080/wxmall/vendor/new'
 	 */
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@RequestMapping(value = "/new/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody Vendor vendor) {
-		vendor.setIsLock("no");
-		vendor.setIsDelete("no");
-		vendor.setPassword(EncryptUtils.passwordEncryptor.encryptPassword("shygxx"));
-		int res = this.vendorService.insert(vendor);
+    Object add(@PathVariable("id") int id, @RequestBody Vendor vendor) {
+		Supervisor supervisor = this.supervisorService.getById(id);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("增加vendor成功id=" + vendor.getId());
-        	jsonObject.put("msg", "200");
+		if(supervisor!=null){
+			vendor.setIsLock("no");
+			vendor.setIsDelete("no");
+			vendor.setPassword(EncryptUtils.passwordEncryptor.encryptPassword("shygxx"));
+			int res = this.vendorService.insert(vendor);
+			if(res==0){
+				logger.info("增加vendor成功id=" + vendor.getId());
+	        	jsonObject.put("msg", "200");
+	        	 return jsonObject;
+			}
+			else{
+				logger.info("增加vendor成功失败id=" + vendor.getId());
+	        	jsonObject.put("msg", "201");
+	        	 return jsonObject;
+			}
 		}
-		else{
-			logger.info("增加vendor成功失败id=" + vendor.getId());
-        	jsonObject.put("msg", "200");
-		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 	
@@ -169,15 +179,24 @@ public class VendorController {
         return Vendors;
     }
 	
-	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    Object query_All() {
+    ModelAndView query_All(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		 ModelAndView modelAndView = new ModelAndView();  
+			modelAndView.setViewName("s_vendorManage");  
+			if(token==null){
+				return modelAndView;
+			}
+		Supervisor supervisor = this.supervisorService.getById(id);
 		List<Vendor> vendors = null;
-		vendors = this.vendorService.queryAll();
-		logger.info("查询所有vendor信息完成");
-		ModelAndView modelAndView = new ModelAndView();  
+		if(supervisor!=null){
+			vendors = this.vendorService.queryAll();
+			logger.info("查询所有vendor信息完成");
+		}
+		modelAndView.addObject("id", id);  
+		modelAndView.addObject("token", token);   
 	    modelAndView.addObject("vendors", vendors);  
-	    modelAndView.setViewName("s_vendorManage");  
 	    return modelAndView;
     }
 	

@@ -62,6 +62,10 @@ public class AreaServiceImpl implements IAreaService {
 	public int openArea(int areaId) {
 		return this.areaDao.openArea(areaId);
 	}
+	@Override
+	public List<Area> queryByCityId(int cityId) {
+		return this.areaDao.queryByCityId(cityId);
+	}
 	
 //	@Override
 //	public void testor() {
