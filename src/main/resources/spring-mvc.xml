@@ -79,6 +79,7 @@
 	<mvc:resources mapping="/test/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/user/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/user/v_datamanage/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/user/s_queryall/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/userPoint/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/index/static/**" location="/WEB-INF/static/" />

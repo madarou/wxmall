@@ -19,8 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.makao.entity.Supervisor;
 import com.makao.entity.User;
 import com.makao.entity.Vendor;
+import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
 
@@ -33,6 +35,8 @@ public class UserController {
 	private IUserService userService;
 	@Resource
 	private IVendorService vendorService;
+	@Resource
+	private ISupervisorService supervisorService;
 	
 //	@RequestMapping("/showUser")
 //	public String toIndex(HttpServletRequest request,Model model){
@@ -107,33 +111,36 @@ public class UserController {
 	 * curl -l -H "Content-type: application/json" -X POST -d '{"id":3,"userName":"darou","password":"test2","age":14}' 'http://localhost:8080/wxmall/user/update'
 	 * 注意update时要传id才能确定update哪个，且像age这种updatable=false的字段不会被新值修改
 	 */
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(value = "/update/{superid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object update(@RequestBody JSONObject paramObject) {
-		int id = paramObject.getIntValue("id");
-		String userName = paramObject.getString("userName");
-		String phoneNumber = paramObject.getString("phoneNumber");
-		int point = paramObject.getIntValue("point");
-		String address = paramObject.getString("address");
-		String rank = paramObject.getString("rank");
-		User user = this.userService.getById(id);
+    Object update(@PathVariable("superid") int superid,@RequestBody JSONObject paramObject) {
+		Supervisor supervisor = this.supervisorService.getById(superid);
 		JSONObject jsonObject = new JSONObject();
-		if(user!=null){
-			user.setUserName(userName);
-			user.setPhoneNumber(phoneNumber);
-			user.setPoint(point);
-			user.setAddress(address);
-			user.setRank(rank);
-			int res = this.userService.update(user);
-			if(res==0){
-				logger.info("修改人员信息成功id=" + user.getId());
-	        	jsonObject.put("msg", "200");
-	        	return jsonObject;
-			}
-			else{
-				logger.info("修改人员信息失败id=" + user.getId());
-	        	jsonObject.put("msg", "201");
-	        	return jsonObject;
+		if(supervisor!=null){
+			int id = paramObject.getIntValue("id");
+			String userName = paramObject.getString("userName");
+			String phoneNumber = paramObject.getString("phoneNumber");
+			int point = paramObject.getIntValue("point");
+			String address = paramObject.getString("address");
+			String rank = paramObject.getString("rank");
+			User user = this.userService.getById(id);
+			if(user!=null){
+				user.setUserName(userName);
+				user.setPhoneNumber(phoneNumber);
+				user.setPoint(point);
+				user.setAddress(address);
+				user.setRank(rank);
+				int res = this.userService.update(user);
+				if(res==0){
+					logger.info("修改人员信息成功id=" + user.getId());
+		        	jsonObject.put("msg", "200");
+		        	return jsonObject;
+				}
+				else{
+					logger.info("修改人员信息失败id=" + user.getId());
+		        	jsonObject.put("msg", "201");
+		        	return jsonObject;
+				}
 			}
 		}
 		jsonObject.put("msg", "201");
@@ -170,15 +177,21 @@ public class UserController {
         return users;
     }
 	
-	@RequestMapping(value = "/s_queryall", method = RequestMethod.GET)
+	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    Object query_All() {
+    Object query_All(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("s_userManage");
+		if (token == null) {
+			return modelAndView;
+		}
 		List<User> users = null;
 		users = this.userService.queryAll();
 		logger.info("查询所有用户信息完成");
-		ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
 	    modelAndView.addObject("users", users);  
-	    modelAndView.setViewName("s_userManage");  
 	    return modelAndView;
     }
 	

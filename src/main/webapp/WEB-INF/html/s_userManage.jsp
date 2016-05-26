@@ -96,11 +96,6 @@
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
-    	 var showTips = function(content){
-    			$("#tips").text(content);
-    			$(".loading_area").fadeIn();
-                $(".loading_area").fadeOut(1500);
-    		}
     	 var userId_toEdit = 0;
     	 var isEdit = false;//判断有没有修改字段，没有则不用提交表单
     	 var oldname = "";
@@ -112,22 +107,17 @@
 		 $(".editUser").click(function(){
 			//获取被点击的行的id，即vendorId
 			 var clickedId = $(this).attr("id");
-       		 userId_toEdit = clickedId.charAt(clickedId.length-1);
-       		 var tr = $(this).parent().parent();
-       		 var secondTD = tr.find("td").eq(1);
-       		 oldname = secondTD.html();
+       		 userId_toEdit = clickedId.split("-")[1];
+       		 $("#editid").val($("#id-"+userId_toEdit).text());
+       		 oldname = $("#userName-"+userId_toEdit).text();
        		 $("#editname").val(oldname);
-       		 var thirdTD = tr.find("td").eq(2);
-       		 oldphone = thirdTD.html();
+       		 oldphone = $("#phoneNumber-"+userId_toEdit).text();
       		 $("#editphone").val(oldphone);
-      		 var forthTD = tr.find("td").eq(3);
-      		 oldpoint = forthTD.html();
+      		 oldpoint = $("#point-"+userId_toEdit).text();
      		 $("#editpoint").val(oldpoint);
-     		 var fifthTD = tr.find("td").eq(4);
-     		 oldaddress = fifthTD.html();
+     		 oldaddress = $("#address-"+userId_toEdit).text();
      		 $("#editaddress").val(oldaddress);
-     		 var sixTD = tr.find("td").eq(5);
-     		 oldrank = sixTD.html();
+     		 oldrank = $("#rank-"+userId_toEdit).text();
     		 $("#editrank").val(oldrank);
       		 
 			 $(".pop_bg").fadeIn();
@@ -142,16 +132,18 @@
 				 $.ajax({
 		    		  type: "POST",
 		  	          contentType: "application/json",
-		  	          url: "/user/update",
+		  	          url: "/user/update/"+$("#loginUserId").val(),
 		  	          dataType: "json",
 		  	          data: JSON.stringify({"id":userId_toEdit,"userName":$("#editname").val(),"phoneNumber":$("#editphone").val(),
 		  	        	"point":$("#editpoint").val(),"address":$("#editaddress").val(),"rank":$("#editrank").val()}),
 		  	          success: function(data){
-		  	        	  //var cities = JSON.stringify(data.cities);
 		  	        	  if(data.msg=="200"){
-		  	        		  //alert("删除区域管理员账号成功");
-		  	        		  showTips("修改会员信息成功");
-		  	        		  window.location="/user/squeryall";
+		  	        		  alert("修改会员信息成功");
+		  	        		  window.location.reload();
+		  	        	  }
+		  	        	  else if(data.msg=="201"){
+		  	        		  alert("修改会员信息失败");
+		  	        		  window.location.reload();
 		  	        	  }
 		  	          }
 		    	 	});
@@ -178,10 +170,13 @@
        <!--content-->
        <div class="pop_cont_input">
           <ul>
+	       <li>
+	          <span>会员&nbsp;I&nbsp;D&nbsp;</span>
+	          <input type="text" id="editid" style="color:grey" placeholder="" disabled="disabled" class="textbox"/>
+	       </li>
            <li>
             <span>会员姓名</span>
-            <input type="text" id="editname" placeholder="" disabled="disabled" class="textbox"/>
-           
+            <input type="text" style="color:grey" id="editname" placeholder="" disabled="disabled" class="textbox"/>
            </li>
            <li>
             <span class="ttl">联系电话</span>
@@ -192,7 +187,7 @@
             <input type="text" id="editpoint" placeholder="" class="textbox"/>
            </li>
            <li>
-            <span class="ttl">详细地址</span>
+            <span class="ttl">默认地址</span>
             <input type="text" id="editaddress" placeholder="" class="textbox"/>
            </li>
            <li>
@@ -225,15 +220,15 @@
        </tr>
        <c:forEach var="item" items="${users}" varStatus="status">
          	<tr>
-         		<td>${item.id}</td>
-         		<td>${item.userName}</td>
-         		<td>${item.phoneNumber}</td>
-         		<td>${item.point}</td>
-         		<td>${item.address}</td>
-         		<td>${item.rank}</td>
-         		<td>${item.registTime}</td>
+         		<td id="id-${item.id}">${item.id}</td>
+         		<td id="userName-${item.id}">${item.userName}</td>
+         		<td id="phoneNumber-${item.id}">${item.phoneNumber}</td>
+         		<td id="point-${item.id}">${item.point}</td>
+         		<td id="address-${item.id}">${item.address}</td>
+         		<td id="rank-${item.id}">${item.rank}</td>
+         		<td id="registTime-${item.id}">${item.registTime}</td>
          		<td style="text-align:center">
-		           <button class="linkStyle editUser" id="showPopTxt${item.id}">修改</button>
+		           <button class="linkStyle editUser" id="showPopTxt-${item.id}">修改</button>
 		        </td>
          	</tr>
 		</c:forEach> 
@@ -251,5 +246,6 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>
