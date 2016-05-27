@@ -332,7 +332,7 @@ public class ProductController {
 		//获取上传文件类型的扩展名,先得到.的位置，再截取从.的下一个位置到文件的最后，最后得到扩展名  
         String ext = fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
         System.out.println(request.getServletContext().getRealPath("/"));
-        if(!("jpg".equals(ext)) && !("png".equals(ext))){
+        if(!("jpg".equals(ext)) && !("png".equals(ext)) && !("jpeg".equals(ext))){
         	jsonObject.put("msg", "图片不符合");
         	return jsonObject;
         }
@@ -388,7 +388,7 @@ public class ProductController {
 		//获取上传文件类型的扩展名,先得到.的位置，再截取从.的下一个位置到文件的最后，最后得到扩展名  
         String ext = fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
         System.out.println(request.getServletContext().getRealPath("/"));
-        if(!("jpg".equals(ext)) && !("png".equals(ext))){
+        if(!("jpg".equals(ext)) && !("png".equals(ext)) && !("jpeg".equals(ext))){
         	jsonObject.put("msg", "图片不符合");
         	return jsonObject;
         }
@@ -444,7 +444,7 @@ public class ProductController {
 		//获取上传文件类型的扩展名,先得到.的位置，再截取从.的下一个位置到文件的最后，最后得到扩展名  
         String ext = fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
         System.out.println(request.getServletContext().getRealPath("/"));
-        if(!("jpg".equals(ext)) && !("png".equals(ext))){
+        if(!("jpg".equals(ext)) && !("png".equals(ext)) && !("jpeg".equals(ext))){
         	jsonObject.put("msg", "图片不符合");
         	return jsonObject;
         }
@@ -500,7 +500,7 @@ public class ProductController {
 		//获取上传文件类型的扩展名,先得到.的位置，再截取从.的下一个位置到文件的最后，最后得到扩展名  
         String ext = fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
         System.out.println(request.getServletContext().getRealPath("/"));
-        if(!("jpg".equals(ext)) && !("png".equals(ext))){
+        if(!("jpg".equals(ext)) && !("png".equals(ext)) && !("jpeg".equals(ext))){
         	jsonObject.put("msg", "图片不符合");
         	return jsonObject;
         }
@@ -638,7 +638,7 @@ public class ProductController {
 			Area area = this.areaService.getById(vendor.getAreaId());
 			if(area!=null){
 				String catalogStr = area.getCatalogs();
-				if(!"".equals(catalogStr.trim())){
+				if(catalogStr!=null && !"".equals(catalogStr.trim())){
 					String[] catalogList = catalogStr.split(",");
 					for(String c : catalogList){
 						Catalog cc = new Catalog();
@@ -678,7 +678,7 @@ public class ProductController {
 			Area area = this.areaService.getById(vendor.getAreaId());
 			if(area!=null){
 				String catalogStr = area.getCatalogs();
-				if(!"".equals(catalogStr.trim())){
+				if(catalogStr!=null && !"".equals(catalogStr.trim())){
 					String[] catalogList = catalogStr.split(",");
 					for(String c : catalogList){
 						Catalog cc = new Catalog();
@@ -713,7 +713,7 @@ public class ProductController {
 			Area area = this.areaService.getById(vendor.getAreaId());
 			if(area!=null){
 				String catalogStr = area.getCatalogs();
-				if(!"".equals(catalogStr.trim())){
+				if(catalogStr!=null && !"".equals(catalogStr.trim())){
 					String[] catalogList = catalogStr.split(",");
 					for(String c : catalogList){
 						Catalog cc = new Catalog();

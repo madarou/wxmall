@@ -62,8 +62,8 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/s_queryall/${id}?token=${token}">所有未处理订单</a></dd>
-    <dd><a href="/orderOff/s_queryall/${id}?token=${token}">所有已处理订单</a></dd>
+    <dd><a href="/orderOn/s_queryall/${id}?token=${token}">所有未完成订单</a></dd>
+    <dd><a href="/orderOff/s_queryall/${id}?token=${token}">所有已完成订单</a></dd>
     <dd><a href="/orderOff/s_query_refund/${id}?token=${token}">退款订单</a></dd>
    </dl>
   </li>
@@ -89,7 +89,7 @@
   <li>
    <dl>
     <dt>账号管理</dt>
-    <dd><a href="/vendor/s_queryall/${id}?token=${token}">账号管理</a></dd>
+    <dd><a href="/vendor/s_queryall/${id}?token=${token}" class="active">账号管理</a></dd>
    </dl>
   </li>
   <li>

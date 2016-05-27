@@ -209,14 +209,19 @@ public class AreaController {
 		if(vendor!=null){
 			int areaId = vendor.getAreaId();
 			Area area = this.areaService.getById(areaId);
-			String[] catalogStr = area.getCatalogs().split(",");
-			for(String s : catalogStr){//检查重复性
-				if(catalog.getName().equals(s.split("=")[0].trim())){
-					jsonObject.put("msg", "202");
-					return jsonObject;
-				}
+			if(area.getCatalogs()==null||"".equals(area.getCatalogs())){
+				area.setCatalogs(catalog.getName()+"="+catalog.getSequence());
 			}
-			area.setCatalogs(area.getCatalogs()+","+catalog.getName()+"="+catalog.getSequence());
+			else{
+				String[] catalogStr = area.getCatalogs().split(",");
+				for(String s : catalogStr){//检查重复性
+					if(catalog.getName().equals(s.split("=")[0].trim())){
+						jsonObject.put("msg", "202");
+						return jsonObject;
+					}
+				}
+				area.setCatalogs(area.getCatalogs()+","+catalog.getName()+"="+catalog.getSequence());
+			}
 			int res = this.areaService.newCatalog(area);//这里之所以不用update(area)是因为对于catalog的增加还会涉及banner表的增加，而其他性的area的update并不需要
 			
 			if(res==0){

@@ -395,7 +395,7 @@ $(document).ready(function(){
        marketPriceO = $.trim($("#pmarketprice-"+editHandle_Id).text());
        priceO = $.trim($("#pprice-"+editHandle_Id).text());
        showWayO = $.trim($("#pshowway-"+editHandle_Id).text());
-       coverSUrlO = $("#pcoversurl-"+editHandle_Id).attr("src").split("/")[3];;
+       coverSUrlO = $("#pcoversurl-"+editHandle_Id).attr("src").split("/")[3];
        coverBUrlO = $.trim($("#pcoverburl-"+editHandle_Id).text());
        inventoryO = $.trim($("#pinventory-"+editHandle_Id).text());
        sequenceO = $.trim($("#psequence-"+editHandle_Id).text());

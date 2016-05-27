@@ -102,7 +102,7 @@
      $(".copyProduct").click(function(){
        $(".confirm_copy_pop_bg").fadeIn();
        var clickedId = $(this).attr("id");
-       id_toCopy = clickedId.charAt(clickedId.length-1);
+       id_toCopy = clickedId.split("-")[1];
        });
      //弹出：确认按钮
      $("#confirmCopy").click(function(){
@@ -112,11 +112,28 @@
     	 }
 		 $(".confirm_copy_pop_bg").fadeOut();
 		 $(".repository_pop_bg").fadeOut();
-      	 $("#proname").val($("#copyName"+id_toCopy).text());
-      	$("#proprice").val($("#copyPrice"+id_toCopy).text());
-      	$("#promarketprice").val($("#copyMarketPrice"+id_toCopy).text());
-      	$("#prostandard").val($("#copyStandard"+id_toCopy).text());
-      	$("#prodescription").val($("#copyDescription"+id_toCopy).text());
+      	 $("#proname").val($("#copyName-"+id_toCopy).text());
+      	 $("#proorigin").val($("#copyOrigin-"+id_toCopy).text());
+      	$("#proprice").val($("#copyPrice-"+id_toCopy).text());
+      	$("#promarketprice").val($("#copyMarketPrice-"+id_toCopy).text());
+      	$("#prostandard").val($("#copyStandard-"+id_toCopy).text());
+      	$("#prodescription").val($("#copyDescription-"+id_toCopy).text());
+      	
+      	var coverSUrlO = $("#copyCoverSUrl-"+id_toCopy).attr("src").split("/")[3];
+      	$("#serverImgNames").val(coverSUrlO);
+      	$("#uploads").attr("src", "/static/upload/"+coverSUrlO);
+      	var coverBUrlO = $("#copyCoverBUrl-"+id_toCopy).text();
+      	$("#serverImgNameb").val(coverBUrlO);
+      	$("#uploadb").attr("src", "/static/upload/"+coverBUrlO);
+      	
+      	var subdetailUrlO = $("#copySubdetailUrl-"+id_toCopy).text();
+      	if(subdetailUrlO!=null && subdetailUrlO!=""){
+     	   $("#uploadd1").attr("src", "/static/upload/"+subdetailUrlO);
+     	   $("#serverImgNamed1").val(subdetailUrlO);
+        }
+      	var detailUrlO = $("#copyDetailUrl-"+id_toCopy).text();
+      	$("#serverImgNamed2").val(detailUrlO);
+      	 $("#uploadd2").attr("src", "/static/upload/"+detailUrlO);
        });
      //弹出：取消或关闭按钮
      $("#cancelCopy").click(function(){
@@ -177,7 +194,6 @@
 	       <tr>
 	        <th>缩略图</th>
 	        <th>商品名称</th>
-	        <th>商品分类</th>
 	        <th>出售价</th>
 	        <th>市场价</th>
 	        <th>规格</th>
@@ -185,16 +201,19 @@
 	       </tr>
 	       <c:forEach var="item" items="${products}" varStatus="status">
 	         	<tr>
-	         		<td>缩略图</td>
-	         		<td id="copyName${item.id}">${item.productName}</td>
-	         		<td>${item.catalog}</td>
-	         		<td id="copyPrice${item.id}">${item.price}</td>
-	         		<td id="copyMarketPrice${item.id}">${item.marketPrice}</td>
-	         		<td id="copyStandard${item.id}">${item.standard}</td>
+	         		<td><img id="copyCoverSUrl-${item.id}" style="width:50px;height:50px" alt="缩略图" src="/static/upload/${item.coverSUrl}"></td>
+	         		<td id="copyName-${item.id}">${item.productName}</td>
+	         		<td id="copyPrice-${item.id}">${item.price}</td>
+	         		<td id="copyMarketPrice-${item.id}">${item.marketPrice}</td>
+	         		<td id="copyStandard-${item.id}">${item.standard}</td>
 	         		<td style="text-align:center">
-			           <button class="linkStyle copyProduct" id="showPopTxt${item.id}">复制</button>
+			           <button class="linkStyle copyProduct" id="showPopTxt-${item.id}">复制</button>
 			        </td>
-			        <td id="copyDescription${item.id}">${item.description}</td>
+			        <td id="copyDescription-${item.id}" style="display:none">${item.description}</td>
+			        <td id="copyOrigin-${item.id}" style="display:none">${item.origin}</td>
+			        <td id="copyCoverBUrl-${item.id}" style="display:none">${item.coverBUrl}</td>
+			        <td id="copySubdetailUrl-${item.id}" style="display:none">${item.subdetailUrl}</td>
+			        <td id="copyDetailUrl-${item.id}" style="display:none">${item.detailUrl}</td>
 	         	</tr>
 			</c:forEach> 
 	      </table>
