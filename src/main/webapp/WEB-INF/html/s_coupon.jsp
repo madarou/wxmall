@@ -193,17 +193,44 @@
      <!--弹出框效果-->
      <script>
      $(document).ready(function(){
+    	 var id_toDel = 0;//要删除的id
      //弹出文本性提示框
      $(".delCoupon").click(function(){
        $(".del_pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       id_toDel = clickedId.split("-")[1];
        });
      //弹出：确认按钮
      $("#confirmDel").click(function(){
+    	 if(id_toDel==0){
+    		 alert("请重新选择要删除的优惠券");
+    		 return false;
+    	 }
+         $.ajax({
+    		  type: "POST",
+  	          contentType: "application/json",
+  	          url: "/coupon/delete/"+$("#loginUserId").val(),
+  	          dataType: "json",
+  	          data:JSON.stringify({"couponId":id_toDel}),
+  	          success: function(data){
+  	        	  if(data.msg=="200"){
+  	        		  alert("删除优惠券成功");
+  	        		  window.location.reload();
+  	        		  id_toDel=0;
+  	        	  }
+  	        	  else if(data.msg=="201"){
+  	        		  alert("删除优惠券失败");
+  	        		  window.location.reload();
+  	        		  id_toDel=0;
+  	        	  }
+  	          }
+    	 	});
        $(".del_pop_bg").fadeOut();
        });
      //弹出：取消或关闭按钮
      $("#cancelDel").click(function(){
        $(".del_pop_bg").fadeOut();
+       id_toDel=0;
        });
      });
      </script>
@@ -288,5 +315,6 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>

@@ -243,7 +243,7 @@
      //弹出：确认按钮
      $("#confirmDel").click(function(){
     	 if(vendorId_toDel==0){
-    		 alert("请重新选择要删除账户");
+    		 alert("请重新选择要删除的账户");
     		 return false;
     	 }
         	$.ajax({
