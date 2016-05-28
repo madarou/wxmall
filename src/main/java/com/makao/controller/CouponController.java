@@ -10,11 +10,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.Area;
 import com.makao.entity.Coupon;
+import com.makao.entity.Supervisor;
 import com.makao.service.ICouponService;
+import com.makao.service.ISupervisorService;
 
 /**
  * @description: TODO
@@ -27,6 +32,8 @@ public class CouponController {
 	private static final Logger logger = Logger.getLogger(CouponController.class);
 	@Resource
 	private ICouponService couponService;
+	@Resource
+	private ISupervisorService supervisorService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Coupon get(@PathVariable("id") Integer id)
@@ -102,5 +109,27 @@ public class CouponController {
 		Coupons = this.couponService.queryAll();
 		logger.info("查询所有优惠券信息完成");
         return Coupons;
+    }
+	
+	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object queryAll(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		 ModelAndView modelAndView = new ModelAndView();  
+			modelAndView.setViewName("s_coupon");  
+			if(token==null){
+				return modelAndView;
+			}
+			Supervisor supervisor = this.supervisorService.getById(id);
+			List<Coupon> coupons = null;
+			if(supervisor!=null){
+				//则查询返回所有
+				coupons = this.couponService.queryAll();
+				logger.info("查询所有coupon信息完成");
+			}
+		    modelAndView.addObject("id", id);  
+		    modelAndView.addObject("token", token);   
+			modelAndView.addObject("coupons", coupons);
+			return modelAndView;
     }
 }

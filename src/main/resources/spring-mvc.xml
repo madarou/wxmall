@@ -47,6 +47,7 @@
 	<mvc:resources mapping="/city/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/comment/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/coupon/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/coupon/s_queryall/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/couponOff/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/couponOn/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/giftChanged/static/**" location="/WEB-INF/static/" />

@@ -122,29 +122,69 @@
      <section class="pop_bg">
       <div class="pop_cont">
        <!--title-->
-       <h3>添加分类</h3>
+       <h3>添加优惠券</h3>
        <!--content-->
-       <div class="pop_cont_input">
-        <ul>
-         <li>
-          <span>分类名称</span>
-          <input type="text" placeholder="如'水果'" class="textbox"/>
-         </li>
-         <li>
-          <span class="ttl">排&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序</span>
-          <input type="text" placeholder="请填写整数，从大到小排序" class="textbox"/>
-         </li>
-        </ul>
-       </div>
+             <div class="pop_cont_input" style="overflow: scroll;width:500px;height:450px;padding:0px">
        <!--以pop_cont_text分界-->
-       <div class="pop_cont_text">
-        这里是文字性提示信息！
-       </div>
-       <!--bottom:operate->button-->
-       <div class="btm_btn">
-        <input type="button" value="保存" id="saveBtn" class="input_btn trueBtn"/>
-        <input type="button" value="取消" id="cancelBtn" class="input_btn falseBtn"/>
-       </div>
+         <div class="pop_cont_text" style="padding:0px">
+             <section>
+		      <ul class="ulColumn2">
+		       <li>
+		        <span class="item_name" style="width:120px;">名称：</span>
+		        <input type="text" id="cname" class="textbox textbox_295" placeholder="如'10元代金券'"/>
+		       </li>
+		        <li>
+		        <span class="item_name" style="width:120px;">面值(￥)：</span>
+		        <input type="text" id="camount" class="textbox textbox_295" placeholder="如'10'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">消耗积分：</span>
+		        <input type="text" id="cpoint" class="textbox textbox_295" placeholder="如'20'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">使用限制：</span>
+		        <input type="text" id="crestrict" class="textbox textbox_295" placeholder="消费满X元才能使用就填X"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">简单说明：</span>
+		        <input type="text" id="ccomment" class="textbox textbox_295" placeholder="如'新用户欢迎礼券'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">生效城市：</span>
+		        <select class="select" id="ccity">  
+				</select>
+		       </li>
+		        <li>
+		        <span class="item_name" style="width:120px;">是否上线：</span>
+		        <select class="select" id="cisshow">  
+				</select>
+		       </li>
+							<li><span class="item_name" style="width: 120px;">封面图：</span>
+								<img alt="封面图" id="uploadd1" src=""
+								style="height: 100px; width: 305px; cursor: pointer">
+								<div id="fileDivd1">
+									<input id="fileToUploadd1" style="display: none" type="file"
+										name="upfiled1">
+								</div> <input type="hidden" id="serverImgNamed1" />
+							</li>
+							<li>
+								<span class="item_name" style="width: 120px;">详细图：</span>
+								<img alt="详细图" id="uploadd2" src=""
+								style="height: 100px; width: 305px; cursor: pointer">
+								<div id="fileDivd2">
+									<input id="fileToUploadd2" style="display: none" type="file"
+										name="upfiled2">
+								</div> <input type="hidden" id="serverImgNamed2" />
+							</li>
+		      </ul>
+		     </section>
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="saveBtn" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelBtn" class="input_btn falseBtn"/>
+         </div>
+        </div>
       </div>
      </section>
      <!--结束：弹出框效果-->
@@ -183,31 +223,55 @@
           <input type="button" value="取消" id="cancelDel" class="input_btn falseBtn"/>
          </div>
         </div>
+       </div>
      </section>
      <!-- 删除分类弹出框 -->
 
      <!-- 搜索 -->
      <section style="text-align:right">
       <div class="btm_btn">
-        <input type="button" value="添加分类" class="input_btn trueBtn popAdd"/>
+        <input type="button" value="添加优惠券" class="input_btn trueBtn popAdd"/>
        </div>
      </section><br/>
 
      <section>
       <table class="table">
        <tr>
-        <th>分类名称</th>
-        <th>排序</th>
+        <th>名称</th>
+        <th>兑换积分</th>
+        <th>类型</th>
+        <th>抵用面值</th>
+        <th>使用限制</th>
+        <th>所属城市</th>
+        <th>状态</th>
         <th>操作</th>
        </tr>
-       <tr>
-        <td></td>
-        <td></td>
-        <td style="text-align:center">
-           <button class="linkStyle popAdd" id="showPopTxt">编辑</button>|
-           <button class="linkStyle" id="delPopTxt">删除</button>
-        </td>
-       </tr>
+       	<c:forEach var="item" items="${coupons}" varStatus="status">
+         	<tr>
+         		<td id="name-${item.id}">${item.name}</td>
+         		<td id="point-${item.id}">${item.point}</td>
+         		<td id="type-${item.id}">${item.type}</td>
+         		<td id="amount-${item.id}">${item.amount}</td>
+         		<td id="restrict-${item.id}">${item.restrict}</td>
+         		<td id="cityName-${item.id}">${item.cityName}</td>
+         		<td style="text-align:center">
+		           <c:choose> 
+		  				<c:when test="${item.isShow=='no'}">   
+		  					<button class="linkStyle" style="color:grey;cursor:default">下线中</button>|
+		  					<button class="linkStyle openOrNot" id="open-${item.id}">上线</button>
+						</c:when> 
+						<c:otherwise>   
+							<button class="linkStyle" style="color:grey;cursor:default">上线中</button>|
+		  					<button class="linkStyle openOrNot" id="close-${item.id}">下线</button>
+						</c:otherwise> 
+					</c:choose>
+		        </td>
+		        <td style="text-align:center">
+		        	<button class="linkStyle editArea" id="editPop-${item.id}">编辑</button>
+		        </td>
+		        <td id="cityId-${item.id}" style="display:none">${item.cityId}</td>
+         	</tr>
+		</c:forEach> 
       </table>
       <aside class="paging">
        <a>第一页</a>

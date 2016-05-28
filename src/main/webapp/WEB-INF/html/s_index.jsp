@@ -81,7 +81,13 @@
   <li>
    <dl>
     <dt>账号管理</dt>
-    <dd><a href="/vendor/s_queryall/${id}?token=${token}">账号管理</a></dd>
+    <dd><a href="/vendor/s_queryall/${id}?token=${token}">账号设置</a></dd>
+   </dl>
+  </li>
+  <li>
+   <dl>
+    <dt>礼券管理</dt>
+    <dd><a href="/coupon/s_queryall/${id}?token=${token}">优惠券管理</a></dd>
    </dl>
   </li>
   <li>

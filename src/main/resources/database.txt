@@ -210,6 +210,7 @@ point			int(11)			对应消耗的积分
 restrict		int(11)			使用限制			至少消费到xx元才能使用，在购物车时根据此限制加载可用券，如'消费满10元'
 comment			varchar(50)		简单说明			如'新用户欢迎礼券','圣诞节专属礼券'等	
 cityName		varchar(30)		所属的城市			便于后台加载所有券时显示
+cityId			int(11)			城市Id			虽然是静态的，但城市表名其在哪个城市下看得到
 isShow			varchar(5)		是否在前台显示		值为'yes'或'no'，类似上架或下架
 type			varchar(20)						值为'代金券兑换'，与Gift中的'礼品兑换'对应
 
@@ -226,6 +227,7 @@ to				date			截止有效期
 restrict		int(11)			使用限制			至少消费到xx元才能使用，在购物车时根据此限制加载可用券，如'消费满10元'
 comment			varchar(50)		简单说明			如'新用户欢迎礼券','圣诞节专属礼券'等	
 cityName		varchar(30)		所属的城市			便于后台加载所有券时显示
+cityId			int(11)			城市Id
 userId			int(11)			优惠券拥有者
 
 Coupon_cityId_off(已过期或已使用的优惠券，增加一个使用日期，为空表示是过期的)

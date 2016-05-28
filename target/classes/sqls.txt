@@ -113,6 +113,7 @@ Coupon_cityId:
 						`restrict` int(11),
 						`comment` varchar(50),
 						`cityName` varchar(30),
+						`cityId` int(11),
 						`isShow` varchar(5),
 						`type` varchar(20),
 						PRIMARY KEY (`id`))";
@@ -132,6 +133,7 @@ Coupon_cityId_on:
 						`restrict` int(11),
 						`comment` varchar(50),
 						`cityName` varchar(30),
+						`cityId` int(11),
 						`isShow` varchar(5),
 						`userId` int(11),
 						PRIMARY KEY (`id`))";
@@ -151,6 +153,7 @@ Coupon_cityId_off:
 						`restrict` int(11),
 						`comment` varchar(50),
 						`cityName` varchar(30),
+						`cityId` int(11),
 						`isShow` varchar(5),
 						`userId` int(11),
 						`overdueDate` date,
