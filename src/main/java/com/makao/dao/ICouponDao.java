@@ -19,4 +19,6 @@ public interface ICouponDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	public List<Coupon> queryAll(String tableName);
 }

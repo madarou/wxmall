@@ -125,6 +125,36 @@ public class CityDaoImpl implements ICityDao {
 							}
 						}
 					});
+			//为Coupon_cityId建表
+			String tableName4 = "Coupon_"+city.getId();
+			String sql4 = "CREATE TABLE IF NOT EXISTS `"
+					+ tableName4
+					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
+					+ "`name` varchar(30) NOT NULL,"
+					+ "`amount` varchar(10),"
+					+ "`coverSUrl` varchar(50),"
+					+ "`coverBUrl` varchar(50),"
+					+ "`point` int(11),"
+					+ "`restrict` int(11),"
+					+ "`comment` varchar(50),"
+					+ "`cityName` varchar(30),"
+					+ "`cityId` int(11),"
+					+ "`isShow` varchar(5),"
+					+ "`type` varchar(20),"
+					+ "PRIMARY KEY (`id`))";
+			session.doWork(
+					// 定义一个匿名类，实现了Work接口
+					new Work() {
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = null;
+							try {
+								ps = connection.prepareStatement(sql4);
+								ps.execute();
+							} finally {
+								doClose(ps);
+							}
+						}
+					});
 			//为Gift_cityId建表
 			String tableName3 = "Gift_"+city.getId();
 			String sql3 = "CREATE TABLE IF NOT EXISTS `"

@@ -194,7 +194,7 @@
      <script>
      $(document).ready(function(){
      //弹出文本性提示框
-     $("#delPopTxt").click(function(){
+     $(".delCoupon").click(function(){
        $(".del_pop_bg").fadeIn();
        });
      //弹出：确认按钮
@@ -215,7 +215,7 @@
        <div class="pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
-          确认删除？删除后该分类下的所有记录将取消与该分类的关联
+          确认要删除该优惠券吗？
          </div>
          <!--bottom:operate->button-->
          <div class="btm_btn">
@@ -267,7 +267,8 @@
 					</c:choose>
 		        </td>
 		        <td style="text-align:center">
-		        	<button class="linkStyle editArea" id="editPop-${item.id}">编辑</button>
+		        	<button class="linkStyle editCoupon" id="edit-${item.id}">编辑</button>|
+		        	<button class="linkStyle delCoupon" id="del-${item.id}">删除</button>
 		        </td>
 		        <td id="cityId-${item.id}" style="display:none">${item.cityId}</td>
          	</tr>

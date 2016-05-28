@@ -40,6 +40,10 @@ public class CouponServiceImpl implements ICouponService {
 	public List<Coupon> queryByName(String name) {
 		return this.couponDao.queryByName(name);
 	}
+	@Override
+	public List<Coupon> queryAll(String tableName) {
+		return this.couponDao.queryAll(tableName);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -1,5 +1,6 @@
 package com.makao.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,8 +17,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
+import com.makao.entity.City;
 import com.makao.entity.Coupon;
+import com.makao.entity.OrderOn;
 import com.makao.entity.Supervisor;
+import com.makao.service.ICityService;
 import com.makao.service.ICouponService;
 import com.makao.service.ISupervisorService;
 
@@ -34,6 +38,8 @@ public class CouponController {
 	private ICouponService couponService;
 	@Resource
 	private ISupervisorService supervisorService;
+	@Resource
+	private ICityService cityService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Coupon get(@PathVariable("id") Integer id)
@@ -59,19 +65,25 @@ public class CouponController {
         return jsonObject;
     }
 	
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@RequestMapping(value = "/new/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody Coupon Coupon) {
-		int res = this.couponService.insert(Coupon);
+    Object add(@PathVariable("id") int id, @RequestBody Coupon Coupon) {
+		Supervisor supervisor = this.supervisorService.getById(id);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("增加优惠券成功id=" + Coupon.getId());
-        	jsonObject.put("msg", "增加优惠券成功");
+		if(supervisor!=null){
+			int res = this.couponService.insert(Coupon);
+			if(res==0){
+				logger.info("增加优惠券成功id=" + Coupon.getId());
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("增加优惠券成功失败id=" + Coupon.getId());
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
 		}
-		else{
-			logger.info("增加优惠券成功失败id=" + Coupon.getId());
-        	jsonObject.put("msg", "增加优惠券失败");
-		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 	
@@ -121,10 +133,14 @@ public class CouponController {
 				return modelAndView;
 			}
 			Supervisor supervisor = this.supervisorService.getById(id);
-			List<Coupon> coupons = null;
+			List<City> cites = this.cityService.queryAll();
+			List<Coupon> coupons = new LinkedList<Coupon>();
 			if(supervisor!=null){
-				//则查询返回所有
-				coupons = this.couponService.queryAll();
+				for(City c : cites){
+					List<Coupon> os = this.couponService.queryAll("Coupon_"+c.getId());
+					if(os!=null)
+						coupons.addAll(os);
+				}
 				logger.info("查询所有coupon信息完成");
 			}
 		    modelAndView.addObject("id", id);  
