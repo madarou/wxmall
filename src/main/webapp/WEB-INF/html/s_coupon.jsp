@@ -206,12 +206,13 @@
     		 alert("请重新选择要删除的优惠券");
     		 return false;
     	 }
+    	 var cityId = $("#cityId-"+id_toDel).text();
          $.ajax({
     		  type: "POST",
   	          contentType: "application/json",
   	          url: "/coupon/delete/"+$("#loginUserId").val(),
   	          dataType: "json",
-  	          data:JSON.stringify({"couponId":id_toDel}),
+  	          data:JSON.stringify({"couponId":id_toDel,"cityId":cityId}),
   	          success: function(data){
   	        	  if(data.msg=="200"){
   	        		  alert("删除优惠券成功");

@@ -21,7 +21,7 @@ public interface ICouponService {
 
 	Coupon getById(int id);
 
-	int deleteById(int id);
+	int deleteById(int id, int cityid);
 
 	List<Coupon> queryAll(String tableName);
 

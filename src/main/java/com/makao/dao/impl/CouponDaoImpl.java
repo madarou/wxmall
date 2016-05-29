@@ -115,9 +115,39 @@ public class CouponDaoImpl implements ICouponDao {
 	}
 
 	@Override
-	public int deleteById(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteById(int id, int cityId) {
+		String tableName = "Coupon_"+cityId;
+		String sql = "DELETE FROM `"+tableName+"` WHERE `id`="+id;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 	
 	@Override

@@ -23,8 +23,8 @@ public class CouponServiceImpl implements ICouponService {
 	}
 	
 	@Override
-	public int deleteById(int id) {
-		return this.couponDao.deleteById(id);
+	public int deleteById(int id, int cityid) {
+		return this.couponDao.deleteById(id, cityid);
 	}
 	
 	@Override

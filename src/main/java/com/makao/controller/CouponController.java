@@ -49,19 +49,43 @@ public class CouponController {
 		return Coupon;
 	}
 	
-	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
+//	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
+//    public @ResponseBody
+//    Object delete(@PathVariable("id") Integer id) {
+//        int res = this.couponService.deleteById(id);
+//        JSONObject jsonObject = new JSONObject();
+//		if(res==0){
+//			logger.info("删除优惠券信息成功id=" + id);
+//        	jsonObject.put("msg", "删除优惠券信息成功");
+//		}
+//		else{
+//			logger.info("删除优惠券信息失败id=" + id);
+//        	jsonObject.put("msg", "删除优惠券信息失败");
+//		}
+//        return jsonObject;
+//    }
+	
+	@RequestMapping(value = "/delete/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object delete(@PathVariable("id") Integer id) {
-        int res = this.couponService.deleteById(id);
-        JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("删除优惠券信息成功id=" + id);
-        	jsonObject.put("msg", "删除优惠券信息成功");
+    Object postdelete(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {
+		int couponid = paramObject.getInteger("couponId");
+		int cityid = paramObject.getInteger("cityId");
+		Supervisor supervisor = this.supervisorService.getById(id);
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+	        int res = this.couponService.deleteById(couponid,cityid);
+			if(res==0){
+				logger.info("删除优惠券信息成功id=" + couponid);
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("删除优惠券信息失败id=" + couponid);
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
 		}
-		else{
-			logger.info("删除优惠券信息失败id=" + id);
-        	jsonObject.put("msg", "删除优惠券信息失败");
-		}
+		jsonObject.put("msg", "201");
         return jsonObject;
     }
 	
@@ -73,12 +97,12 @@ public class CouponController {
 		if(supervisor!=null){
 			int res = this.couponService.insert(Coupon);
 			if(res==0){
-				logger.info("增加优惠券成功id=" + Coupon.getId());
+				logger.info("增加优惠券成功id=" + Coupon.getName());
 	        	jsonObject.put("msg", "200");
 	        	return jsonObject;
 			}
 			else{
-				logger.info("增加优惠券成功失败id=" + Coupon.getId());
+				logger.info("增加优惠券成功失败id=" + Coupon.getName());
 	        	jsonObject.put("msg", "201");
 	        	return jsonObject;
 			}
