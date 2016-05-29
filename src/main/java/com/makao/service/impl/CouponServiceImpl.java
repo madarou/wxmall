@@ -14,8 +14,8 @@ import com.makao.service.ICouponService;
 public class CouponServiceImpl implements ICouponService {
 	@Resource
 	private ICouponDao couponDao;
-	public Coupon getById(int id) {
-		return this.couponDao.getById(id);
+	public Coupon getById(int id, int cityid) {
+		return this.couponDao.getById(id, cityid);
 	}
 	@Override
 	public int insert(Coupon coupon) {

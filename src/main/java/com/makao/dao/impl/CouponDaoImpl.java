@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.makao.dao.ICouponDao;
 import com.makao.entity.Coupon;
 import com.makao.entity.OrderOn;
+import com.makao.entity.Product;
 
 /**
  * @description: TODO
@@ -85,15 +87,106 @@ public class CouponDaoImpl implements ICouponDao {
 	}
 
 	@Override
-	public Coupon getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Coupon getById(int id, int cityid) {
+		String tableName = "Coupon_"+cityid;
+		String sql = "SELECT * FROM `"
+				+ tableName
+				+ "` WHERE id = ?";
+		Session session = null;
+		Transaction tx = null;
+		List<Coupon> coupons = new ArrayList<Coupon>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.setInt(1, id);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							Coupon p = new Coupon();
+							p.setId(rs.getInt("id"));
+							p.setName(rs.getString("name"));
+							p.setAmount(rs.getString("amount"));
+							p.setCoverSUrl(rs.getString("coverSUrl"));
+							p.setCoverBUrl(rs.getString("coverBUrl"));
+							p.setPoint(rs.getInt("point"));
+							p.setRestrict(rs.getInt("restrict"));
+							p.setComment(rs.getString("comment"));
+							p.setCityName(rs.getString("cityName"));
+							p.setIsShow(rs.getString("isShow"));
+							p.setType(rs.getString("type"));
+							p.setCityId(rs.getInt("cityId"));
+							coupons.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}	
+				}
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return coupons.size()>0 ? coupons.get(0) : null;
 	}
 
 	@Override
 	public int update(Coupon coupon) {
-		// TODO Auto-generated method stub
-		return 0;
+		String tableName = "Coupon_"+coupon.getCityId();
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `name`='"+coupon.getName()+"',"
+						+ "`amount`='"+coupon.getAmount()+"',"
+								+ "`point`="+coupon.getPoint()+","
+										+ "`restrict`="+coupon.getRestrict()+","
+												+ "`comment`='"+coupon.getComment()+"',"
+																		+ "`isShow`='"+coupon.getIsShow()+"',"
+								+ "`coverSUrl`='"+coupon.getCoverSUrl()+"',"
+										+ "`coverBUrl`='"+coupon.getCoverBUrl()+"',"
+												+ "`cityName`='"+coupon.getCityName()+"',"
+														+ "`type`='"+coupon.getType()+"',"
+																		+ "`cityId`="+coupon.getCityId()
+																				+ " WHERE `id`=" + coupon.getId();
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override

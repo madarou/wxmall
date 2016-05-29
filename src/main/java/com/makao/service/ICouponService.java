@@ -19,7 +19,7 @@ public interface ICouponService {
 
 	List<Coupon> queryAll();
 
-	Coupon getById(int id);
+	Coupon getById(int id, int cityId);
 
 	int deleteById(int id, int cityid);
 

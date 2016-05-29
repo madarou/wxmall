@@ -198,7 +198,7 @@
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">类型：</span>
-		        <input type="text" id="ctype" class="textbox textbox_295" style="color:grey" disabled="disabled" value="代金券兑换"/>
+		        <input type="text" id="ctype" class="textbox textbox_295" style="bcolor:grey" disabled="disabled" value="代金券兑换"/>
 		       </li>
 		        <li>
 		        <span class="item_name" style="width:120px;">面值(￥)：</span>
@@ -323,6 +323,95 @@
        </div>
      </section>
      <!-- 删除分类弹出框 -->
+     
+      <!-- 上架下架提示框 -->
+      <script>
+     $(document).ready(function(){
+    	var upHandle_Id = 0;//要上下架的优惠券id
+    	var upAction = "";
+     //弹出文本性提示框
+     $(".upOrdown").click(function(){
+       $(".coupon_pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       upAction = clickedId.split("-")[0];
+       upHandle_Id = clickedId.split("-")[1];
+       });
+     //弹出：确认按钮
+     $("#confirmAction").click(function(){
+    	 if(upHandle_Id==0){
+    		 alert("请重新选择上下架的优惠券");
+    		 return false;
+    	 }
+    	var cityid = $("#cityId-"+upHandle_Id).text();
+    	 if(upAction=="down"){//下线操作
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/coupon/sdown/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"couponId":upHandle_Id,"cityId":cityid}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  alert("下线成功");
+     	        		  window.location.reload();
+     	        	  }
+     	        	  else if(data.msg=="201"){
+    	        		  alert("下线失败");
+    	        		  window.location.reload();
+    	        	  }
+     	          }
+       	 	}); 
+    	 }
+    	 else if(upAction=="up"){//上线操作
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/coupon/sup/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"couponId":upHandle_Id,"cityId":cityid}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  alert("上线成功");
+     	        		  window.location.reload();
+     	        	  }
+     	        	  else if(data.msg=="201"){
+     	        		  alert("上线失败");
+     	        		  window.location.reload();
+     	        	  }
+     	          }
+       	 	}); 
+    	 }
+        	
+       $(".coupon_pop_bg").fadeOut();
+       upHandle_Id=0;
+       upAction = "";
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelAction").click(function(){
+       $(".coupon_pop_bg").fadeOut();
+       upHandle_Id=0;
+       upAction = "";
+       });
+     });
+     </script>
+     <section class="coupon_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>温馨提示</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          确认要继续操作吗？
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="继续" id="confirmAction" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelAction" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
 
      <!-- 搜索 -->
      <section style="text-align:right">
@@ -355,11 +444,11 @@
 		           <c:choose> 
 		  				<c:when test="${item.isShow=='no'}">   
 		  					<button class="linkStyle" style="color:grey;cursor:default">下线中</button>|
-		  					<button class="linkStyle openOrNot" id="open-${item.id}">上线</button>
+		  					<button class="linkStyle upOrdown" id="up-${item.id}">上线</button>
 						</c:when> 
 						<c:otherwise>   
 							<button class="linkStyle" style="color:grey;cursor:default">上线中</button>|
-		  					<button class="linkStyle openOrNot" id="close-${item.id}">下线</button>
+		  					<button class="linkStyle upOrdown" id="down-${item.id}">下线</button>
 						</c:otherwise> 
 					</c:choose>
 		        </td>

@@ -20,10 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
+import com.makao.entity.Banner;
 import com.makao.entity.City;
 import com.makao.entity.Coupon;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Supervisor;
+import com.makao.entity.Vendor;
 import com.makao.service.ICityService;
 import com.makao.service.ICouponService;
 import com.makao.service.ISupervisorService;
@@ -45,13 +47,13 @@ public class CouponController {
 	@Resource
 	private ICityService cityService;
 	
-	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
-	public @ResponseBody Coupon get(@PathVariable("id") Integer id)
-	{
-		logger.info("获取优惠券信息id=" + id);
-		Coupon Coupon = (Coupon)this.couponService.getById(id);
-		return Coupon;
-	}
+//	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
+//	public @ResponseBody Coupon get(@PathVariable("id") Integer id)
+//	{
+//		logger.info("获取优惠券信息id=" + id);
+//		Coupon Coupon = (Coupon)this.couponService.getById(id);
+//		return Coupon;
+//	}
 	
 //	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
 //    public @ResponseBody
@@ -150,6 +152,75 @@ public class CouponController {
 		logger.info("查询所有优惠券信息完成");
         return Coupons;
     }
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 下线优惠券
+	 */
+	@RequestMapping(value = "/sdown/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object sdown(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {
+		Supervisor supervisor = this.supervisorService.getById(id);
+		int couponId = paramObject.getInteger("couponId");
+		int cityId = paramObject.getInteger("cityId");
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+			Coupon coupon = this.couponService.getById(couponId, cityId);
+			if(coupon!=null){
+				coupon.setIsShow("no");
+				int res = this.couponService.update(coupon);
+				if(res==0){
+					logger.info("Coupon下线成功id=" + couponId);
+		        	jsonObject.put("msg", "200");
+		        	return jsonObject;
+				}
+				else{
+					logger.info("Coupon下线失败id=" + couponId);
+		        	jsonObject.put("msg", "201");
+		        	return jsonObject;
+				}
+			}
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+	}
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 上线优惠券
+	 */
+	@RequestMapping(value = "/sup/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object sup(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {
+		Supervisor supervisor = this.supervisorService.getById(id);
+		int couponId = paramObject.getInteger("couponId");
+		int cityId = paramObject.getInteger("cityId");
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+			Coupon coupon = this.couponService.getById(couponId, cityId);
+			if(coupon!=null){
+				coupon.setIsShow("yes");
+				int res = this.couponService.update(coupon);
+				if(res==0){
+					logger.info("Coupon上线成功id=" + couponId);
+		        	jsonObject.put("msg", "200");
+		        	return jsonObject;
+				}
+				else{
+					logger.info("Coupon上线失败id=" + couponId);
+		        	jsonObject.put("msg", "201");
+		        	return jsonObject;
+				}
+			}
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+	}
+	
 	
 	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody

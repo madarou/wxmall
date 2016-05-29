@@ -8,7 +8,7 @@ public interface ICouponDao {
 
     public int insert(Coupon coupon);
 
-    public Coupon getById(int id);
+    public Coupon getById(int id, int cityid);
 
     public int update(Coupon coupon);
     

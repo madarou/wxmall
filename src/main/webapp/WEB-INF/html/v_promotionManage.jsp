@@ -291,7 +291,7 @@
      //弹出：确认按钮
      $("#confirmDel").click(function(){
     	 if(upHandle_Id==0){
-    		 alert("请重新选择下架的商品");
+    		 alert("请重新选择上下架的商品");
     		 return false;
     	 }
     
