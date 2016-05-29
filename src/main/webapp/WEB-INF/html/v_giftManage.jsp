@@ -80,10 +80,15 @@
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="/user/v_datamanage/${id}?token=${token}">数据管理</a></dd>
-    <dd><a href="#">优惠券配置</a></dd>
-    <dd><a href="/gift/v_giftmanage/${id}?token=${token}">礼品配置</a></dd>
+    <dd><a href="/user/v_usermanage/${id}?token=${token}">用户管理</a></dd>
+   </dl>
+  </li>
+  <li>
+   <dl>
+    <dt>礼券管理</dt>
+    <dd><a href="/gift/v_giftmanage/${id}?token=${token}" class="active">礼品配置</a></dd>
     <dd><a href="/vendor/v_bindwx/${id}?token=${token}">绑定微信号</a></dd>
+    <!-- <dd><a href="#">优惠券配置</a></dd> -->
    </dl>
   </li>
   <li>

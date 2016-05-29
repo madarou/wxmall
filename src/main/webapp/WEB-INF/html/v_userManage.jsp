@@ -51,12 +51,15 @@
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
  <h2><a href="index.php">常州-某某区</a></h2>
-  <ul>
+ <ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/v_query/${id}?token=${token}">未处理订单</a></dd>
-    <dd><a href="/orderOff/v_query/${id}?token=${token}">已处理订单</a></dd>
+    <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队订单</a></dd>
+    <dd><a href="/orderOn/v_query_process/${id}?token=${token}">待处理订单</a></dd>
+    <dd><a href="/orderOff/v_query_done/${id}?token=${token}">已完成订单</a></dd>
+    <dd><a href="/orderOff/v_query_refund/${id}?token=${token}">待退货订单</a></dd>
+    <dd><a href="/orderOff/v_query_cancel/${id}?token=${token}">已取消订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
@@ -74,10 +77,15 @@
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="/user/v_datamanage/${id}?token=${token}">数据管理</a></dd>
-    <dd><a href="#">优惠券配置</a></dd>
+    <dd><a href="/user/v_usermanage/${id}?token=${token}" class="active">用户管理</a></dd>
+   </dl>
+  </li>
+  <li>
+   <dl>
+    <dt>礼券管理</dt>
     <dd><a href="/gift/v_giftmanage/${id}?token=${token}">礼品配置</a></dd>
     <dd><a href="/vendor/v_bindwx/${id}?token=${token}">绑定微信号</a></dd>
+    <!-- <dd><a href="#">优惠券配置</a></dd> -->
    </dl>
   </li>
   <li>
@@ -158,10 +166,9 @@
      </script>
     
      <section>
-      <ul class="admin_tab">
+     <!--  <ul class="admin_tab">
        <li><a class="active">用户管理</a></li>
-       <li><a>礼品管理</a></li>
-      </ul>
+      </ul> -->
       <!--tabCont-->
       <div class="admin_tab_cont" style="display:block;">
          <section style="text-align:right">
@@ -206,47 +213,9 @@
           </aside>
          </section>
       </div>
-      <div class="admin_tab_cont">
-          <section style="text-align:right">
-            <input type="text" class="textbox textbox_225" placeholder="请输入手机号、ID、姓名查询"/>
-            <input type="button" value="搜索" class="group_btn"/>
-           </section>
-        <section>
-          <table class="table">
-           <tr>
-            <th>ID</th>
-            <th>姓名</th>
-            <th>联系电话</th>
-            <th>礼品</th>
-            <th>详细地址</th>
-            <th>兑换日期</th>
-            <th>状态</th>
-           </tr>
-           <tr>
-            <td style="width:265px;"><div class="cut_title ellipsis">265px宽·长标题字符串截取，仅适合单行截取，多行截取程序定义一下。</div></td>
-            <td>内容二</td>
-            <td>内容三</td>
-            <td>内容四</td>
-            <td>内容五</td>
-            <td>内容六</td>
-            <td>
-             <button class="linkStyle" id="showPopTxt">修改</button>
-            </td>
-           </tr>
-          </table>
-          <aside class="paging">
-           <a>第一页</a>
-           <a>1</a>
-           <a>2</a>
-           <a>3</a>
-           <a>…</a>
-           <a>1004</a>
-           <a>最后一页</a>
-          </aside>
-         </section>
-      </div>
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
+ </div>
  </div>
 </section>
 </body>

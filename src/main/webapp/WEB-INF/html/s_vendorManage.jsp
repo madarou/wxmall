@@ -93,6 +93,11 @@
    </dl>
   </li>
   <li>
+   <dl>
+    <dt>礼券管理</dt>
+    <dd><a href="/coupon/s_queryall/${id}?token=${token}">优惠券管理</a></dd>
+   </dl>
+  <li>
    <p class="btm_infor">© 优格信息 版权所有</p>
   </li>
  </ul>

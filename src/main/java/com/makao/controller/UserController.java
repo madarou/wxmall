@@ -195,12 +195,12 @@ public class UserController {
 	    return modelAndView;
     }
 	
-	@RequestMapping(value = "/v_datamanage/{id:\\d+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/v_usermanage/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView dataManage(@PathVariable("id") int id,
 			@RequestParam(value = "token", required = false) String token) {
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("v_dataManage");
+		modelAndView.setViewName("v_userManage");
 		if (token == null) {
 			return modelAndView;
 		}

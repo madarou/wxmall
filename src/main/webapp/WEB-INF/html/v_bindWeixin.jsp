@@ -54,12 +54,15 @@
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
  <h2><a href="index.php">常州-某某区</a></h2>
-  <ul>
+ <ul>
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/v_query/${id}?token=${token}">未处理订单</a></dd>
-    <dd><a href="/orderOff/v_query/${id}?token=${token}">已处理订单</a></dd>
+    <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队订单</a></dd>
+    <dd><a href="/orderOn/v_query_process/${id}?token=${token}">待处理订单</a></dd>
+    <dd><a href="/orderOff/v_query_done/${id}?token=${token}">已完成订单</a></dd>
+    <dd><a href="/orderOff/v_query_refund/${id}?token=${token}">待退货订单</a></dd>
+    <dd><a href="/orderOff/v_query_cancel/${id}?token=${token}">已取消订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
@@ -77,10 +80,15 @@
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="/user/v_datamanage/${id}?token=${token}">数据管理</a></dd>
-    <dd><a href="#">优惠券配置</a></dd>
+    <dd><a href="/user/v_usermanage/${id}?token=${token}">用户管理</a></dd>
+   </dl>
+  </li>
+  <li>
+   <dl>
+    <dt>礼券管理</dt>
     <dd><a href="/gift/v_giftmanage/${id}?token=${token}">礼品配置</a></dd>
-    <dd><a href="/vendor/v_bindwx/${id}?token=${token}">绑定微信号</a></dd>
+    <dd><a href="/vendor/v_bindwx/${id}?token=${token}" class="active">绑定微信号</a></dd>
+    <!-- <dd><a href="#">优惠券配置</a></dd> -->
    </dl>
   </li>
   <li>
@@ -195,7 +203,6 @@
       </aside>
      </section>
 
-     </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
