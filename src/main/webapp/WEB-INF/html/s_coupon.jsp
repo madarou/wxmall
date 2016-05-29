@@ -17,6 +17,7 @@
 <![endif]-->
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="static/js/ajaxfileupload.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -107,15 +108,77 @@
      $(document).ready(function(){
 		 //弹出文本性提示框
 		 $(".popAdd").click(function(){
+			 $("#ccity").empty();
+	    	 $("#ccity").get(0).options.add(new Option("选择城市","选择城市"));
+	    	 $.ajax({
+	    		 type: "GET",
+		          contentType: "application/json",
+		          url: "/city/queryall/"+$("#loginUserId").val(),
+		          dataType: "json",
+		          success: function(data){
+		        	  var cities = JSON.stringify(data.cities);
+		        	  if(data.msg=="200"){
+		        		  $.each(data.cities,function(i, val){
+		        			  $("#ccity").get(0).options.add(new Option(val.cityName,val.id));
+		        		  });
+		        	  }
+		          }
+	    	 });
 			 $(".pop_bg").fadeIn();
 			 });
 		 //弹出：确认按钮
 		 $("#saveBtn").click(function(){
-			 $(".pop_bg").fadeOut();
+			 var cityId = $("#ccity").val();//这种方式获取的是value
+	    	 if(cityId=="选择城市"){
+	    		 alert("请选择所属城市");
+	    		 return false;
+	    	 }
+	    	 var cityName = $("#ccity").find("option:selected").text();
+			 var name = $.trim($("#cname").val());
+			 var type = $.trim($("#ctype").val());
+			 var amount = $.trim($("#camount").val());
+			 var point = $.trim($("#cpoint").val());
+			 var restrict = $.trim($("#crestrict").val());
+			 var comment = $.trim($("#ccomment").val());
+			 var isshow = $("#cisshow").val();
+			 var coverSUrl = $.trim($("#serverImgNamed1").val());
+			 var coverBUrl = $.trim($("#serverImgNamed2").val());
+			 if(name=="" || amount=="" || point=="" || restrict=="" || comment=="" || coverSUrl=="" || coverBUrl==""){
+				 alert("名称、面值、消耗积分、使用限制、简单说明、封面和详情图不能为空");
+				 return false;
+			 }
+			 $.ajax({
+		          type: "POST",
+		          contentType: "application/json",
+		          url: "/coupon/new/"+$("#loginUserId").val(),
+		          data: JSON.stringify({"name":name,"type":type,"cityId":cityId,"cityName":cityName,"amount":amount,"point":point,"restrict":restrict,
+		        	  					"comment":comment,"isShow":isshow,"coverSUrl":coverSUrl,"coverBUrl":coverBUrl}),
+		          dataType: "json",
+		          success: function(data){
+		                  if(data.msg=="200"){
+		                	  alert("增加优惠券成功");
+		                	  window.location.reload();
+		                  }
+		                  else{
+		                	  alert("增加优惠券失败");
+		                  }
+		          }
+		      });
+			 
 			 });
 		 //弹出：取消或关闭按钮
 		 $("#cancelBtn").click(function(){
 			 $(".pop_bg").fadeOut();
+			 $("#cname").val("");
+			 $("#camount").val("");
+			 $("#cpoint").val("");
+			 $("#crestrict").val("");
+			 $("#ccomment").val("");
+			 $("#cisshow").val("");
+			 $("#serverImgNamed1").val("");
+			 $("#serverImgNamed2").val("");
+			 $("#uploadd1").attr("src","");
+			 $("#uploadd2").attr("src","");
 			 });
 		 });
      </script>
@@ -132,6 +195,10 @@
 		       <li>
 		        <span class="item_name" style="width:120px;">名称：</span>
 		        <input type="text" id="cname" class="textbox textbox_295" placeholder="如'10元代金券'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">类型：</span>
+		        <input type="text" id="ctype" class="textbox textbox_295" style="color:grey" disabled="disabled" value="代金券兑换"/>
 		       </li>
 		        <li>
 		        <span class="item_name" style="width:120px;">面值(￥)：</span>
@@ -157,6 +224,8 @@
 		        <li>
 		        <span class="item_name" style="width:120px;">是否上线：</span>
 		        <select class="select" id="cisshow">  
+		        	<option value="no">暂不上线</option>
+		        	<option value="yes">立即上线</option>
 				</select>
 		       </li>
 							<li><span class="item_name" style="width: 120px;">封面图：</span>
@@ -316,6 +385,72 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<script>
+$("#uploadd1").on('click', function() {  
+    $('#fileToUploadd1').click();  
+});
+//这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+$('#fileDivd1').on('change',function() {  
+    $.ajaxFileUpload({  
+        url:'/coupon/uploadImgd1',  
+        secureuri:false,  
+        fileElementId:'fileToUploadd1',//file标签的id  
+        dataType: 'json',//返回数据的类型  
+        success: function (data, status) {  
+            if(data.msg=="200"){
+                //alert("图片可用");
+                $("#serverImgNamed1").val(data.imgName);
+                $("#uploadd1").attr("src", "/static/upload/"+data.imgName);
+            }
+            else if(data.msg=="图片不符合"){
+           	 alert("图片不符合");
+            }
+            if(typeof(data.error) != 'undefined') {  
+                if(data.error != '') {  
+                    alert(data.error);  
+                } else {  
+                    alert(data.msg);  
+                }  
+            }
+         }, 
+        error: function (data, status, e) {  
+            alert(e);  
+        }  
+    });  
+});
+$("#uploadd2").on('click', function() {  
+    $('#fileToUploadd2').click();  
+});
+//这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+$('#fileDivd2').on('change',function() {  
+    $.ajaxFileUpload({  
+        url:'/coupon/uploadImgd2',  
+        secureuri:false,  
+        fileElementId:'fileToUploadd2',//file标签的id  
+        dataType: 'json',//返回数据的类型  
+        success: function (data, status) {  
+            if(data.msg=="200"){
+                //alert("图片可用");
+                $("#serverImgNamed2").val(data.imgName);
+                $("#uploadd2").attr("src", "/static/upload/"+data.imgName);
+            }
+            else if(data.msg=="图片不符合"){
+           	 alert("图片不符合");
+            }
+            if(typeof(data.error) != 'undefined') {  
+                if(data.error != '') {  
+                    alert(data.error);  
+                } else {  
+                    alert(data.msg);  
+                }  
+            }
+         }, 
+        error: function (data, status, e) {  
+            alert(e);  
+        }  
+    });  
+});
+</script>
 <input type="hidden" id="loginUserId" value="${id}"></input>
 </body>
 </html>
