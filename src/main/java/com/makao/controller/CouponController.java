@@ -221,6 +221,49 @@ public class CouponController {
         return jsonObject;
 	}
 	
+	@RequestMapping(value = "/sedit/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object sedit(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {
+		Supervisor supervisor = this.supervisorService.getById(id);
+		int couponId = paramObject.getInteger("couponId");
+		String name = paramObject.getString("name");
+		String amount = paramObject.getString("amount");
+		String comment = paramObject.getString("comment");
+		String coverSUrl = paramObject.getString("coverSUrl");
+		String coverBUrl = paramObject.getString("coverBUrl");
+		String isShow = paramObject.getString("isShow");
+		int point = paramObject.getInteger("point");
+		int restrict = paramObject.getInteger("restrict");
+		int cityId = paramObject.getInteger("cityId");
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+			Coupon coupon = this.couponService.getById(couponId, cityId);
+			if(coupon!=null){
+				coupon.setName(name);
+				coupon.setIsShow(isShow);
+				coupon.setAmount(amount);
+				coupon.setComment(comment);
+				coupon.setCoverSUrl(coverSUrl);
+				coupon.setCoverBUrl(coverBUrl);
+				coupon.setPoint(point);
+				coupon.setRestrict(restrict);
+				int res = this.couponService.update(coupon);
+				if(res==0){
+					logger.info("Coupon修改成功id=" + couponId);
+		        	jsonObject.put("msg", "200");
+		        	return jsonObject;
+				}
+				else{
+					logger.info("Coupon修改失败id=" + couponId);
+		        	jsonObject.put("msg", "201");
+		        	return jsonObject;
+				}
+			}
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+	}
+	
 	
 	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
@@ -353,4 +396,109 @@ public class CouponController {
        jsonObject.put("msg", "201");
        return jsonObject;
    }
+	@RequestMapping(value = "/cuploadImgd1", method = RequestMethod.POST)
+	   public @ResponseBody
+	   Object cuploadImgd1(@RequestParam("cupfiled1") CommonsMultipartFile[] files, HttpServletRequest request) {
+			JSONObject jsonObject = new JSONObject();
+			if(files==null || files.length==0){
+				jsonObject.put("msg", "图片不符合");
+				return jsonObject;
+			}
+			CommonsMultipartFile upfile = files[0];
+			String fileName = upfile.getOriginalFilename();
+			//获取上传文件类型的扩展名,先得到.的位置，再截取从.的下一个位置到文件的最后，最后得到扩展名  
+	       String ext = fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
+	       System.out.println(request.getServletContext().getRealPath("/"));
+	       if(!("jpg".equals(ext)) && !("png".equals(ext)) && !("jpeg".equals(ext))){
+	       	jsonObject.put("msg", "图片不符合");
+	       	return jsonObject;
+	       }
+	       //使用订单号生成器生成一个唯一的编号作为图片的名称
+	       String picUniqueName = OrderNumberUtils.generateOrderNumber();
+	       //将图片存入文件系统upload文件夹
+	       if(!upfile.isEmpty()){  
+	       	System.out.println("正在上传图片fileName---------->" + upfile.getOriginalFilename());
+	       	String imgFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/upload/";
+	       	String realImgName = picUniqueName+"_"+upfile.getOriginalFilename();
+	       	if(realImgName.length()>50){//名字长过数据库设置的50，则截掉后面
+	       		realImgName = realImgName.substring(0, 46)+"."+ext;
+	       	}
+	           int pre = (int) System.currentTimeMillis();  
+	           try {  
+	           	File tofile = new File(imgFolder + realImgName);
+	           	upfile.transferTo(tofile);
+	               int finaltime = (int) System.currentTimeMillis();  
+	               System.out.println("上传图片用时:"+(finaltime - pre));  
+	               logger.info("图片 "+realImgName+" 成功写入本地文件");
+	               jsonObject.put("msg", "200");
+	               jsonObject.put("imgName", realImgName);
+	               return jsonObject;
+	               
+	           } catch (Exception e) {  
+	               e.printStackTrace();  
+	               System.out.println("图片"+realImgName+"写入本地文件出错");  
+	               logger.error("图片 "+realImgName+" 写入本地文件出错" + e);
+	               jsonObject.put("msg", "201");
+	               return jsonObject;
+	           }  
+			}
+	       jsonObject.put("msg", "201");
+	       return jsonObject;
+	   }
+		
+		/**
+		 * @param files
+		 * @param request
+		 * @return
+		 * 上传详情2图
+		 */
+		@RequestMapping(value = "/cuploadImgd2", method = RequestMethod.POST)
+	   public @ResponseBody
+	   Object cuploadImgd2(@RequestParam("cupfiled2") CommonsMultipartFile[] files, HttpServletRequest request) {
+			JSONObject jsonObject = new JSONObject();
+			if(files==null || files.length==0){
+				jsonObject.put("msg", "图片不符合");
+				return jsonObject;
+			}
+			CommonsMultipartFile upfile = files[0];
+			String fileName = upfile.getOriginalFilename();
+			//获取上传文件类型的扩展名,先得到.的位置，再截取从.的下一个位置到文件的最后，最后得到扩展名  
+	       String ext = fileName.substring(fileName.lastIndexOf(".")+1,fileName.length());
+	       System.out.println(request.getServletContext().getRealPath("/"));
+	       if(!("jpg".equals(ext)) && !("png".equals(ext)) && !("jpeg".equals(ext))){
+	       	jsonObject.put("msg", "图片不符合");
+	       	return jsonObject;
+	       }
+	       //使用订单号生成器生成一个唯一的编号作为图片的名称
+	       String picUniqueName = OrderNumberUtils.generateOrderNumber();
+	       //将图片存入文件系统upload文件夹
+	       if(!upfile.isEmpty()){  
+	       	System.out.println("正在上传图片fileName---------->" + upfile.getOriginalFilename());
+	       	String imgFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/upload/";
+	       	String realImgName = picUniqueName+"_"+upfile.getOriginalFilename();
+	       	if(realImgName.length()>50){//名字长过数据库设置的50，则截掉后面
+	       		realImgName = realImgName.substring(0, 46)+"."+ext;
+	       	}
+	           int pre = (int) System.currentTimeMillis();  
+	           try {  
+	           	File tofile = new File(imgFolder + realImgName);
+	           	upfile.transferTo(tofile);
+	               int finaltime = (int) System.currentTimeMillis();  
+	               System.out.println("上传图片用时:"+(finaltime - pre));  
+	               logger.info("图片 "+realImgName+" 成功写入本地文件");
+	               jsonObject.put("msg", "200");
+	               jsonObject.put("imgName", realImgName);
+	               return jsonObject;
+	               
+	           } catch (Exception e) {  
+	               e.printStackTrace();  
+	               System.out.println("图片"+realImgName+"写入本地文件出错");  
+	               logger.error("图片 "+realImgName+" 写入本地文件出错" + e);
+	               jsonObject.put("msg", "201");
+	               return jsonObject;
+	           }  
+			}
+	       jsonObject.put("msg", "201");
+	       return jsonObject;
+	   }
 }

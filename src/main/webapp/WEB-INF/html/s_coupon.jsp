@@ -412,6 +412,206 @@
         </div>
        </div>
      </section>
+    <!--  上下线 -->
+    
+    <!-- 编辑优惠券 -->
+ <script>
+     $(document).ready(function(){
+    	var editHandle_Id = 0;//要编辑的id
+    	var nameO = "";
+    	var amountO = "";
+    	var pointO = 0;
+    	var restrictO = 0;
+    	var commentO = "";
+    	var coverSUrlO = "";
+    	var coverBUrlO = "";
+    	var cityNameO = "";
+    	var cityIdO = 0;
+    	var isShowO = "";
+    	//弹出文本性提示框
+     $(".editCoupon").click(function(){
+       $(".editproduct_pop_bg").fadeIn();
+       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
+       var clickedId = $(this).attr("id");
+       editHandle_Id = clickedId.split("-")[1];
+       //填充编辑框里的字段
+       nameO = $.trim($("#name-"+editHandle_Id).text());
+       amountO = $.trim($("#amount-"+editHandle_Id).text());
+       pointO = $.trim($("#point-"+editHandle_Id).text());
+       restrictO = $.trim($("#restrict-"+editHandle_Id).text());
+       commentO = $.trim($("#comment-"+editHandle_Id).text());
+       coverSUrlO =  $.trim($("#coverBUrl-"+editHandle_Id).text());
+       coverBUrlO = $.trim($("#coverBUrl-"+editHandle_Id).text());
+       cityNameO = $.trim($("#cityName-"+editHandle_Id).text());
+       cityIdO = $.trim($("#cityId-"+editHandle_Id).text());
+       isShowO = $.trim($("#isShow-"+editHandle_Id).text());
+
+       $("#coname").val(nameO);
+       $("#coamount").val(amountO);
+       $("#copoint").val(pointO);
+       $("#corestrict").val(restrictO);
+       $("#cocomment").val(commentO);
+       $("#cocity").empty();
+  	   $("#cocity").get(0).options.add(new Option(cityNameO,cityIdO));
+
+       $("#cuploadd1").attr("src", "/static/upload/"+coverSUrlO);
+       $("#cserverImgNamed1").val(coverSUrlO);
+       $("#cuploadd2").attr("src", "/static/upload/"+coverBUrlO);
+       $("#cserverImgNamed1").val(coverBUrlO);
+       $("#coisshow").val(isShowO);
+       });
+     //弹出：确认按钮
+     $("#confirmEdit").click(function(){
+    	 if(editHandle_Id==0){
+    		 alert("请重新选择优惠券");
+    		 return false;
+    	 }
+    	 	var name = $.trim($("#coname").val());
+		 	var amount = $.trim($("#coamount").val());
+		 	var point = $.trim($("#copoint").val());
+		 	var restrict = $.trim($("#corestrict").val());
+		 	var comment = $.trim($("#cocomment").val());
+		 	var isshow = $("#coisshow").val();
+		 	
+		 	var coverSUrl = $("#cserverImgNamed1").val();
+		 	var coverBUrl = $("#cserverImgNamed1").val();
+		 	
+		 	if(name == "" || amount=="" || point=="" || restrict=="" || comment==""){
+		 		alert("名称、面值、消耗积分、使用限制、简单介绍不能为空");
+		 		return false;
+		 	}
+		 	if(coverSUrl == "" || coverBUrl == ""){
+		 		alert("封面图、详情图片必须上传");
+		 		return false;
+		 	}
+		 	if(name == nameO && amount==amountO && point==pointO && restrict==restrictO && isshow == isShowO && 
+		 			comment==commentO && coverSUrl==coverSUrlO && coverBUrl==coverBUrlO){
+		 		alert("并未做修改");
+		 		return false;
+		 	}
+    		$.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/coupon/sedit/"+$("#loginUserId").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"couponId":editHandle_Id,"name":name,"amount":amount,"point":point,"restrict":restrict,"isShow":isshow,
+	  	        		"comment":comment,"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"cityId":cityIdO}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  alert("优惠券修改成功");
+     	        		  window.location.reload();
+     	        	  }
+     	        	  else if(data.msg=="201"){
+    	        		  alert("商品修改失败");
+    	        		  window.location.reload();
+    	        	  }
+     	          }
+       	 	});   	
+       $(".editproduct_pop_bg").fadeOut();
+       	 editHandle_Id=0;
+       	 nameO = "";
+    	 amountO = "";
+    	 pointO = 0;
+    	 restrictO = 0;
+    	 commentO = "";
+    	 coverSUrlO = "";
+    	 coverBUrlO = "";
+    	 cityNameO = "";
+    	 cityIdO = 0;
+    	 isShowO = "";
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelEdit").click(function(){
+       $(".editproduct_pop_bg").fadeOut();
+       	 editHandle_Id=0;
+       	 nameO = "";
+	   	 amountO = "";
+	   	 pointO = 0;
+	   	 restrictO = 0;
+	   	 commentO = "";
+	   	 coverSUrlO = "";
+	   	 coverBUrlO = "";
+	   	 cityNameO = "";
+	   	 cityIdO = 0;
+	   	 isShowO = "";
+       });
+     });
+     </script>
+     <section class="editproduct_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>商品管理——编辑</h3>
+       <!--content-->
+       <div class="pop_cont_input" style="overflow: scroll;width:500px;height:450px;padding:0px">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text" style="padding:0px">
+             <section>
+		      <ul class="ulColumn2">
+		       <li>
+		        <span class="item_name" style="width:120px;">名称：</span>
+		        <input type="text" id="coname" class="textbox textbox_295" placeholder="如'10元代金券'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">类型：</span>
+		        <input type="text" id="cotype" class="textbox textbox_295" style="bcolor:grey" disabled="disabled" value="代金券兑换"/>
+		       </li>
+		        <li>
+		        <span class="item_name" style="width:120px;">面值(￥)：</span>
+		        <input type="text" id="coamount" class="textbox textbox_295" placeholder="如'10'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">消耗积分：</span>
+		        <input type="text" id="copoint" class="textbox textbox_295" placeholder="如'20'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">使用限制：</span>
+		        <input type="text" id="corestrict" class="textbox textbox_295" placeholder="消费满X元才能使用就填X"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">简单说明：</span>
+		        <input type="text" id="cocomment" class="textbox textbox_295" placeholder="如'新用户欢迎礼券'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">生效城市：</span>
+		        <select class="select" id="cocity" disabled="disabled">  
+				</select>
+		       </li>
+		        <li>
+		        <span class="item_name" style="width:120px;">是否上线：</span>
+		        <select class="select" id="coisshow">  
+		        	<option value="no">暂不上线</option>
+		        	<option value="yes">立即上线</option>
+				</select>
+		       </li>
+							<li><span class="item_name" style="width: 120px;">封面图：</span>
+								<img alt="封面图" id="cuploadd1" src=""
+								style="height: 100px; width: 305px; cursor: pointer">
+								<div id="cfileDivd1">
+									<input id="cfileToUploadd1" style="display: none" type="file"
+										name="cupfiled1">
+								</div> <input type="hidden" id="cserverImgNamed1" />
+							</li>
+							<li>
+								<span class="item_name" style="width: 120px;">详细图：</span>
+								<img alt="详细图" id="cuploadd2" src=""
+								style="height: 100px; width: 305px; cursor: pointer">
+								<div id="cfileDivd2">
+									<input id="cfileToUploadd2" style="display: none" type="file"
+										name="cupfiled2">
+								</div> <input type="hidden" id="cserverImgNamed2" />
+							</li>
+		      </ul>
+		     </section>
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="confirmEdit" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelEdit" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
+<!-- 编辑产品 -->
 
      <!-- 搜索 -->
      <section style="text-align:right">
@@ -457,6 +657,10 @@
 		        	<button class="linkStyle delCoupon" id="del-${item.id}">删除</button>
 		        </td>
 		        <td id="cityId-${item.id}" style="display:none">${item.cityId}</td>
+		        <td id="coverSUrl-${item.id}" style="display:none">${item.coverSUrl}</td>
+		        <td id="coverBUrl-${item.id}" style="display:none">${item.coverBUrl}</td>
+		        <td id="isShow-${item.id}" style="display:none">${item.isShow}</td>
+		        <td id="comment-${item.id}" style="display:none">${item.comment}</td>
          	</tr>
 		</c:forEach> 
       </table>
@@ -522,6 +726,71 @@ $('#fileDivd2').on('change',function() {
                 //alert("图片可用");
                 $("#serverImgNamed2").val(data.imgName);
                 $("#uploadd2").attr("src", "/static/upload/"+data.imgName);
+            }
+            else if(data.msg=="图片不符合"){
+           	 alert("图片不符合");
+            }
+            if(typeof(data.error) != 'undefined') {  
+                if(data.error != '') {  
+                    alert(data.error);  
+                } else {  
+                    alert(data.msg);  
+                }  
+            }
+         }, 
+        error: function (data, status, e) {  
+            alert(e);  
+        }  
+    });  
+});
+
+$("#cuploadd1").on('click', function() {  
+    $('#cfileToUploadd1').click();  
+});
+//这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+$('#cfileDivd1').on('change',function() {  
+    $.ajaxFileUpload({  
+        url:'/coupon/cuploadImgd1',  
+        secureuri:false,  
+        fileElementId:'cfileToUploadd1',//file标签的id  
+        dataType: 'json',//返回数据的类型  
+        success: function (data, status) {  
+            if(data.msg=="200"){
+                //alert("图片可用");
+                $("#cserverImgNamed1").val(data.imgName);
+                $("#cuploadd1").attr("src", "/static/upload/"+data.imgName);
+            }
+            else if(data.msg=="图片不符合"){
+           	 alert("图片不符合");
+            }
+            if(typeof(data.error) != 'undefined') {  
+                if(data.error != '') {  
+                    alert(data.error);  
+                } else {  
+                    alert(data.msg);  
+                }  
+            }
+         }, 
+        error: function (data, status, e) {  
+            alert(e);  
+        }  
+    });  
+});
+$("#cuploadd2").on('click', function() {  
+    $('#cfileToUploadd2').click();  
+});
+//这里必须绑定到file的父元素上，否则change事件只会触发一次，即在页面不刷新的情况下，只能上传一次图片，原因http://blog.csdn.net/wc0077/article/details/42065193
+$('#cfileDivd2').on('change',function() {  
+    $.ajaxFileUpload({  
+        url:'/coupon/cuploadImgd2',  
+        secureuri:false,  
+        fileElementId:'cfileToUploadd2',//file标签的id  
+        dataType: 'json',//返回数据的类型  
+        success: function (data, status) {  
+            if(data.msg=="200"){
+                //alert("图片可用");
+                $("#cserverImgNamed2").val(data.imgName);
+                $("#cuploadd2").attr("src", "/static/upload/"+data.imgName);
             }
             else if(data.msg=="图片不符合"){
            	 alert("图片不符合");
