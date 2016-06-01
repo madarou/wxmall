@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,7 @@ import com.makao.utils.OrderNumberUtils;
  * @author makao
  * @date 2016年5月6日
  */
+@CrossOrigin(origins = "http://www.yuqq.cc:8080", maxAge = 3600)
 @Controller
 @RequestMapping("/product")
 public class ProductController {
@@ -62,11 +64,14 @@ public class ProductController {
 	 * curl -X GET 'http://localhost:8080/wxmall/product/1/1/1'
 	 */
 	@RequestMapping(value="/{id:\\d+}/{cityId:\\d+}/{areaId:\\d+}",method = RequestMethod.GET)
-	public @ResponseBody Product get(@PathVariable("id") int id,@PathVariable("cityId") int cityId,@PathVariable("areaId") int areaId)
+	public @ResponseBody Object get(@PathVariable("id") int id,@PathVariable("cityId") int cityId,@PathVariable("areaId") int areaId)
 	{
+		JSONObject jsonObject = new JSONObject();
 		logger.info("获取商品信息id=" + id);
-		Product Product = (Product)this.productService.getById(id,cityId,areaId);
-		return Product;
+		Product product = (Product)this.productService.getById(id,cityId,areaId);
+		jsonObject.put("msg", "200");
+		jsonObject.put("product", product);//不用序列化，方便前端jquery遍历
+		return jsonObject;
 	}
 	
 	@RequestMapping(value="/{id:\\d+}/{vendorId:\\d+}",method = RequestMethod.GET)
@@ -293,14 +298,17 @@ public class ProductController {
 	 * 根据cityId和areaId查出所有商品，即到指定的Product_cityId_areaId表里查
 	 * curl -X GET 'http://localhost:8080/wxmall/product/query/1/1'
 	 */
-	@RequestMapping(value = "/query/{cityId:\\d+}/{areaId:\\d+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/all/{cityId:\\d+}/{areaId:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     Object queryByCityAreaId(@PathVariable("cityId")int cityId,@PathVariable("areaId")int areaId) {
-		List<Product> Products = null;
+		List<Product> products = null;
+		JSONObject jsonObject = new JSONObject();
 		//则根据关键字查询
-		Products = this.productService.queryByCityAreaId(cityId,areaId);
-		logger.info("根据关键字: '"+areaId+"' 查询商品信息完成");
-        return Products;
+		products = this.productService.queryByCityAreaId(cityId,areaId);
+		logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有商品信息完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
+		return jsonObject;
     }
 	
 	@RequestMapping(value = "/queryall", method = RequestMethod.GET)

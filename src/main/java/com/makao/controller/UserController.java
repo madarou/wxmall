@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
 
+@CrossOrigin(origins = "http://www.yuqq.cc:8080", maxAge = 3600)
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -51,11 +53,14 @@ public class UserController {
 	 * curl -X GET 'http://localhost:8080/wxmall/user/1'
 	 */
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
-	public @ResponseBody User get(@PathVariable("id") Integer id)
+	public @ResponseBody Object get(@PathVariable("id") Integer id)
 	{
+		JSONObject jsonObject = new JSONObject();
 		logger.info("获取人员信息id=" + id);
 		User user = (User)this.userService.getById(id);
-		return user;
+		jsonObject.put("msg", "200");
+		jsonObject.put("user", user);//不用序列化，方便前端jquery遍历
+		return jsonObject;
 	}
 	
 	/**

@@ -18,7 +18,7 @@ public class QueryProductsTest {
 	@Test
 	public void test() {
 		JSONArray result = null;
-		String getproducts_bycityareaId = "http://localhost:8080/product/query/1/1";
+		String getproducts_bycityareaId = "http://localhost:8080/product/all/1/1";
 		
 		result = HttpUtils.doGetArray(getproducts_bycityareaId);
 		System.out.println(result);
