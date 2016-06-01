@@ -10,6 +10,7 @@ import net.sf.json.JSONArray;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ import com.makao.utils.OrderNumberUtils;
  * @author makao
  * @date 2016年5月6日
  */
+@CrossOrigin(origins = "http://www.yuqq.cc:8080", maxAge = 3600)
 @Controller
 @RequestMapping("/city")
 public class CityController {
@@ -197,5 +199,20 @@ public class CityController {
 		}
 		jsonObject.put("msg", "201");
         return jsonObject;
+    }
+	
+		@RequestMapping(value = "/all", method = RequestMethod.GET)
+    public @ResponseBody
+    Object all() {
+		JSONObject jsonObject = new JSONObject();
+			List<City> cities = null;
+			//则查询返回所有
+			cities = this.cityService.queryAll();
+			logger.info("查询所有city信息完成");
+			
+			jsonObject.put("msg", "200");
+			jsonObject.put("cities", cities);//不用序列化，方便前端jquery遍历
+			return jsonObject;
+
     }
 }
