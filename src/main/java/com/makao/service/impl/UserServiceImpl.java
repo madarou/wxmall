@@ -50,6 +50,10 @@ public class UserServiceImpl implements IUserService {
 	public void testor() {
 		this.userDao.testor();
 	}
+	@Override
+	public User checkLogin(String openid) {
+		return this.userDao.checkLogin(openid);
+	}
 	
 
 }

@@ -256,6 +256,30 @@ public class UserDaoImpl implements IUserDao {
 		return res;
 	}
 	
+	@Override
+	public User checkLogin(String openid) {
+		Session session = null;
+		Transaction tx = null;
+		User res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = (User)session.createQuery("from User u where u.openid=?")
+					.setString(0, openid).uniqueResult();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
+	
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
@@ -312,7 +336,5 @@ public class UserDaoImpl implements IUserDao {
 		testor.setName("madarou");
 		insertProduct(testor,tableName);
 	}
-
-	
 
 }

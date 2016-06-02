@@ -31,7 +31,7 @@ import com.makao.utils.OrderNumberUtils;
  * @author makao
  * @date 2016年5月6日
  */
-@CrossOrigin(origins = "http://www.yuqq.cc:8080", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/city")
 public class CityController {

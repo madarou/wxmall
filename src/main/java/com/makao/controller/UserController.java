@@ -1,10 +1,13 @@
 package com.makao.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -27,7 +30,7 @@ import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
 
-@CrossOrigin(origins = "http://www.yuqq.cc:8080", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -39,6 +42,10 @@ public class UserController {
 	private IVendorService vendorService;
 	@Resource
 	private ISupervisorService supervisorService;
+	private final String DEFAULT_CITY_NAME="上海";
+	private final String DEFAULT_AREA_NAME="张江";
+	private final int DEFAULT_CITY_ID=1;
+	private final int DEFAULT_AREA_ID=1;
 	
 //	@RequestMapping("/showUser")
 //	public String toIndex(HttpServletRequest request,Model model){
@@ -63,6 +70,79 @@ public class UserController {
 		return jsonObject;
 	}
 	
+	@RequestMapping(value="/login",method = RequestMethod.GET)
+	public void login(@RequestParam(value="openid",required = false) String openid, HttpServletResponse response) throws IOException{
+		response.setHeader("content-type", "text/html;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		String page = "";
+		if(openid==null||"".equals(openid)){
+			page="非法登录";
+			out.write(page);
+			return;
+		}
+		User user = this.userService.checkLogin(openid);
+		if(user==null){
+			page = "<!DOCTYPE html>"
+					+ "<html>"
+						+ "<head>"
+							+ "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\" />"
+							+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
+							+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\">"
+							+ "<meta name=\"format-detection\" content=\"telephone=no\" />"
+							+ "<title>Fruit</title>"
+							+ "<link rel=\"stylesheet\" href=\"/css/index.css\" />"
+							+ "<link rel=\"stylesheet\" href=\"/css/font-awesome.min.css\" />"
+						+ "</head>"
+						+ "<body>"
+							+ "<div class=\"page\" id=\"root\">"
+							+ "</div>"
+							+ "<script>"
+								+ "window.cityid="+DEFAULT_CITY_ID+";"
+								+ "window.cityname='"+DEFAULT_CITY_NAME+"';"
+								+ "window.areaid="+DEFAULT_AREA_ID+";"
+								+ "window.areaname='"+DEFAULT_AREA_NAME+"';"
+							+ "</script>"
+							+ "<script src=\"/static/bundle.js\"></script>"
+						+ "</body>"
+					+ "</html>";
+			//这里后面可以添加注册的工作，第一次登录进来的用户写入数据库
+		}
+		else{
+			int cityid = user.getCityId();
+			int areaid = user.getAreaId();
+			String cityname = user.getCityName();
+			String areaname = user.getAreaName();
+			System.out.println(cityname);
+			System.out.println(areaname);
+			page = "<!DOCTYPE html>"
+					+ "<html>"
+						+ "<head>"
+							+ "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\" />"
+							+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
+							+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\">"
+							+ "<meta name=\"format-detection\" content=\"telephone=no\" />"
+							+ "<title>Fruit</title>"
+							+ "<link rel=\"stylesheet\" href=\"/css/index.css\" />"
+							+ "<link rel=\"stylesheet\" href=\"/css/font-awesome.min.css\" />"
+						+ "</head>"
+						+ "<body>"
+							+ "<div class=\"page\" id=\"root\">"
+							+ "</div>"
+							+ "<script>"
+								+ "window.cityid="+cityid+";"
+								+ "window.cityname='"+cityname+"';"
+								+ "window.areaid="+areaid+";"
+								+ "window.areaname='"+areaname+"';"
+							+ "</script>"
+							+ "<script src=\"/static/bundle.js\"></script>"
+						+ "</body>"
+					+ "</html>";
+		}
+		//out.write("<!DOCTYPE html><html><body>hello</body></html>");
+		
+		out.write(page);
+	}
 	/**
 	 * @param id
 	 * @return

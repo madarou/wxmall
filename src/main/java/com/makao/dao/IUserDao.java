@@ -21,4 +21,6 @@ public interface IUserDao {
 	public int deleteById(int id);
 
 	public List<User> queryByAreaId(int areaId);
+
+	public User checkLogin(String openid);
 }

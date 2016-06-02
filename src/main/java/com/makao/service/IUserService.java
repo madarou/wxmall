@@ -14,4 +14,5 @@ public interface IUserService {
 	
 	public void testor();
 	public List<User> queryByAreaId(int areaId);
+	public User checkLogin(String openid);
 }
