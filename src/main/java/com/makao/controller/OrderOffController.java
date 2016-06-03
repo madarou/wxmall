@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ import com.makao.utils.OrderNumberUtils;
  * @author makao
  * @date 2016年5月6日
  */
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/orderOff")
 public class OrderOffController {
@@ -94,6 +96,26 @@ public class OrderOffController {
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;
+    }
+	
+	@RequestMapping(value = "/all/{cityid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody Object all(@PathVariable("cityid") int cityid, @PathVariable("userid") int userid) {
+		JSONObject jsonObject = new JSONObject();
+		List<OrderOff> os = this.orderOffService.queryByUserId("Order_"+cityid+"_off", userid);
+		logger.info("查询用户id："+userid+"的所有失效订单信息完成(所属city:"+cityid+")");
+		jsonObject.put("msg", "200");
+		jsonObject.put("orders", os);
+		return jsonObject;
+    }
+	
+	@RequestMapping(value = "/{cityid:\\d+}/{orderid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody Object get(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid) {
+		JSONObject jsonObject = new JSONObject();
+		OrderOff os = this.orderOffService.queryByOrderId("Order_"+cityid+"_off", orderid);
+		logger.info("查询失效订单id："+orderid+" 信息完成(所属city:"+cityid+")");
+		jsonObject.put("msg", "200");
+		jsonObject.put("order", os);
+		return jsonObject;
     }
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)

@@ -74,6 +74,14 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	public int finishReturnOrder(int cityId, int orderid) {
 		return this.orderOffDao.finishReturnOrder(cityId, orderid);
 	}
+	@Override
+	public List<OrderOff> queryByUserId(String tableName, int userid) {
+		return this.orderOffDao.queryByUserId(tableName, userid);
+	}
+	@Override
+	public OrderOff queryByOrderId(String tableName, int orderid) {
+		return this.orderOffDao.queryByOrderId(tableName, orderid);
+	}
 	
 //	@Override
 //	public void testor() {

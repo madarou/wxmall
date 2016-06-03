@@ -60,6 +60,14 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public int finishOrder(int cityId, int orderid) {
 		return this.orderOnDao.finishOrder(cityId, orderid);
 	}
+	@Override
+	public List<OrderOn> queryByUserId(String tableName, int userid) {
+		return this.orderOnDao.queryByUserId(tableName, userid);
+	}
+	@Override
+	public OrderOn queryByOrderId(String tableName, int orderid) {
+		return this.orderOnDao.queryByOrderId(tableName,orderid);
+	}
 	
 //	@Override
 //	public void testor() {

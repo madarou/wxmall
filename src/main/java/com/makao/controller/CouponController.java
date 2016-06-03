@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ import com.makao.utils.OrderNumberUtils;
  * @author makao
  * @date 2016年5月6日
  */
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/coupon")
 public class CouponController {
@@ -115,6 +117,17 @@ public class CouponController {
 		}
 		jsonObject.put("msg", "201");
         return jsonObject;
+    }
+	
+	@RequestMapping(value = "/all/{cityid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object all(@PathVariable("cityid") int cityid) {
+        JSONObject jsonObject = new JSONObject();
+		List<Coupon> os = this.couponService.queryAll("Coupon_"+cityid);
+		logger.info("查询城市id："+cityid+"的所有静态coupon完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("coupons", os);
+		return jsonObject;
     }
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)

@@ -33,4 +33,8 @@ public interface IOrderOnService {
 
 	int finishOrder(int cityId, int orderid);
 
+	List<OrderOn> queryByUserId(String string, int userid);
+
+	OrderOn queryByOrderId(String string, int orderid);
+
 }

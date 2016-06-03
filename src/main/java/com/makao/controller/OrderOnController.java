@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,7 @@ import com.makao.utils.OrderNumberUtils;
  * @author makao
  * @date 2016年5月6日
  */
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/orderOn")
 public class OrderOnController {
@@ -48,13 +50,13 @@ public class OrderOnController {
 	@Resource
 	private ISupervisorService supervisorService;
 	
-	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
-	public @ResponseBody OrderOn get(@PathVariable("id") Integer id)
-	{
-		logger.info("获取有效订单信息id=" + id);
-		OrderOn OrderOn = (OrderOn)this.orderOnService.getById(id);
-		return OrderOn;
-	}
+//	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
+//	public @ResponseBody OrderOn get(@PathVariable("id") Integer id)
+//	{
+//		logger.info("获取有效订单信息id=" + id);
+//		OrderOn OrderOn = (OrderOn)this.orderOnService.getById(id);
+//		return OrderOn;
+//	}
 	
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
@@ -81,7 +83,6 @@ public class OrderOnController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestParam(value="token", required=false) String token, @RequestBody OrderOn OrderOn) {
-		System.out.println("token:"+token);
 		OrderOn.setNumber(OrderNumberUtils.generateOrderNumber());
 		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
 		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
@@ -102,28 +103,24 @@ public class OrderOnController {
         return jsonObject;
     }
 	
-	@RequestMapping(value = "/all/{id:\\d+}", method = RequestMethod.GET)
-    public @ResponseBody ModelAndView all(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
-		ModelAndView modelAndView = new ModelAndView();  
-		modelAndView.setViewName("s_orderOn");  
-		if(token==null){
-			return modelAndView;
-		}
-		Supervisor supervisor = this.supervisorService.getById(id);
-		List<City> cites = this.cityService.queryAll();
-		List<OrderOn> orderOns = new LinkedList<OrderOn>();
-		if(supervisor!=null){
-			for(City c : cites){
-				List<OrderOn> os = this.orderOnService.queryAll("Order_"+c.getId()+"_on");
-				if(os!=null)
-					orderOns.addAll(os);
-			}
-		}
-		logger.info("查询所有有效订单信息完成");
-		modelAndView.addObject("id", id);  
-		modelAndView.addObject("token", token); 
-	    modelAndView.addObject("ordersOn", orderOns);   
-	    return modelAndView;
+	@RequestMapping(value = "/all/{cityid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody Object all(@PathVariable("cityid") int cityid, @PathVariable("userid") int userid) {
+		JSONObject jsonObject = new JSONObject();
+		List<OrderOn> os = this.orderOnService.queryByUserId("Order_"+cityid+"_on", userid);
+		logger.info("查询用户id："+userid+"的所有有效订单信息完成(所属city:"+cityid+")");
+		jsonObject.put("msg", "200");
+		jsonObject.put("orders", os);
+		return jsonObject;
+    }
+	
+	@RequestMapping(value = "/{cityid:\\d+}/{orderid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody Object get(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid) {
+		JSONObject jsonObject = new JSONObject();
+		OrderOn os = this.orderOnService.queryByOrderId("Order_"+cityid+"_on", orderid);
+		logger.info("查询订单id："+orderid+" 信息完成(所属city:"+cityid+")");
+		jsonObject.put("msg", "200");
+		jsonObject.put("order", os);
+		return jsonObject;
     }
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)

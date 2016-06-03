@@ -29,4 +29,8 @@ public interface IOrderOnDao {
 	public int distributeOrder(int cityId, int orderid);
 
 	public int finishOrder(int cityId, int orderid);
+
+	public List<OrderOn> queryByUserId(String tableName, int userid);
+
+	public OrderOn queryByOrderId(String tableName, int orderid);
 }

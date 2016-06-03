@@ -40,4 +40,8 @@ public interface IOrderOffService {
 
 	int finishReturnOrder(int cityId, int orderid);
 
+	List<OrderOff> queryByUserId(String tableName, int userid);
+
+	OrderOff queryByOrderId(String tableName, int orderid);
+
 }

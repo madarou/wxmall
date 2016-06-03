@@ -294,6 +294,7 @@ public class CouponDaoImpl implements ICouponDao {
 		}
 		return res;
 	}
+
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
