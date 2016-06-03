@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.makao.utils.TokenUtils;
+
 /**
  * @description: TODO
  * @author makao
@@ -37,18 +39,46 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		String method = request.getMethod();
 
 		System.out.println("***********拦截器************");
-/*		AuthPassport authPassport = ((HandlerMethod) handler)
+		AuthPassport authPassport = ((HandlerMethod) handler)
 				.getMethodAnnotation(AuthPassport.class);
 
 		// 没有声明需要权限,或者声明不验证权限
 		if (authPassport == null || authPassport.validate() == false)
 			return true;
 		else {
+			//要验证的都有token，没有token则失败
+			String token = request.getParameter("token");
+			if(token==null){
+				return false;
+			}
+			String type = "";//请求是用户、区域管理还是超级管理
+			if(token.length()==36){
+				type = "USER";
+			}
+			else if(token.length()>36 && "v".equals(token.substring(token.length()-1))){//vendor请求
+				type = "VENDOR";
+			}
+			else{
+				type = "SUPERVISOR";
+			}
+			switch(type){
+				case "USER":
+					System.out.println("handle user auth");
+					return TokenUtils.validateToken(token, type);	
+				case "VENDOR":
+					System.out.println("handle vendor auth");
+					return TokenUtils.validateToken(token, type);	
+				case "SUPERVISOR":
+					System.out.println("handle supervisor auth");
+					return TokenUtils.validateToken(token, type);	
+				default:
+					return false;
+			}
 			// 在这里实现自己的权限验证逻辑，这里模拟从servletContext中获取supervisor的登录信息
 			// Object o =
 			// request.getServletContext().getAttribute("supervisor");
 
-			// 截取到请求地址的前几位，判断是supervisor登录还是vendor登录，从而定向对应登录页面让其重新登录
+/*			// 截取到请求地址的前几位，判断是supervisor登录还是vendor登录，从而定向对应登录页面让其重新登录
 			// 返回到登录界面
 			String role = url.substring(getCharacterPosition(url, 2),
 					getCharacterPosition(url, 3));
@@ -86,10 +116,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					}
 				}
 			}
-
-		}
 		*/
-		return true;
+		}
+
+		//return true;
 	}
 
 	/**

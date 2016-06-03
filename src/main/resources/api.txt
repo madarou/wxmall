@@ -3,7 +3,7 @@ api											method				comment
 /product/all/[cityId]/[areaId]				GET					获取指定城市区域下的产品列表
 /product/[productId]/[cityId]/[areaId]		GET					获取指定城市区下的某个产品
 /user/[userId]								GET					获取用户信息
-/orderOn/new								POST				下单
+/orderOn/new/?token=xxx						POST				下单(token设置在header中，跨域时header会有问题)
 	{
 		productIds:[id1,id2,...],//*商品id列表
 		productNames:[name1=price1=number1,name2=price2=number2,...],//*商品名称=当时价格=购买数量
@@ -22,7 +22,6 @@ api											method				comment
 		areaId:,//区域Id
 		cityId:,//城市Id，用于在访问数据库时，直接确定数据库表名
 	}
-	
 	
 /orderOn/all/[userId]						GET					查询某个用户的所有未收货订单
 /orderOn/[orderId]							GET					查询未收货的某个具体订单详情

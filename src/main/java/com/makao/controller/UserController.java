@@ -29,6 +29,7 @@ import com.makao.entity.Vendor;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
+import com.makao.utils.TokenUtils;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
@@ -82,6 +83,8 @@ public class UserController {
 			return;
 		}
 		User user = this.userService.checkLogin(openid);
+		String token = TokenUtils.setToken("user");
+		//把token放到服务器缓存以备后面验证
 		if(user==null){
 			page = "<!DOCTYPE html>"
 					+ "<html>"
@@ -102,6 +105,7 @@ public class UserController {
 								+ "window.cityname='"+DEFAULT_CITY_NAME+"';"
 								+ "window.areaid="+DEFAULT_AREA_ID+";"
 								+ "window.areaname='"+DEFAULT_AREA_NAME+"';"
+								+ "window.token='"+token+"';"
 							+ "</script>"
 							+ "<script src=\"/static/bundle.js\"></script>"
 						+ "</body>"
@@ -134,6 +138,7 @@ public class UserController {
 								+ "window.cityname='"+cityname+"';"
 								+ "window.areaid="+areaid+";"
 								+ "window.areaname='"+areaname+"';"
+								+ "window.token='"+token+"';"
 							+ "</script>"
 							+ "<script src=\"/static/bundle.js\"></script>"
 						+ "</body>"

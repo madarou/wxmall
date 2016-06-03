@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.City;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Supervisor;
@@ -76,9 +77,11 @@ public class OrderOnController {
 	 * curl l -H "Content-type: application/json" -X POST -d '{"productIds":"2=3.50=3,3=4.00=1","productNames":"海南小番茄=3.50=3,广东蜜桃=4.00=1","receiverName":"郭德纲","phoneNumber":"17638372821","address":"上海复旦大学","couponId":3,"couponPrice":"2.00","totalPrice":"14.5","comment":"越快越好","status":"未确认","cityarea":"常州-某某区","userId":1,"areaId":1,"cityId":1}' 'http://localhost:8080/orderOn/new'
 	 * 
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody OrderOn OrderOn) {
+    Object add(@RequestParam(value="token", required=false) String token, @RequestBody OrderOn OrderOn) {
+		System.out.println("token:"+token);
 		OrderOn.setNumber(OrderNumberUtils.generateOrderNumber());
 		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
 		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
@@ -97,6 +100,30 @@ public class OrderOnController {
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;
+    }
+	
+	@RequestMapping(value = "/all/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody ModelAndView all(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+		ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("s_orderOn");  
+		if(token==null){
+			return modelAndView;
+		}
+		Supervisor supervisor = this.supervisorService.getById(id);
+		List<City> cites = this.cityService.queryAll();
+		List<OrderOn> orderOns = new LinkedList<OrderOn>();
+		if(supervisor!=null){
+			for(City c : cites){
+				List<OrderOn> os = this.orderOnService.queryAll("Order_"+c.getId()+"_on");
+				if(os!=null)
+					orderOns.addAll(os);
+			}
+		}
+		logger.info("查询所有有效订单信息完成");
+		modelAndView.addObject("id", id);  
+		modelAndView.addObject("token", token); 
+	    modelAndView.addObject("ordersOn", orderOns);   
+	    return modelAndView;
     }
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)

@@ -20,10 +20,18 @@ public class TokenUtils {
 			s = s + "s";
 		else if("vendor".equals(role))
 			s = s + "v";
-		
 		return s;
 	}
 	
+	/**
+	 * @param token
+	 * @param type
+	 * @return
+	 * 验证用户token
+	 */
+	public static boolean validateToken(String token, String type){
+		return true;
+	}
 	public static void main(String[] args){
 		//System.out.println(TokenUtils.generateGUID());
 		System.out.println(java.util.UUID.randomUUID().toString());
