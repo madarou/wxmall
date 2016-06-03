@@ -48,8 +48,8 @@ public class CityDaoImpl implements ICityDao {
 					+ tableName
 					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
 					+ "`number` varchar(20) NOT NULL,"
-					+ "`productIds` varchar(200),"
-					+ "`productNames` varchar(255),"
+					+ "`productIds` varchar(512),"
+					+ "`productNames` varchar(512),"
 					+ "`orderTime` datetime,"
 					+ "`receiverName` varchar(30),"
 					+ "`phoneNumber` varchar(12),"
@@ -89,8 +89,8 @@ public class CityDaoImpl implements ICityDao {
 					+ tableName2
 					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
 					+ "`number` varchar(20) NOT NULL,"
-					+ "`productIds` varchar(200),"
-					+ "`productNames` varchar(255),"
+					+ "`productIds` varchar(512),"
+					+ "`productNames` varchar(512),"
 					+ "`orderTime` datetime,"
 					+ "`receiverName` varchar(30),"
 					+ "`phoneNumber` varchar(12),"

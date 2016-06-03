@@ -145,8 +145,8 @@ Order_cityId_on(将订单表按城市分开，同时根据订单是否确认收�
 列名				类型				注释				备注
 id				int(11)
 number			varchar(20)*	订单编号			根据年月日和时分秒以及一个随机生成的4为数组成
-productIds		varchar(200)	所有购买的商品id	以'商品id1=当时单价=数量,商品id2=当时单价=数量'连接
-productNames	varchar(255)	所有商品的名称		以'商品名称1=当时单价=数量,商品名称2=当时单价=数量'连接，所有商品名称中不能含有=
+productIds		varchar(512)	所有购买的商品id	以'id1,id2,id3'连接
+productNames	varchar(512)	所有商品的名称		以'商品名称1=当时单价=数量,商品名称2=当时单价=数量'连接，所有商品名称中不能含有=
 orderTime		datetime		下单时间
 receiverName	varchar(30)		收货人姓名			
 phoneNumber		varchar(12)		收货人手机号
@@ -176,8 +176,8 @@ Order_cityId_off(卖家收货或系统一段时间自动收货后，即订单状
 列名				类型				注释				备注
 id				int(11)
 number			varchar(20)		订单编号			根据年月日和时分秒以及一个随机生成的4为数组成
-productIds		varchar(200)	所有购买的商品id	以'商品id1=当时单价=数量,商品id2=当时单价=数量'连接
-productNames	varchar(255)	所有商品的名称		以'商品名称1=当时单价=数量,商品名称2=当时单价=数量'连接，所有商品名称中不能含有=
+productIds		varchar(512)	所有购买的商品id	以'id1,id2,id3'连接
+productNames	varchar(512)	所有商品的名称		以'商品名称1=当时单价=数量,商品名称2=当时单价=数量'连接，所有商品名称中不能含有=
 orderTime		datetime		下单时间
 receiverName	varchar(30)		收货人姓名			
 phoneNumber		varchar(12)		收货人手机号

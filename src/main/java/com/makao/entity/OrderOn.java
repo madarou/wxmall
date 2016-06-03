@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 public class OrderOn {
 	private int id;
 	private String number;//订单编号			根据年月日和时分秒以及一个随机生成的4为数组成
-	private String productIds;//所有购买的商品id	以'商品id1=当时单价=数量,商品id2=当时单价=数量'连接
+	private String productIds;//所有购买的商品id	以'id1,id2,id3'连接
 	private String productNames;//所有商品的名称		以'商品名称1=当时单价=数量,商品名称2=当时单价=数量'连接，所有商品名称中不能含有=
 	private Timestamp orderTime;//下单时间
 	private String receiverName;//收货人姓名

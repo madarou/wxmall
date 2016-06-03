@@ -3,3 +3,28 @@ api											method				comment
 /product/all/[cityId]/[areaId]				GET					获取指定城市区域下的产品列表
 /product/[productId]/[cityId]/[areaId]		GET					获取指定城市区下的某个产品
 /user/[userId]								GET					获取用户信息
+/orderOn/new								POST				下单
+	{
+		productIds:[id1,id2,...],//*商品id列表
+		productNames:[name1=price1=number1,name2=price2=number2,...],//*商品名称=当时价格=购买数量
+		receiverName:,//*收货人姓名
+		phoneNumber:,//*收货人电话
+		address:,//*收货地址
+		payType:,//支付方式，目前只有一种方式，所以暂不需要，后台统一填写
+		receiveType:,//收货方式，目前只有一种方式，所以也由后台统一填写
+		receiveTime://*收货时间段
+		couponId:,//优惠券ID
+		couponPrice:,//优惠券面值
+		totalPrice:,//订单总价
+		comment:,//用户备注
+		cityarea:[城市名区域名],//方便直接展示
+		userId:,//用户Id
+		areaId:,//区域Id
+		cityId:,//城市Id，用于在访问数据库时，直接确定数据库表名
+	}
+	
+	
+/orderOn/all/[userId]						GET					查询某个用户的所有未收货订单
+/orderOn/[orderId]							GET					查询未收货的某个具体订单详情
+/orderOff/all/[userId]						GET					查询某个用户所有已收货订单
+/orderOff/[orderId]							GET					查询已收货的某个具体订单详情

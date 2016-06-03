@@ -83,6 +83,9 @@ public class OrderOnController {
 		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
 		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
 		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
+		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
+			OrderOn.setStatus("排队中");
+		}
 		int res = this.orderOnService.insert(OrderOn);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
@@ -90,7 +93,7 @@ public class OrderOnController {
         	jsonObject.put("msg", "200");
 		}
 		else{
-			logger.info("增加有效订单成功失败id=" + OrderOn.getNumber());
+			logger.info("增加有效订单失败id=" + OrderOn.getNumber());
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;
