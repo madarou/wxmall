@@ -686,7 +686,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 
 	@Override
 	public OrderOn queryByOrderId(String tableName, int orderid) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `id`="+orderid+" Order By `orderTime` DESC";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOn> res = new LinkedList<OrderOn>();

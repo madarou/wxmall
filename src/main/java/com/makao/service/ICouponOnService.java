@@ -2,6 +2,7 @@ package com.makao.service;
 
 import java.util.List;
 
+import com.makao.entity.Coupon;
 import com.makao.entity.CouponOn;
 
 /**
@@ -22,5 +23,9 @@ public interface ICouponOnService {
 	CouponOn getById(int id);
 
 	int deleteById(int id);
+
+	List<CouponOn> queryAllByUserId(String tableName, int userid);
+
+	CouponOn queryByCouponId(String tableName, int couponid);
 
 }

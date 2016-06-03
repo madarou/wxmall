@@ -111,7 +111,7 @@ public class CouponController {
 		if(supervisor!=null){
 			int res = this.couponService.insert(Coupon);
 			if(res==0){
-				logger.info("增加优惠券成功id=" + Coupon.getName());
+				logger.info("增加优惠券成功面值=" + Coupon.getName());
 	        	jsonObject.put("msg", "200");
 	        	return jsonObject;
 			}

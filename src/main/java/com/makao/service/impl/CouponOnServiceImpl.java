@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.makao.dao.ICouponOnDao;
+import com.makao.entity.Coupon;
 import com.makao.entity.CouponOn;
 import com.makao.service.ICouponOnService;
 
@@ -39,6 +40,14 @@ public class CouponOnServiceImpl implements ICouponOnService {
 	@Override
 	public List<CouponOn> queryByName(String name) {
 		return this.couponOnDao.queryByName(name);
+	}
+	@Override
+	public List<CouponOn> queryAllByUserId(String tableName, int userid) {
+		return this.couponOnDao.queryAllByUserId(tableName, userid);
+	}
+	@Override
+	public CouponOn queryByCouponId(String tableName, int couponid) {
+		return this.couponOnDao.queryByCouponId(tableName, couponid);
 	}
 	
 //	@Override

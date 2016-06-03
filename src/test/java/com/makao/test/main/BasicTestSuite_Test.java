@@ -76,7 +76,7 @@ public class BasicTestSuite_Test {
 		String newcoupon = "http://localhost:8080/coupon/new/1";
 		String coupon = "{\"name\":\"10元代金券\",\"amount\":\"10\",\"point\":20,\"restrict\":10,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\"}";
 	
-		String exchangecoupon = "http://localhost:8080/coupon/exchange/1/1/1";
+		String exchangecoupon = "http://localhost:8080/coupon/exchange/1/1/1?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
 		
 		result = HttpUtils.doPostStr(newsupervisor,supervisor);
 		assertEquals("增加supervisor成功",result.get("msg"));

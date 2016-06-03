@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.Coupon;
 import com.makao.entity.CouponOn;
 import com.makao.service.ICouponOnService;
 
@@ -21,6 +23,7 @@ import com.makao.service.ICouponOnService;
  * @author makao
  * @date 2016年5月6日
  */
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/couponOn")
 public class CouponOnController {
@@ -66,6 +69,27 @@ public class CouponOnController {
         	jsonObject.put("msg", "增加有效优惠券失败");
 		}
         return jsonObject;
+    }
+	
+	@RequestMapping(value = "/all/{cityid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object all(@PathVariable("cityid") int cityid,@PathVariable("userid") int userid) {
+        JSONObject jsonObject = new JSONObject();
+		List<CouponOn> os = this.couponOnService.queryAllByUserId("Coupon_"+cityid+"_on",userid);
+		logger.info("查询城市id："+cityid+" 中的用户id为:"+userid+"的所有有效coupon完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("coupons", os);
+		return jsonObject;
+    }
+	
+	@RequestMapping(value = "/{cityid:\\d+}/{couponid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody Object get(@PathVariable("cityid") int cityid, @PathVariable("couponid") int couponid) {
+		JSONObject jsonObject = new JSONObject();
+		CouponOn couponon = this.couponOnService.queryByCouponId("Coupon_"+cityid+"_on", couponid);
+		logger.info("查询有效优惠券id："+couponid+" 信息完成(所属city:"+cityid+")");
+		jsonObject.put("msg", "200");
+		jsonObject.put("coupon", couponon);
+		return jsonObject;
     }
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)

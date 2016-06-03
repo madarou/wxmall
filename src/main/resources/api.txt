@@ -30,4 +30,9 @@ api															method				comment
 
 /coupon/all/[cityId]										GET					查询用户所在城市所提供的优惠券种类，注意不是用户已经兑换的，是该城市中的用户在积分满足后可以兑换的
 /coupon/[cityId]/[couponId]									GET					查询某个指定的优惠券详情介绍
-/coupon/exchange/[cityId]/[couponId]/[userId]/?token=xxx	GET					兑换优惠券	
+/coupon/exchange/[cityId]/[couponId]/[userId]/?token=xxx	GET					兑换优惠券
+
+/couponOn/all/[cityId]/[userId]								GET					查询用户未使用的优惠券列表
+/couponOn/[cityId]/[couponId]								GET					查询用户已兑换的某个优惠券
+/couponOff/all/[cityId]/[userId]							GET					查询用户已使用或已过期的优惠券列表
+/couponOff/[cityId]/[couponId]								GET					查询用户已使用或已过期的某个优惠券

@@ -2,6 +2,7 @@ package com.makao.dao;
 
 import java.util.List;
 
+import com.makao.entity.Coupon;
 import com.makao.entity.CouponOn;
 
 public interface ICouponOnDao {
@@ -19,4 +20,8 @@ public interface ICouponOnDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	public List<CouponOn> queryAllByUserId(String tableName, int userid);
+
+	public CouponOn queryByCouponId(String tableName, int couponid);
 }

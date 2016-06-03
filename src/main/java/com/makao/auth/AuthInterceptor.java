@@ -50,6 +50,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 				// 要验证的都有token，没有token则失败
 				String token = request.getParameter("token");
 				if (token == null) {
+					System.out.println("*****需要验证token，但token不存在*****");
 					return false;
 				}
 				String type = "";// 请求是用户、区域管理还是超级管理
