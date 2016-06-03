@@ -1,9 +1,11 @@
 package com.makao.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,8 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.makao.dao.ICouponDao;
 import com.makao.entity.Coupon;
+import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.makao.entity.User;
 
 /**
  * @description: TODO
@@ -33,6 +37,7 @@ import com.makao.entity.Product;
 @Transactional
 public class CouponDaoImpl implements ICouponDao {
 	private static final Logger logger = Logger.getLogger(CouponDaoImpl.class);
+	private static final int COUPON_EXPIRE_DAY = 7;
 	@Resource
 	private SessionFactory sessionFactory;
 	@Override
@@ -288,6 +293,114 @@ public class CouponDaoImpl implements ICouponDao {
 			if (null != tx)
 				tx.rollback();// 回滚
 			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
+
+	@Override
+	public Coupon queryByCouponId(String tableName, int couponid) {
+		String sql = "SELECT * FROM "+ tableName + " WHERE `id`="+couponid+" Order By `point`";
+		Session session = null;
+		Transaction tx = null;
+		List<Coupon> res = new LinkedList<Coupon>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							Coupon p = new Coupon();
+							p.setId(rs.getInt("id"));
+							p.setName(rs.getString("name"));
+							p.setAmount(rs.getString("amount"));
+							p.setCoverSUrl(rs.getString("coverSUrl"));
+							p.setCoverBUrl(rs.getString("coverBUrl"));
+							p.setPoint(rs.getInt("point"));
+							p.setRestrict(rs.getInt("restrict"));
+							p.setComment(rs.getString("comment"));
+							p.setCityName(rs.getString("cityName"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setIsShow(rs.getString("isShow"));
+							p.setType(rs.getString("type"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res.size()>0 ? res.get(0) : null;
+	}
+	
+	@Override
+	public int exchangeCoupon(Coupon coupon, User user) {
+		String tableName = "Coupon_"+coupon.getCityId()+"_on";
+		String sql1 = "INSERT INTO `"
+				+ tableName
+				+ "` (`name`,`amount`,`coverSUrl`,`coverBUrl`,`point`,`restrict`,`comment`,`cityName`,"
+				+ "`cityId`,`userId`,`type`,`from`,`to`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			user.setPoint(user.getPoint()-coupon.getPoint());
+			session.update(user);
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql1);
+						ps.setString(1, coupon.getName());
+						ps.setString(2, coupon.getAmount());
+						ps.setString(3, coupon.getCoverSUrl());
+						ps.setString(4, coupon.getCoverBUrl());
+						ps.setInt(5, coupon.getPoint());
+						ps.setInt(6, coupon.getRestrict());
+						ps.setString(7, coupon.getComment());
+						ps.setString(8, coupon.getCityName());
+						ps.setInt(9, coupon.getCityId());
+						ps.setInt(10, user.getId());
+						ps.setString(11, coupon.getType());
+						ps.setDate(12, new Date(System.currentTimeMillis()));
+						ps.setDate(13, new Date(System.currentTimeMillis()+(24*60*60*1000*COUPON_EXPIRE_DAY)));
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
 		} finally {
 			if (null != session)
 				session.close();// 关闭回话

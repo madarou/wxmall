@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.makao.dao.ICouponDao;
 import com.makao.entity.Coupon;
+import com.makao.entity.CouponOn;
+import com.makao.entity.User;
 import com.makao.service.ICouponService;
 
 @Service
@@ -43,6 +45,14 @@ public class CouponServiceImpl implements ICouponService {
 	@Override
 	public List<Coupon> queryAll(String tableName) {
 		return this.couponDao.queryAll(tableName);
+	}
+	@Override
+	public Coupon queryByCouponId(String tableName, int couponid) {
+		return this.couponDao.queryByCouponId(tableName, couponid);
+	}
+	@Override
+	public int exchangeCoupon(Coupon coupon, User user) {
+		return this.couponDao.exchangeCoupon(coupon, user);
 	}
 	
 //	@Override

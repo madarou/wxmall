@@ -3,6 +3,8 @@ package com.makao.service;
 import java.util.List;
 
 import com.makao.entity.Coupon;
+import com.makao.entity.CouponOn;
+import com.makao.entity.User;
 
 /**
  * @description: TODO
@@ -24,5 +26,9 @@ public interface ICouponService {
 	int deleteById(int id, int cityid);
 
 	List<Coupon> queryAll(String tableName);
+
+	Coupon queryByCouponId(String tableName, int couponid);
+
+	int exchangeCoupon(Coupon coupon, User user);
 
 }

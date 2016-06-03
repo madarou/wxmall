@@ -20,16 +20,20 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.Area;
 import com.makao.entity.Banner;
 import com.makao.entity.City;
 import com.makao.entity.Coupon;
+import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Supervisor;
+import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.ICityService;
 import com.makao.service.ICouponService;
 import com.makao.service.ISupervisorService;
+import com.makao.service.IUserService;
 import com.makao.utils.OrderNumberUtils;
 
 /**
@@ -48,6 +52,8 @@ public class CouponController {
 	private ISupervisorService supervisorService;
 	@Resource
 	private ICityService cityService;
+	@Resource
+	private IUserService userService;
 	
 //	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 //	public @ResponseBody Coupon get(@PathVariable("id") Integer id)
@@ -127,6 +133,37 @@ public class CouponController {
 		logger.info("查询城市id："+cityid+"的所有静态coupon完成");
 		jsonObject.put("msg", "200");
 		jsonObject.put("coupons", os);
+		return jsonObject;
+    }
+	
+	@RequestMapping(value = "/{cityid:\\d+}/{couponid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody Object get(@PathVariable("cityid") int cityid, @PathVariable("couponid") int couponid) {
+		JSONObject jsonObject = new JSONObject();
+		Coupon coupon = this.couponService.queryByCouponId("Coupon_"+cityid, couponid);
+		logger.info("查询优惠券id："+couponid+" 信息完成(所属city:"+cityid+")");
+		jsonObject.put("msg", "200");
+		jsonObject.put("coupon", coupon);
+		return jsonObject;
+    }
+	
+	@AuthPassport
+	@RequestMapping(value = "/exchange/{cityid:\\d+}/{couponid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object exchange(@PathVariable("cityid") int cityid,@PathVariable("couponid") int couponid,@PathVariable("userid") int userid,
+    		@RequestParam(value="token", required=false) String token) {
+        JSONObject jsonObject = new JSONObject();
+        Coupon coupon = this.couponService.queryByCouponId("Coupon_"+cityid, couponid);
+        User user = this.userService.getById(userid);
+        if(coupon!=null && user!=null){
+        	int res = this.couponService.exchangeCoupon(coupon, user);
+        	if(res==0){
+    			logger.info("兑换优惠券成功面值=" + coupon.getAmount() + "，所属城市id:"+cityid);
+            	jsonObject.put("msg", "200");
+            	return jsonObject;
+    		}
+        }
+        logger.info("兑换优惠券失败id=" + couponid+" 所属城市id:"+cityid);
+        jsonObject.put("msg", "201");
 		return jsonObject;
     }
 	

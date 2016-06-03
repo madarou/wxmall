@@ -23,7 +23,7 @@ import com.makao.test.utils.HttpUtils;
 public class BasicTestSuite_Test {
 
 	@Test
-	public void test() {
+	public void test() throws InterruptedException {
 		String cityLogo = "1000000495269125_0241020.jpg";
 		String userHead = "1003234393232034_head.jpg";
 		String productSCover = "1000001767118287_putao_s.jpg";
@@ -74,8 +74,10 @@ public class BasicTestSuite_Test {
 		String orderon2 = "{\"productIds\":\"3\",\"productNames\":\"广东蜜桃=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":3,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		
 		String newcoupon = "http://localhost:8080/coupon/new/1";
-		String coupon = "{\"name\":\"10元代金券\",\"amount\":\"10\",\"point\":20,\"restrict\":10,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\"}";
+		String coupon = "{\"name\":\"10元代金券\",\"amount\":\"10\",\"point\":20,\"restrict\":10,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\"}";
 	
+		String exchangecoupon = "http://localhost:8080/coupon/exchange/1/1/1";
+		
 		result = HttpUtils.doPostStr(newsupervisor,supervisor);
 		assertEquals("增加supervisor成功",result.get("msg"));
 		result = HttpUtils.doPostStr(newcity,city);
@@ -113,6 +115,10 @@ public class BasicTestSuite_Test {
 		assertEquals("200",result.get("msg"));
 		
 		result = HttpUtils.doPostStr(newcoupon,coupon);
+		assertEquals("200",result.get("msg"));
+		
+		Thread.sleep(1000);
+		result = HttpUtils.doGetObject(exchangecoupon);
 		assertEquals("200",result.get("msg"));
 	}
 	

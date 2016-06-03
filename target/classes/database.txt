@@ -229,6 +229,7 @@ comment			varchar(50)		简单说明			如'新用户欢迎礼券','圣诞节专�
 cityName		varchar(30)		所属的城市			便于后台加载所有券时显示
 cityId			int(11)			城市Id
 userId			int(11)			优惠券拥有者
+type			varchar(20)						值为'代金券兑换'，与Gift中的'礼品兑换'对应
 
 Coupon_cityId_off(已过期或已使用的优惠券，增加一个使用日期，为空表示是过期的)
 列名				类型				注释				备注

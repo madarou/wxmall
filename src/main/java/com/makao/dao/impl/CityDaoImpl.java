@@ -155,6 +155,71 @@ public class CityDaoImpl implements ICityDao {
 							}
 						}
 					});
+			//为Coupon_cityId_on建表
+			String tableName5 = "Coupon_"+city.getId()+"_on";
+			String sql5 = "CREATE TABLE IF NOT EXISTS `"
+					+ tableName5
+					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
+					+ "`name` varchar(30) NOT NULL,"
+					+ "`amount` varchar(10),"
+					+ "`coverSUrl` varchar(50),"
+					+ "`coverBUrl` varchar(50),"
+					+ "`point` int(11),"
+					+ "`from` date,"
+					+ "`to` date,"
+					+ "`restrict` int(11),"
+					+ "`comment` varchar(50),"
+					+ "`cityName` varchar(30),"
+					+ "`cityId` int(11),"
+					+ "`userId` int(11),"
+					+ "`type` varchar(20),"
+					+ "PRIMARY KEY (`id`))";
+			session.doWork(
+					// 定义一个匿名类，实现了Work接口
+					new Work() {
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = null;
+							try {
+								ps = connection.prepareStatement(sql5);
+								ps.execute();
+							} finally {
+								doClose(ps);
+							}
+						}
+					});
+			//为Coupon_cityId_off建表
+			String tableName6 = "Coupon_"+city.getId()+"_off";
+			String sql6 = "CREATE TABLE IF NOT EXISTS `"
+					+ tableName6
+					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
+					+ "`name` varchar(30) NOT NULL,"
+					+ "`amount` varchar(10),"
+					+ "`coverSUrl` varchar(50),"
+					+ "`coverBUrl` varchar(50),"
+					+ "`point` int(11),"
+					+ "`from` date,"
+					+ "`to` date,"
+					+ "`restrict` int(11),"
+					+ "`comment` varchar(50),"
+					+ "`cityName` varchar(30),"
+					+ "`cityId` int(11),"
+					+ "`userId` int(11),"
+					+ "`type` varchar(20),"
+					+ "`overdueDate` date,"
+					+ "PRIMARY KEY (`id`))";
+			session.doWork(
+					// 定义一个匿名类，实现了Work接口
+					new Work() {
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = null;
+							try {
+								ps = connection.prepareStatement(sql6);
+								ps.execute();
+							} finally {
+								doClose(ps);
+							}
+						}
+					});
 			//为Gift_cityId建表
 			String tableName3 = "Gift_"+city.getId();
 			String sql3 = "CREATE TABLE IF NOT EXISTS `"

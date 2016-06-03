@@ -134,8 +134,8 @@ Coupon_cityId_on:
 						`comment` varchar(50),
 						`cityName` varchar(30),
 						`cityId` int(11),
-						`isShow` varchar(5),
 						`userId` int(11),
+						`type` varchar(20),
 						PRIMARY KEY (`id`))";
 						
 						
@@ -154,8 +154,8 @@ Coupon_cityId_off:
 						`comment` varchar(50),
 						`cityName` varchar(30),
 						`cityId` int(11),
-						`isShow` varchar(5),
 						`userId` int(11),
+						`type` varchar(20),
 						`overdueDate` date,
 						PRIMARY KEY (`id`))";
 						
