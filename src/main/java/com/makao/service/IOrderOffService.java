@@ -23,8 +23,8 @@ public interface IOrderOffService {
 	OrderOff getById(int id);
 
 	int deleteById(int id);
-
-	List<OrderOff> queryDoneByAreaId(String string, int areaId);
+	//已确认收货的订单列表
+	List<OrderOff> queryConfirmGetByAreaId(String string, int areaId);
 
 	List<OrderOff> queryCancelByAreaId(String tableName, int areaId);
 
@@ -43,5 +43,7 @@ public interface IOrderOffService {
 	List<OrderOff> queryByUserId(String tableName, int userid);
 
 	OrderOff queryByOrderId(String tableName, int orderid);
+	//发起退货申请
+	int returnOrder(int cityid, int orderid);
 
 }

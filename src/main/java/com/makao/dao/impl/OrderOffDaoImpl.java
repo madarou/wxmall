@@ -129,8 +129,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	}
 
 	@Override
-	public List<OrderOff> queryDoneByAreaId(String tableName, int areaId) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus`='已完成' Order By `finalTime`";
+	public List<OrderOff> queryConfirmGetByAreaId(String tableName, int areaId) {
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus`='已收货' Order By `finalTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();
@@ -194,7 +194,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	
 	@Override
 	public List<OrderOff> queryCancelByAreaId(String tableName, int areaId) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('已退货','卖家取消','已取消退货') Order By `finalTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('已退货','已取消','已取消退货') Order By `finalTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();
@@ -441,7 +441,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String tableName = "Order_"+cityId+"_off";
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='已取消退货',`refundStatus`='无',`vcomment`='"+vcomment+"' WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='已取消退货',`refundStatus`='无需退款',`vcomment`='"+vcomment+"' WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -476,7 +476,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	
 	@Override
 	public List<OrderOff> queryAllCanceledAndReturned(String tableName) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus` IN ('已退货','卖家取消') Order By `finalTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus` IN ('已退货','已取消') Order By `finalTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();
@@ -729,7 +729,45 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		}
 		return res.size()>0 ? res.get(0) : null;
 	}
-
+	
+	@Override
+	public int returnOrder(int cityid, int orderid) {
+		String tableName = "Order_"+cityid+"_off";
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `finalStatus`='退货申请中',`refundStatus`='无' WHERE `id`="+orderid;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {

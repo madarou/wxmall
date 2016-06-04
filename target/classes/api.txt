@@ -27,6 +27,8 @@ api															method				comment
 /orderOn/[cityId]/[orderId]									GET					查询未收货的某个具体订单详情
 /orderOff/all/[cityId]/[userId]								GET					查询某个用户所有已收货订单
 /orderOff/[cityId]/[orderId]								GET					查询已收货的某个具体订单详情
+/orderOn/confirm/[cityId]/[orderId]/?token=xxxx				GET					确认收货
+/orderOff/return/[cityId]/[orderId]/?token=xxxx				GET					发起退货							
 
 /coupon/all/[cityId]										GET					查询用户所在城市所提供的优惠券种类，注意不是用户已经兑换的，是该城市中的用户在积分满足后可以兑换的
 /coupon/[cityId]/[couponId]									GET					查询某个指定的优惠券详情介绍

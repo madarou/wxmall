@@ -36,5 +36,9 @@ public interface IOrderOnService {
 	List<OrderOn> queryByUserId(String string, int userid);
 
 	OrderOn queryByOrderId(String string, int orderid);
+	//已配送的但尚未确认收货的订单列表
+	List<OrderOn> queryDistributedByAreaId(String string, int areaId);
+	//确认收货
+	public int confirmGetOrder(int cityid, int orderid);
 
 }

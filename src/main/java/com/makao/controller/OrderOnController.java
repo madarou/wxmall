@@ -103,6 +103,30 @@ public class OrderOnController {
         return jsonObject;
     }
 	
+	/**
+	 * @param token
+	 * @param OrderOn
+	 * @return
+	 * 确认收货
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/confirm/{cityid:\\d+}/{orderid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object confirm(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid,
+    		@RequestParam(value="token", required=false) String token) {
+		JSONObject jsonObject = new JSONObject();
+		int res = this.orderOnService.confirmGetOrder(cityid, orderid);
+		if(res==0){
+			logger.info("确认收货订单成功id=" + orderid + " 所属城市id:"+cityid);
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("确认收货订单失败id=" + orderid + " 所属城市id:"+cityid);
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+	
 	@RequestMapping(value = "/all/{cityid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
     public @ResponseBody Object all(@PathVariable("cityid") int cityid, @PathVariable("userid") int userid) {
 		JSONObject jsonObject = new JSONObject();
@@ -191,7 +215,7 @@ public class OrderOnController {
 	 * @param id
 	 * @param paramObject
 	 * @return
-	 * 开始配送订单，即将其状态设为已处理
+	 * 开始配送订单，即将其状态设为配送中
 	 */
 	@RequestMapping(value = "/vdistribute/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
@@ -218,7 +242,7 @@ public class OrderOnController {
 	 * @param id
 	 * @param paramObject
 	 * @return
-	 * 完成配送订单，即将其状态设为已完成
+	 * 完成配送订单，即将其状态设为已配送
 	 */
 	@RequestMapping(value = "/vfinish/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
@@ -311,6 +335,25 @@ public class OrderOnController {
 		List<OrderOn> orders = null;
 		if(vendor!=null)
 			orders = this.orderOnService.queryProcessByAreaId("Order_"+vendor.getCityId()+"_on",vendor.getAreaId());
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders);   
+		return modelAndView;
+    }
+	
+	@RequestMapping(value = "/v_query_distributed/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView v_query_distributed(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOn_distributed");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOn> orders = null;
+		if(vendor!=null)
+			orders = this.orderOnService.queryDistributedByAreaId("Order_"+vendor.getCityId()+"_on",vendor.getAreaId());
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
 	    modelAndView.addObject("orders", orders);   

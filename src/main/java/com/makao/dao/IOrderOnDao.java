@@ -2,6 +2,7 @@ package com.makao.dao;
 
 import java.util.List;
 
+import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 
 public interface IOrderOnDao {
@@ -33,4 +34,9 @@ public interface IOrderOnDao {
 	public List<OrderOn> queryByUserId(String tableName, int userid);
 
 	public OrderOn queryByOrderId(String tableName, int orderid);
+
+	int confirmGetOrder(int cityId, int orderid);
+
+	//已配送订单查询，但尚未确认收货
+	public List<OrderOn> queryDistributedByAreaId(String tableName, int areaId);
 }

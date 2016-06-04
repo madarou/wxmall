@@ -42,8 +42,8 @@ public class OrderOffServiceImpl implements IOrderOffService {
 		return this.orderOffDao.queryByName(name);
 	}
 	@Override
-	public List<OrderOff> queryDoneByAreaId(String tableName, int areaId) {
-		return this.orderOffDao.queryDoneByAreaId(tableName, areaId);
+	public List<OrderOff> queryConfirmGetByAreaId(String tableName, int areaId) {
+		return this.orderOffDao.queryConfirmGetByAreaId(tableName, areaId);
 	}
 	@Override
 	public List<OrderOff> queryCancelByAreaId(String tableName, int areaId) {
@@ -81,6 +81,10 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	@Override
 	public OrderOff queryByOrderId(String tableName, int orderid) {
 		return this.orderOffDao.queryByOrderId(tableName, orderid);
+	}
+	@Override
+	public int returnOrder(int cityid, int orderid) {
+		return this.orderOffDao.returnOrder(cityid,orderid);
 	}
 	
 //	@Override

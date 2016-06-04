@@ -21,8 +21,6 @@ public interface IOrderOffDao {
 
 	public int deleteById(int id);
 
-	public List<OrderOff> queryDoneByAreaId(String tableName, int areaId);
-
 	public List<OrderOff> queryCancelByAreaId(String tableName, int areaId);
 
 	public List<OrderOff> queryRefundByAreaId(String tableName, int areaId);
@@ -40,4 +38,9 @@ public interface IOrderOffDao {
 	public OrderOff queryByOrderId(String tableName, int orderid);
 
 	public List<OrderOff> queryByUserId(String tableName, int userid);
+	
+	//已收货订单查询
+	public List<OrderOff> queryConfirmGetByAreaId(String tableName, int areaId);
+	//发起退货申请
+	public int returnOrder(int cityid, int orderid);
 }

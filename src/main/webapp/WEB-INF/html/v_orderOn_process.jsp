@@ -54,7 +54,8 @@
     <dt>订单信息</dt>
     <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队订单</a></dd>
     <dd><a href="/orderOn/v_query_process/${id}?token=${token}" class="active">待处理订单</a></dd>
-    <dd><a href="/orderOff/v_query_done/${id}?token=${token}">已完成订单</a></dd>
+    <dd><a href="/orderOn/v_query_distributed/${id}?token=${token}">已配送订单</a></dd>
+    <dd><a href="/orderOff/v_query_confirm/${id}?token=${token}">已收货订单</a></dd>
     <dd><a href="/orderOff/v_query_refund/${id}?token=${token}">待退货订单</a></dd>
     <dd><a href="/orderOff/v_query_cancel/${id}?token=${token}">已取消订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
@@ -367,7 +368,7 @@
          				<button class="linkStyle handleOrder" id="distribute${item.id}">配送</button>|
          				<button class="linkStyle" id="finishPopTxt${item.id}" style="color:grey;cursor:default">完成</button>
          			</c:if>
-         			<c:if test="${item.status=='已处理'}">
+         			<c:if test="${item.status=='配送中'}">
          				<button class="linkStyle" id="distributePopTxt${item.id}" style="color:grey;cursor:default">配送</button>|
          				<button class="linkStyle handleOrder" id="finish${item.id}">完成</button>
          			</c:if>

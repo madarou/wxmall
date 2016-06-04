@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.City;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
@@ -116,6 +117,30 @@ public class OrderOffController {
 		jsonObject.put("msg", "200");
 		jsonObject.put("order", os);
 		return jsonObject;
+    }
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 用户发起退货请求，将订单状态设置为退货申请中
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/return/{cityid:\\d+}/{orderid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object returnOrder(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid,
+    		@RequestParam(value="token", required=false) String token) {
+		JSONObject jsonObject = new JSONObject();
+		int res = this.orderOffService.returnOrder(cityid, orderid);
+		if(res==0){
+			logger.info("发起退货申请成功，订单id=" + orderid + " 所属城市id:"+cityid);
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("发起退货申请失败，订单id=" + orderid + " 所属城市id:"+cityid);
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
     }
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -293,13 +318,13 @@ public class OrderOffController {
 	 * @param id
 	 * @param token
 	 * @return
-	 * 查询所有已完成的订单
+	 * 查询所有已收货的订单
 	 */
-	@RequestMapping(value = "/v_query_done/{id:\\d+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/v_query_confirm/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView areaQuery(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
 	    ModelAndView modelAndView = new ModelAndView();  
-		modelAndView.setViewName("v_orderOff_done");  
+		modelAndView.setViewName("v_orderOff_confirm");  
 		if(token==null){
 			return modelAndView;
 		}
@@ -307,7 +332,7 @@ public class OrderOffController {
 		Vendor vendor = this.vendorService.getById(id);
 		List<OrderOff> orders = null;
 		if(vendor!=null)
-			orders = this.orderOffService.queryDoneByAreaId("Order_"+vendor.getCityId()+"_off",vendor.getAreaId());
+			orders = this.orderOffService.queryConfirmGetByAreaId("Order_"+vendor.getCityId()+"_off",vendor.getAreaId());
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
 	    modelAndView.addObject("orders", orders);     

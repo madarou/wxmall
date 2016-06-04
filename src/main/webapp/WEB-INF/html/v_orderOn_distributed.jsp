@@ -52,9 +52,9 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/v_query_queue/${id}?token=${token}" class="active">排队订单</a></dd>
+    <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队订单</a></dd>
     <dd><a href="/orderOn/v_query_process/${id}?token=${token}">待处理订单</a></dd>
-    <dd><a href="/orderOn/v_query_distributed/${id}?token=${token}">已配送订单</a></dd>
+    <dd><a href="/orderOn/v_query_distributed/${id}?token=${token}" class="active">已配送订单</a></dd>
     <dd><a href="/orderOff/v_query_confirm/${id}?token=${token}">已收货订单</a></dd>
     <dd><a href="/orderOff/v_query_refund/${id}?token=${token}">待退货订单</a></dd>
     <dd><a href="/orderOff/v_query_cancel/${id}?token=${token}">已取消订单</a></dd>
@@ -91,7 +91,6 @@
   </li>
  </ul>
 </aside>
-
 <section class="rt_wrap content mCustomScrollbar">
  <div class="rt_content">
      <section>
@@ -277,7 +276,7 @@
          		<td id="phoneNumber-${item.id}">${item.phoneNumber}</td>
          		<td id="orderTime-${item.id}">${item.orderTime}</td>
          		<td id="receiveTime-${item.id}">${item.receiveTime}</td>
-		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${item.id}">${item.status}</button></td>
+		        <td><button class="linkStyle" id="cancelPopTxt-${item.id}" style="color:grey;cursor:default">${item.status}</button></td>
 		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
 		        <td id="address-${item.id}" style="display:none">${item.address}</td>
 		         <td id="comment-${item.id}" style="display:none">${item.comment}</td>
