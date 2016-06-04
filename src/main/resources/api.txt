@@ -36,3 +36,24 @@ api															method				comment
 /couponOn/[cityId]/[couponId]								GET					查询用户已兑换的某个优惠券
 /couponOff/all/[cityId]/[userId]							GET					查询用户已使用或已过期的优惠券列表
 /couponOff/[cityId]/[couponId]								GET					查询用户已使用或已过期的某个优惠券
+
+/address/new/?token=xxx										POST				新增地址
+	{
+		userId:,//用户id
+		userName:,//收货人姓名
+		phoneNumber:,//收货人电话
+		address:,//城市区域名，如上海张江
+		detailAddress:,//具体地址
+		label:,//地址标签
+		isDefault:,//是否是默认[yes]/[no]
+	}
+/address/all/[userId]										GET					查询用户所有地址
+/address/edit/[addressId]/?token=xxx						POST				修改用户地址
+	{
+		userName:,//收货人姓名
+		phoneNumber:,//收货人电话
+		detailAddress:,//具体地址
+		label:,//地址标签
+		isDefault:,//是否是默认[yes]/[no]
+	}
+/address/[addressId]/?token=xxx								DELETE				删除用户地址

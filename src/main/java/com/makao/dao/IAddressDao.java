@@ -19,4 +19,6 @@ public interface IAddressDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	public List<Address> queryByUserId(int userid);
 }

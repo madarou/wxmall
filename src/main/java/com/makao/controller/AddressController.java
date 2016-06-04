@@ -6,14 +6,18 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.Address;
+import com.makao.entity.OrderOn;
 import com.makao.service.IAddressService;
 
 /**
@@ -21,6 +25,7 @@ import com.makao.service.IAddressService;
  * @author makao
  * @date 2016年5月6日
  */
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/address")
 public class AddressController {
@@ -36,36 +41,79 @@ public class AddressController {
 		return address;
 	}
 	
+	@AuthPassport
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
-    Object delete(@PathVariable("id") Integer id) {
+    Object delete(@PathVariable("id") Integer id,@RequestParam(value="token", required=false) String token) {
         int res = this.addressService.deleteById(id);
         JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("删除地址信息成功id=" + id);
-        	jsonObject.put("msg", "删除地址信息成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("删除地址信息失败id=" + id);
-        	jsonObject.put("msg", "删除地址信息失败");
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }
 	
+	@AuthPassport
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
-    Object add(@RequestBody Address Address) {
+    Object add(@RequestParam(value="token", required=false) String token, @RequestBody Address Address) {
 		int res = this.addressService.insert(Address);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加地址成功id=" + Address.getId());
-        	jsonObject.put("msg", "增加地址成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
-			logger.info("增加地址成功失败id=" + Address.getId());
-        	jsonObject.put("msg", "增加地址失败");
+			logger.info("增加地址失败id=" + Address.getId());
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
+    }
+	
+	@RequestMapping(value = "/all/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody Object all(@PathVariable("userid") int userid) {
+		JSONObject jsonObject = new JSONObject();
+		List<Address> os = this.addressService.queryByUserId(userid);
+		logger.info("查询用户id："+userid+"的所有地址");
+		jsonObject.put("msg", "200");
+		jsonObject.put("addresses", os);
+		return jsonObject;
+    }
+	
+	@AuthPassport
+	@RequestMapping(value = "/edit/{addressid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody Object edit(@PathVariable("addressid") int addressid,@RequestParam(value="token", required=false) String token,
+    		@RequestBody JSONObject paramObject) {
+		
+		String userName = paramObject.getString("userName");
+		String phoneNumber = paramObject.getString("phoneNumber");
+		String detailAddress = paramObject.getString("detailAddress");
+		String label = paramObject.getString("label");
+		String isDefault = paramObject.getString("isDefault");
+		
+		JSONObject jsonObject = new JSONObject();
+		Address ad = this.addressService.getById(addressid);
+		if(ad!=null){
+			ad.setUserName(userName);
+			ad.setPhoneNumber(phoneNumber);
+			ad.setDetailAddress(detailAddress);
+			ad.setLabel(label);
+			ad.setIsDefault(isDefault);
+			int res = this.addressService.update(ad);
+			if(res==0){
+				logger.info("更新用户："+userName+" 的id为: "+addressid+" 的地址成功");
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+		}
+		logger.info("更新用户："+userName+" 的id为: "+addressid+" 的地址失败");
+		jsonObject.put("msg", "201");
+		return jsonObject;
     }
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)

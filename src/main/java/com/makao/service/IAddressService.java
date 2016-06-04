@@ -23,4 +23,6 @@ public interface IAddressService {
 
 	int deleteById(int id);
 
+	List<Address> queryByUserId(int userid);
+
 }

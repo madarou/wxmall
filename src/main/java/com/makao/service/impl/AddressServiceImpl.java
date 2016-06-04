@@ -40,6 +40,10 @@ public class AddressServiceImpl implements IAddressService {
 	public List<Address> queryByName(String name) {
 		return this.addressDao.queryByName(name);
 	}
+	@Override
+	public List<Address> queryByUserId(int userid) {
+		return this.addressDao.queryByUserId(userid);
+	}
 	
 //	@Override
 //	public void testor() {

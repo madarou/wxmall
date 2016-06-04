@@ -50,7 +50,7 @@ phoneNumber		varchat(12)		收货手机
 address			varchar(30)		收货地址			由城市名+区域名组成，城市和区域在前端根据用户当前所在位置传入，用户不能修改
 detailAddress	varchar(120)	具体地址			具体楼栋号和门牌号，用户自己填
 label			varchar(20)		地址标签			如'家''公司'
-isDefault(可去掉)	varcar(5)		是否是默认			如果默认地址记录在了User表里，那这里就不要了
+isDefault		varcar(5)		是否是默认			如果默认地址记录在了User表里，那这里就不要了，但为了方便前端设置时整体传入，这里还是保留
 
 Vendor(区域卖点用户，登录卖家系统)
 列名				类型				注释				备注

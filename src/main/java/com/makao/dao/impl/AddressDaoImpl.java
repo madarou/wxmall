@@ -18,8 +18,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.makao.dao.IAddressDao;
+import com.makao.entity.Area;
 import com.makao.entity.Testor;
 import com.makao.entity.Address;
+import com.makao.entity.User;
 
 @Repository
 @Transactional
@@ -37,7 +39,16 @@ public class AddressDaoImpl implements IAddressDao {
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
-			session.save(address);// 保存用户
+			session.save(address);// 保存地址
+			//如果是默认地址，则更新user表里的对应字段
+			if("yes".equals(address.getIsDefault())){
+				User user = (User)session.get(User.class, address.getUserId());
+				user.setReceiveName(address.getUserName());
+				user.setPhoneNumber(address.getPhoneNumber());
+				user.setAddress(address.getDetailAddress());
+				user.setAddLabel(address.getLabel());
+				session.update(user);
+			}
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)
@@ -107,6 +118,15 @@ public class AddressDaoImpl implements IAddressDao {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
 			session.update(address);
+			//如果是默认地址，则更新user表里的对应字段
+			if("yes".equals(address.getIsDefault())){
+				User user = (User)session.get(User.class, address.getUserId());
+				user.setReceiveName(address.getUserName());
+				user.setPhoneNumber(address.getPhoneNumber());
+				user.setAddress(address.getDetailAddress());
+				user.setAddLabel(address.getLabel());
+				session.update(user);
+			}
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)
@@ -260,6 +280,27 @@ public class AddressDaoImpl implements IAddressDao {
 		// if(session != null){
 		// session.close();
 		// }
+	}
+	
+	@Override
+	public List<Address> queryByUserId(int userid) {
+		Session session = null;
+		Transaction tx = null;
+		List<Address> res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = session.createQuery("from Address a where a.userId=?").setInteger(0, userid).list();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	protected void doClose(PreparedStatement stmt) {
