@@ -108,18 +108,19 @@
     	$("#productList").html('<tr><td colspan="3">购买商品信息</td></tr><tr><td>商品名称</td><td>单价</td><td>数量</td></tr>');
        $(".pop_bg").fadeIn();
        var clickedId = $(this).attr("id");
-       orderId_toView = clickedId.charAt(clickedId.length-1);
-       $("#oname_phone").text($("#receiverName"+orderId_toView).text()+"  "+$("#phoneNumber"+orderId_toView).text());
-       $("#onumber").text($("#viewPopTxt"+orderId_toView).text());
-       $("#oreceiveTime").text($("#receiveTime"+orderId_toView).text());
-       $("#oaddress").text($("#address"+orderId_toView).text());
-       $("#ototalPrice").text($("#totalPrice"+orderId_toView).text());
-       $("#ocouponPrice").text($("#couponPrice"+orderId_toView).text());
-       $("#ocomment").text($("#comment"+orderId_toView).text());
+       //orderId_toView = clickedId.charAt(clickedId.length-1);
+       orderId_toView = clickedId.split("-")[1];
+       $("#oname_phone").text($("#receiverName-"+orderId_toView).text()+"  "+$("#phoneNumber-"+orderId_toView).text());
+       $("#onumber").text($("#viewPopTxt-"+orderId_toView).text());
+       $("#oreceiveTime").text($("#receiveTime-"+orderId_toView).text());
+       $("#oaddress").text($("#address-"+orderId_toView).text());
+       $("#ototalPrice").text($("#totalPrice-"+orderId_toView).text());
+       $("#ocouponPrice").text($("#couponPrice-"+orderId_toView).text());
+       $("#ocomment").text($("#comment-"+orderId_toView).text());
        
      //商品详细列表
   	   var table= $("#productList");
-       var productNames = $("#productNames"+orderId_toView).text();
+       var productNames = $("#productNames-"+orderId_toView).text();
        var productList = productNames.split(",");
        $.each(productList,function(index,item){
     	   var pname = item.split("=")[0];
@@ -225,8 +226,8 @@
        $(".del_pop_bg").fadeIn();
        //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
        var clickedId = $(this).attr("id");
-       orderId_toCancel = clickedId.charAt(clickedId.length-1);
-
+       //orderId_toCancel = clickedId.charAt(clickedId.length-1);
+		orderId_toCancel = clickedId.split("-")[1];
        });
      //弹出：确认按钮
      $("#confirmCancel").click(function(){
@@ -305,19 +306,19 @@
        </tr>
        	<c:forEach var="item" items="${orders}" varStatus="status">
          	<tr>
-         		<td><button class="linkStyle viewOrder" id="viewPopTxt${item.id}">${item.number}</button></td>
-         		<td id="totalPrice${item.id}">￥${item.totalPrice}</td>
-         		<td id="couponPrice${item.id}">${item.couponPrice}</td>
-         		<td id="receiverName${item.id}">${item.receiverName}</td>
-         		<td id="phoneNumber${item.id}">${item.phoneNumber}</td>
-         		<td id="receiveTime${item.id}">${item.receiveTime}</td>
+         		<td><button class="linkStyle viewOrder" id="viewPopTxt-${item.id}">${item.number}</button></td>
+         		<td id="totalPrice-${item.id}">￥${item.totalPrice}</td>
+         		<td id="couponPrice-${item.id}">${item.couponPrice}</td>
+         		<td id="receiverName-${item.id}">${item.receiverName}</td>
+         		<td id="phoneNumber-${item.id}">${item.phoneNumber}</td>
+         		<td id="receiveTime-${item.id}">${item.receiveTime}</td>
          		<td>${item.refundStatus}</td>
-		        <td><button class="linkStyle" id="cancelPopTxt${item.id}" style="cursor:default;color:grey">${item.finalStatus}</button></td>
-		        <td id="productNames${item.id}" style="display:none">${item.productNames}</td>
-		        <td id="address${item.id}" style="display:none">${item.address}</td>
-		         <td id="comment${item.id}" style="display:none">${item.comment}</td>
-		         <td id="receiveTime${item.id}" style="display:none">${item.receiveTime}</td>
-		         <td id="orderTime${item.id}" style="display:none">${item.orderTime}</td>
+		        <td><button class="linkStyle" id="cancelPopTxt-${item.id}" style="cursor:default;color:grey">${item.finalStatus}</button></td>
+		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
+		        <td id="address-${item.id}" style="display:none">${item.address}</td>
+		         <td id="comment-${item.id}" style="display:none">${item.comment}</td>
+		         <td id="receiveTime-${item.id}" style="display:none">${item.receiveTime}</td>
+		         <td id="orderTime-${item.id}" style="display:none">${item.orderTime}</td>
          	</tr>
 		</c:forEach> 
       </table>
