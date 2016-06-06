@@ -149,7 +149,7 @@
        <!--title-->
        <h3>添加分类</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
         <ul>
          <li>
           <span>分类名称</span>
@@ -160,10 +160,6 @@
           <input type="text" id="catsequence" placeholder="请填写整数，从大到小排序" class="textbox"/>
          </li>
         </ul>
-       </div>
-       <!--以pop_cont_text分界-->
-       <div class="pop_cont_text">
-        这里是文字性提示信息！
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
@@ -238,7 +234,7 @@
        <!--title-->
        		<h3>修改分类</h3>
        		<!--content-->
-	       <div class="pop_cont_input">
+	       <div class="small_pop_cont_input">
 	        <ul>
 	         <li>
 	          <span>分类名称</span>
@@ -312,7 +308,7 @@
        <!--title-->
        <h3>温馨提示</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
           确认删除？删除后该分类下的所有记录将取消与该分类的关联

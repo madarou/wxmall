@@ -201,7 +201,7 @@
        <!--title-->
        <h3>添加城市</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
           <section>
@@ -312,7 +312,7 @@
        <!--title-->
        <h3>添加区域</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small-pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
           <section>
@@ -419,7 +419,7 @@
        <!--title-->
        <h3>温馨提示</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
           确认要将本区域相关信息暂时下线（上线）么？<br/>
@@ -526,7 +526,7 @@
        <!--title-->
        <h3>修改区域</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
           <section>

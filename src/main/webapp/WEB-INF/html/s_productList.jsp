@@ -415,12 +415,13 @@
 		      </ul>
 		     </section>
          </div>
-         <!--bottom:operate->button-->
+         
+        </div>
+        <!--bottom:operate->button-->
          <div class="btm_btn">
           <input type="button" value="确认" id="confirmEdit" class="input_btn trueBtn"/>
           <input type="button" value="取消" id="cancelEdit" class="input_btn falseBtn"/>
          </div>
-        </div>
        </div>
      </section>
 <!-- 编辑产品 -->

@@ -133,6 +133,10 @@
     		 alert("并未修改");
     		 return false;
     	 }
+    	 if(imgUrlN==""){
+    		 alert("banner图片不能为空");
+    		 return false;
+    	 }
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
@@ -357,7 +361,7 @@
        <!--title-->
        <h3>温馨提示</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
           确认要继续操作吗?

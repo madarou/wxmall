@@ -228,7 +228,7 @@
 					<!--title-->
 					<h3>温馨提示</h3>
 					<!--content-->
-					<div class="pop_cont_input">
+					<div class="small_pop_cont_input">
 						<!--以pop_cont_text分界-->
 						<div class="pop_cont_text">请确认已经通过微信支付后台进行退款再点此操作
 						</div>

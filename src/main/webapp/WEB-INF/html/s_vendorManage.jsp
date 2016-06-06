@@ -279,7 +279,7 @@
        <!--title-->
        <h3>温馨提示</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
           确认删除该区域管理员账户?
@@ -299,11 +299,11 @@
     	  $('#vendorcity').change(function(){
     	    	 //alert($(this).children('option:selected').val());
     	    	 var cityId = $(this).children('option:selected').val();
-    	    	 if(cityId=="选择城市"){
+    	    	 //if(cityId=="选择城市"){
     	    		 $("#vendorarea").empty();
     	        	 $("#vendorarea").get(0).options.add(new Option("选择区域","选择区域"));
-    	    		 return;
-    	    	 }
+    	    	//	 return;
+    	    	 //}
     	    	 $.ajax({
     	    		 type: "POST",
     		          contentType: "application/json",
@@ -411,7 +411,7 @@
        <!--title-->
        <h3>添加账号</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
           <section>

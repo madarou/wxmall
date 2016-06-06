@@ -178,7 +178,7 @@
        <!--title-->
        <h3>修改会员信息</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
           <ul>
 	       <li>
 	          <span>会员&nbsp;I&nbsp;D&nbsp;</span>

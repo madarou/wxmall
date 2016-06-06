@@ -249,7 +249,7 @@
        <!--title-->
        <h3>温馨提示</h3>
        <!--content-->
-       <div class="pop_cont_input">
+       <div class="small_pop_cont_input">
        <!--以pop_cont_text分界-->
          <div class="pop_cont_text">
           确认要继续操作吗?
@@ -607,12 +607,12 @@ $(document).ready(function(){
 		      </ul>
 		     </section>
          </div>
-         <!--bottom:operate->button-->
+        </div>
+        <!--bottom:operate->button-->
          <div class="btm_btn">
           <input type="button" value="确认" id="confirmEdit" class="input_btn trueBtn"/>
           <input type="button" value="取消" id="cancelEdit" class="input_btn falseBtn"/>
          </div>
-        </div>
        </div>
      </section>
 <!-- 编辑产品 -->
