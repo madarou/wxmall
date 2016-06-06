@@ -161,11 +161,10 @@
           	<tr><td colspan="3">购买商品信息</td></tr>
           	<tr><td>商品名称</td><td>单价</td><td>数量</td></tr>
           </table>
-          
-       </div>
-       <!--以pop_cont_text分界-->
-       <div class="pop_cont_text">
-        <!-- <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消'"/> -->
+          <!--以pop_cont_text分界-->
+	       <div class="pop_cont_text">
+	       <span class="item_name">备注：</span>在用户确认收货或一定时间后，已配送订单会进入已收货订单列表
+	       </div>
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">

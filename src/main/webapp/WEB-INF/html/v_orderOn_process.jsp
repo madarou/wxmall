@@ -47,7 +47,7 @@
 
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
- <h2><a href="index.php">常州-某某区</a></h2>
+ <h2>常州-某某区</h2>
  <ul>
   <li>
    <dl>
@@ -163,12 +163,11 @@
           	<tr><td colspan="3">购买商品信息</td></tr>
           	<tr><td>商品名称</td><td>单价</td><td>数量</td></tr>
           </table>
-          
-       </div>
-       <!--以pop_cont_text分界-->
-       <div class="pop_cont_text">
-        <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消'"/>
-        <button class="linkStyle" id="subComment">提交</button>
+          <!--以pop_cont_text分界-->
+	       <div class="pop_cont_text">
+	        <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox textbox_295" placeholder="如'用户临时改变收货地址'"/>
+	        <button class="linkStyle" id="subComment">提交</button>
+	       </div>
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
@@ -231,7 +230,7 @@
 					<!--title-->
 					<h3>温馨提示</h3>
 					<!--content-->
-					<div class="pop_cont_input">
+					<div class="small_pop_cont_input">
 						<!--以pop_cont_text分界-->
 						<div class="pop_cont_text">确认要取消该订单吗?
 						</div>
@@ -239,7 +238,7 @@
 						      <ul class="ulColumn2">
 						       <li>
 						        <span class="item_name">备注：</span>
-						        <input type="text" id="vcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消'"/>
+						        <input type="text" id="vcomment" class="textbox textbox_225" placeholder="如'用户电话联系取消'"/>
 						       </li>
 						       <li>
 						      </ul>
@@ -325,7 +324,7 @@
 					<!--title-->
 					<h3>温馨提示</h3>
 					<!--content-->
-					<div class="pop_cont_input">
+					<div class="small_pop_cont_input">
 						<!--以pop_cont_text分界-->
 						<div class="pop_cont_text">确定要继续吗?
 						</div>

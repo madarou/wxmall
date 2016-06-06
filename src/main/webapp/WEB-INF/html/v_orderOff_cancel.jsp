@@ -198,15 +198,14 @@
           	<tr><td colspan="3">购买商品信息</td></tr>
           	<tr><td>商品名称</td><td>单价</td><td>数量</td></tr>
           </table>
-          
+          <!--以pop_cont_text分界-->
+	       <div class="pop_cont_text">
+	        	<span class="item_name">备注：</span>需要退款的订单将由专人负责退款的操作
+	       </div>
        </div>
-       <!--以pop_cont_text分界-->
-       <div class="pop_cont_text">
-        <!-- <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消'"/> -->
-       </div>
+       
        <!--bottom:operate->button-->
        <div class="btm_btn">
-        <input type="button" value="确认并打印" class="input_btn trueBtn"/>
         <input type="button" value="关闭" class="input_btn falseBtn"/>
        </div>
       </div>
