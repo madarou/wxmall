@@ -40,6 +40,7 @@ import com.makao.service.IVendorService;
 import com.makao.utils.OrderNumberUtils;
 import com.makao.weixin.po.pay.Unifiedorder;
 import com.makao.weixin.utils.HttpUtil;
+import com.makao.weixin.utils.JSSignatureUtil;
 import com.makao.weixin.utils.SignatureUtil;
 import com.makao.weixin.utils.WeixinConstants;
 import com.thoughtworks.xstream.XStream;
@@ -158,6 +159,9 @@ public class OrderOnController {
 	    String returnXml = HttpUtil.doPostXml(WeixinConstants.UNIFIEDORDER_URL, xml);
 	    logger.info("返回结果:" + returnXml);
 	    
+	    //为前端页面能够使用JSSDK设置签名
+	    String appId = WeixinConstants.APPID;
+	    Map<String, String> wxConfig = JSSignatureUtil.getSignature("http://madarou1.ngrok.cc/orderOn/unifiedorder");
 	    //将生成的订单需要在提交时使用的信息返回到前端页面
 	    response.setHeader("content-type", "text/html;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -183,10 +187,10 @@ public class OrderOnController {
 						+"<script>"
 							+ "wx.config({"
 								+ "debug: true,"
-								+ "appId: 'wxf8b4f85f3a794e77',"
-								+ "timestamp: 1465472244,"
-								+ "nonceStr: '27BIAtVKP25ZBjzl',"
-								+ "signature: '1e4bbb418a694c35d299595844e2cdb12bbb14f7',"
+								+ "appId: '"+appId+"',"
+								+ "timestamp: "+wxConfig.get("timestamp")+","
+								+ "nonceStr: '"+wxConfig.get("nonceStr")+"',"
+								+ "signature: '"+wxConfig.get("signature")+"',"
 								+ "jsApiList: ["
 									+ "'chooseWXPay'"
 								+ "]"

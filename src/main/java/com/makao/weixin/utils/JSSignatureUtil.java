@@ -8,6 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+
+import com.makao.controller.UserController;
+import com.makao.weixin.po.AccessToken;
+
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
+
 /**
  * @description: TODO
  * @author makao
@@ -15,7 +23,26 @@ import java.util.UUID;
  * JSSDK的签名生成
  */
 public class JSSignatureUtil {
-    public static Map<String, String> sign(String jsapi_ticket, String url) {
+	private static final Logger logger = Logger.getLogger(JSSignatureUtil.class);
+	private static String jsapi_ticket = getJsApiTicket(AccessTokenUtil.getToken().getToken());
+	
+	public static String getJsApiTicket(String access_token) {
+        String requestUrl = WeixinConstants.JSAPI_TICKET_URL.replace("ACCESS_TOKEN", access_token);
+        // 发起GET请求获取凭证
+        JSONObject jsonObject = HttpUtil.doGetObject(requestUrl);
+        String ticket = null;
+        if (null != jsonObject) {
+            try {
+                ticket = jsonObject.getString("ticket");
+                System.out.println("jsapi_ticket: "+ticket);
+            } catch (JSONException e) {
+                // 获取token失败
+            	logger.error("获取token失败 errcode:{"+jsonObject.getInt("errcode")+"} errmsg:{"+jsonObject.getString("errmsg")+"}");
+            }
+        }
+        return ticket;
+    }
+    public static Map<String, String> getSignature(String url) {
         Map<String, String> ret = new HashMap<String, String>();
         String nonce_str = create_nonce_str();
         String timestamp = create_timestamp();

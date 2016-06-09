@@ -9,7 +9,7 @@ public class WeixinConstants {
 	public static final String APPSECRET = "ea2fa885539a667e302a92bb86b54e55";
 	
 	public static final String MCHID = "1239292402";//商户号，支付用
-	public static final String PAY_KEY = "";//生成签名时所用的key
+	public static final String PAY_KEY = "";//生成支付签名时所用的商户key
 	//统一下单地址，POST
 	public static final String UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	
@@ -18,6 +18,8 @@ public class WeixinConstants {
 	//public static final String APPSECRET_TEST = "ea2fa885539a667e302a92bb86b54e55";
 	//获取access_token，get
 	public static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
+	//JSSDK获取jsapi_ticket的url，get
+	public static final String JSAPI_TICKET_URL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
 	//自定义菜单创建，post
 	public static final String CREATEMENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
 	
