@@ -1,13 +1,19 @@
 package com.makao.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -115,7 +121,7 @@ public class OrderOnController {
 	
 	@RequestMapping(value = "/unifiedorder", method = RequestMethod.POST)
     public @ResponseBody
-    void unifiedorder(@RequestParam(value="token", required=false) String token) {
+    void unifiedorder(@RequestParam(value="token", required=false) String token,HttpServletRequest request,HttpServletResponse response) throws IOException {
 		Unifiedorder u = new Unifiedorder();
 		u.setAppid(WeixinConstants.APPID);
 		u.setMch_id(WeixinConstants.MCHID);
@@ -131,7 +137,7 @@ public class OrderOnController {
 		u.setDevice_info("WEB");
 		
 		//生成sign签名
-		Map<Object, Object> parameters = new HashMap<Object, Object>();
+		SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
 		parameters.put("appid", u.getAppid());
 		parameters.put("body", u.getBody());
 		parameters.put("mch_id", u.getMch_id());
@@ -151,6 +157,58 @@ public class OrderOnController {
 	    logger.info("统一下单xml为:\n" + xml);
 	    String returnXml = HttpUtil.doPostXml(WeixinConstants.UNIFIEDORDER_URL, xml);
 	    logger.info("返回结果:" + returnXml);
+	    
+	    //将生成的订单需要在提交时使用的信息返回到前端页面
+	    response.setHeader("content-type", "text/html;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		String page = "<!DOCTYPE html>"
+						+ "<html>"
+						+ "<head>"
+							+ "<meta charset=\"utf-8\">"
+							+ "<title>订单支付</title>"
+							+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=0\">"
+							+ "<link rel=\"stylesheet\" href=\"/css/weixin.css\">"
+						+ "</head>"
+						+"<body>"
+							+ "<div class=\"wxapi_container\">"
+								+"<div class=\"lbox_close wxapi_form\">"
+									+ "<h3 id=\"menu-pay\">微信支付接口</h3>"
+									+ "<span class=\"desc\">发起一个微信支付请求</span>"
+									+ "<button class=\"btn btn_primary\" id=\"chooseWXPay\">支付订单</button>"
+								+"</div>"
+							+ "</div>"
+						+ "</body>"
+						+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
+						+"<script>"
+							+ "wx.config({"
+								+ "debug: true,"
+								+ "appId: 'wxf8b4f85f3a794e77',"
+								+ "timestamp: 1465472244,"
+								+ "nonceStr: '27BIAtVKP25ZBjzl',"
+								+ "signature: '1e4bbb418a694c35d299595844e2cdb12bbb14f7',"
+								+ "jsApiList: ["
+									+ "'chooseWXPay'"
+								+ "]"
+							+ "});"
+							+ "wx.ready(function () {"
+								+ "var btn = document.getElementById(\"chooseWXPay\");"
+								+ "btn.onclick=function(){"
+									+ "alert('click success');"
+									+ "wx.chooseWXPay({"
+										+ "timestamp: 1414723227,"
+										+ "nonceStr: 'noncestr',"
+										+ "package: 'addition=action_id%3dgaby1234%26limit_pay%3d&bank_type=WX&body=innertest&fee_type=1&input_charset=GBK&notify_url=http%3A%2F%2F120.204.206.246%2Fcgi-bin%2Fmmsupport-bin%2Fnotifypay&out_trade_no=1414723227818375338&partner=1900000109&spbill_create_ip=127.0.0.1&total_fee=1&sign=432B647FE95C7BF73BCD177CEECBEF8D',"
+										+ "signType: 'MD5',"
+										+ "paySign: 'bd5b1933cda6e9548862944836a9b52e8c9a2b69'"
+									+ "});"
+								+ "}"
+							+ "});"
+							+ "wx.error(function (res) {"
+								+ "alert(res.errMsg);"
+							+ "});"
+						+ "</script>"
+					+ "</html>";
 	}
 	
 	/**

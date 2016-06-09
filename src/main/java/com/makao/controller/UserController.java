@@ -260,7 +260,6 @@ public class UserController {
 						+ "</body>"
 					+ "</html>";
 		}
-		//out.write("<!DOCTYPE html><html><body>hello</body></html>");
 		
 		out.write(page);
 	}

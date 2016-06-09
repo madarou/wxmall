@@ -14,7 +14,7 @@ import java.util.SortedMap;
  * 微信支付使用的signature
  */
 public class SignatureUtil {
-	public static String createSign(Map<Object,Object> parameters,String key){ 
+	public static String createSign(SortedMap<Object,Object> parameters,String key){ 
 	    StringBuffer sb = new StringBuffer(); 
 	    Set es = parameters.entrySet();//所有参与传参的参数按照accsii排序（升序） 
 	    Iterator it = es.iterator(); 
