@@ -82,4 +82,26 @@ public class HttpUtil {
 		}
 		return jsonObject;
 	}
+	
+	public static String doPostXml(String url, String outStr){
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpPost httpPost = new HttpPost(url);
+		String res = null;
+		//设置post参数
+		StringEntity en = new StringEntity(outStr,"UTF-8");
+		en.setContentType("text/xml");
+		httpPost.setEntity(en);
+		try {
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity entity = response.getEntity();
+			if(entity != null){
+				res = EntityUtils.toString(entity,"UTF-8");
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
 }

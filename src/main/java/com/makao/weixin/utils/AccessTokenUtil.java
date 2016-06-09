@@ -8,6 +8,7 @@ import com.makao.weixin.po.AccessToken;
  * @description: TODO
  * @author makao
  * @date 2016年6月6日
+ * 这个access_token不是网页授权登录的access_token
  */
 public class AccessTokenUtil {
 	private static AccessToken token = getAccessToken();

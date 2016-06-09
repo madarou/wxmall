@@ -2,8 +2,10 @@ package com.makao.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -30,6 +32,11 @@ import com.makao.service.IOrderOnService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.OrderNumberUtils;
+import com.makao.weixin.po.pay.Unifiedorder;
+import com.makao.weixin.utils.HttpUtil;
+import com.makao.weixin.utils.SignatureUtil;
+import com.makao.weixin.utils.WeixinConstants;
+import com.thoughtworks.xstream.XStream;
 
 /**
  * @description: TODO
@@ -105,6 +112,46 @@ public class OrderOnController {
 		}
         return jsonObject;
     }
+	
+	@RequestMapping(value = "/unifiedorder", method = RequestMethod.POST)
+    public @ResponseBody
+    void unifiedorder(@RequestParam(value="token", required=false) String token) {
+		Unifiedorder u = new Unifiedorder();
+		u.setAppid(WeixinConstants.APPID);
+		u.setMch_id(WeixinConstants.MCHID);
+		u.setSub_mch_id(WeixinConstants.MCHID);
+		u.setNonce_str(SignatureUtil.getNonceStr());
+		u.setBody("测试支付(商品描述body)");
+		u.setOut_trade_no(OrderNumberUtils.generateOrderNumber());
+		u.setTotal_fee(1);
+		u.setSpbill_create_ip("127.0.0.1");
+		u.setNotify_url("http://www.baidu.com/");//接收微信支付异步通知回调地址
+		u.setTrade_type("JSAPI");
+		u.setOpenid("oNeZrwPHAKJ5jpLjZENmtVY5Y9u0");
+		u.setDevice_info("WEB");
+		
+		//生成sign签名
+		Map<Object, Object> parameters = new HashMap<Object, Object>();
+		parameters.put("appid", u.getAppid());
+		parameters.put("body", u.getBody());
+		parameters.put("mch_id", u.getMch_id());
+		parameters.put("nonce_str", u.getNonce_str());
+		parameters.put("notify_url", u.getNotify_url());
+		parameters.put("out_trade_no", u.getOut_trade_no());
+		parameters.put("total_fee", u.getTotal_fee());
+		parameters.put("trade_type", u.getTrade_type());
+		parameters.put("spbill_create_ip", u.getSpbill_create_ip());
+		parameters.put("openid", u.getOpenid());
+		parameters.put("device_info", u.getDevice_info());
+		u.setSign(SignatureUtil.createSign(parameters, WeixinConstants.PAY_KEY));
+		
+		XStream xstream = new XStream();
+		xstream.alias("xml", Unifiedorder.class);
+		String xml = xstream.toXML(u);
+	    logger.info("统一下单xml为:\n" + xml);
+	    String returnXml = HttpUtil.doPostXml(WeixinConstants.UNIFIEDORDER_URL, xml);
+	    logger.info("返回结果:" + returnXml);
+	}
 	
 	/**
 	 * @param token

@@ -8,6 +8,11 @@ public class WeixinConstants {
 	public static final String APPID = "wx454e62d4ba842c70";
 	public static final String APPSECRET = "ea2fa885539a667e302a92bb86b54e55";
 	
+	public static final String MCHID = "1239292402";//商户号，支付用
+	public static final String PAY_KEY = "";//生成签名时所用的key
+	//统一下单地址，POST
+	public static final String UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	
 	//测试用的订阅号，因为个人订阅号有权限限制，如不能请求图片上传的URL等，只能用测试号代替
 	//public static final String APPID_TEST = "wx454e62d4ba842c70";
 	//public static final String APPSECRET_TEST = "ea2fa885539a667e302a92bb86b54e55";
