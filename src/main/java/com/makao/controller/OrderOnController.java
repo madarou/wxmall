@@ -90,6 +90,9 @@ public class OrderOnController {
 		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
 			OrderOn.setStatus("排队中");
 		}
+		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
+		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
+		//订单生成后，使用微信接口向用户发送模板消息
 		int res = this.orderOnService.insert(OrderOn);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){

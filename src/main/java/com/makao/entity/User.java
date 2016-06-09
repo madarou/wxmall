@@ -71,7 +71,7 @@ public class User implements Serializable{
 	public void setOpenid(String openid) {
 		this.openid = openid;
 	}
-	@Column(length=50)
+	@Column(length=150)//因为从微信返回的头像地址125位
 	public String getAvatarUrl() {
 		return avatarUrl;
 	}

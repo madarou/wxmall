@@ -1,5 +1,7 @@
 package com.makao.weixin.main;
 
+import java.io.UnsupportedEncodingException;
+
 import net.sf.json.JSONObject;
 
 import com.makao.weixin.po.AccessToken;
@@ -22,14 +24,21 @@ public class MenuCreator {
 	 * 创建一个菜单，
 	 * 里面包含三个一级菜单clickButton, viewButton和compoundButton
 	 * 其中compoundButton还是包含两个子菜单
+	 * @throws UnsupportedEncodingException 
 	 */
-	public static Menu initMenu(){
+	public static Menu initMenu() throws UnsupportedEncodingException{
 		Menu menu = new Menu();
 		//进入商城
 		ViewButton mallButton = new ViewButton();
 		mallButton.setName("进入商城");
 		mallButton.setType("view");
-		mallButton.setUrl("http://madarou1.ngrok.cc/user/login/?openid=3c5d3acb-31b9-480d-944a-516e74390ed8");//注意必须加http，否则会报40055错误
+		//mallButton.setUrl("http://madarou1.ngrok.cc/user/login/?openid=3c5d3acb-31b9-480d-944a-516e74390ed8");//注意必须加http，否则会报40055错误
+		//String login_url = "http://baidu.com";
+		String login_url = "http://madarou1.ngrok.cc/user/snsapi_userinfo";
+		String url = WeixinConstants.AUTH_URL.replace("APPID", WeixinConstants.APPID).
+				replace("REDIRECT_URI", login_url).
+				replace("SCOPE","snsapi_userinfo");
+		mallButton.setUrl(url);
 		//我的订单
 		ViewButton orderButton = new ViewButton();
 		orderButton.setName("我的订单");
@@ -70,7 +79,7 @@ public class MenuCreator {
 	}
 	
 	//创建菜单只创建一次，不用启动服务器
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnsupportedEncodingException {
 		AccessToken token = AccessTokenUtil.getToken();
 		System.out.println(token.getToken());
 		System.out.println(token.getExpiresIn());

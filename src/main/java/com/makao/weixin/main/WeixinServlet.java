@@ -71,7 +71,9 @@ public class WeixinServlet extends HttpServlet {
 			String content = map.get("Content");
 			System.out.println(content);
 			String msgId = map.get("MsgId");
-
+			System.out.println("message fromUserName: "+ fromUserName);//其实就是发送者的微信openid
+			System.out.println("message toUserName: "+ toUserName);//其实就是公众号的微信号
+			
 			String message = null;
 			//如果用户发送过来的是文本消息，处理文本消息
 			if (MessageUtil.MESSAGE_TEXT.equals(msgType)) {
