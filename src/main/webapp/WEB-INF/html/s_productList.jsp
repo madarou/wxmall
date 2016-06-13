@@ -180,11 +180,6 @@
      <!-- 搜索 -->
      <section style="text-align:right">
       <input type="text" class="textbox textbox_225" placeholder="海南西红柿"/>
-      <select class="select">
-       <option>选择分类...</option>
-       <option>水果</option>
-       <option>食材</option>
-      </select>
       <input type="button" value="搜索" class="group_btn"/>
       <a href="/product/s_new/${id}?token=${token}" style="margin-left: 30px">添加商品</a>
      </section><br/>

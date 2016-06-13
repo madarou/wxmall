@@ -44,6 +44,8 @@ import com.makao.weixin.utils.JSSignatureUtil;
 import com.makao.weixin.utils.SignatureUtil;
 import com.makao.weixin.utils.WeixinConstants;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 
 /**
  * @description: TODO
@@ -126,7 +128,7 @@ public class OrderOnController {
 		Unifiedorder u = new Unifiedorder();
 		u.setAppid(WeixinConstants.APPID);
 		u.setMch_id(WeixinConstants.MCHID);
-		u.setSub_mch_id(WeixinConstants.MCHID);
+		//u.setSub_mch_id(WeixinConstants.MCHID);
 		u.setNonce_str(SignatureUtil.getNonceStr());
 		u.setBody("测试支付(商品描述body)");
 		u.setOut_trade_no(OrderNumberUtils.generateOrderNumber());
@@ -152,7 +154,7 @@ public class OrderOnController {
 		parameters.put("device_info", u.getDevice_info());
 		u.setSign(SignatureUtil.createSign(parameters, WeixinConstants.PAY_KEY));
 		
-		XStream xstream = new XStream();
+		XStream xstream = new XStream(new DomDriver("UTF-8",new XmlFriendlyNameCoder("-_", "_")));
 		xstream.alias("xml", Unifiedorder.class);
 		String xml = xstream.toXML(u);
 	    logger.info("统一下单xml为:\n" + xml);

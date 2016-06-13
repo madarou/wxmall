@@ -25,7 +25,7 @@ import net.sf.json.JSONObject;
 public class JSSignatureUtil {
 	private static final Logger logger = Logger.getLogger(JSSignatureUtil.class);
 	private static String jsapi_ticket = getJsApiTicket(AccessTokenUtil.getToken().getToken());
-	
+	//private static String jsapi_ticket = "kgt8ON7yVITDhtdwci0qeX6wTpn15xQ_HJUqdWfRW-9-EjYL1HCmjYvn9joC_B5XJpePVLgFl5oFUlTy_YSTkg";
 	public static String getJsApiTicket(String access_token) {
         String requestUrl = WeixinConstants.JSAPI_TICKET_URL.replace("ACCESS_TOKEN", access_token);
         // 发起GET请求获取凭证
