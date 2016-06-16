@@ -13,6 +13,7 @@
 <![endif]-->
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="static/js/input_constrain.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -182,27 +183,27 @@
           <ul>
 	       <li>
 	          <span>会员&nbsp;I&nbsp;D&nbsp;</span>
-	          <input type="text" id="editid" style="color:grey" placeholder="" disabled="disabled" class="textbox"/>
+	          <input type="text" id="editid" style="color:grey" placeholder="" disabled="disabled" class="textbox_225"/>
 	       </li>
            <li>
             <span>会员姓名</span>
-            <input type="text" style="color:grey" id="editname" placeholder="" disabled="disabled" class="textbox"/>
+            <input type="text" style="color:grey" id="editname" placeholder="" disabled="disabled" class="textbox_225"/>
            </li>
            <li>
             <span class="ttl">联系电话</span>
-            <input type="text" id="editphone" placeholder="" class="textbox"/>
+            <input type="text" id="editphone" placeholder="" class="textbox_225"/>
            </li>
            <li>
             <span class="ttl">会员积分</span>
-            <input type="text" id="editpoint" placeholder="" class="textbox"/>
+            <input type="text" id="editpoint" placeholder="" class="textbox_225 point_input"/>
            </li>
            <li>
             <span class="ttl">默认地址</span>
-            <input type="text" id="editaddress" placeholder="" class="textbox"/>
+            <input type="text" id="editaddress" placeholder="" class="textbox_225 length_input_120"/>
            </li>
            <li>
             <span class="ttl">会员等级</span>
-            <input type="text" id="editrank" placeholder="" class="textbox"/>
+            <input type="text" id="editrank" placeholder="" class="textbox_225 length_input_10"/>
            </li>
           </ul>
        </div>

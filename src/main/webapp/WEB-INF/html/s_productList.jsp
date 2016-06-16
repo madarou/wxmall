@@ -14,6 +14,7 @@
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="static/js/ajaxfileupload.js" type="text/javascript"></script>
+<script src="static/js/input_constrain.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -179,7 +180,7 @@
 
      <!-- 搜索 -->
      <section style="text-align:right">
-      <input type="text" class="textbox textbox_225" placeholder="海南西红柿"/>
+      <input type="text" class=" textbox_225 length_input_20" placeholder="海南西红柿"/>
       <input type="button" value="搜索" class="group_btn"/>
       <a href="/product/s_new/${id}?token=${token}" style="margin-left: 30px">添加商品</a>
      </section><br/>
@@ -351,27 +352,27 @@
 		      <ul class="ulColumn2">
 		       <li>
 		        <span class="item_name" style="width:120px;">商品名称：</span>
-		        <input type="text" id="proname" class="textbox textbox_295" placeholder="如'海南小番茄'"/>
+		        <input type="text" id="proname" class=" textbox_295 length_input_20" placeholder="如'海南小番茄'"/>
 		       </li>
 		        <li>
 		        <span class="item_name" style="width:120px;">原产地：</span>
-		        <input type="text" id="proorigin" class="textbox textbox_295" placeholder="如'海南'"/>
+		        <input type="text" id="proorigin" class=" textbox_295 length_input_20" placeholder="如'海南'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">商品规格：</span>
-		        <input type="text" id="prostandard" class="textbox textbox_295" placeholder="如'一份250克','一份足2斤'"/>
+		        <input type="text" id="prostandard" class=" textbox_295 length_input_30" placeholder="如'一份250克','一份足2斤'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">售价(￥)：</span>
-		        <input type="text" id="proprice" class="textbox textbox_295" placeholder=""/>
+		        <input type="text" id="proprice" class=" textbox_295 price_input" placeholder=""/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">市场价(￥)：</span>
-		        <input type="text" id="promarketprice" class="textbox textbox_295" placeholder=""/>
+		        <input type="text" id="promarketprice" class=" textbox_295 price_input" placeholder=""/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">商品简介：</span>
-		        <input type="text" id="prodescription" class="textbox textbox_295" placeholder="一句话十字以内"/>
+		        <input type="text" id="prodescription" class=" textbox_295 length_input_20" placeholder="一句话十字以内"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">缩略图：</span>

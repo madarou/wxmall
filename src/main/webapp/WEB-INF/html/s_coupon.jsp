@@ -18,6 +18,7 @@
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="static/js/ajaxfileupload.js" type="text/javascript"></script>
+<script src="static/js/input_constrain.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -199,27 +200,27 @@
 		      <ul class="ulColumn2">
 		       <li>
 		        <span class="item_name" style="width:120px;">名称：</span>
-		        <input type="text" id="cname" class="textbox textbox_295" placeholder="如'10元代金券'"/>
+		        <input type="text" id="cname" class=" textbox_295 length_input_20" placeholder="如'10元代金券'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">类型：</span>
-		        <input type="text" id="ctype" class="textbox textbox_295" style="bcolor:grey" disabled="disabled" value="代金券兑换"/>
+		        <input type="text" id="ctype" class=" textbox_295" style="bcolor:grey" disabled="disabled" value="代金券兑换"/>
 		       </li>
 		        <li>
 		        <span class="item_name" style="width:120px;">面值(￥)：</span>
-		        <input type="text" id="camount" class="textbox textbox_295" placeholder="如'10'"/>
+		        <input type="text" id="camount" class=" textbox_295 coupon_amount_input" placeholder="如'10'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">消耗积分：</span>
-		        <input type="text" id="cpoint" class="textbox textbox_295" placeholder="如'20'"/>
+		        <input type="text" id="cpoint" class=" textbox_295 point_input" placeholder="如'20'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">使用限制：</span>
-		        <input type="text" id="crestrict" class="textbox textbox_295" placeholder="消费满X元才能使用就填X"/>
+		        <input type="text" id="crestrict" class=" textbox_295 coupon_restrict_input" placeholder="消费满X元才能使用就填X"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">简单说明：</span>
-		        <input type="text" id="ccomment" class="textbox textbox_295" placeholder="如'新用户欢迎礼券'"/>
+		        <input type="text" id="ccomment" class=" textbox_295 length_input_50" placeholder="如'新用户欢迎礼券'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">生效城市：</span>
@@ -554,27 +555,27 @@
 		      <ul class="ulColumn2">
 		       <li>
 		        <span class="item_name" style="width:120px;">名称：</span>
-		        <input type="text" id="coname" class="textbox textbox_295" placeholder="如'10元代金券'"/>
+		        <input type="text" id="coname" class="textbox_295 length_input_20" placeholder="如'10元代金券'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">类型：</span>
-		        <input type="text" id="cotype" class="textbox textbox_295" style="bcolor:grey" disabled="disabled" value="代金券兑换"/>
+		        <input type="text" id="cotype" class="textbox_295" style="bcolor:grey" disabled="disabled" value="代金券兑换"/>
 		       </li>
 		        <li>
 		        <span class="item_name" style="width:120px;">面值(￥)：</span>
-		        <input type="text" id="coamount" class="textbox textbox_295" placeholder="如'10'"/>
+		        <input type="text" id="coamount" class=" textbox_295 coupon_amount_input" placeholder="如'10'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">消耗积分：</span>
-		        <input type="text" id="copoint" class="textbox textbox_295" placeholder="如'20'"/>
+		        <input type="text" id="copoint" class=" textbox_295 point_input" placeholder="如'20'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">使用限制：</span>
-		        <input type="text" id="corestrict" class="textbox textbox_295" placeholder="消费满X元才能使用就填X"/>
+		        <input type="text" id="corestrict" class=" textbox_295 coupon_restrict_input" placeholder="消费满X元才能使用就填X"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">简单说明：</span>
-		        <input type="text" id="cocomment" class="textbox textbox_295" placeholder="如'新用户欢迎礼券'"/>
+		        <input type="text" id="cocomment" class=" textbox_295 length_input_50" placeholder="如'新用户欢迎礼券'"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">生效城市：</span>

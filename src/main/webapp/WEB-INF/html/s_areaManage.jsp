@@ -19,6 +19,7 @@
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="static/js/ajaxfileupload.js" type="text/javascript"></script>
+<script src="static/js/input_constrain.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -208,7 +209,7 @@
 		      <ul class="ulColumn2">
 		       <li>
 		        <span class="item_name">城市名称:</span>
-		        <input type="text" id="cityName" placeholder=""/>
+		        <input type="text" id="cityName" class="textbox_225 length_input_20" placeholder="布宜诺斯艾利斯"/>
 		        <!-- <span class="errorTips" id="nocityname"></span> -->
 		       </li>
 		       <li>
@@ -319,7 +320,7 @@
 		      <ul class="ulColumn2">
 		       <li>
 		        <span class="item_name">区域名称:</span>
-		        <input type="text" id="areaName" placeholder=""/>
+		        <input type="text" id="areaName" class="length_input_20 textbox_225" placeholder=""/>
 		        <!-- <span class="errorTips" id="nocityname"></span> -->
 		       </li>
 		       <li>
@@ -330,15 +331,15 @@
 		       </li>
 		       <li>
 		        <span class="item_name">区域经度:</span>
-		        <input type="text" id="arealongitude" placeholder=""/>
+		        <input type="text" id="arealongitude" class="titude_input textbox_225" placeholder=""/>
 		       </li>
 		        <li>
 		        <span class="item_name">区域纬度:</span>
-		        <input type="text" id="arealatitude" placeholder=""/>
+		        <input type="text" id="arealatitude" class="titude_input textbox_225" placeholder=""/>
 		       </li>
 		       <li>
 		        <span class="item_name">服务电话:</span>
-		        <input type="text" id="areaphoneNumber" placeholder=""/>
+		        <input type="text" id="areaphoneNumber" class="phone_input textbox_225" placeholder="如'12345678900'"/>
 		       </li>
 		      </ul>
 		    </section>
@@ -533,7 +534,7 @@
 		      <ul class="ulColumn2">
 		       <li>
 		        <span class="item_name">区域名称:</span>
-		        <input type="text" id="eareaName" placeholder=""/>
+		        <input type="text" id="eareaName" class="length_input_20 textbox_225" placeholder=""/>
 		       </li>
 		       <li>
 		        <span class="item_name">所属城市:</span>
@@ -543,15 +544,15 @@
 		       </li>
 		       <li>
 		        <span class="item_name">区域经度:</span>
-		        <input type="text" id="earealongitude" placeholder=""/>
+		        <input type="text" id="earealongitude" class="titude_input textbox_225"  placeholder=""/>
 		       </li>
 		        <li>
 		        <span class="item_name">区域纬度:</span>
-		        <input type="text" id="earealatitude" placeholder=""/>
+		        <input type="text" id="earealatitude" class="titude_input textbox_225"  placeholder=""/>
 		       </li>
 		       <li>
 		        <span class="item_name">服务电话:</span>
-		        <input type="text" id="eareaphoneNumber" placeholder=""/>
+		        <input type="text" id="eareaphoneNumber" class="phone_input textbox_225" placeholder="如'12345678900'"/>
 		       </li>
 		      </ul>
 		    </section>

@@ -212,27 +212,27 @@
       <ul class="ulColumn2" style="padding-left: 22%;">
        <li>
         <span class="item_name" style="width:120px;">商品名称：</span>
-        <input type="text" id="proname" class="textbox textbox_295 length_input_15" placeholder="如'海南小番茄'"/>
+        <input type="text" id="proname" class=" textbox_295 length_input_20" placeholder="如'海南小番茄'"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">原产地：</span>
-        <input type="text" id="proorigin" class="textbox textbox_295 length_input_15" placeholder="如'海南'"/>
+        <input type="text" id="proorigin" class=" textbox_295 length_input_20" placeholder="如'海南'"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品规格：</span>
-        <input type="text" id="prostandard" class="textbox textbox_295 length_input_20" placeholder="如'一份250克','一份足2斤'"/>
+        <input type="text" id="prostandard" class=" textbox_295 length_input_30" placeholder="如'一份250克','一份足2斤'"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">售价(￥)：</span>
-        <input type="text" id="proprice" class="textbox textbox_295 price_input" placeholder=""/>
+        <input type="text" id="proprice" class=" textbox_295 price_input" placeholder=""/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">市场价(￥)：</span>
-        <input type="text" id="promarketprice" class="textbox textbox_295 price_input" placeholder=""/>
+        <input type="text" id="promarketprice" class=" textbox_295 price_input" placeholder=""/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品简介：</span>
-        <input type="text" id="prodescription" class="textbox textbox_295 length_input_10" placeholder="一句话十字以内"/>
+        <input type="text" id="prodescription" class=" textbox_295 length_input_20" placeholder="如'香甜可口，消暑止渴'"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">缩略图：</span>

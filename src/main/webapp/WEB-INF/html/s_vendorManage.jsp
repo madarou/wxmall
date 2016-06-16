@@ -19,6 +19,7 @@
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="static/js/ajaxfileupload.js" type="text/javascript"></script>
+<script src="static/js/input_constrain.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -207,11 +208,11 @@
 		      <ul class="ulColumn2">
 		       <li>
 		        <span class="item_name">账号名称:</span>
-		        <input type="text" id="editvendorName" placeholder=""/>
+		        <input type="text" id="editvendorName" class="length_input_20  textbox_225" placeholder=""/>
 		       </li>
 		       <li>
 		        <span class="item_name">账号密码:</span>
-		        <input type="text" id="editpassword" placeholder=""/>
+		        <input type="text" id="editpassword" class="length_input_20  textbox_225" placeholder=""/>
 		       </li>
 		       <!-- <li>
 		        <span class="item_name">负责区域:</span>
@@ -418,11 +419,11 @@
 		      <ul class="ulColumn2">
 		       <li>
 		        <span class="item_name">账号名称:</span>
-		        <input type="text" id="vendorName" placeholder=""/>
+		        <input type="text" id="vendorName" class="length_input_20 textbox_225" placeholder=""/>
 		       </li>
 		       <li>
 		        <span class="item_name">账号密码:</span>
-		        <input type="text" id="password" placeholder=""/>
+		        <input type="text" id="password" class="length_input_20 textbox_225" placeholder=""/>
 		       </li>
 		       <li>
 		        <span class="item_name">负责区域:</span>
