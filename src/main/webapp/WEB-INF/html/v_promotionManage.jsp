@@ -181,7 +181,7 @@
 	         </li>
 	         <li>
 	          		<span class="item_name">banner图片：</span>
-						<img alt="请上传比例300*150，大小小于50M的图片" id="upload" src=""
+						<img alt="请上传比例480*240，大小小于50M的图片" id="upload" src=""
 								style="height: 100px; width: 305px; cursor: pointer">
 						<div id="fileDiv">
 						<input id="fileToUpload" style="display: none" type="file"
@@ -203,16 +203,16 @@
     <script>
      $(document).ready(function(){ 
     	 //获取图片尺寸，并验证是否满足尺寸大小
-    	 function checkImageSize(url,standard,callback){
+    	 function checkImageSize(url,callback){
     			var img = new Image();
     			img.src = url;
     			// 如果图片被缓存，则直接返回缓存数据
     			if(img.complete){
-    			    callback(img.width, img.height,standard);
+    			    callback(img.width, img.height);
     			}else{
     				// 完全加载完毕的事件
     			    img.onload = function(){
-    					callback(img.width, img.height, standard);
+    					callback(img.width, img.height);
     			    }
     		    }
     	  }
@@ -232,10 +232,10 @@
                      $("#serverImgName").val(data.imgName);
                      $("#upload").attr("src", "/static/upload/"+data.imgName);
                      var imgSrc = $("#upload").attr("src");
-                     var require = {wid:300,hei:300};
-                     checkImageSize(imgSrc,require,function(w,h,require){
+                     var require = {wid:480,hei:240};
+                     checkImageSize(imgSrc,function(w,h){
                  		if(w!=require.wid || h!=require.hei){
-                 			alert("图片尺寸不符合!");
+                 			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");
                  			$("#serverImgName").val("");
                  			$("#upload").attr("src", "");
                  		}

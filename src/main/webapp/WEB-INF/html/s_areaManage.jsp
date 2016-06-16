@@ -159,6 +159,20 @@
        $(".addcity_pop_bg").fadeOut();
        });
      
+     //获取图片尺寸，并验证是否满足尺寸大小
+	 function checkImageSize(url,callback){
+			var img = new Image();
+			img.src = url;
+			// 如果图片被缓存，则直接返回缓存数据
+			if(img.complete){
+			    callback(img.width, img.height);
+			}else{
+				// 完全加载完毕的事件
+			    img.onload = function(){
+					callback(img.width, img.height);
+			    }
+		    }
+	  }
      $("#upload").on('click', function() {  
          $('#fileToUpload').click();  
      });
@@ -178,6 +192,15 @@
                      //alert("图片可用");
                      $("#serverImgName").val(data.imgName);
                      $("#upload").attr("src", "/static/upload/"+data.imgName);
+                     var imgSrc = $("#upload").attr("src");
+                     var require = {wid:79,hei:79};
+                     checkImageSize(imgSrc,function(w,h){
+                 		if(w!=require.wid || h!=require.hei){
+                 			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");
+                 			$("#serverImgName").val("");
+                 			$("#upload").attr("src", "");
+                 		}
+                 	 });
                  }
                  else if(data.msg=="图片不符合"){
                 	 alert("图片不符合");
@@ -217,7 +240,7 @@
 		        <!-- <label class="uploadImg" id="upload">
 		         <span>上传图片</span>
 		        </label> -->
-		        <img alt="上传图片" id="upload" src="" style="height:100px;width:100px;cursor:pointer">
+		        <img alt="图片(79 x 79)" id="upload" src="" style="height:100px;width:100px;cursor:pointer">
 		        <div id="fileDiv">
 		        	<input id="fileToUpload" style="display: none" type="file" name="upfile">
 		        </div>

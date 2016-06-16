@@ -235,8 +235,8 @@
 				</select>
 		       </li>
 							<li><span class="item_name" style="width: 120px;">封面图：</span>
-								<img alt="封面图" id="uploadd1" src=""
-								style="height: 100px; width: 305px; cursor: pointer">
+								<img alt="(182 x 182)" id="uploadd1" src=""
+								style="height: 100px; width: 100px; cursor: pointer">
 								<div id="fileDivd1">
 									<input id="fileToUploadd1" style="display: none" type="file"
 										name="upfiled1">
@@ -244,7 +244,7 @@
 							</li>
 							<li>
 								<span class="item_name" style="width: 120px;">详细图：</span>
-								<img alt="详细图" id="uploadd2" src=""
+								<img alt="(1040 x 420)" id="uploadd2" src=""
 								style="height: 100px; width: 305px; cursor: pointer">
 								<div id="fileDivd2">
 									<input id="fileToUploadd2" style="display: none" type="file"
@@ -446,7 +446,7 @@
        pointO = $.trim($("#point-"+editHandle_Id).text());
        restrictO = $.trim($("#restrict-"+editHandle_Id).text());
        commentO = $.trim($("#comment-"+editHandle_Id).text());
-       coverSUrlO =  $.trim($("#coverBUrl-"+editHandle_Id).text());
+       coverSUrlO =  $.trim($("#coverSUrl-"+editHandle_Id).text());
        coverBUrlO = $.trim($("#coverBUrl-"+editHandle_Id).text());
        cityNameO = $.trim($("#cityName-"+editHandle_Id).text());
        cityIdO = $.trim($("#cityId-"+editHandle_Id).text());
@@ -463,7 +463,7 @@
        $("#cuploadd1").attr("src", "/static/upload/"+coverSUrlO);
        $("#cserverImgNamed1").val(coverSUrlO);
        $("#cuploadd2").attr("src", "/static/upload/"+coverBUrlO);
-       $("#cserverImgNamed1").val(coverBUrlO);
+       $("#cserverImgNamed2").val(coverBUrlO);
        $("#coisshow").val(isShowO);
        });
      //弹出：确认按钮
@@ -480,7 +480,7 @@
 		 	var isshow = $("#coisshow").val();
 		 	
 		 	var coverSUrl = $("#cserverImgNamed1").val();
-		 	var coverBUrl = $("#cserverImgNamed1").val();
+		 	var coverBUrl = $("#cserverImgNamed2").val();
 		 	
 		 	if(name == "" || amount=="" || point=="" || restrict=="" || comment==""){
 		 		alert("名称、面值、消耗积分、使用限制、简单介绍不能为空");
@@ -590,8 +590,8 @@
 				</select>
 		       </li>
 							<li><span class="item_name" style="width: 120px;">封面图：</span>
-								<img alt="封面图" id="cuploadd1" src=""
-								style="height: 100px; width: 305px; cursor: pointer">
+								<img alt="(182 x 182)" id="cuploadd1" src=""
+								style="height: 100px; width: 100px; cursor: pointer">
 								<div id="cfileDivd1">
 									<input id="cfileToUploadd1" style="display: none" type="file"
 										name="cupfiled1">
@@ -599,7 +599,7 @@
 							</li>
 							<li>
 								<span class="item_name" style="width: 120px;">详细图：</span>
-								<img alt="详细图" id="cuploadd2" src=""
+								<img alt="(1040 x 420)" id="cuploadd2" src=""
 								style="height: 100px; width: 305px; cursor: pointer">
 								<div id="cfileDivd2">
 									<input id="cfileToUploadd2" style="display: none" type="file"
@@ -685,6 +685,20 @@
  </div>
 </section>
 <script>
+//获取图片尺寸，并验证是否满足尺寸大小
+function checkImageSize(url,callback){
+		var img = new Image();
+		img.src = url;
+		// 如果图片被缓存，则直接返回缓存数据
+		if(img.complete){
+		    callback(img.width, img.height);
+		}else{
+			// 完全加载完毕的事件
+		    img.onload = function(){
+				callback(img.width, img.height);
+		    }
+	    }
+ }
 $("#uploadd1").on('click', function() {  
     $('#fileToUploadd1').click();  
 });
@@ -700,6 +714,15 @@ $('#fileDivd1').on('change',function() {
                 //alert("图片可用");
                 $("#serverImgNamed1").val(data.imgName);
                 $("#uploadd1").attr("src", "/static/upload/"+data.imgName);
+                var imgSrc = $("#uploadd1").attr("src");
+                var require = {wid:182,hei:182};
+                checkImageSize(imgSrc,function(w,h){
+            		if(w!=require.wid || h!=require.hei){
+            			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");
+            			$("#serverImgNamed1").val("");
+            			$("#uploadd1").attr("src", "");
+            		}
+            	 });
             }
             else if(data.msg=="图片不符合"){
            	 alert("图片不符合");
@@ -732,6 +755,15 @@ $('#fileDivd2').on('change',function() {
                 //alert("图片可用");
                 $("#serverImgNamed2").val(data.imgName);
                 $("#uploadd2").attr("src", "/static/upload/"+data.imgName);
+                var imgSrc = $("#uploadd2").attr("src");
+                var require = {wid:1040,hei:420};
+                checkImageSize(imgSrc,function(w,h){
+            		if(w!=require.wid || h!=require.hei){
+            			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");
+            			$("#serverImgNamed2").val("");
+            			$("#uploadd2").attr("src", "");
+            		}
+            	 });
             }
             else if(data.msg=="图片不符合"){
            	 alert("图片不符合");
@@ -765,6 +797,15 @@ $('#cfileDivd1').on('change',function() {
                 //alert("图片可用");
                 $("#cserverImgNamed1").val(data.imgName);
                 $("#cuploadd1").attr("src", "/static/upload/"+data.imgName);
+                var imgSrc = $("#cuploadd1").attr("src");
+                var require = {wid:182,hei:182};
+                checkImageSize(imgSrc,function(w,h){
+            		if(w!=require.wid || h!=require.hei){
+            			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");
+            			$("#cserverImgNamed1").val("");
+            			$("#cuploadd1").attr("src", "");
+            		}
+            	 });
             }
             else if(data.msg=="图片不符合"){
            	 alert("图片不符合");
@@ -797,6 +838,15 @@ $('#cfileDivd2').on('change',function() {
                 //alert("图片可用");
                 $("#cserverImgNamed2").val(data.imgName);
                 $("#cuploadd2").attr("src", "/static/upload/"+data.imgName);
+                var imgSrc = $("#cuploadd2").attr("src");
+                var require = {wid:1040,hei:420};
+                checkImageSize(imgSrc,function(w,h){
+            		if(w!=require.wid || h!=require.hei){
+            			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");
+            			$("#cserverImgNamed2").val("");
+            			$("#cuploadd2").attr("src", "");
+            		}
+            	 });
             }
             else if(data.msg=="图片不符合"){
            	 alert("图片不符合");

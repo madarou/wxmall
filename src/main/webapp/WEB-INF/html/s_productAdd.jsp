@@ -236,8 +236,8 @@
        </li>
        <li>
         <span class="item_name" style="width:120px;">缩略图：</span>
-        <span><img alt="正方形" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
-        <span><img alt="长方形" id="uploadb" src="" style="height:100px;width:200px;cursor:pointer"/></span>
+        <span><img alt="(400 x 400)" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
+        <span><img alt="(480 x 240)" id="uploadb" src="" style="height:100px;width:200px;cursor:pointer"/></span>
 		<div id="fileDivs">
 		     <input id="fileToUploads" style="display: none" type="file" name="upfiles">
 		</div>
@@ -278,7 +278,21 @@
 
  <!-- 添加s缩略图 -->
     <script>
-     $(document).ready(function(){     
+     $(document).ready(function(){
+    	//获取图片尺寸，并验证是否满足尺寸大小
+    	 function checkImageSize(url,callback){
+    			var img = new Image();
+    			img.src = url;
+    			// 如果图片被缓存，则直接返回缓存数据
+    			if(img.complete){
+    			    callback(img.width, img.height);
+    			}else{
+    				// 完全加载完毕的事件
+    			    img.onload = function(){
+    					callback(img.width, img.height);
+    			    }
+    		    }
+    	  }
      $("#uploads").on('click', function() {  
          $('#fileToUploads').click();  
      });
@@ -298,6 +312,15 @@
                      //alert("图片可用");
                      $("#serverImgNames").val(data.imgName);
                      $("#uploads").attr("src", "/static/upload/"+data.imgName);
+                     var imgSrc = $("#uploads").attr("src");
+                     var require = {wid:400,hei:400};
+                     checkImageSize(imgSrc,function(w,h){
+                 		if(w!=require.wid || h!=require.hei){
+                 			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");
+                 			$("#serverImgNames").val("");
+                 			$("#uploads").attr("src", "");
+                 		}
+                 	 });
                  }
                  else if(data.msg=="201"){
                 	 alert("图片不符合");
@@ -322,6 +345,20 @@
    <!-- 添加b缩略图 -->
     <script>
      $(document).ready(function(){     
+    	//获取图片尺寸，并验证是否满足尺寸大小
+    	 function checkImageSize(url,callback){
+    			var img = new Image();
+    			img.src = url;
+    			// 如果图片被缓存，则直接返回缓存数据
+    			if(img.complete){
+    			    callback(img.width, img.height);
+    			}else{
+    				// 完全加载完毕的事件
+    			    img.onload = function(){
+    					callback(img.width, img.height);
+    			    }
+    		    }
+    	  }
      $("#uploadb").on('click', function() {  
          $('#fileToUploadb').click();  
      });
@@ -338,6 +375,15 @@
                      //alert("图片可用");
                      $("#serverImgNameb").val(data.imgName);
                      $("#uploadb").attr("src", "/static/upload/"+data.imgName);
+                     var imgSrc = $("#uploadb").attr("src");
+                     var require = {wid:480,hei:240};
+                     checkImageSize(imgSrc,function(w,h){
+                 		if(w!=require.wid || h!=require.hei){
+                 			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");
+                 			$("#serverImgNameb").val("");
+                 			$("#uploadb").attr("src", "");
+                 		}
+                 	 });
                  }
                  else if(data.msg=="201"){
                 	 alert("图片不符合");
