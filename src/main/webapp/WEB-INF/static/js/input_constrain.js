@@ -65,7 +65,7 @@ $(document).ready(function(){
 			 $(this).val($(this).val().substring(0,120));
 		 }
 	 });
-	 //会员等级
+	 //会员等级，商品分类名
 	 $(".length_input_10").on('input',function(){
 		 var len = $.trim($(this).val()).length;
 		 if(len>10){
@@ -98,5 +98,15 @@ $(document).ready(function(){
 		 if(len>50){
 			 $(this).val($(this).val().substring(0,50));
 		 }
+	 });
+	 //商品库存，商品排序，分类名的排序，整数
+	 $(".inventory_input").on('blur',function(){
+		 var reg = /^(\d+)+$/g;
+		 var content = $.trim($(this).val());
+		 if(content!="" && !reg.test(content)){  
+		     alert("请输入正确格式的整数");
+		     $(this).val("");
+		     $(this).focus();
+		 } 
 	 });
 });

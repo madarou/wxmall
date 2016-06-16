@@ -291,7 +291,7 @@
 	     
      <section>
       <div class="page_title">
-       <a class="fr top_rt_btn" href="/orderOff/v_query_done/${id}?token=${token}">刷新</a>
+       <a class="fr top_rt_btn" href="/orderOff/v_query_confirm/${id}?token=${token}">刷新</a>
       </div>
       <table class="table">
        <tr>

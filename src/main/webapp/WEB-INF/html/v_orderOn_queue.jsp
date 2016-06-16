@@ -236,7 +236,7 @@
 						      <ul class="ulColumn2">
 						       <li>
 						        <span class="item_name">备注：</span>
-						        <input type="text" id="vcomment" class="textbox textbox_225" placeholder="如'用户电话联系取消'"/>
+						        <input type="text" id="vcomment" class="textbox_225" placeholder="如'用户电话联系取消'"/>
 						       </li>
 						       <li>
 						      </ul>

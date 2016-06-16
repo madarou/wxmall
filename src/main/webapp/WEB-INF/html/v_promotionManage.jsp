@@ -243,7 +243,7 @@
        <tr>
         <th>分类名称</th>
         <th>操作</th>
-        <th>状态</th>
+        <th>操作&nbsp;|&nbsp;状态</th>
        </tr>
        	<c:forEach var="item" items="${banners}" varStatus="status">
          	<tr>
@@ -260,7 +260,7 @@
 		  					<button class="linkStyle upOrdown" id="up-${item.id}">上线</button>&nbsp;&nbsp;${item.status}
 						</c:when> 
 						<c:otherwise>   
-							<button class="linkStyle" id="up-${item.id}">未配置</button>&nbsp;&nbsp;未配置
+							<%-- <button class="linkStyle" id="up-${item.id}">未配置</button>&nbsp;&nbsp; --%>未配置
 						</c:otherwise> 
 					</c:choose>
          		</td>

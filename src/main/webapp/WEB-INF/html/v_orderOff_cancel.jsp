@@ -148,42 +148,6 @@
        <h3>订单详情</h3>
        <!--content-->
        <div class="pop_cont_input">
-         <!--  <table class="table">
-              <tr>
-                <td>订单编号</td>
-                <td>2016283737282892</td>
-                <td>下单时间</td>
-                <td>2016-04-12</td>
-              </tr>
-              <tr>
-                <td>地址</td>
-                <td>开心公寓xxx号</td>
-                <td>收货人</td>
-                <td>郭德纲</td>
-              </tr>
-              <tr>
-                <td>联系电话</td>
-                <td>18763645373</td>
-                <td>送货方式</td>
-                <td>送货上门</td>
-              </tr>
-              <tr>
-                <td>支付方式</td>
-                <td>微信支付</td>
-                <td>是否付款</td>
-                <td>已付款</td>
-              </tr>
-              <tr>
-                <td>优惠券抵扣</td>
-                <td>￥13.00</td>
-                <td>备注</td>
-                <td>尽快送达</td>
-              </tr>
-              <tr>
-                <td>总价</td>
-                <td colspan="3">￥36.00</td>
-              </tr>
-          </table> -->
           <table class="table">
           	<tr><td colspan="3">订单详情</td></tr>
           	<tr><td>联系方式</td><td colspan="2" id="oname_phone"></td></tr>

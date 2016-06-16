@@ -165,7 +165,7 @@
           </table>
           <!--以pop_cont_text分界-->
 	       <div class="pop_cont_text">
-	        <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消退货'"/>
+	        <span class="item_name">备注：</span><input type="text" id="vendorcomment" class=" textbox_295" placeholder="如'用户电话联系取消退货'"/>
 	        <button class="linkStyle" id="subComment">提交</button>
 	       </div>
        </div>
@@ -239,7 +239,7 @@
 						      <ul class="ulColumn2">
 						       <li>
 						        <span class="item_name">备注：</span>
-						        <input type="text" id="vcomment" class="textbox textbox_225" placeholder="如'用户电话联系取消'"/>
+						        <input type="text" id="vcomment" class=" textbox_225" placeholder="如'用户电话联系取消'"/>
 						       </li>
 						       <li>
 						      </ul>

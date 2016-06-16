@@ -18,6 +18,7 @@
 <![endif]-->
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="static/js/input_constrain.js" type="text/javascript"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -153,11 +154,11 @@
         <ul>
          <li>
           <span>分类名称</span>
-          <input type="text" id="catname" placeholder="如'水果'" class="textbox"/>
+          <input type="text" id="catname" placeholder="如'水果'" class="textbox_225 length_input_10"/>
          </li>
          <li>
           <span class="ttl">排&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序</span>
-          <input type="text" id="catsequence" placeholder="请填写整数，从大到小排序" class="textbox"/>
+          <input type="text" id="catsequence" placeholder="请填写整数，从大到小排序" class="textbox_225 inventory_input"/>
          </li>
         </ul>
        </div>
@@ -238,11 +239,11 @@
 	        <ul>
 	         <li>
 	          <span>分类名称</span>
-	          <input type="text" id="cat_name" placeholder="如'水果'" class="textbox"/>
+	          <input type="text" id="cat_name" placeholder="如'水果'" class="textbox_225 length_input_10"/>
 	         </li>
 	         <li>
 	          <span class="ttl">排&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序</span>
-	          <input type="text" id="cat_sequence" placeholder="请填写整数，从大到小排序" class="textbox"/>
+	          <input type="text" id="cat_sequence" placeholder="请填写整数，从大到小排序" class="textbox_225 inventory_input"/>
 	         </li>
 	        </ul>
 	       </div>
