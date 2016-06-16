@@ -202,6 +202,20 @@
         <!-- 添加banner图 -->
     <script>
      $(document).ready(function(){ 
+    	 //获取图片尺寸，并验证是否满足尺寸大小
+    	 function checkImageSize(url,standard,callback){
+    			var img = new Image();
+    			img.src = url;
+    			// 如果图片被缓存，则直接返回缓存数据
+    			if(img.complete){
+    			    callback(img.width, img.height,standard);
+    			}else{
+    				// 完全加载完毕的事件
+    			    img.onload = function(){
+    					callback(img.width, img.height, standard);
+    			    }
+    		    }
+    	  }
      $("#upload").on('click', function() {  
          $('#fileToUpload').click();  
      });
@@ -217,6 +231,15 @@
                      //alert("图片可用");
                      $("#serverImgName").val(data.imgName);
                      $("#upload").attr("src", "/static/upload/"+data.imgName);
+                     var imgSrc = $("#upload").attr("src");
+                     var require = {wid:300,hei:300};
+                     checkImageSize(imgSrc,require,function(w,h,require){
+                 		if(w!=require.wid || h!=require.hei){
+                 			alert("图片尺寸不符合!");
+                 			$("#serverImgName").val("");
+                 			$("#upload").attr("src", "");
+                 		}
+                 	 });
                  }
                  else if(data.msg=="201"){
                 	 alert("图片不符合");
