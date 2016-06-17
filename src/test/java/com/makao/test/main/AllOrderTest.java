@@ -44,6 +44,26 @@ public class AllOrderTest {
 		String orderon_queue = "{\"productIds\":\"5\",\"productNames\":\"新疆葡萄=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":3,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		result = HttpUtils.doPostStr(neworderon,orderon_queue);
 		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(neworderon,orderon_queue);
+//		assertEquals("200",result.get("msg"));
 		
 		//要被配送api配送的订单
 		String orderon = "{\"productIds\":\"2,3\",\"productNames\":\"海南小番茄=3.50=3,广东蜜桃=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"17638372821\",\"address\":\"上海复旦大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":3,\"couponPrice\":\"2.00\",\"totalPrice\":\"14.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";

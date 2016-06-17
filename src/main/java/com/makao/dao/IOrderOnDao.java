@@ -39,4 +39,27 @@ public interface IOrderOnDao {
 
 	//已配送订单查询，但尚未确认收货
 	public List<OrderOn> queryDistributedByAreaId(String tableName, int areaId);
+
+	/**
+	 * @param areaid 
+	 * @return
+	 * 查询排队订单的记录数
+	 */
+	public int getQueueRecordCount(int cityid, int areaid);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 查询待处理和处理中的记录数
+	 */
+	public int getProcessRecordCount(int cityId, int areaId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 查询已配送的记录数
+	 */
+	public int getDistributedRecordCount(int cityId, int areaId);
 }

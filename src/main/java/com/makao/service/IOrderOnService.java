@@ -41,4 +41,27 @@ public interface IOrderOnService {
 	//确认收货
 	public int confirmGetOrder(int cityid, int orderid);
 
+	/**
+	 * @param areaid 
+	 * @return
+	 * 查询排队订单的记录数
+	 */
+	int getQueueRecordCount(int cityid, int areaid);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 查询待处理和处理中的记录数
+	 */
+	int getProcessRecordCount(int cityId, int areaId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 查询已配送的记录总数
+	 */
+	int getDistributedRecordCount(int cityId, int areaId);
+
 }

@@ -76,6 +76,18 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public int confirmGetOrder(int cityid, int orderid) {
 		return this.orderOnDao.confirmGetOrder(cityid, orderid);
 	}
+	@Override
+	public int getQueueRecordCount(int cityid, int areaid) {
+		return this.orderOnDao.getQueueRecordCount(cityid, areaid);
+	}
+	@Override
+	public int getProcessRecordCount(int cityId, int areaId) {
+		return this.orderOnDao.getProcessRecordCount(cityId, areaId);
+	}
+	@Override
+	public int getDistributedRecordCount(int cityId, int areaId) {
+		return this.orderOnDao.getDistributedRecordCount(cityId, areaId);
+	}
 	
 //	@Override
 //	public void testor() {

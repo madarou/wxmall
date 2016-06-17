@@ -539,7 +539,7 @@ public class UserController {
 			//如果要显示第showPage页，那么游标应该移动到的position的值是：
 			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
 			int to=(users.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(users.size()-1);
-			users = this.userService.queryByAreaId(vendor.getAreaId()).subList(from, to+1);
+			users = users.subList(from, to+1);
 		}
 		
 		modelAndView.addObject("id", id);

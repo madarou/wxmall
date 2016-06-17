@@ -974,7 +974,127 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		}
 		return res.size()>0 ? res.get(0) : null;
 	}
+
+	@Override
+	public int getQueueRecordCount(int cityid, int areaid) {
+		String tableName = "Order_"+cityid+"_on";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaid+" AND `status`='排队中'";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new ArrayList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//res = session.createQuery("from User").list();
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						rs.next();
+						res.add(rs.getInt("count"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return  (res.size()>0 ? res.get(0) : 0);
+	}
+
+	@Override
+	public int getProcessRecordCount(int cityId, int areaId) {
+		String tableName = "Order_"+cityId+"_on";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `status` IN ('待处理','配送中')";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new ArrayList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//res = session.createQuery("from User").list();
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						rs.next();
+						res.add(rs.getInt("count"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return  (res.size()>0 ? res.get(0) : 0);
+	}
 	
+	@Override
+	public int getDistributedRecordCount(int cityId, int areaId) {
+		String tableName = "Order_"+cityId+"_on";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `status`='已配送'";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new ArrayList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//res = session.createQuery("from User").list();
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						rs.next();
+						res.add(rs.getInt("count"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return  (res.size()>0 ? res.get(0) : 0);
+	}
+
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
@@ -1014,5 +1134,4 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 			}
 		}
 	}
-
 }

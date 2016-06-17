@@ -37,6 +37,7 @@ import com.makao.service.ICityService;
 import com.makao.service.IOrderOnService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
+import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
 import com.makao.weixin.po.pay.Unifiedorder;
 import com.makao.weixin.utils.HttpUtil;
@@ -436,6 +437,41 @@ public class OrderOnController {
 		return modelAndView;
     }
 	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 增加分页
+	 */
+	@RequestMapping(value = "/v_query_queue/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView v_query_queue_paging(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token
+    		,@PathVariable("showPage") int showPage) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOn_queue");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOn> orders = null;
+		int pageCount = 0;
+		if(vendor!=null){
+			orders = this.orderOnService.queryQueueByAreaId("Order_"+vendor.getCityId()+"_on",vendor.getAreaId());
+			int recordCount = this.orderOnService.getQueueRecordCount(vendor.getCityId(),vendor.getAreaId());
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
+			int to=(orders.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orders.size()-1);
+			orders = orders.subList(from, to+1);
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders);   
+	    modelAndView.addObject("pageCount", pageCount);   
+		return modelAndView;
+    }
+	
 	@RequestMapping(value = "/v_query_process/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView v_query_process(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
@@ -455,6 +491,41 @@ public class OrderOnController {
 		return modelAndView;
     }
 	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 增加了分页
+	 */
+	@RequestMapping(value = "/v_query_process/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView v_query_process_paging(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token
+    		,@PathVariable("showPage") int showPage) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOn_process");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOn> orders = null;
+		int pageCount = 0;
+		if(vendor!=null){
+			orders = this.orderOnService.queryProcessByAreaId("Order_"+vendor.getCityId()+"_on",vendor.getAreaId());
+			int recordCount = this.orderOnService.getProcessRecordCount(vendor.getCityId(),vendor.getAreaId());
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
+			int to=(orders.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orders.size()-1);
+			orders = orders.subList(from, to+1);
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders);   
+	    modelAndView.addObject("pageCount", pageCount);   
+		return modelAndView;
+    }
+	
 	@RequestMapping(value = "/v_query_distributed/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView v_query_distributed(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
@@ -471,6 +542,41 @@ public class OrderOnController {
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
 	    modelAndView.addObject("orders", orders);   
+		return modelAndView;
+    }
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 增加分页
+	 */
+	@RequestMapping(value = "/v_query_distributed/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView v_query_distributed_paging(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token
+    		,@PathVariable("showPage") int showPage) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOn_distributed");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOn> orders = null;
+		int pageCount = 0;
+		if(vendor!=null){
+			orders = this.orderOnService.queryDistributedByAreaId("Order_"+vendor.getCityId()+"_on",vendor.getAreaId());
+			int recordCount = this.orderOnService.getDistributedRecordCount(vendor.getCityId(),vendor.getAreaId());
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
+			int to=(orders.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orders.size()-1);
+			orders = orders.subList(from, to+1);
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders);   
+	    modelAndView.addObject("pageCount", pageCount);   
 		return modelAndView;
     }
 }
