@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -766,6 +767,86 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 				session.close();// 关闭回话
 		}
 		return res;
+	}
+	
+	@Override
+	public int getConfirmRecordCount(int cityId, int areaId) {
+		String tableName = "Order_"+cityId+"_off";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `finalStatus`='已收货'";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new ArrayList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//res = session.createQuery("from User").list();
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						rs.next();
+						res.add(rs.getInt("count"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return  (res.size()>0 ? res.get(0) : 0);
+	}
+	
+	@Override
+	public int getReturnRecordCount(int cityId, int areaId) {
+		String tableName = "Order_"+cityId+"_off";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('退货申请中','退货中')";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new ArrayList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//res = session.createQuery("from User").list();
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						rs.next();
+						res.add(rs.getInt("count"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return  (res.size()>0 ? res.get(0) : 0);
 	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {

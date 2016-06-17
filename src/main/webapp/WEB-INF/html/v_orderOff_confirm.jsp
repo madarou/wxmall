@@ -55,7 +55,7 @@
     <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队订单</a></dd>
     <dd><a href="/orderOn/v_query_process/${id}?token=${token}">待处理订单</a></dd>
     <dd><a href="/orderOn/v_query_distributed/${id}?token=${token}">已配送订单</a></dd>
-    <dd><a href="/orderOff/v_query_confirm/${id}?token=${token}" class="active">已收货订单</a></dd>
+    <dd><a href="/orderOff/v_query_confirm/${id}/1?token=${token}" class="active">已收货订单</a></dd>
     <dd><a href="/orderOff/v_query_refund/${id}?token=${token}">待退货订单</a></dd>
     <dd><a href="/orderOff/v_query_cancel/${id}?token=${token}">已取消订单</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
@@ -322,13 +322,11 @@
 		</c:forEach> 
       </table>
       <aside class="paging">
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a>
+       <a href="/orderOff/v_query_confirm/${id}/1?token=${token}">第一页</a>
+       <c:forEach var="item" begin="1" end="${pageCount}">
+		   <a href="/orderOff/v_query_confirm/${id}/${item}?token=${token}">${item}</a>
+	   </c:forEach>
+       <a href="/orderOff/v_query_confirm/${id}/${pageCount}?token=${token}">最后一页</a>
       </aside>
      </section>
 	</div>

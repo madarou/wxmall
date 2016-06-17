@@ -60,8 +60,10 @@
 	<mvc:resources mapping="/orderOff/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query_confirm/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/v_query_confirm/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query_cancel/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query_refund/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/v_query_refund/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/s_query_refund/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/s_queryall/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/static/**" location="/WEB-INF/static/" />

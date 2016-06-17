@@ -29,6 +29,7 @@ import com.makao.service.ICityService;
 import com.makao.service.IOrderOffService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
+import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
 
 /**
@@ -343,6 +344,42 @@ public class OrderOffController {
 	 * @param id
 	 * @param token
 	 * @return
+	 * 增加了分页
+	 */
+	@RequestMapping(value = "/v_query_confirm/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView areaQuery_paging(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token
+    		,@PathVariable("showPage") int showPage) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOff_confirm");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOff> orders = null;
+		int pageCount = 0;
+		if(vendor!=null){
+			orders = this.orderOffService.queryConfirmGetByAreaId("Order_"+vendor.getCityId()+"_off",vendor.getAreaId());
+			int recordCount = this.orderOffService.getConfirmRecordCount(vendor.getCityId(),vendor.getAreaId());
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
+			int to=(orders.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orders.size()-1);
+			orders = orders.subList(from, to+1);
+
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders); 
+	    modelAndView.addObject("pageCount", pageCount);   
+		return modelAndView;
+    }
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
 	 * 查询所有已取消的、已退货和已取消退货的订单
 	 */
 	@RequestMapping(value = "/v_query_cancel/{id:\\d+}", method = RequestMethod.GET)
@@ -368,7 +405,7 @@ public class OrderOffController {
 	 * @param id
 	 * @param token
 	 * @return
-	 * 查询退货中、已退货的订单
+	 * 查询退货中、退货申请中的订单
 	 */
 	@RequestMapping(value = "/v_query_refund/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
@@ -386,6 +423,42 @@ public class OrderOffController {
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
 	    modelAndView.addObject("orders", orders);     
+		return modelAndView;
+    }
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 增加分页
+	 */
+	@RequestMapping(value = "/v_query_refund/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView vqueryrefund_paging(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token
+    		,@PathVariable("showPage") int showPage) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_orderOff_refund");  
+		if(token==null){
+			return modelAndView;
+		}
+		
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOff> orders = null;
+		int pageCount = 0;
+		if(vendor!=null){
+			orders = this.orderOffService.queryRefundByAreaId("Order_"+vendor.getCityId()+"_off",vendor.getAreaId());
+			int recordCount = this.orderOffService.getReturnRecordCount(vendor.getCityId(),vendor.getAreaId());
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
+			int to=(orders.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orders.size()-1);
+			orders = orders.subList(from, to+1);
+
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("orders", orders); 
+	    modelAndView.addObject("pageCount", pageCount);   
 		return modelAndView;
     }
 	

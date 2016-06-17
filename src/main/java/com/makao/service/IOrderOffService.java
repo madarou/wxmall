@@ -28,6 +28,12 @@ public interface IOrderOffService {
 
 	List<OrderOff> queryCancelByAreaId(String tableName, int areaId);
 
+	/**
+	 * @param tableName
+	 * @param areaId
+	 * @return
+	 * 退货申请中和退货中的订单
+	 */
 	List<OrderOff> queryRefundByAreaId(String tableName, int areaId);
 
 	int refundOrder(int cityId, int orderid);
@@ -45,5 +51,21 @@ public interface IOrderOffService {
 	OrderOff queryByOrderId(String tableName, int orderid);
 	//发起退货申请
 	int returnOrder(int cityid, int orderid);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 查询已退货的记录数
+	 */
+	int getConfirmRecordCount(int cityId, int areaId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 查询退货申请中和退货中的订单记录数
+	 */
+	int getReturnRecordCount(int cityId, int areaId);
 
 }
