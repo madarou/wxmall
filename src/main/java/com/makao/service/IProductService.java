@@ -33,4 +33,22 @@ public interface IProductService {
 	int showProduct(String tableName, int prodcutId);
 
 	int updateRepProduct(Product product);
+	
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 获取总的记录数
+	 */
+	int getRecordCount(int cityId, int areaId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param position
+	 * @param i
+	 * @return
+	 * 返回从指定下标开始到指定下标结束的所有记录
+	 */
+	List<Product> queryFromToIndex(int cityId, int areaId, int from, int to);
 }

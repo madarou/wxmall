@@ -65,6 +65,15 @@ public class ProductServiceImpl implements IProductService {
 	public int updateRepProduct(Product product) {
 		return this.productDao.updateRepProduct(product);
 	}
+	@Override
+	public int getRecordCount(int cityId, int areaId) {
+		return this.productDao.getRecordCount(cityId, areaId);
+	}
+	@Override
+	public List<Product> queryFromToIndex(int cityId, int areaId, int from,
+			int to) {
+		return this.productDao.queryFromToIndex(cityId, areaId, from, to);
+	}
 	
 	
 //	@Override

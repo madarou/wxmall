@@ -76,7 +76,7 @@
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
     <dd><a href="/product/v_new/${id}?token=${token}">商品添加</a></dd>
-    <dd><a href="/product/v_manage/${id}?token=${token}" class="active">商品管理</a></dd>
+    <dd><a href="/product/v_manage/${id}/1?token=${token}" class="active">商品管理</a></dd>
     <dd><a href="/product/v_catalog/${id}?token=${token}">分类管理</a></dd>
     <dd><a href="/product/v_promotion/${id}?token=${token}">综合配置</a></dd>
    </dl>
@@ -328,13 +328,11 @@
 		
       </table>
       <aside class="paging">
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a>
+       <a href="/product/v_manage/${id}/1?token=${token}">第一页</a>
+       <c:forEach var="item" begin="1" end="${pageCount}">
+		   <a href="/product/v_manage/${id}/${item}?token=${token}">${item}</a>
+	   </c:forEach>
+       <a href="/product/v_manage/${id}/${pageCount}?token=${token}">最后一页</a>
       </aside>
      </section>
 

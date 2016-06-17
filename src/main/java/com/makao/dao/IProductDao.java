@@ -30,4 +30,23 @@ public interface IProductDao {
 	public int showProduct(String tableName, int prodcutId);
 
 	public int updateRepProduct(Product product);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 获取总的记录条数
+	 */
+	public int getRecordCount(int cityId, int areaId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param from
+	 * @param to
+	 * @return
+	 * 返回从指定下标开始到指定下标结束的所有记录
+	 */
+	public List<Product> queryFromToIndex(int cityId, int areaId, int from,
+			int to);
 }

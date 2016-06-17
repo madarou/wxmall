@@ -33,6 +33,7 @@ import com.makao.service.IBannerService;
 import com.makao.service.IProductService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
+import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
 
 /**
@@ -667,10 +668,53 @@ public class ProductController {
 	 * @return
 	 * 除了产品列表，还需要catalog列表，因为里面有编辑产品的选项
 	 */
-	@RequestMapping(value = "/v_manage/{id:\\d+}", method = RequestMethod.GET)
+//	@RequestMapping(value = "/v_manage/{id:\\d+}", method = RequestMethod.GET)
+//    public @ResponseBody
+//    ModelAndView areaManage(@PathVariable("id") int id,
+//			@RequestParam(value = "token", required = false) String token) {
+//		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.setViewName("v_productManage");
+//		if (token == null) {
+//			return modelAndView;
+//		}
+//		modelAndView.addObject("id", id);
+//		modelAndView.addObject("token", token);
+//		Vendor vendor = this.vendorService.getById(id);
+//		List<Product> products = null;
+//		List<Catalog> catalogs = new ArrayList<Catalog>();
+//		if(vendor!=null){
+//			products = this.productService.queryByCityAreaId(vendor.getCityId(),vendor.getAreaId());
+//			Area area = this.areaService.getById(vendor.getAreaId());
+//			if(area!=null){
+//				String catalogStr = area.getCatalogs();
+//				if(catalogStr!=null && !"".equals(catalogStr.trim())){
+//					String[] catalogList = catalogStr.split(",");
+//					for(String c : catalogList){
+//						Catalog cc = new Catalog();
+//						cc.setName(c.split("=")[0]);
+//						cc.setSequence(c.split("=")[1]);
+//						catalogs.add(cc);
+//					}
+//				}
+//			}
+//		}
+//	    modelAndView.addObject("products", products);  
+//	    modelAndView.addObject("catalogs", catalogs); 
+//	    
+//		return modelAndView;
+//	}
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 因为要加入分页，所以进入产品管理时要先获取总的商品数，计算出总页数
+	 * 并且返回第一页的内容
+	 */
+	@RequestMapping(value = "/v_manage/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
-    ModelAndView areaManage(@PathVariable("id") int id,
-			@RequestParam(value = "token", required = false) String token) {
+    ModelAndView areaManageIndex(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token,@PathVariable("showPage") int showPage) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("v_productManage");
 		if (token == null) {
@@ -681,8 +725,17 @@ public class ProductController {
 		Vendor vendor = this.vendorService.getById(id);
 		List<Product> products = null;
 		List<Catalog> catalogs = new ArrayList<Catalog>();
+		int pageCount = 0;//需要分页的总数
 		if(vendor!=null){
-			products = this.productService.queryByCityAreaId(vendor.getCityId(),vendor.getAreaId());
+			//products = this.productService.queryByCityAreaId(vendor.getCityId(),vendor.getAreaId());
+			int recordCount = this.productService.getRecordCount(vendor.getCityId(),vendor.getAreaId());
+			System.out.println("total product count:"+recordCount);
+			//需要分页的总数
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//int showPage = 1;
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int position=(showPage-1)*MakaoConstants.PAGE_SIZE+1;
+			products = this.productService.queryFromToIndex(vendor.getCityId(),vendor.getAreaId(),position,position+MakaoConstants.PAGE_SIZE);
 			Area area = this.areaService.getById(vendor.getAreaId());
 			if(area!=null){
 				String catalogStr = area.getCatalogs();
@@ -699,6 +752,7 @@ public class ProductController {
 		}
 	    modelAndView.addObject("products", products);  
 	    modelAndView.addObject("catalogs", catalogs); 
+	    modelAndView.addObject("pageCount", pageCount); 
 	    
 		return modelAndView;
 	}
