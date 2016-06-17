@@ -78,6 +78,7 @@
 	<mvc:resources mapping="/product/v_catalog/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/v_promotion/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/s_products/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/product/s_products/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/s_catalogs/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/s_new/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/s_products/static/**" location="/WEB-INF/static/" />

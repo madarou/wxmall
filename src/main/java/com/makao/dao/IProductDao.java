@@ -49,4 +49,18 @@ public interface IProductDao {
 	 */
 	public List<Product> queryFromToIndex(int cityId, int areaId, int from,
 			int to);
+
+	/**
+	 * @return
+	 * 获取Product表的记录总数
+	 */
+	public int getRecordCount();
+
+	/**
+	 * @param from
+	 * @param to
+	 * @return
+	 * 从Product表中返回从指定下标开始到指定下标结束的所有记录
+	 */
+	public List<Product> queryFromToIndex(int from, int to);
 }

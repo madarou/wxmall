@@ -67,7 +67,7 @@
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="/product/s_products/${id}?token=${token}" class="active">商品库</a></dd>
+    <dd><a href="/product/s_products/${id}/1?token=${token}" class="active">商品库</a></dd>
    </dl>
   </li>
   <li>
@@ -215,13 +215,11 @@
 		</c:forEach> 
       </table>
       <aside class="paging">
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a>
+       <a href="/product/s_products/${id}/1?token=${token}">第一页</a>
+       <c:forEach var="item" begin="1" end="${pageCount}">
+		   <a href="/product/s_products/${id}/${item}?token=${token}">${item}</a>
+	   </c:forEach>
+       <a href="/product/s_products/${id}/${pageCount}?token=${token}">最后一页</a>
       </aside>
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->

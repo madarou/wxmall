@@ -51,4 +51,18 @@ public interface IProductService {
 	 * 返回从指定下标开始到指定下标结束的所有记录
 	 */
 	List<Product> queryFromToIndex(int cityId, int areaId, int from, int to);
+
+	/**
+	 * @return
+	 * 获取产品仓库，即Product表中的记录总数
+	 */
+	int getRecordCount();
+
+	/**
+	 * @param position
+	 * @param i
+	 * @return
+	 * 从Product表中返回从指定下标开始到指定下标结束的所有记录
+	 */
+	List<Product> queryFromToIndex(int from, int to);
 }

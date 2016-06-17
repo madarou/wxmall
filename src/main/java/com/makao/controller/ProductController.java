@@ -587,6 +587,34 @@ public class ProductController {
 	    return modelAndView;
     }
 	
+	@RequestMapping(value = "/s_products/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView queryRepproductsIndex(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token,@PathVariable("showPage") int showPage) {
+		ModelAndView modelAndView = new ModelAndView();  
+	    modelAndView.setViewName("s_productList");  
+		if (token == null) {
+			return modelAndView;
+		}
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		List<Product> ps = null;
+		int pageCount = 0;//需要分页的总数
+		Supervisor supervisor = this.supervisorService.getById(id);
+		if(supervisor!=null){
+			int recordCount = this.productService.getRecordCount();
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int position=(showPage-1)*MakaoConstants.PAGE_SIZE+1;
+			ps = this.productService.queryFromToIndex(position,position+MakaoConstants.PAGE_SIZE-1);
+		}
+		//这里假设放一些东西进去
+		logger.info("查询商品库信息完成");
+	    modelAndView.addObject("products", ps);  
+	    modelAndView.addObject("pageCount", pageCount); 
+	    return modelAndView;
+    }
+	
 	@RequestMapping(value = "/s_catalogs/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView query_Catalogs() {
@@ -667,6 +695,7 @@ public class ProductController {
 	 * @param token
 	 * @return
 	 * 除了产品列表，还需要catalog列表，因为里面有编辑产品的选项
+	 * 这个方法是没有加入分页的，返回所有的商品列表
 	 */
 //	@RequestMapping(value = "/v_manage/{id:\\d+}", method = RequestMethod.GET)
 //    public @ResponseBody
@@ -709,7 +738,7 @@ public class ProductController {
 	 * @param token
 	 * @return
 	 * 因为要加入分页，所以进入产品管理时要先获取总的商品数，计算出总页数
-	 * 并且返回第一页的内容
+	 * 并根据showPage显示对应页的记录
 	 */
 	@RequestMapping(value = "/v_manage/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
@@ -735,7 +764,7 @@ public class ProductController {
 			//int showPage = 1;
 			//如果要显示第showPage页，那么游标应该移动到的position的值是：
 			int position=(showPage-1)*MakaoConstants.PAGE_SIZE+1;
-			products = this.productService.queryFromToIndex(vendor.getCityId(),vendor.getAreaId(),position,position+MakaoConstants.PAGE_SIZE);
+			products = this.productService.queryFromToIndex(vendor.getCityId(),vendor.getAreaId(),position,position+MakaoConstants.PAGE_SIZE-1);
 			Area area = this.areaService.getById(vendor.getAreaId());
 			if(area!=null){
 				String catalogStr = area.getCatalogs();

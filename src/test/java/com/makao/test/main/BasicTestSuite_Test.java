@@ -113,6 +113,31 @@ public class BasicTestSuite_Test {
 		
 		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
 		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+//		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
+//		assertEquals("200",result.get("msg"));
+		
 		result = HttpUtils.doPostStr(newprodcut11_2,product11_2);
 		assertEquals("200",result.get("msg"));
 		result = HttpUtils.doPostStr(newprodcut22_1,product22_1);
