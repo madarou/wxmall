@@ -15,4 +15,23 @@ public interface IUserService {
 	public void testor();
 	public List<User> queryByAreaId(int areaId);
 	public User checkLogin(String openid);
+	
+	/**
+	 * @return
+	 * 返回总的记录数
+	 */
+	public int getRecordCount();
+	/**
+	 * @param from
+	 * @param to
+	 * @return
+	 * 返回id从from到to的所有记录
+	 */
+	public List<User> queryFromToIndex(int from, int to);
+	/**
+	 * @param areaId
+	 * @return
+	 * 返回areaid对应的记录数
+	 */
+	public int getRecordCountByAreaId(int areaId);
 }

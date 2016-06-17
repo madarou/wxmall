@@ -31,6 +31,7 @@ import com.makao.entity.Vendor;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
+import com.makao.utils.MakaoConstants;
 import com.makao.utils.TokenUtils;
 import com.makao.weixin.utils.HttpUtil;
 import com.makao.weixin.utils.JSSignatureUtil;
@@ -457,6 +458,40 @@ public class UserController {
 	    return modelAndView;
     }
 	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 分页返回用户列表
+	 */
+	@RequestMapping(value = "/s_queryall/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object query_Paging(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token,@PathVariable("showPage") int showPage) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("s_userManage");
+		if (token == null) {
+			return modelAndView;
+		}
+		List<User> users = null;
+		int pageCount = 0;//需要分页的总数
+		Supervisor supervisor = this.supervisorService.getById(id);
+		if(supervisor!=null){
+			int recordCount = this.userService.getRecordCount();
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int position=(showPage-1)*MakaoConstants.PAGE_SIZE+1;
+			users = this.userService.queryFromToIndex(position,position+MakaoConstants.PAGE_SIZE-1);
+		}
+		
+		logger.info("查询所有用户信息完成");
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+	    modelAndView.addObject("users", users);
+	    modelAndView.addObject("pageCount", pageCount); 
+	    return modelAndView;
+    }
+	
 	@RequestMapping(value = "/v_usermanage/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView dataManage(@PathVariable("id") int id,
@@ -475,6 +510,42 @@ public class UserController {
 		modelAndView.addObject("id", id);
 		modelAndView.addObject("token", token);
 		modelAndView.addObject("users", users);
+		return modelAndView;
+    }
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 增加分页功能
+	 */
+	@RequestMapping(value = "/v_usermanage/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView dataManagePaging(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token,@PathVariable("showPage") int showPage) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("v_userManage");
+		if (token == null) {
+			return modelAndView;
+		}
+		//查询该area下所有用户，即当前area是该vendor负责的area
+		Vendor vendor = this.vendorService.getById(id);
+		List<User> users = null;
+		int pageCount = 0;//需要分页的总数
+		if(vendor!=null){
+			users = this.userService.queryByAreaId(vendor.getAreaId());
+			int recordCount = this.userService.getRecordCountByAreaId(vendor.getAreaId());
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
+			int to=(users.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(users.size()-1);
+			users = this.userService.queryByAreaId(vendor.getAreaId()).subList(from, to+1);
+		}
+		
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		modelAndView.addObject("users", users);
+		modelAndView.addObject("pageCount", pageCount);
 		return modelAndView;
     }
 	

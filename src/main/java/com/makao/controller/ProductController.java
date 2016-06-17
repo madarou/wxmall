@@ -569,6 +569,12 @@ public class ProductController {
 	    return modelAndView;
     }
 	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 没有分页，返回所有
+	 */
 	@RequestMapping(value = "/s_products/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView queryRepproducts(@PathVariable("id") int id,
@@ -587,6 +593,13 @@ public class ProductController {
 	    return modelAndView;
     }
 	
+	/**
+	 * @param id
+	 * @param token
+	 * @param showPage
+	 * @return
+	 * 增加了分页
+	 */
 	@RequestMapping(value = "/s_products/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView queryRepproductsIndex(@PathVariable("id") int id,

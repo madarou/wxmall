@@ -54,6 +54,18 @@ public class UserServiceImpl implements IUserService {
 	public User checkLogin(String openid) {
 		return this.userDao.checkLogin(openid);
 	}
+	@Override
+	public int getRecordCount() {
+		return this.userDao.getRecordCount();
+	}
+	@Override
+	public List<User> queryFromToIndex(int from, int to) {
+		return this.userDao.queryFromToIndex(from, to);
+	}
+	@Override
+	public int getRecordCountByAreaId(int areaId) {
+		return this.userDao.getRecordCountByAreaId(areaId);
+	}
 	
 
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -278,7 +279,68 @@ public class UserDaoImpl implements IUserDao {
 		return res;
 	}
 
-	
+	@Override
+	public int getRecordCount() {
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = ((Long)session.createQuery("select count(id) from User").iterate().next()).intValue();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
+	@Override
+	public List<User> queryFromToIndex(int from, int to) {
+		Session session = null;
+		Transaction tx = null;
+		List<User> res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = session.createQuery("from User u where u.id between ? and ?").setInteger(0, from).setInteger(1, to).list();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}	
+
+	@Override
+	public int getRecordCountByAreaId(int areaId) {
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = ((Long)session.createQuery("select count(id) from User u where u.areaId=?").setInteger(0, areaId).iterate().next()).intValue();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {

@@ -520,7 +520,7 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public int getRecordCount(int cityId, int areaId) {
 		String tableName = "Product_"+cityId+"_"+areaId;
-		String sql = "SELECT count(*) as count FROM "+tableName;
+		String sql = "SELECT count(id) as count FROM "+tableName;
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -625,7 +625,7 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public int getRecordCount() {
 		String tableName = "Product";
-		String sql = "SELECT count(*) as count FROM "+tableName;
+		String sql = "SELECT count(id) as count FROM "+tableName;
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();

@@ -108,6 +108,27 @@ public class BasicTestSuite_Test {
 		
 		result = HttpUtils.doPostStr(newuser,user);
 		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		
 		result = HttpUtils.doPostStr(newaddress,address);
 		assertEquals("200",result.get("msg"));
 		
