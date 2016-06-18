@@ -94,6 +94,10 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	public int getReturnRecordCount(int cityId, int areaId) {
 		return this.orderOffDao.getReturnRecordCount(cityId, areaId);
 	}
+	@Override
+	public int getCancelRecordCount(int cityId, int areaId) {
+		return this.orderOffDao.getCancelRecordCount(cityId, areaId);
+	}
 	
 //	@Override
 //	public void testor() {

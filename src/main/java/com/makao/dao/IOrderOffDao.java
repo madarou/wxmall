@@ -59,4 +59,12 @@ public interface IOrderOffDao {
 	 * 查询退货申请中和退货中的订单
 	 */
 	public int getReturnRecordCount(int cityId, int areaId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 已取消，已退货，已取消退货的记录数
+	 */
+	public int getCancelRecordCount(int cityId, int areaId);
 }
