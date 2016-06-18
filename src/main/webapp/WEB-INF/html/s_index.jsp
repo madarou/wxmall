@@ -54,22 +54,22 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/s_queryall/${id}?token=${token}">所有未处理订单</a></dd>
-    <dd><a href="/orderOff/s_queryall/${id}?token=${token}">所有已处理订单</a></dd>
-    <dd><a href="/orderOff/s_query_refund/${id}?token=${token}">退款订单</a></dd>
+    <dd><a href="/orderOn/s_queryall/${id}/1?token=${token}">所有未完成订单</a></dd>
+    <dd><a href="/orderOff/s_queryall/${id}/1?token=${token}">所有已完成订单</a></dd>
+    <dd><a href="/orderOff/s_query_refund/${id}/1?token=${token}">退款订单</a></dd>
    </dl>
   </li>
    <li>
    <dl>
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="/product/s_products/${id}?token=${token}">商品库</a></dd>
+    <dd><a href="/product/s_products/${id}/1?token=${token}">商品库</a></dd>
    </dl>
   </li>
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="/user/s_queryall/${id}?token=${token}">会员中心</a></dd>
+    <dd><a href="/user/s_queryall/${id}/1?token=${token}">会员中心</a></dd>
    </dl>
   </li>
   <li>
@@ -81,7 +81,7 @@
   <li>
    <dl>
     <dt>账号管理</dt>
-    <dd><a href="/vendor/s_queryall/${id}?token=${token}">账号设置</a></dd>
+    <dd><a href="/vendor/s_queryall/${id}?token=${token}">账号管理</a></dd>
    </dl>
   </li>
   <li>
@@ -89,7 +89,6 @@
     <dt>礼券管理</dt>
     <dd><a href="/coupon/s_queryall/${id}?token=${token}">优惠券管理</a></dd>
    </dl>
-  </li>
   <li>
    <p class="btm_infor">© 优格信息 版权所有</p>
   </li>

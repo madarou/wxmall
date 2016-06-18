@@ -58,9 +58,9 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/s_queryall/${id}?token=${token}">所有未完成订单</a></dd>
-    <dd><a href="/orderOff/s_queryall/${id}?token=${token}">所有已完成订单</a></dd>
-    <dd><a href="/orderOff/s_query_refund/${id}?token=${token}">退款订单</a></dd>
+    <dd><a href="/orderOn/s_queryall/${id}/1?token=${token}">所有未完成订单</a></dd>
+    <dd><a href="/orderOff/s_queryall/${id}/1?token=${token}">所有已完成订单</a></dd>
+    <dd><a href="/orderOff/s_query_refund/${id}/1?token=${token}">退款订单</a></dd>
    </dl>
   </li>
    <li>
@@ -73,7 +73,7 @@
   <li>
    <dl>
     <dt>会员管理</dt>
-    <dd><a href="/user/s_queryall/${id}?token=${token}">会员中心</a></dd>
+    <dd><a href="/user/s_queryall/${id}/1?token=${token}">会员中心</a></dd>
    </dl>
   </li>
   <li>
