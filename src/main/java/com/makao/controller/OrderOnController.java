@@ -404,6 +404,48 @@ public class OrderOnController {
 	    return modelAndView;
     }
 	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 总后台查询所有有效订单，分页
+	 */
+	@RequestMapping(value = "/s_queryall/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody ModelAndView query_All_paging(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token
+    		,@PathVariable("showPage") int showPage) {
+		ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("s_orderOn");  
+		if(token==null){
+			return modelAndView;
+		}
+		Supervisor supervisor = this.supervisorService.getById(id);
+		List<City> cites = this.cityService.queryAll();
+		List<OrderOn> orderOns = new LinkedList<OrderOn>();
+		int pageCount = 0;
+		int recordCount = 0;
+		if(supervisor!=null){
+			for(City c : cites){
+				List<OrderOn> os = this.orderOnService.queryAll("Order_"+c.getId()+"_on");
+				if(os!=null){
+					orderOns.addAll(os);
+					int rc = this.orderOnService.getRecordCount(c.getId());
+					recordCount += rc;
+				}
+			}
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
+			int to=(orderOns.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orderOns.size()-1);
+			orderOns = orderOns.subList(from, to+1);
+		}
+		logger.info("查询所有有效订单信息完成");
+		modelAndView.addObject("id", id);  
+		modelAndView.addObject("token", token); 
+	    modelAndView.addObject("ordersOn", orderOns);   
+	    modelAndView.addObject("pageCount", pageCount);
+	    return modelAndView;
+    }
+	
 	
 	@RequestMapping(value = "/v_query/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody

@@ -62,4 +62,11 @@ public interface IOrderOnDao {
 	 * 查询已配送的记录数
 	 */
 	public int getDistributedRecordCount(int cityId, int areaId);
+
+	/**
+	 * @param cityid
+	 * @return
+	 * 返回Order_cityid_on的记录总数
+	 */
+	public int getRecordCount(int cityid);
 }

@@ -67,4 +67,18 @@ public interface IOrderOffDao {
 	 * 已取消，已退货，已取消退货的记录数
 	 */
 	public int getCancelRecordCount(int cityId, int areaId);
+
+	/**
+	 * @param cityid
+	 * @return
+	 * Order_cityid_off表的记录数
+	 */
+	public int getRecordCount(int cityid);
+
+	/**
+	 * @param cityid
+	 * @return
+	 * 查询所有已取消(卖家取消)的和已退货的订单记录数
+	 */
+	public int getCanceledAndReturnedRecordCount(int cityid);
 }

@@ -66,7 +66,9 @@
 	<mvc:resources mapping="/orderOff/v_query_refund/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query_refund/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/s_query_refund/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/s_query_refund/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/s_queryall/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/s_queryall/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/v_query/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/v_query_queue/static/**" location="/WEB-INF/static/" />
@@ -76,6 +78,7 @@
 	<mvc:resources mapping="/orderOn/v_query_distributed/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/v_query_distributed/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/s_queryall/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOn/s_queryall/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/point/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/v_new/static/**" location="/WEB-INF/static/" />

@@ -76,4 +76,18 @@ public interface IOrderOffService {
 	 */
 	int getCancelRecordCount(int cityId, int areaId);
 
+	/**
+	 * @param id
+	 * @return
+	 * Order_cityid_off表的记录数
+	 */
+	int getRecordCount(int cityid);
+
+	/**
+	 * @param id
+	 * @return
+	 * 查询所有已取消(卖家取消)的和已退货的订单记录数
+	 */
+	int getCanceledAndReturnedRecordCount(int cityid);
+
 }

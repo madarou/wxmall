@@ -57,7 +57,7 @@
     <dt>订单信息</dt>
     <dd><a href="/orderOn/s_queryall/${id}?token=${token}">所有未完成订单</a></dd>
     <dd><a href="/orderOff/s_queryall/${id}?token=${token}">所有已完成订单</a></dd>
-    <dd><a href="/orderOff/s_query_refund/${id}?token=${token}" class="active">退款订单</a></dd>
+    <dd><a href="/orderOff/s_query_refund/${id}/1?token=${token}" class="active">退款订单</a></dd>
    </dl>
   </li>
    <li>
@@ -289,13 +289,11 @@
 		</c:forEach> 
       </table>
       <aside class="paging">
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a>
+       <a href="/orderOff/s_query_refund/${id}/1?token=${token}">第一页</a>
+       <c:forEach var="item" begin="1" end="${pageCount}">
+		   <a href="/orderOff/s_query_refund/${id}/${item}?token=${token}">${item}</a>
+	   </c:forEach>
+       <a href="/orderOff/s_query_refund/${id}/${pageCount}?token=${token}">最后一页</a>
       </aside>
      </section>
      <!--结束：以下内容则可删除，仅为素材引用参考-->

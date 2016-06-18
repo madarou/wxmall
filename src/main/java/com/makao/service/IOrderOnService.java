@@ -64,4 +64,11 @@ public interface IOrderOnService {
 	 */
 	int getDistributedRecordCount(int cityId, int areaId);
 
+	/**
+	 * @param cityid
+	 * @return
+	 * 返回Order_cityid_on的记录总数
+	 */
+	int getRecordCount(int cityid);
+
 }

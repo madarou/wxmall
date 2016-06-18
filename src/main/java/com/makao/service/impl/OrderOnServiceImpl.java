@@ -88,6 +88,10 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public int getDistributedRecordCount(int cityId, int areaId) {
 		return this.orderOnDao.getDistributedRecordCount(cityId, areaId);
 	}
+	@Override
+	public int getRecordCount(int cityid) {
+		return this.orderOnDao.getRecordCount(cityid);
+	}
 	
 //	@Override
 //	public void testor() {
