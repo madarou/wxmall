@@ -223,15 +223,6 @@
 	         	</tr>
 			</c:forEach> 
 	      </table>
-	      <aside class="paging">
-	       <a>第一页</a>
-	       <a>1</a>
-	       <a>2</a>
-	       <a>3</a>
-	       <a>…</a>
-	       <a>1004</a>
-	       <a>最后一页</a>
-	      </aside>
        </div>
        <!--以pop_cont_text分界-->
        <div class="pop_cont_text">
