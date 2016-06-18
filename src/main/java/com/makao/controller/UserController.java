@@ -3,15 +3,12 @@ package com.makao.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +25,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.makao.entity.OrderOn;
-import com.makao.entity.Product;
 import com.makao.entity.Supervisor;
+import com.makao.entity.TokenModel;
 import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
 import com.makao.utils.MakaoConstants;
+import com.makao.utils.TokenManager;
 import com.makao.utils.TokenUtils;
 import com.makao.weixin.utils.HttpUtil;
-import com.makao.weixin.utils.JSSignatureUtil;
 import com.makao.weixin.utils.WeixinConstants;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -59,8 +55,10 @@ public class UserController {
 	private final int DEFAULT_CITY_ID=1;
 	private final int DEFAULT_AREA_ID=1;
 	
+//	@Autowired
+//	private StringRedisTemplate redisTemplate;
 	@Autowired
-	public StringRedisTemplate redisTemplate;
+	private TokenManager tokenManager;
 //	@RequestMapping("/showUser")
 //	public String toIndex(HttpServletRequest request,Model model){
 //		int userId = Integer.parseInt(request.getParameter("id"));
@@ -270,7 +268,7 @@ public class UserController {
 						+ "</body>"
 					+ "</html>";
 		}
-		
+/*		
 		//为前端页面能够使用JSSDK设置签名
 	    String appId = WeixinConstants.APPID;
 	    Map<String, String> wxConfig = JSSignatureUtil.getSignature("http://madarou1.ngrok.cc/user/login/?openid=3c5d3acb-31b9-480d-944a-516e74390ed8");
@@ -325,7 +323,7 @@ public class UserController {
 							+ "});"
 						+ "</script>"
 					+ "</html>";
-		
+*/
 		out.write(page);
 	}
 	/**
@@ -560,11 +558,12 @@ public class UserController {
     public @ResponseBody
     void testor() {
 		//this.userService.testor();
-		ValueOperations<String, String> vop = redisTemplate.opsForValue();
-		String key = "string_redis_template";
-	    String v = "use StringRedisTemplate set k v";
-	    vop.set(key, v);
-	    String value = vop.get(key);
-	    System.out.println(value);
+//		ValueOperations<String, String> vop = redisTemplate.opsForValue();
+//		String key = "user1";
+//	    String v = "use1 StringRedisTemplate set k v";
+//	    vop.set(key, v, 10, TimeUnit.SECONDS);
+//	    String value = vop.get(key);
+//	    System.out.println("redis set: "+ value);
+		TokenModel tm = tokenManager.createToken(1,"u");
     }
 }

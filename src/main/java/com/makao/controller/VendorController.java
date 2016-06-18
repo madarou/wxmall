@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +25,7 @@ import com.makao.entity.Vendor;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
+import com.makao.utils.TokenManager;
 import com.makao.utils.TokenUtils;
 
 /**
@@ -37,6 +41,8 @@ public class VendorController {
 	private IVendorService vendorService;
 	@Resource
 	private ISupervisorService supervisorService;
+	@Autowired
+	private TokenManager tokenManager;
 	
 	@RequestMapping(value="/login", method = RequestMethod.POST)
 	public @ResponseBody Object login(@RequestBody JSONObject paramObject,HttpServletRequest request, HttpServletResponse response)
@@ -188,6 +194,7 @@ public class VendorController {
 			if(token==null){
 				return modelAndView;
 			}
+			System.out.println("check token: "+ tokenManager.checkToken("u1","fdfsd"));
 		Supervisor supervisor = this.supervisorService.getById(id);
 		List<Vendor> vendors = null;
 		if(supervisor!=null){
