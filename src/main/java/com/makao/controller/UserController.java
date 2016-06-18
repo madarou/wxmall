@@ -11,7 +11,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import junit.framework.Assert;
+
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +59,8 @@ public class UserController {
 	private final int DEFAULT_CITY_ID=1;
 	private final int DEFAULT_AREA_ID=1;
 	
+	@Autowired
+	public StringRedisTemplate redisTemplate;
 //	@RequestMapping("/showUser")
 //	public String toIndex(HttpServletRequest request,Model model){
 //		int userId = Integer.parseInt(request.getParameter("id"));
@@ -552,6 +559,12 @@ public class UserController {
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
     public @ResponseBody
     void testor() {
-		this.userService.testor();
+		//this.userService.testor();
+		ValueOperations<String, String> vop = redisTemplate.opsForValue();
+		String key = "string_redis_template";
+	    String v = "use StringRedisTemplate set k v";
+	    vop.set(key, v);
+	    String value = vop.get(key);
+	    System.out.println(value);
     }
 }
