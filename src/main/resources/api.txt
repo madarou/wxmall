@@ -2,6 +2,7 @@ api															method				comment
 /city/all													GET					获取城市列表
 /product/all/[cityId]/[areaId]								GET					获取指定城市区域下的产品列表
 /product/[productId]/[cityId]/[areaId]						GET					获取指定城市区下的某个产品
+/banner/all/[areaId]										GET					获取areaId下所有banner
 /user/[userId]												GET					获取用户信息
 
 /orderOn/new/?token=xxx										POST				下单(token设置在header中，跨域时header会有问题)

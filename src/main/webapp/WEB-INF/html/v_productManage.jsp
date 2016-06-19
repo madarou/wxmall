@@ -349,7 +349,7 @@ $(document).ready(function(){
 		copy: function(){
 			var clickedId = $(this).attr("id");
 		    copyHandle_Id = clickedId.split("-")[1];
-		    return "/product/"+copyHandle_Id+"/"+$("#loginUserId").val();
+		    return "/product/"+copyHandle_Id+"/"+$("#loginCityId").val()+"/"+$("#loginAreaId").val();
 		},
 		afterCopy: function(){
 			if(copyHandle_Id!=0){
@@ -824,5 +824,7 @@ $(document).ready(function(){
    <!-- 添加详情2图 -->
    
 <input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginCityId" value="${city_id}"></input>
+<input type="hidden" id="loginAreaId" value="${area_id}"></input>
 </body>
 </html>

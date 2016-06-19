@@ -114,6 +114,18 @@ public class BannerController {
     }
 	
 	/**
+	 * @return
+	 * 根据areaid从Area表中获取某个area里配置的所有分类的banner
+	 */
+	@RequestMapping(value = "/all/{areaid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object queryArea(@PathVariable("areaid")int areaid) {
+		List<Banner> banners = this.bannerService.queryByAreaId(areaid);
+		logger.info("查询areaid="+areaid+"下所有banner信息完成");
+        return banners;
+    }
+	
+	/**
 	 * @param vendorid
 	 * @param paramObject
 	 * @return

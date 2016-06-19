@@ -739,6 +739,8 @@ public class ProductController {
 //					}
 //				}
 //			}
+//			modelAndView.addObject("city_id", vendor.getCityId());
+//			modelAndView.addObject("area_id", vendor.getAreaId());
 //		}
 //	    modelAndView.addObject("products", products);  
 //	    modelAndView.addObject("catalogs", catalogs); 
@@ -769,7 +771,6 @@ public class ProductController {
 		List<Catalog> catalogs = new ArrayList<Catalog>();
 		int pageCount = 0;//需要分页的总数
 		if(vendor!=null){
-			//products = this.productService.queryByCityAreaId(vendor.getCityId(),vendor.getAreaId());
 			int recordCount = this.productService.getRecordCount(vendor.getCityId(),vendor.getAreaId());
 			System.out.println("total product count:"+recordCount);
 			//需要分页的总数
@@ -791,6 +792,8 @@ public class ProductController {
 					}
 				}
 			}
+			modelAndView.addObject("city_id", vendor.getCityId());
+			modelAndView.addObject("area_id", vendor.getAreaId());
 		}
 	    modelAndView.addObject("products", products);  
 	    modelAndView.addObject("catalogs", catalogs); 
