@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,15 +19,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.Area;
 import com.makao.entity.City;
 import com.makao.entity.Supervisor;
+import com.makao.entity.TokenModel;
 import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
 import com.makao.service.ICityService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
+import com.makao.utils.TokenManager;
 import com.makao.utils.TokenUtils;
 
 /**
@@ -46,6 +50,8 @@ public class SupervisorController {
 	private ICityService cityService;
 	@Resource
 	private IVendorService vendorService;
+	@Autowired
+	private TokenManager tokenManager;
 	
 	/**
 	 * @param userName
@@ -59,6 +65,7 @@ public class SupervisorController {
 		String userName = paramObject.getString("userName");
 		String password = paramObject.getString("password");
 		JSONObject jsonObject = new JSONObject();
+		//实际上线时用，要验证
 //		if(userName==null || userName.trim().length() <=0 || password==null || password.trim().length() <=0){
 //			jsonObject.put("msg", "用户或密码为空");
 //	        return jsonObject; 
@@ -70,24 +77,24 @@ public class SupervisorController {
 //			//if(supervisor.getPassword().equals(encryptedPassword)){
 //			if(EncryptUtils.passwordEncryptor.checkPassword(password, supervisor.getPassword())){
 //				jsonObject.put("msg", "登录成功");
-//				//session.getServletContext().setAttribute("supervisor", "1");
-//				//在登录成功时，生成token来记录用户登录信息
 //				//生成token
+//				TokenModel tm = tokenManager.createToken(supervisor.getId(), "s");
 //				
-//				String tokenstring = TokenUtils.setToken("supervisor");
-//				//在放在header中返回给用户作为下次登录的凭证，这里不放到header中，因为这里只返回response body，所以还是放到jsonObject中
-//				//response.setHeader("token", tokenstring);
-//				//将生成的的token信息放到服务器缓存中，同时记录他这次登录的时间，用于定时失效
-//				request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
 //				logger.info("supervisor登录成功name=" + userName);
 //				jsonObject.put("supervisor", supervisor);//实验表明这里supervisor不需要json化
-//				jsonObject.put("token", tokenstring);
+//				jsonObject.put("id", supervisor.getId());
+//				jsonObject.put("token", tm.getToken());
+//				return jsonObject;
 //			}
 //			else{
-//				jsonObject.put("msg", "密码错误");
+//				jsonObject.put("msg", "用户名或密码错误");
+//				return jsonObject;
 //			}
 //		}
+//		jsonObject.put("msg", "用户不存在");
 //		return jsonObject;
+		
+		//测试时用，不验证
 		System.out.println(userName);
 		System.out.println(password);
 		jsonObject.put("msg", "登录成功");
@@ -97,7 +104,7 @@ public class SupervisorController {
 		request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
 		return jsonObject;
 	}
-	
+	@AuthPassport
 	@RequestMapping(value="/index/{id:\\d+}",method = RequestMethod.GET)
 	public ModelAndView index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
 	{
@@ -106,9 +113,8 @@ public class SupervisorController {
 		if(token==null){
 			return modelAndView;
 		}
-		System.out.println(id);
-		System.out.println(token);
-		System.out.println(request.getServletContext().getAttribute(token));
+		logger.info(id);
+		logger.info(token);
 		
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token);   

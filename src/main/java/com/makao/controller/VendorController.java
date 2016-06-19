@@ -41,8 +41,6 @@ public class VendorController {
 	private IVendorService vendorService;
 	@Resource
 	private ISupervisorService supervisorService;
-	@Autowired
-	private TokenManager tokenManager;
 	
 	@RequestMapping(value="/login", method = RequestMethod.POST)
 	public @ResponseBody Object login(@RequestBody JSONObject paramObject,HttpServletRequest request, HttpServletResponse response)
@@ -194,7 +192,7 @@ public class VendorController {
 			if(token==null){
 				return modelAndView;
 			}
-			System.out.println("check token: "+ tokenManager.checkToken("u1","fdfsd"));
+
 		Supervisor supervisor = this.supervisorService.getById(id);
 		List<Vendor> vendors = null;
 		if(supervisor!=null){

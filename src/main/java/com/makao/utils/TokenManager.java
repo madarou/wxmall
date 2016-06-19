@@ -5,11 +5,9 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
-import com.makao.controller.UserController;
 import com.makao.entity.TokenModel;
 
 /**
@@ -39,10 +37,10 @@ public class TokenManager {
 		else if("v".equals(role)){
 			s = s + "v";
 		}
-		TokenModel tm = new TokenModel(userid,role,s);
+		TokenModel tm = new TokenModel(userid,userRole,s);
 		logger.info("generated token is: "+s);
 		ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-		vop.set(userRole+userid, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS);
+		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS);
 		return tm;
 	}
 	
@@ -52,19 +50,19 @@ public class TokenManager {
 	 * @return
 	 * 验证管理员token
 	 */
-	public boolean checkToken(String key, String tokenString) {
-        if (key == null || "".equals(key.trim()) || tokenString==null || "".equals(tokenString.trim())) {
+	public boolean checkToken(String tokenString) {
+        if (tokenString==null || "".equals(tokenString.trim())) {
             return false;
         }
         ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-        logger.info("get TM from redis:"+vop.get(key));
-        TokenModel tm = vop.get(key);
-        if (tm == null || !tm.getToken().equals(tokenString)) {
+        TokenModel tm = vop.get(tokenString.trim());
+        logger.info("get TM from redis:"+tm);
+        if (tm == null || !tm.getToken().equals(tokenString.trim())) {
         	logger.info("check failed: token string not match");
             return false;
         }
         //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
-        System.out.println(redisTemplate.boundValueOps(key).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS));
+        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS));
         return true;
 	}
 	
@@ -81,7 +79,7 @@ public class TokenManager {
 		tm.setOpenid(openid);
 		logger.info("generated user token is: "+s);
 		ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-		vop.set(userRole+userid, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS);
+		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS);
 		return tm;
 	}
 	
@@ -91,13 +89,13 @@ public class TokenManager {
 	 * @return
 	 * 验证普通用户token
 	 */
-	public boolean checkUserToken(String key, String tokenString) {
-        if (key == null || "".equals(key.trim()) || tokenString==null || "".equals(tokenString.trim())) {
+	public boolean checkUserToken(String tokenString) {
+        if (tokenString==null || "".equals(tokenString.trim())) {
             return false;
         }
         ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-        TokenModel tm = vop.get(key);
-        if (tm == null || !tm.getToken().equals(tokenString)) {
+        TokenModel tm = vop.get(tokenString.trim());
+        if (tm == null || !tm.getToken().equals(tokenString.trim())) {
         	logger.info("check user token failed: token string not match");
             return false;
         }
@@ -106,7 +104,7 @@ public class TokenManager {
         	return false;
         }
         //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
-        System.out.println(redisTemplate.boundValueOps(key).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS));
+        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS));
         return true;
 	}
 	

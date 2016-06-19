@@ -108,9 +108,9 @@ public class UserController {
 				.replace("SECRET", WeixinConstants.APPSECRET).replace("CODE", code);
 		net.sf.json.JSONObject jsonObject = HttpUtil.doGetObject(get_token_url);
 		String access_token = jsonObject.getString("access_token");
-		System.out.println("auth access_token: "+access_token);
+		System.out.println("weixin auth access_token: "+access_token);
 		String openid = jsonObject.getString("openid");
-		System.out.println("user openid: "+openid);
+		System.out.println("weixin user openid: "+openid);
 		//使用该openid去数据库里查询用户信息
 		User user = this.userService.checkLogin(openid);
 		String token = TokenUtils.setToken("user");

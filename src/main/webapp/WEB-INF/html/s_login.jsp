@@ -36,6 +36,9 @@ $(document).ready(function() {
 	                  if(data.msg=="登录成功"){
 	                	  window.location="supervisor/index/"+data.id+"?token="+data.token;
 	                  }
+	                  else{
+	                	  alert(data.msg);
+	                  }
 	          }
 	      });
 	  });
