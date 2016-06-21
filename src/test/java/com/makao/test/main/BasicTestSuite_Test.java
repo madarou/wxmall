@@ -26,9 +26,9 @@ public class BasicTestSuite_Test {
 	public void test() throws InterruptedException {
 		String cityLogo = "1000000495269125_0241020.jpg";
 		String userHead = "1003234393232034_head.jpg";
-		String productSCover = "1000001767118287_putao_s.jpg";
-		String productBCover = "1000000442918849_putao.jpg";
-		String productDetail2 = "1000000334128290_putao.jpg";
+		String productSCover = "1000000879418434_正方形标准商品图.jpg";
+		String productBCover = "1000000493029796_长方形标准商品图.jpg";
+		String productDetail2 = "1000001532212560_标准商品详情.jpg";
 		JSONObject result = null;
 		String newsupervisor = "http://localhost:8080/supervisor/new";
 		String supervisor = "{\"userName\":\"darou\",\"password\":\"test\"}";

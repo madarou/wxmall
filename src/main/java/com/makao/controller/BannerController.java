@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ import com.makao.utils.OrderNumberUtils;
  * @author makao
  * @date 2016年5月6日
  */
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/banner")
 public class BannerController {

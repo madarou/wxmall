@@ -123,6 +123,24 @@ public class OrderOnController {
         return jsonObject;
     }
 	
+	/**
+	 * @param token
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * 支付订单，过程包括:
+	 * 		1.通过token获取到下单用户的openid
+	 * 		2.根据request中的内容和openid，调用微信unified接口下单
+	 * 		3.立刻获取下单后的prepay_id以及其他信息生成订单支付需要的参数
+	 * 		4.将订单支付的参数填充如要返回的支付页面一并返回
+	 * 		5.在返回的支付页面的success: function (res)中根据res的结果决定前面页面的跳转
+	 * 返回支付页面
+	 */
+	@RequestMapping(value = "/pay", method = RequestMethod.POST)
+    public @ResponseBody
+    void payOrder(@RequestParam(value="token", required=false) String token,HttpServletRequest request,HttpServletResponse response) throws IOException {
+	}
+	
 	@RequestMapping(value = "/unifiedorder", method = RequestMethod.POST)
     public @ResponseBody
     void unifiedorder(@RequestParam(value="token", required=false) String token,HttpServletRequest request,HttpServletResponse response) throws IOException {
