@@ -10,12 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -141,9 +144,164 @@ public class OrderOnController {
 	@AuthPassport
 	@RequestMapping(value = "/pay", method = RequestMethod.POST)
     public @ResponseBody
-    void payOrder(@RequestParam(value="token", required=false) String token,HttpServletRequest request,HttpServletResponse response) throws IOException {
+    void payOrder(@RequestParam(value="token", required=false) String token,@RequestBody OrderOn orderOn, 
+    		HttpServletRequest request,HttpServletResponse response) throws IOException {
+		response.setHeader("content-type", "text/html;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		String page = "";
+		
 		TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
 		String openid = tm.getOpenid();
+		if(openid==null || "".equals(openid.trim())){
+			page = "订单提交失败，没有openid："+openid;
+			logger.warn(page);
+			out.write(page);
+			return;
+		}
+		//为了鲁棒性，检查价格是否为00.00格式
+		Pattern pattern = Pattern.compile("^(\\d+){2}.(\\d+){2}$");
+		Matcher m = pattern.matcher(orderOn.getTotalPrice());
+		if(!m.matches()){
+			page = "订单提交失败，价格格式错误";
+			logger.warn(page);
+			out.write(page);
+			return;
+		}
+		orderOn.setNumber(OrderNumberUtils.generateOrderNumber());
+		orderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
+		orderOn.setPayType("微信安全支付");//现在只有这种支付方式
+		orderOn.setReceiveType("送货上门");//现在只有这种收货方式
+		orderOn.setStatus("未支付");
+		// 生成微信订单
+		Unifiedorder u = new Unifiedorder();
+		u.setAppid(WeixinConstants.APPID);
+		u.setMch_id(WeixinConstants.MCHID);
+		u.setNonce_str(SignatureUtil.getNonceStr());
+		u.setBody("超级社区商品购买订单");
+		u.setOut_trade_no(orderOn.getNumber());
+		String price = orderOn.getTotalPrice();
+		u.setTotal_fee(Integer.parseInt(price.split(".")[0]+price.split(".")[1]));//单位为分
+		u.setSpbill_create_ip(request.getRemoteAddr());//用户下单的ip
+		u.setNotify_url(MakaoConstants.SERVER_DOMAIN+"/orderOn/postPay");// 接收微信支付异步通知回调地址
+		u.setTrade_type("JSAPI");
+		u.setOpenid(openid);
+		u.setDevice_info("WEB");
+		u.setAttach(String.valueOf(orderOn.getCityId()));//将cityId作为附加数据传入，因为在postPay中需要通过它确定orderOn是具体哪张表
+		// 还有签名没有，下面生成sign签名
+		// 生成sign签名，这里必须用SortedMap，因为签名算法里key值是要排序的
+		SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
+		parameters.put("appid", u.getAppid());
+		parameters.put("body", u.getBody());
+		parameters.put("mch_id", u.getMch_id());
+		parameters.put("nonce_str", u.getNonce_str());
+		parameters.put("notify_url", u.getNotify_url());
+		parameters.put("out_trade_no", u.getOut_trade_no());
+		parameters.put("total_fee", u.getTotal_fee());
+		parameters.put("trade_type", u.getTrade_type());
+		parameters.put("spbill_create_ip", u.getSpbill_create_ip());
+		parameters.put("openid", u.getOpenid());
+		parameters.put("device_info", u.getDevice_info());
+		parameters.put("attach", u.getAttach());
+		u.setSign(SignatureUtil.createSign(parameters, WeixinConstants.PAY_KEY));
+		
+		// 提交到微信统一订单接口，用xml格式提交和接收
+		// 这里XStream是转化-，防止mch_id被转化为了mdc__id
+		XStream xstream = new XStream(new DomDriver("UTF-8",
+				new XmlFriendlyNameCoder("-_", "_")));
+		xstream.alias("xml", Unifiedorder.class);
+		String xml = xstream.toXML(u);
+		Map<String, String> returnXml = HttpUtil.doPostXmlAndParse(
+				WeixinConstants.UNIFIEDORDER_URL, xml);
+		if (returnXml == null) {
+			page = "订单号: "+orderOn.getNumber()+"提交到微信时下单失败!";
+			logger.warn(page);
+			out.write(page);
+			return;
+		}
+		String prepay_id = returnXml.get("prepay_id");
+		if (prepay_id == null || "".equals(prepay_id)) {
+			page = "订单号: "+orderOn.getNumber()+"没有获取到prepay_id，参数错误下单失败!";
+			logger.warn(page);
+			out.write(page);
+			return;
+		}
+		
+		// 为前端页面能够使用JSSDK设置签名
+		Map<String, String> wxConfig = JSSignatureUtil
+				.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");
+
+		// 生成支付订单需要的参数和签名
+		String timeStamp = SignatureUtil.getTimeStamp();
+		String nonceStr = SignatureUtil.getNonceStr();
+		String packages = "prepay_id=" + prepay_id;
+		String signType = "MD5";
+		SortedMap<Object, Object> signMap = new TreeMap<Object, Object>();
+		signMap.put("appId", WeixinConstants.APPID);
+		signMap.put("timeStamp", timeStamp);
+		signMap.put("nonceStr", nonceStr);
+		signMap.put("package", packages);
+		signMap.put("signType", signType);
+		// 生成统一订单时的签名算法与支付时使用的签名算法一样，只是用到的key=value不一样
+		String paySign = SignatureUtil.createSign(signMap,
+				WeixinConstants.PAY_KEY);
+
+				page = "<!DOCTYPE html>"
+						+ "<html>"
+						+ "<head>"
+							+ "<meta charset=\"utf-8\">"
+							+ "<title>订单支付</title>"
+							+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=0\">"
+							+ "<link rel=\"stylesheet\" href=\"static/css/weixin.css\">"
+						+ "</head>"
+						+"<body>"
+							+ "<div class=\"wxapi_container\">"
+								+"<div class=\"lbox_close wxapi_form\">"
+									+ "<h3 id=\"menu-pay\">超级社区</h3>"
+									+ "<span class=\"desc\">订单总价：￥"+price+"</span>"
+									+ "<button class=\"btn btn_primary\" id=\"chooseWXPay\">支付订单</button>"
+								+"</div>"
+							+ "</div>"
+						+ "</body>"
+						+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
+						+"<script>"
+							+ "wx.config({"
+								+ "debug: false,"
+								+ "appId: '"+WeixinConstants.APPID+"',"
+								+ "timestamp: "+wxConfig.get("timestamp")+","
+								+ "nonceStr: '"+wxConfig.get("nonceStr")+"',"
+								+ "signature: '"+wxConfig.get("signature")+"',"
+								+ "jsApiList: ["
+									+ "'chooseWXPay'"
+								+ "]"
+							+ "});"
+							+ "wx.ready(function () {"
+								+ "var btn = document.getElementById(\"chooseWXPay\");"
+								+ "btn.onclick=function(){"
+									+ "alert('click success');"
+									+ "wx.chooseWXPay({"
+										+ "timestamp:"+timeStamp+","
+										+ "nonceStr:'"+nonceStr+"',"
+										+ "package:'"+packages+"',"
+										+ "signType:'MD5',"
+										+ "paySign:'"+paySign+"',"
+										+ "success: function (res) {"
+											+ "if(res.errMsg=='chooseWXPay:ok'){"
+												+ "alert('支付成功');"
+											+ "}"
+											+ "else{"
+												+ "alert('支付失败');"
+											+ "}"
+										+ "}"
+									+ "});"
+								+ "}"
+							+ "});"
+							+ "wx.error(function (res) {"
+								+ "alert(res.errMsg);"
+							+ "});"
+						+ "</script>"
+					+ "</html>";
+		out.write(page);
 	}
 	
 	/**
@@ -159,7 +317,29 @@ public class OrderOnController {
 	@RequestMapping(value = "/postPay", method = RequestMethod.POST)
     public @ResponseBody
     void postPay(HttpServletRequest request,HttpServletResponse response) throws IOException {
-		
+		response.setHeader("content-type", "text/xml;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		String page = "";
+		Map<String, String> resultXML = null;//解析微信服务器发来的request的结果
+		try {
+			resultXML = HttpUtil.parseXmlRequest(request);
+		} catch (DocumentException e) {
+			logger.warn("解析微信支付后的响应出错", e);
+			page = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[参数格式校验错误]]></return_msg></xml>";
+			out.write(page);
+			return;
+		}
+		if("SUCCESS".equals(resultXML.get("result_code"))){
+		    String openid = resultXML.get("openid");
+		    String orderid = resultXML.get("out_trade_no");
+		    String cityid = resultXML.get("attach");
+		    if(orderid!=null && !"".equals(orderid)){
+		    	this.orderOnService.confirmMoney(cityid,orderid);//将订单的状态从未支付改为排队中
+		    	page = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+				out.write(page);
+		    }
+		}
 	}
 	
 	@RequestMapping(value = "/unifiedorder", method = RequestMethod.POST)

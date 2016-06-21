@@ -1,5 +1,8 @@
 package com.makao.test.main;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -21,8 +24,8 @@ import com.makao.service.IUserService;
 public class TestMyBatis {
 	private static Logger logger = Logger.getLogger(TestMyBatis.class);
 //	private ApplicationContext ac = null;
-	@Resource
-	private IUserService userService = null;
+//	@Resource
+//	private IUserService userService = null;
 
 //	@Before
 //	public void before() {
@@ -43,6 +46,14 @@ public class TestMyBatis {
 		
 		//订单号生成
 		System.out.println(generateOrderNumber());
+		Pattern pattern = Pattern.compile("^(\\d+){2}.(\\d+){2}$");
+		Matcher m = pattern.matcher("12.3w");
+		if(m.matches()){
+			System.out.println("yes");
+		}
+		else{
+			System.out.println("no");
+		}
 	}
 	public static String generateOrderNumber(){
 		int machineId = 1;
