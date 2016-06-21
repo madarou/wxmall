@@ -15,6 +15,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.makao.controller.UserController;
+import com.makao.entity.TokenModel;
 import com.makao.utils.TokenManager;
 import com.makao.utils.TokenUtils;
 
@@ -79,29 +80,42 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 //					type = "s";
 //				}
 //				boolean isValid = false;
+//				TokenModel tm = null;
 //				switch (type) {
 //				case "u":
 //					logger.info("handle user auth");
-//					isValid =  tokenManager.checkUserToken(token);
+//					tm = tokenManager.getUserToken(token);
+//					isValid =  tokenManager.checkUserToken(tm, token);
 //					if(!isValid){
 //						page="需要重新登录";
 //						out.write(page);
+//					}
+//					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
+//						request.setAttribute("tokenmodel",tm);
 //					}
 //					return isValid;
 //				case "v":
 //					logger.info("handle vendor auth");
-//					isValid =  tokenManager.checkToken(token);
+//					tm = tokenManager.getToken(token);
+//					isValid =  tokenManager.checkToken(tm, token);
 //					if(!isValid){
 //						page="需要重新登录";
 //						out.write(page);
 //					}
+//					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
+//						request.setAttribute("tokenmodel",tm);
+//					}
 //					return isValid;
 //				case "s":
 //					logger.info("handle supervisor auth");
-//					isValid =  tokenManager.checkToken(token);
+//					tm = tokenManager.getToken(token);
+//					isValid =  tokenManager.checkToken(tm, token);
 //					if(!isValid){
 //						page="需要重新登录";
 //						out.write(page);
+//					}
+//					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
+//						request.setAttribute("tokenmodel",tm);
 //					}
 //					return isValid;
 //				default:

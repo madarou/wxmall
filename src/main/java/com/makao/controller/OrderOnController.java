@@ -31,6 +31,7 @@ import com.makao.auth.AuthPassport;
 import com.makao.entity.City;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Supervisor;
+import com.makao.entity.TokenModel;
 import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.ICityService;
@@ -131,14 +132,34 @@ public class OrderOnController {
 	 * 支付订单，过程包括:
 	 * 		1.通过token获取到下单用户的openid
 	 * 		2.根据request中的内容和openid，调用微信unified接口下单
-	 * 		3.立刻获取下单后的prepay_id以及其他信息生成订单支付需要的参数
-	 * 		4.将订单支付的参数填充如要返回的支付页面一并返回
-	 * 		5.在返回的支付页面的success: function (res)中根据res的结果决定前面页面的跳转
-	 * 返回支付页面
+	 * 		3.下单成功后，立刻获取下单后的prepay_id以及其他信息生成订单支付需要的参数
+	 * 		4.下单成功后，在本地生成orderOn记录，状态为"未支付"
+	 * 		5.将订单支付的参数填充到返回的支付页面一并返回
+	 * 		6.在返回的支付页面的success: function (res)中根据res的结果决定前面页面的跳转
+	 * 		7.真正成功的支付处理在postPay中完成，在那里根据orderid到本地数据库中更新对应订单的状态为"排队中"
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/pay", method = RequestMethod.POST)
     public @ResponseBody
     void payOrder(@RequestParam(value="token", required=false) String token,HttpServletRequest request,HttpServletResponse response) throws IOException {
+		TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
+		String openid = tm.getOpenid();
+	}
+	
+	/**
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * 下单时设置的notify_url
+	 * 支付完成后微信服务器访问的地址
+	 * 这里通过微信request里的内容真正判断支付是否成功
+	 * 支付成功后，根据request的订单id在本地数据库中更新对应订单状态为"排队中"
+	 * 成功后要返回SUCCESS，否则微信服务器会多次轮询访问
+	 */
+	@RequestMapping(value = "/postPay", method = RequestMethod.POST)
+    public @ResponseBody
+    void postPay(HttpServletRequest request,HttpServletResponse response) throws IOException {
+		
 	}
 	
 	@RequestMapping(value = "/unifiedorder", method = RequestMethod.POST)
