@@ -69,4 +69,12 @@ public interface IOrderOnDao {
 	 * 返回Order_cityid_on的记录总数
 	 */
 	public int getRecordCount(int cityid);
+
+	/**
+	 * @param cityid
+	 * @param orderid
+	 * @return
+	 * 已付款后，将订单状态从未支付改为排队中
+	 */
+	public int confirmMoney(String cityid, String orderid);
 }

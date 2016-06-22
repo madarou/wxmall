@@ -335,9 +335,11 @@ public class OrderOnController {
 		    String orderid = resultXML.get("out_trade_no");
 		    String cityid = resultXML.get("attach");
 		    if(orderid!=null && !"".equals(orderid)){
-		    	this.orderOnService.confirmMoney(cityid,orderid);//将订单的状态从未支付改为排队中
-		    	page = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
-				out.write(page);
+		    	int res = this.orderOnService.confirmMoney(cityid,orderid);//将订单的状态从未支付改为排队中
+		    	if(res==0){
+		    		page = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+		    		out.write(page);
+		    	}
 		    }
 		}
 	}

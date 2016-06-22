@@ -71,4 +71,11 @@ public interface IOrderOnService {
 	 */
 	int getRecordCount(int cityid);
 
+	/**
+	 * @param cityid
+	 * @param orderid
+	 * 已付款后，将订单状态从未支付改为排队中
+	 */
+	int confirmMoney(String cityid, String orderid);
+
 }
