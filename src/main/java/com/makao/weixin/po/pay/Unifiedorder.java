@@ -20,6 +20,7 @@ public class Unifiedorder {
 	private String openid;
 	private String device_info;
 	private String attach;
+	private String detail;
 	public String getAppid() {
 		return appid;
 	}
@@ -103,6 +104,12 @@ public class Unifiedorder {
 	}
 	public void setAttach(String attach) {
 		this.attach = attach;
+	}
+	public String getDetail() {
+		return detail;
+	}
+	public void setDetail(String detail) {
+		this.detail = detail;
 	}
 	
 }

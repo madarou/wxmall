@@ -188,6 +188,7 @@ public class OrderOnController {
 		u.setOpenid(openid);
 		u.setDevice_info("WEB");
 		u.setAttach(String.valueOf(orderOn.getCityId()));//将cityId作为附加数据传入，因为在postPay中需要通过它确定orderOn是具体哪张表
+		u.setDetail(orderToJson(orderOn));
 		// 还有签名没有，下面生成sign签名
 		// 生成sign签名，这里必须用SortedMap，因为签名算法里key值是要排序的
 		SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
@@ -203,6 +204,7 @@ public class OrderOnController {
 		parameters.put("openid", u.getOpenid());
 		parameters.put("device_info", u.getDevice_info());
 		parameters.put("attach", u.getAttach());
+		parameters.put("detail", u.getDetail());
 		u.setSign(SignatureUtil.createSign(parameters, WeixinConstants.PAY_KEY));
 		
 		// 提交到微信统一订单接口，用xml格式提交和接收
@@ -226,6 +228,7 @@ public class OrderOnController {
 			out.write(page);
 			return;
 		}
+		this.orderOnService.insert(orderOn);
 		
 		// 为前端页面能够使用JSSDK设置签名
 		Map<String, String> wxConfig = JSSignatureUtil
@@ -842,4 +845,26 @@ public class OrderOnController {
 	    modelAndView.addObject("pageCount", pageCount);   
 		return modelAndView;
     }
+	
+	/**
+	 * @param orderOn
+	 * @return
+	 * 将前端传来的orderOn转换成微信detail需要的json格式
+	 */
+	private String orderToJson(OrderOn orderOn){
+		String productIds = orderOn.getProductIds();
+		String productNames = orderOn.getProductNames();
+		String[] ids = productIds.split(",");
+		String[] names = productNames.split(",");
+		StringBuilder sb = new StringBuilder();
+		sb.append("{\"goods_detail\":[");
+		for(int i=0; i<ids.length; i++){
+			String[] nameDetail = names[i].split("=");
+			int price = Integer.parseInt(nameDetail[1].split(".")[0]+nameDetail[1].split(".")[1]);
+			String po = "{\"goods_id\":\""+ids[i]+"\",\"goods_name\":\""+nameDetail[0]+"\",\"quantity\":"+nameDetail[2]+",\"price\":"+price+"}";
+			sb.append(po);
+		}
+		sb.append("]}");
+		return sb.toString();
+	}
 }
