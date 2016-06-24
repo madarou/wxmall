@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.makao.auth.AuthPassport;
 import com.makao.entity.TokenModel;
+import com.makao.utils.RedisUtil;
 import com.makao.utils.TokenManager;
 
 /**
@@ -29,6 +30,8 @@ import com.makao.utils.TokenManager;
 public class TestController {
 	@Autowired
 	private RedisTemplate<String, Long> redisTemplate;
+	@Autowired
+	private RedisUtil redisUtil;
 	
 	private static final Logger logger = Logger.getLogger(TestController.class);
 	@RequestMapping(value="/supervisor")
@@ -80,8 +83,8 @@ public class TestController {
 				  rt = operations.exec();
 				  logger.info("exec rt: " + rt);
 				  if(rt!=null){
-					  long inventory = (long) rt.get(0);
-					  logger.info("rt: " + inventory);
+					  //int inventory = (int) rt.get(0);
+					  logger.info("rt: " + rt.get(0));
 					  break;
 				  }
 			  }
@@ -89,6 +92,12 @@ public class TestController {
 		  }
 		});
 		return txResults;
+	}
+	
+	@RequestMapping(value={"/redistx2"})
+	public void executeTransaction2(){
+		int inventory = Integer.valueOf(redisUtil.redisQueryObject("inventory"));
+		logger.info("inventory: " + inventory);
 	}
 	
 }

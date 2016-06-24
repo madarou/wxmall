@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +46,7 @@ import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
+import com.makao.utils.RedisUtil;
 import com.makao.weixin.po.pay.Unifiedorder;
 import com.makao.weixin.utils.HttpUtil;
 import com.makao.weixin.utils.JSSignatureUtil;
@@ -70,6 +74,8 @@ public class OrderOnController {
 	private IVendorService vendorService;
 	@Resource
 	private ISupervisorService supervisorService;
+	@Autowired
+	private RedisUtil redisUtil;
 	
 //	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 //	public @ResponseBody OrderOn get(@PathVariable("id") Integer id)
@@ -149,19 +155,55 @@ public class OrderOnController {
 	@AuthPassport
 	@RequestMapping(value = "/neworder", method = RequestMethod.POST)
     public @ResponseBody
-    Object addorder(@RequestParam(value="token", required=false) String token, @RequestBody OrderOn OrderOn) {
-		OrderOn.setNumber(OrderNumberUtils.generateOrderNumber());
-		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
-		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
-		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
-		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
-			OrderOn.setStatus("排队中");
+    Object addorder(@RequestParam(value="token", required=false) String token, @RequestBody OrderOn orderOn,
+    		HttpServletRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
+		String openid = tm.getOpenid();
+		if(openid==null || "".equals(openid.trim())){
+			logger.warn("订单提交失败，没有openid："+openid);
+			jsonObject.put("msg", "201");
+			return jsonObject;
 		}
+		//为了鲁棒性，检查价格是否为00.00格式
+		Pattern pattern = Pattern.compile("^(\\d+){2}.(\\d+){2}$");
+		Matcher m = pattern.matcher(orderOn.getTotalPrice());
+		if(!m.matches()){
+			logger.warn("订单提交失败，价格格式错误");
+			jsonObject.put("msg", "202");
+			return jsonObject;
+		}
+		String[] ids = orderOn.getProductIds().split(",");
+		for(String id: ids){
+			Object object = redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim());
+			if(object==null){//缓存里面如果没有，从数据库里读
+				int inv = this.productService.getInventory(orderOn.getCityId(), orderOn.getAreaId(), id);
+				redisUtil.redisSaveObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim(), inv);
+			}
+			int inventory = Integer.valueOf(redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim()));
+			if(inventory<=0){
+				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim()+" 售罄");
+				jsonObject.put("msg", "203");
+				return jsonObject;
+			}
+		}
+		//所有商品都有库存，则轮流为所有商品在缓存中减少对应数量的库存，如果中途有exec为null，循环执行
+		for(String id: ids){
+			while(true){
+				
+			}
+		}
+		
+		orderOn.setNumber(OrderNumberUtils.generateOrderNumber());
+		orderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
+		orderOn.setPayType("微信安全支付");//现在只有这种支付方式
+		orderOn.setReceiveType("送货上门");//现在只有这种收货方式
+		orderOn.setStatus("未支付");
 		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
 		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
 		//订单生成后，使用微信接口向用户发送模板消息
 		int res = this.orderOnService.insert(OrderOn);
-		JSONObject jsonObject = new JSONObject();
+		
 		if(res==0){
 			logger.info("增加有效订单成功id=" + OrderOn.getNumber());
         	jsonObject.put("msg", "200");

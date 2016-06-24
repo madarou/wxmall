@@ -32,8 +32,8 @@ public class RedisInitialOnInit implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 		ApplicationContext application=WebApplicationContextUtils.getWebApplicationContext(event.getServletContext()); 
-		RedisTemplate<String, Long> redisTemplate = (RedisTemplate<String, Long>) application.getBean("redisTemplate");
-		ValueOperations<String, Long> vop = redisTemplate.opsForValue();
+		RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>) application.getBean("redisTemplate");
+		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 		if(redisTemplate.hasKey("inventory")){
 			redisTemplate.delete("inventory");
 		}
@@ -42,8 +42,8 @@ public class RedisInitialOnInit implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		ApplicationContext application=WebApplicationContextUtils.getWebApplicationContext(event.getServletContext()); 
-		RedisTemplate<String, Long> redisTemplate = (RedisTemplate<String, Long>) application.getBean("redisTemplate");
-		ValueOperations<String, Long> vop = redisTemplate.opsForValue();
+		RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>) application.getBean("redisTemplate");
+		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 		if(redisTemplate.hasKey("inventory")){
 			redisTemplate.delete("inventory");
 		}
