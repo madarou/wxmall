@@ -62,7 +62,10 @@
 	 <listener> 
 		  <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>  
 	 </listener>
-
+	<!-- 初始化redis缓存 -->
+	<listener>
+		<listener-class>com.makao.utils.RedisInitialOnInit</listener-class>
+	</listener>
 <!-- 	<servlet-mapping>   
     <servlet-name>default</servlet-name>  
     <url-pattern>*.jpg</url-pattern>     

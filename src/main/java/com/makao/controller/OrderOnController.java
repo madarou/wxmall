@@ -100,10 +100,56 @@ public class OrderOnController {
 	 * curl l -H "Content-type: application/json" -X POST -d '{"productIds":"2=3.50=3,3=4.00=1","productNames":"海南小番茄=3.50=3,广东蜜桃=4.00=1","receiverName":"郭德纲","phoneNumber":"17638372821","address":"上海复旦大学","couponId":3,"couponPrice":"2.00","totalPrice":"14.5","comment":"越快越好","status":"未确认","cityarea":"常州-某某区","userId":1,"areaId":1,"cityId":1}' 'http://localhost:8080/orderOn/new'
 	 * 
 	 */
+	/**
+	 * @param token
+	 * @param OrderOn
+	 * @return
+	 * 最早的下单方法，由于要加入微信下单的过程和缓存校验库存，所以不用了，
+	 * 但留作测试时直接往数据库中生成订单使用
+	 */
 	@AuthPassport
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestParam(value="token", required=false) String token, @RequestBody OrderOn OrderOn) {
+		OrderOn.setNumber(OrderNumberUtils.generateOrderNumber());
+		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
+		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
+		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
+		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
+			OrderOn.setStatus("排队中");
+		}
+		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
+		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
+		//订单生成后，使用微信接口向用户发送模板消息
+		int res = this.orderOnService.insert(OrderOn);
+		JSONObject jsonObject = new JSONObject();
+		if(res==0){
+			logger.info("增加有效订单成功id=" + OrderOn.getNumber());
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("增加有效订单失败id=" + OrderOn.getNumber());
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+	
+	/**
+	 * @param token
+	 * @param OrderOn
+	 * @return
+	 * 该方法在用户提交订单时调用，主要完成：
+	 * 1.根据订单中的商品id到缓存中查找对应商品的库存
+	 * 2.如果某个商品没有库存了，则返回该商品对应商品的名称，说明库存不足，下单失败
+	 * 3.所有商品都有库存，则轮流为所有商品在缓存中减少对应数量的库存，如果中途有exec为null，循环执行，
+	 *   直到所有商品库存减少的操作都完成，如果减少某个商品库存的过程中，减后库存为负，则对应商品的名称，说明库存不足，下单失败
+	 * 4.生成订单OrderOn，存入缓存中，给定失效时间(即一定时间未支付则失效)
+	 * 5.返回下单成功消息
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/neworder", method = RequestMethod.POST)
+    public @ResponseBody
+    Object addorder(@RequestParam(value="token", required=false) String token, @RequestBody OrderOn OrderOn) {
 		OrderOn.setNumber(OrderNumberUtils.generateOrderNumber());
 		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
 		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
