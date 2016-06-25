@@ -44,6 +44,7 @@ import com.makao.service.ICityService;
 import com.makao.service.IOrderOnService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
+import com.makao.thread.AddInventoryThread;
 import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
 import com.makao.utils.RedisUtil;
@@ -188,9 +189,19 @@ public class OrderOnController {
 			}
 		}
 		//所有商品都有库存，则轮流为所有商品在缓存中减少对应数量的库存，如果中途有exec为null，循环执行
-		for(String id: ids){
-			while(true){
+		String[] names = orderOn.getProductNames().split(",");
+		for(int i=0; i<ids.length; i++){
+			int productNum = Integer.parseInt(names[i].split("=")[2]);
+			List<Object> rt = redisUtil.cutInventoryTx("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i].trim(), productNum);
+			//如果某商品扣除购买数量后，库存为负，下单失败，但是要将减掉的库存加回去
+			if(((Long)rt.get(0)).intValue()<=0){
+				//另外起一个线程来回加减掉的库存
+				AddInventoryThread ait = new AddInventoryThread("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i].trim(),productNum,redisUtil);
+				new Thread(ait,"add inventory thread").start();
 				
+				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i]+" 库存不够");
+				jsonObject.put("msg", "204");
+				return jsonObject;
 			}
 		}
 		
@@ -202,8 +213,8 @@ public class OrderOnController {
 		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
 		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
 		//订单生成后，使用微信接口向用户发送模板消息
-		int res = this.orderOnService.insert(OrderOn);
-		
+		//int res = this.orderOnService.insert(orderOn);//这里不再实际往数据库里生成订单，只放在缓存中，提交支付请求时才生成
+		redisUtil.redisSaveObject(orderOn.getNumber(), orderOn, 15);
 		if(res==0){
 			logger.info("增加有效订单成功id=" + OrderOn.getNumber());
         	jsonObject.put("msg", "200");

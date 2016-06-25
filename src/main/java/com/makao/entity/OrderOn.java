@@ -1,13 +1,17 @@
 package com.makao.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * @description: 订单，对应Order_cityId_on表
  * @author makao
  * @date 2016年5月5日
+ * 因为要在redis缓存中存储，所以需要继承序列化接口
  */
-public class OrderOn {
+public class OrderOn implements Serializable{
+
+	private static final long serialVersionUID = 1745588056529200462L;
 	private int id;
 	private String number;//订单编号			根据年月日和时分秒以及一个随机生成的4为数组成
 	private String productIds;//所有购买的商品id	以'id1,id2,id3'连接

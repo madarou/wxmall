@@ -5,13 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import com.makao.controller.TestController;
 import com.makao.entity.TokenModel;
 
 /**
@@ -23,6 +28,7 @@ import com.makao.entity.TokenModel;
 public class RedisUtil {
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
+	private static final Logger logger = Logger.getLogger(RedisUtil.class);
 	
 	/** 
      * @param <T> 
@@ -126,8 +132,17 @@ public class RedisUtil {
      * @throws 
      */  
     public <T> T redisQueryObject(final String key) {  
-        ValueOperations<String, Object> ops = redisTemplate.opsForValue();  
-        return (T) ops.get(key);  
+        //ValueOperations<String, Object> ops = redisTemplate.opsForValue();  
+        //return (T) ops.get(key);  
+    	//在spring中redis的string 类型，当值采用JdkSerializationRedisSerializer序列化操作后，使用get获取失败。
+    	//这是redis的一个bug.有两种解决办法。第一，采用StringRedisSerializer序列化其值。第二，采用boundValueOps(key).get(0,-1)获取计数key的值
+    	try{
+    		ValueOperations<String, Object> ops = redisTemplate.opsForValue();  
+            return (T) ops.get(key);
+    	}catch(Exception e){
+    		logger.info("get value by get(0,-1)");
+    		return (T)redisTemplate.boundValueOps(key).get(0, -1);
+    	}
     }  
   
     /** 
@@ -207,4 +222,64 @@ public class RedisUtil {
         ListOperations<String, Object> ops = redisTemplate.opsForList();  
         ops.remove(key, 0, value);  
     }  
+    
+    /**
+     * @param key
+     * @param productNum
+     * @return
+     * 试图扣除producNum个key所对应的inventory，最后直到扣除成功才返回
+     */
+    public List<Object> cutInventoryTx(String key, int productNum){
+		//execute a transaction
+		List<Object> txResults = redisTemplate.execute(new SessionCallback<List<Object>>() {
+		  public List<Object> execute(RedisOperations operations) throws DataAccessException {
+			  List<Object> rt = null;
+			  while(true){
+				  operations.watch(key);
+				  operations.multi();
+				  //必须用increment的才能在exec()方法得到之后的inventory值，使用set(key,value)方法没有返回，
+				  operations.opsForValue().increment("inventory", 0-productNum);
+				  //				    logger.info("decreasing inventory to: "+ inventory);
+				  rt = operations.exec();
+				  logger.info("exec cut inventory "+key+" by "+productNum+" rt: " + rt);
+				  if(rt!=null){
+					  //int inventory = (int) rt.get(0);
+					  logger.info("exec success rt: " + rt.get(0));
+					  break;
+				  }
+			  }
+		    return rt;
+		  }
+		});
+		return txResults;
+	}
+    
+    /**
+     * @param key
+     * @param productNum
+     * @return
+     * 为key对应的商品在缓存里面增加productNum个库存，直到增加成功为止
+     */
+    public List<Object> addInventoryTx(String key, int productNum){
+		//execute a transaction
+		List<Object> txResults = redisTemplate.execute(new SessionCallback<List<Object>>() {
+		  public List<Object> execute(RedisOperations operations) throws DataAccessException {
+			  List<Object> rt = null;
+			  while(true){
+				  operations.watch(key);
+				  operations.multi();
+				  //必须用increment的才能在exec()方法得到之后的inventory值，使用set(key,value)方法没有返回，
+				  operations.opsForValue().increment("inventory", productNum);
+				  rt = operations.exec();
+				  logger.info("exec add inventory "+key+" by "+productNum+" rt: " + rt);
+				  if(rt!=null){
+					  logger.info("exec success rt: " + rt.get(0));
+					  break;
+				  }
+			  }
+		    return rt;
+		  }
+		});
+		return txResults;
+	}
 }

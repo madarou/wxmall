@@ -1,5 +1,7 @@
 package com.makao.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -16,8 +18,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.makao.auth.AuthPassport;
+import com.makao.entity.OrderOn;
 import com.makao.entity.TokenModel;
+import com.makao.thread.AddInventoryThread;
+import com.makao.utils.OrderNumberUtils;
 import com.makao.utils.RedisUtil;
+import com.makao.utils.SerializeUtils;
 import com.makao.utils.TokenManager;
 
 /**
@@ -29,7 +35,7 @@ import com.makao.utils.TokenManager;
 @RequestMapping("/test")
 public class TestController {
 	@Autowired
-	private RedisTemplate<String, Long> redisTemplate;
+	private RedisTemplate<String, Object> redisTemplate;
 	@Autowired
 	private RedisUtil redisUtil;
 	
@@ -83,8 +89,8 @@ public class TestController {
 				  rt = operations.exec();
 				  logger.info("exec rt: " + rt);
 				  if(rt!=null){
-					  //int inventory = (int) rt.get(0);
-					  logger.info("rt: " + rt.get(0));
+					  int inventory = ((Long)rt.get(0)).intValue();
+					  logger.info("rt: " + inventory);
 					  break;
 				  }
 			  }
@@ -96,8 +102,29 @@ public class TestController {
 	
 	@RequestMapping(value={"/redistx2"})
 	public void executeTransaction2(){
-		int inventory = Integer.valueOf(redisUtil.redisQueryObject("inventory"));
-		logger.info("inventory: " + inventory);
+		//int inventory = Integer.valueOf(redisUtil.redisQueryObject("inventory"));
+		logger.info("inventory: " + redisUtil.redisQueryObject("inventory"));
+	}
+	
+	@RequestMapping(value={"/redistx3"})
+	public void executeAdd() throws UnsupportedEncodingException{
+		OrderOn orderOn = new OrderOn();
+		orderOn.setNumber(OrderNumberUtils.generateOrderNumber());
+		orderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
+		orderOn.setPayType("微信安全支付");//现在只有这种支付方式
+		orderOn.setReceiveType("送货上门");//现在只有这种收货方式
+		orderOn.setStatus("未支付");
+		redisUtil.redisSaveObject(orderOn.getNumber(), orderOn, 1);
+		redisUtil.redisSaveObject("test", 1, 1);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//OrderOn o = (OrderOn) SerializeUtils.deserialize(((String)redisUtil.redisQueryObject(orderOn.getNumber())).getBytes("UTF-8"));
+		logger.info(((OrderOn)redisUtil.redisQueryObject(orderOn.getNumber())).getStatus());
+		logger.info(redisUtil.redisQueryObject("test"));
 	}
 	
 }
