@@ -36,12 +36,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.makao.auth.AuthPassport;
 import com.makao.entity.City;
 import com.makao.entity.OrderOn;
+import com.makao.entity.Product;
 import com.makao.entity.Supervisor;
 import com.makao.entity.TokenModel;
 import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.ICityService;
 import com.makao.service.IOrderOnService;
+import com.makao.service.IProductService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.thread.AddInventoryThread;
@@ -75,6 +77,8 @@ public class OrderOnController {
 	private IVendorService vendorService;
 	@Resource
 	private ISupervisorService supervisorService;
+	@Resource
+	private IProductService productService;
 	@Autowired
 	private RedisUtil redisUtil;
 	
@@ -178,8 +182,8 @@ public class OrderOnController {
 		for(String id: ids){
 			Object object = redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim());
 			if(object==null){//缓存里面如果没有，从数据库里读
-				int inv = this.productService.getInventory(orderOn.getCityId(), orderOn.getAreaId(), id);
-				redisUtil.redisSaveObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim(), inv);
+				//int inv = this.productService.getInventory(orderOn.getCityId(), orderOn.getAreaId(), id);
+				//redisUtil.redisSaveObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim(), inv);
 			}
 			int inventory = Integer.valueOf(redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim()));
 			if(inventory<=0){
@@ -215,12 +219,13 @@ public class OrderOnController {
 		//订单生成后，使用微信接口向用户发送模板消息
 		//int res = this.orderOnService.insert(orderOn);//这里不再实际往数据库里生成订单，只放在缓存中，提交支付请求时才生成
 		redisUtil.redisSaveObject(orderOn.getNumber(), orderOn, 15);
-		if(res==0){
-			logger.info("增加有效订单成功id=" + OrderOn.getNumber());
+		if(redisUtil.redisQueryObject(orderOn.getNumber())!=null){
+			logger.info("增加有效订单成功id=" + orderOn.getNumber());
+			jsonObject.put("orderId", orderOn.getNumber());
         	jsonObject.put("msg", "200");
 		}
 		else{
-			logger.info("增加有效订单失败id=" + OrderOn.getNumber());
+			logger.info("增加有效订单失败id=" + orderOn.getNumber());
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;
@@ -243,7 +248,7 @@ public class OrderOnController {
 	@AuthPassport
 	@RequestMapping(value = "/pay", method = RequestMethod.POST)
     public @ResponseBody
-    void payOrder(@RequestParam(value="token", required=false) String token,@RequestBody OrderOn orderOn, 
+    void payOrder(@RequestParam(value="token", required=false) String token,@RequestBody JSONObject paramObject, 
     		HttpServletRequest request,HttpServletResponse response) throws IOException {
 		response.setHeader("content-type", "text/html;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -253,25 +258,20 @@ public class OrderOnController {
 		TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
 		String openid = tm.getOpenid();
 		if(openid==null || "".equals(openid.trim())){
-			page = "订单提交失败，没有openid："+openid;
+			page = "订单支付失败，没有openid："+openid;
 			logger.warn(page);
 			out.write(page);
 			return;
 		}
-		//为了鲁棒性，检查价格是否为00.00格式
-		Pattern pattern = Pattern.compile("^(\\d+){2}.(\\d+){2}$");
-		Matcher m = pattern.matcher(orderOn.getTotalPrice());
-		if(!m.matches()){
-			page = "订单提交失败，价格格式错误";
-			logger.warn(page);
-			out.write(page);
+		String orderid = paramObject.getString("orderId");
+		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderid);
+		if(orderOn==null){
+			page = "订单支付失败，订单已过期，orderid=："+orderid;
+			logger.info(page);
+			out.write("支付失败，订单已过期(15分钟)");
 			return;
 		}
-		orderOn.setNumber(OrderNumberUtils.generateOrderNumber());
-		orderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
-		orderOn.setPayType("微信安全支付");//现在只有这种支付方式
-		orderOn.setReceiveType("送货上门");//现在只有这种收货方式
-		orderOn.setStatus("未支付");
+		
 		// 生成微信订单
 		Unifiedorder u = new Unifiedorder();
 		u.setAppid(WeixinConstants.APPID);
@@ -579,9 +579,29 @@ public class OrderOnController {
     public @ResponseBody Object get(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid) {
 		JSONObject jsonObject = new JSONObject();
 		OrderOn os = this.orderOnService.queryByOrderId("Order_"+cityid+"_on", orderid);
+		List<SmallProduct> sps = new ArrayList<SmallProduct>();
+		if(os!=null){
+			//重新组装商品列表，方便前端直接显示
+			String[] pro_ids = os.getProductIds().split(",");
+			String[] pro_names = os.getProductNames().split(",");
+			for(int i=0; i<pro_ids.length; i++){
+				String pid = pro_ids[i];
+				String[] names = pro_names[i].split(",");
+				Product p = (Product)this.productService.getById(Integer.valueOf(pid),os.getCityId(),os.getAreaId());
+				SmallProduct sp = new SmallProduct();
+				sp.setId(pid);
+				sp.setName(names[0]);//这里要显示当时下单时的名称，防止后面修改了商品名后，引起误会
+				sp.setImage(p.getCoverSUrl());
+				sp.setPrice(names[1]);//这里要显示当时用户下单时的价格，而不是现在商品实际的价格
+				sp.setNumber(names[2]);
+				sps.add(sp);
+			}
+			
+		}
 		logger.info("查询订单id："+orderid+" 信息完成(所属city:"+cityid+")");
 		jsonObject.put("msg", "200");
 		jsonObject.put("order", os);
+		jsonObject.put("products", sps);
 		return jsonObject;
     }
 	
@@ -965,5 +985,43 @@ public class OrderOnController {
 		}
 		sb.append("]}");
 		return sb.toString();
+	}
+	
+	private class SmallProduct{
+		private String id;
+		private String name;
+		private String image;
+		private String price;
+		private String number;
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getImage() {
+			return image;
+		}
+		public void setImage(String image) {
+			this.image = image;
+		}
+		public String getPrice() {
+			return price;
+		}
+		public void setPrice(String price) {
+			this.price = price;
+		}
+		public String getNumber() {
+			return number;
+		}
+		public void setNumber(String number) {
+			this.number = number;
+		}
 	}
 }

@@ -41,7 +41,7 @@ public class AllOrderTest {
 		
 		String neworderon = "http://localhost:8080/orderOn/new/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
 		//排队订单
-		String orderon_queue = "{\"productIds\":\"5\",\"productNames\":\"新疆葡萄=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":3,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
+		String orderon_queue = "{\"productIds\":\"5\",\"productNames\":\"新疆葡萄=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		result = HttpUtils.doPostStr(neworderon,orderon_queue);
 		assertEquals("200",result.get("msg"));
 //		result = HttpUtils.doPostStr(neworderon,orderon_queue);
@@ -66,7 +66,7 @@ public class AllOrderTest {
 //		assertEquals("200",result.get("msg"));
 		
 		//要被配送api配送的订单
-		String orderon = "{\"productIds\":\"2,3\",\"productNames\":\"海南小番茄=3.50=3,广东蜜桃=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"17638372821\",\"address\":\"上海复旦大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":3,\"couponPrice\":\"2.00\",\"totalPrice\":\"14.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
+		String orderon = "{\"productIds\":\"2,3\",\"productNames\":\"海南小番茄=3.50=3,广东蜜桃=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"17638372821\",\"address\":\"上海复旦大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"couponPrice\":\"2.00\",\"totalPrice\":\"14.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		String distributeorderon1 = "http://localhost:8080/orderOn/vdistribute/1";
 		String orderon1id = "{\"orderid\":1}";
 		result = HttpUtils.doPostStr(neworderon,orderon);
@@ -75,7 +75,7 @@ public class AllOrderTest {
 		assertEquals("200",result.get("msg"));
 		
 		//要被配送完成API finish的订单
-		String orderon2 = "{\"productIds\":\"3\",\"productNames\":\"广东蜜桃=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":3,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
+		String orderon2 = "{\"productIds\":\"3\",\"productNames\":\"广东蜜桃=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		String finishorderon2 = "http://localhost:8080/orderOn/vfinish/1";
 		String orderon2id = "{\"orderid\":2}";
 		result = HttpUtils.doPostStr(neworderon,orderon2);
@@ -84,7 +84,7 @@ public class AllOrderTest {
 		assertEquals("200",result.get("msg"));
 		
 		//要被收货api确认收货的订单
-		String orderon3 = "{\"productIds\":\"4\",\"productNames\":\"海南西瓜=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":3,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
+		String orderon3 = "{\"productIds\":\"4\",\"productNames\":\"海南西瓜=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		String confirmorderon3 = "http://localhost:8080/orderOn/confirm/1/4/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
 		result = HttpUtils.doPostStr(neworderon,orderon3);
 		assertEquals("200",result.get("msg"));
@@ -93,7 +93,7 @@ public class AllOrderTest {
 		
 		
 		//要先被确认收货，然后被申请退货的订单
-		String orderon4 = "{\"productIds\":\"5\",\"productNames\":\"美国冬瓜=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":3,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
+		String orderon4 = "{\"productIds\":\"5\",\"productNames\":\"美国冬瓜=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		String confirmorderon4 = "http://localhost:8080/orderOn/confirm/1/5/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
 		result = HttpUtils.doPostStr(neworderon,orderon4);
 		assertEquals("200",result.get("msg"));

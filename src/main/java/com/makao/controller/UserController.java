@@ -25,10 +25,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.Area;
 import com.makao.entity.Supervisor;
 import com.makao.entity.TokenModel;
 import com.makao.entity.User;
 import com.makao.entity.Vendor;
+import com.makao.service.IAreaService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
@@ -49,11 +51,9 @@ public class UserController {
 	@Resource
 	private IVendorService vendorService;
 	@Resource
+	private IAreaService areaService;
+	@Resource
 	private ISupervisorService supervisorService;
-	private final String DEFAULT_CITY_NAME="上海";
-	private final String DEFAULT_AREA_NAME="张江";
-	private final int DEFAULT_CITY_ID=1;
-	private final int DEFAULT_AREA_ID=1;
 	
 //	@Autowired
 //	private StringRedisTemplate redisTemplate;
@@ -120,8 +120,8 @@ public class UserController {
 			int areaid = user.getAreaId();
 			String cityname = user.getCityName();
 			String areaname = user.getAreaName();
-			System.out.println(cityname);
-			System.out.println(areaname);
+			Area area = this.areaService.getById(areaid);
+			String catalogs = area.getCatalogs();
 			page = "<!DOCTYPE html>"
 					+ "<html>"
 						+ "<head>"
@@ -141,6 +141,7 @@ public class UserController {
 								+ "window.cityname='"+cityname+"';"
 								+ "window.areaid="+areaid+";"
 								+ "window.areaname='"+areaname+"';"
+								+ "window.catalogs='"+catalogs+"';"
 								+ "window.token='"+token+"';"
 							+ "</script>"
 							+ "<script src=\"/static/bundle.js\"></script>"
@@ -162,10 +163,12 @@ public class UserController {
 				u.setRank("初级会员");
 				u.setRegistTime(new Timestamp(System.currentTimeMillis()));
 				u.setPoint(0);
-				u.setCityId(DEFAULT_CITY_ID);
-				u.setAreaId(DEFAULT_AREA_ID);
-				u.setCityName(DEFAULT_CITY_NAME);
-				u.setAreaName(DEFAULT_AREA_NAME);
+				u.setCityId(MakaoConstants.DEFAULT_CITY_ID);
+				u.setAreaId(MakaoConstants.DEFAULT_AREA_ID);
+				u.setCityName(MakaoConstants.DEFAULT_CITY_NAME);
+				u.setAreaName(MakaoConstants.DEFAULT_AREA_NAME);
+				Area area = this.areaService.getById(MakaoConstants.DEFAULT_AREA_ID);
+				String catalogs = area.getCatalogs();
 				this.userService.insert(u);
 				page = "<!DOCTYPE html>"
 						+ "<html>"
@@ -182,10 +185,11 @@ public class UserController {
 								+ "<div class=\"page\" id=\"root\">"
 								+ "</div>"
 								+ "<script>"
-									+ "window.cityid="+DEFAULT_CITY_ID+";"
-									+ "window.cityname='"+DEFAULT_CITY_NAME+"';"
-									+ "window.areaid="+DEFAULT_AREA_ID+";"
-									+ "window.areaname='"+DEFAULT_AREA_NAME+"';"
+									+ "window.cityid="+MakaoConstants.DEFAULT_CITY_ID+";"
+									+ "window.cityname='"+MakaoConstants.DEFAULT_CITY_NAME+"';"
+									+ "window.areaid="+MakaoConstants.DEFAULT_AREA_ID+";"
+									+ "window.areaname='"+MakaoConstants.DEFAULT_AREA_NAME+"';"
+									+ "window.catalogs='"+catalogs+"';"
 									+ "window.token='"+token+"';"
 								+ "</script>"
 								+ "<script src=\"/static/bundle.js\"></script>"
@@ -225,10 +229,10 @@ public class UserController {
 							+ "<div class=\"page\" id=\"root\">"
 							+ "</div>"
 							+ "<script>"
-								+ "window.cityid="+DEFAULT_CITY_ID+";"
-								+ "window.cityname='"+DEFAULT_CITY_NAME+"';"
-								+ "window.areaid="+DEFAULT_AREA_ID+";"
-								+ "window.areaname='"+DEFAULT_AREA_NAME+"';"
+								+ "window.cityid="+MakaoConstants.DEFAULT_CITY_ID+";"
+								+ "window.cityname='"+MakaoConstants.DEFAULT_CITY_NAME+"';"
+								+ "window.areaid="+MakaoConstants.DEFAULT_AREA_ID+";"
+								+ "window.areaname='"+MakaoConstants.DEFAULT_AREA_NAME+"';"
 								+ "window.token='"+token+"';"
 							+ "</script>"
 							+ "<script src=\"/static/bundle.js\"></script>"

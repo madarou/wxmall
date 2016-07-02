@@ -1,5 +1,6 @@
 package com.makao.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.CouponOff;
+import com.makao.entity.CouponOn;
 import com.makao.service.ICouponOffService;
 
 /**
@@ -68,6 +70,33 @@ public class CouponOffController {
         	jsonObject.put("msg", "增加失效优惠券失败");
 		}
         return jsonObject;
+    }
+	@RequestMapping(value = "/all/{cityid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object all(@PathVariable("cityid") int cityid,@PathVariable("userid") int userid) {
+        JSONObject jsonObject = new JSONObject();
+		List<CouponOff> os = this.couponOffService.queryAllByUserId("Coupon_"+cityid+"_off",userid);
+		List<CouponOff> offs = new ArrayList<CouponOff>();
+		//只返回已过期的，不返回已使用的，已使用的券里面会有overdueDate字段记录使用时间
+		for(CouponOff c : os){
+			if(c.getOverdueDate()==null){
+				offs.add(c);
+			}
+		}
+		logger.info("查询城市id："+cityid+" 中的用户id为:"+userid+"的所有失效coupoff完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("coupoffs", offs);
+		return jsonObject;
+    }
+	
+	@RequestMapping(value = "/{cityid:\\d+}/{couponid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody Object get(@PathVariable("cityid") int cityid, @PathVariable("couponid") int couponid) {
+		JSONObject jsonObject = new JSONObject();
+		CouponOff couponoff = this.couponOffService.queryByCouponId("Coupon_"+cityid+"_off", couponid);
+		logger.info("查询失效优惠券id："+couponid+" 信息完成(所属city:"+cityid+")");
+		jsonObject.put("msg", "200");
+		jsonObject.put("coupoff", couponoff);
+		return jsonObject;
     }
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)

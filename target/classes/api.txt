@@ -5,7 +5,8 @@ api															method				comment
 /banner/all/[areaId]										GET					获取areaId下所有banner
 /user/[userId]												GET					获取用户信息
 
-/orderOn/new/?token=xxx										POST				下单(token设置在header中，跨域时header会有问题)
+/orderOn/neworder/?token=xxx								POST				下单(token设置在header中，跨域时header会有问题)(暂时不用/orderOn/new/ api，因为涉及了缓存和微信下单，那个只用于测试直接生成订单)
+参数：
 	{
 		productIds:[id1,id2,...],//*商品id列表
 		productNames:[name1=price1=number1,name2=price2=number2,...],//*商品名称=当时价格=购买数量
@@ -22,7 +23,17 @@ api															method				comment
 		cityarea:[城市名区域名],//方便直接展示
 		userId:,//用户Id
 		areaId:,//区域Id
-		cityId:,//城市Id，用于在访问数据库时，直接确定数据库表名
+		cityId://城市Id，用于在访问数据库时，直接确定数据库表名
+	}
+成功时返回:
+	{
+		msg:200,
+		orderId:"xxxxxxxxxxxxxxx"
+	}
+/orderOn/pay/?token=xxx										POST				提交支付订单请求
+参数:
+	{
+		orderId:"xxxxxxxxxxxxxxx"
 	}
 /orderOn/all/[cityId]/[userId]								GET					查询某个用户的所有未收货订单
 /orderOn/[cityId]/[orderId]									GET					查询未收货的某个具体订单详情
@@ -48,7 +59,7 @@ api															method				comment
 		address:,//城市区域名，如上海张江
 		detailAddress:,//具体地址
 		label:,//地址标签
-		isDefault:,//是否是默认[yes]/[no]
+		isDefault://是否是默认[yes]/[no]
 	}
 /address/all/[userId]										GET					查询用户所有地址
 /address/edit/[addressId]/?token=xxx						POST				修改用户地址
@@ -57,6 +68,6 @@ api															method				comment
 		phoneNumber:,//收货人电话
 		detailAddress:,//具体地址
 		label:,//地址标签
-		isDefault:,//是否是默认[yes]/[no]
+		isDefault://是否是默认[yes]/[no]
 	}
 /address/[addressId]/?token=xxx								DELETE				删除用户地址

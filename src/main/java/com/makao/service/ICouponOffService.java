@@ -23,4 +23,20 @@ public interface ICouponOffService {
 
 	int deleteById(int id);
 
+	/**
+	 * @param string
+	 * @param userid
+	 * @return
+	 * 查询用户userid下的所有失效优惠券
+	 */
+	List<CouponOff> queryAllByUserId(String tableName, int userid);
+
+	/**
+	 * @param tableName
+	 * @param couponid
+	 * @return
+	 * 查询couponOff详情
+	 */
+	CouponOff queryByCouponId(String tableName, int couponid);
+
 }

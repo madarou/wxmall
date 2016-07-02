@@ -1,6 +1,7 @@
 package com.makao.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.makao.dao.IOrderOnDao;
 import com.makao.entity.City;
+import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
@@ -46,6 +48,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
 				+ "`freight`,`comment`,`vcomment`,`status`,`cityarea`,`userId`,`areaId`,`cityId`,`refundStatus`)"
 				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		List<CouponOn> co = new ArrayList<CouponOn>();
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -87,6 +90,95 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 					}
 				}
 			});
+			//如果优惠券不为空，则要记录优惠券被使用的信息，即从Coupon_cityid_on移到Coupon_cityid_off中去
+			int couponid = orderOn.getCouponId();
+			if(couponid>0){
+				session.doWork(
+						// 定义一个匿名类，实现了Work接口
+						new Work() {
+							public void execute(Connection connection) throws SQLException {
+								PreparedStatement ps = null;
+								try {
+									String couponTable = "Coupon_"+orderOn.getCityId()+"_on";
+									String sql1 = "SELECT * FROM `" + couponTable + "` WHERE `id`="+couponid;
+									ps = connection.prepareStatement(sql1);
+									ResultSet rs = ps.executeQuery();
+									while(rs.next()){
+										CouponOn p = new CouponOn();
+										p.setId(rs.getInt("id"));
+										p.setName(rs.getString("name"));
+										p.setAmount(rs.getString("amount"));
+										p.setCoverSUrl(rs.getString("coverSUrl"));
+										p.setCoverBUrl(rs.getString("coverBUrl"));
+										p.setPoint(rs.getInt("point"));
+										p.setFrom(rs.getDate("from"));
+										p.setTo(rs.getDate("to"));
+										p.setRestrict(rs.getInt("restrict"));
+										p.setComment(rs.getString("comment"));
+										p.setCityName(rs.getString("cityName"));
+										p.setCityId(rs.getInt("cityId"));
+										p.setUserId(rs.getInt("userId"));
+										p.setType(rs.getString("type"));
+										co.add(p);
+									}
+								} finally {
+									doClose(ps);
+								}
+							}
+						});
+				if(co.size()>0){//从CouponOn里查到了，写入off表里
+					session.doWork(
+							// 定义一个匿名类，实现了Work接口
+							new Work() {
+								public void execute(Connection connection) throws SQLException {
+									PreparedStatement ps = null;
+									CouponOn couponOn = co.get(0);
+									String tableName = "Coupon_"+orderOn.getCityId()+"_off";
+									String sql2 = "INSERT INTO `"
+											+ tableName
+											+ "` (`name`,`amount`,`coverSUrl`,`coverBUrl`,`point`,`restrict`,`comment`,`cityName`,"
+											+ "`cityId`,`userId`,`type`,`from`,`to`,`overdueDate`)"
+											+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+									try {
+										ps = connection.prepareStatement(sql2);
+										ps.setString(1, couponOn.getName());
+										ps.setString(2, couponOn.getAmount());
+										ps.setString(3, couponOn.getCoverSUrl());
+										ps.setString(4, couponOn.getCoverBUrl());
+										ps.setInt(5, couponOn.getPoint());
+										ps.setInt(6, couponOn.getRestrict());
+										ps.setString(7, couponOn.getComment());
+										ps.setString(8, couponOn.getCityName());
+										ps.setInt(9, couponOn.getCityId());
+										ps.setInt(10, couponOn.getUserId());
+										ps.setString(11, couponOn.getType());
+										ps.setDate(12, couponOn.getFrom());
+										ps.setDate(13, couponOn.getTo());
+										ps.setDate(14, new Date(System.currentTimeMillis()));
+										ps.executeUpdate();
+									} finally {
+										doClose(ps);
+									}
+								}
+							});
+					session.doWork(//在Coupon_cityId_on中删除该记录
+							// 定义一个匿名类，实现了Work接口
+							new Work() {
+								public void execute(Connection connection) throws SQLException {
+									PreparedStatement ps = null;
+									try {
+										String tableName = "Coupon_"+orderOn.getCityId()+"_on";
+										String sql3 = "DELETE FROM `"+tableName+"` WHERE `id`="+couponid;
+										ps = connection.prepareStatement(sql3);
+										ps.executeUpdate();
+									} finally {
+										doClose(ps);
+									}
+								}
+							});
+					
+				}
+			}
 			tx.commit(); // 使用 Hibernate事务处理边界
 		} catch (HibernateException e) {
 			if (null != tx)
