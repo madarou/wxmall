@@ -35,25 +35,36 @@ public class AddressDaoImpl implements IAddressDao {
 	public int insert(Address address) {
 		Session session = null;
 		Transaction tx = null;
-		int res = 0;// 返回0表示成功，1表示失败
+		int res = 0;// 返回0表示失败，成功的话返回id
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
-			session.save(address);// 保存地址
-			//如果是默认地址，则更新user表里的对应字段
-			if("yes".equals(address.getIsDefault())){
-				User user = (User)session.get(User.class, address.getUserId());
-				user.setReceiveName(address.getUserName());
-				user.setPhoneNumber(address.getPhoneNumber());
-				user.setAddress(address.getDetailAddress());
-				user.setAddLabel(address.getLabel());
-				session.update(user);
+//			//不再更新user表里的对应字段，因为这些字段不再作为默认地址
+//			session.save(address);// 保存地址
+//			//如果是默认地址，则更新user表里的对应字段
+//			if("yes".equals(address.getIsDefault())){
+//				User user = (User)session.get(User.class, address.getUserId());
+//				user.setReceiveName(address.getUserName());
+//				user.setPhoneNumber(address.getPhoneNumber());
+//				user.setAddress(address.getDetailAddress());
+//				user.setAddLabel(address.getLabel());
+//				session.update(user);
+//			}
+			if("yes".equals(address.getIsDefault())){//如果新增的地址被设为默认
+				//尝试找到该城市区域下原来是默认的地址，将其默认字段设为no
+				Address defaultA = (Address) session.createQuery("from Address a where a.userId=? and a.cityId=? and a.areaId=? and a.isDefault=?").setInteger(0, address.getUserId())
+						.setInteger(1, address.getCityId()).setInteger(2, address.getAreaId()).setString(3, "yes").uniqueResult();
+				if(defaultA!=null){
+					defaultA.setIsDefault("no");
+					session.update(defaultA);
+				}
 			}
+			res = (int) session.save(address);// 保存地址
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)
 				tx.rollback();// 回滚
-			res = 1;
+			res = 0;
 			logger.error(e.getMessage(), e);
 		} finally {
 			if (null != session)
@@ -117,15 +128,41 @@ public class AddressDaoImpl implements IAddressDao {
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
-			session.update(address);
-			//如果是默认地址，则更新user表里的对应字段
-			if("yes".equals(address.getIsDefault())){
-				User user = (User)session.get(User.class, address.getUserId());
-				user.setReceiveName(address.getUserName());
-				user.setPhoneNumber(address.getPhoneNumber());
-				user.setAddress(address.getDetailAddress());
-				user.setAddLabel(address.getLabel());
-				session.update(user);
+//			session.update(address);
+//			//如果是默认地址，则更新user表里的对应字段
+//			if("yes".equals(address.getIsDefault())){
+//				User user = (User)session.get(User.class, address.getUserId());
+//				user.setReceiveName(address.getUserName());
+//				user.setPhoneNumber(address.getPhoneNumber());
+//				user.setAddress(address.getDetailAddress());
+//				user.setAddLabel(address.getLabel());
+//				session.update(user);
+//			}
+			//不再更新user表里的对应字段，因为这些字段不再作为默认地址
+			//现在:
+			//1.如果原来的add是默认地址，新来的address也是默认，则照常进行
+			//2.如果原来的add是默认地址，新来的address不是默认地址，判断新来的没有isDefault，则add的设为no
+			//3.如果原来的add不是默认地址，新来的不是默认地址，照常进行
+			//4.如果原来的add不是默认地址，新来的是默认地址，则要找到原来是默认地址的，设为no
+			if(!"yes".equals(address.getIsDefault())){//新来的不是默认的，照常进行
+				session.update(address);
+			}
+			else{//新来的是设为默认
+				Address add = (Address)session.get(Address.class, address.getId());
+				if(!"yes".equals(add.getIsDefault())){//原来的不是默认，试图找到原来是默认的
+					Address defaultA = (Address) session.createQuery("from Address a where a.userId=? and a.cityId=? and a.areaId=? and a.isDefault=?").setInteger(0, address.getUserId())
+							.setInteger(1, address.getCityId()).setInteger(2, address.getAreaId()).setString(3, "yes").uniqueResult();
+					if(defaultA!=null){
+						defaultA.setIsDefault("no");
+						session.update(defaultA);
+					}
+				}
+				add.setUserName(address.getUserName());
+				add.setPhoneNumber(address.getPhoneNumber());
+				add.setDetailAddress(address.getDetailAddress());
+				add.setLabel(address.getLabel());
+				add.setIsDefault(address.getIsDefault());
+				session.update(add);
 			}
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
@@ -303,6 +340,29 @@ public class AddressDaoImpl implements IAddressDao {
 		return res;
 	}
 
+	@Override
+	public List<Address> queryByCityAreaUserId(int cityid, int areaid,
+			int userid) {
+		Session session = null;
+		Transaction tx = null;
+		List<Address> res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = session.createQuery("from Address a where a.userId=? and a.cityId=? and a.areaId=?").setInteger(0, userid)
+					.setInteger(1, cityid).setInteger(2, areaid).list();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
 	protected void doClose(PreparedStatement stmt) {
 		// Statement对象关闭时,会自动释放其管理的一个ResultSet对象
 		if (stmt != null) {

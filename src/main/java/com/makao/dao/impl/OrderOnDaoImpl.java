@@ -46,8 +46,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ tableName
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`status`,`cityarea`,`userId`,`areaId`,`cityId`,`refundStatus`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`status`,`cityarea`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		List<CouponOn> co = new ArrayList<CouponOn>();
 		Session session = null;
 		Transaction tx = null;
@@ -84,6 +84,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						ps.setInt(20, orderOn.getAreaId());
 						ps.setInt(21, orderOn.getCityId());
 						ps.setString(22, orderOn.getRefundStatus());
+						ps.setString(23, orderOn.getStatus()+"="+orderOn.getOrderTime());
 						ps.executeUpdate();
 					} finally {
 						doClose(ps);
@@ -246,6 +247,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -331,6 +333,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -394,6 +397,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -429,8 +433,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ Order_cityId_off
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		String sql3 = "DELETE FROM `"+Order_cityId_on+"` WHERE `id`="+orderid;
 		List<OrderOn> oo = new ArrayList<OrderOn>();
 		Session session = null;
@@ -472,6 +476,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							oo.add(p);
 						}
 					} finally {
@@ -511,6 +516,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(21, orderOn.getAreaId());
 									ps.setInt(22, orderOn.getCityId());
 									ps.setString(23, "待退款");
+									ps.setString(24,orderOn.getHistory());
 									ps.executeUpdate();
 								} finally {
 									doClose(ps);
@@ -553,9 +559,10 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public int distributeOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_on";
+		String history = ",配送中="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `status`='配送中' WHERE `id`="+orderid;
+				+ "` SET `status`='配送中',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -591,9 +598,13 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public int finishOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_on";
+//		String sql = "UPDATE `"
+//				+ tableName
+//				+ "` SET `status`='已配送' WHERE `id`="+orderid;
+		String history = ",已配送="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `status`='已配送' WHERE `id`="+orderid;
+				+ "` SET `status`='已配送',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -636,8 +647,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ Order_cityId_off
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		String sql3 = "DELETE FROM `"+Order_cityId_on+"` WHERE `id`="+orderid;
 		List<OrderOn> oo = new ArrayList<OrderOn>();
 		Session session = null;
@@ -679,6 +690,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							oo.add(p);
 						}
 					} finally {
@@ -718,6 +730,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(21, orderOn.getAreaId());
 									ps.setInt(22, orderOn.getCityId());
 									ps.setString(23, "无需退款");//正常完成的订单，退款状态为无
+									ps.setString(24, orderOn.getHistory());
 									ps.executeUpdate();
 								} finally {
 									doClose(ps);
@@ -795,6 +808,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -983,6 +997,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -1046,6 +1061,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{

@@ -38,6 +38,7 @@ public class OrderOn implements Serializable{
 	private int areaId;//Area表里的Id，区域卖家登录时的查询条件
 	private int cityId;//用于在访问数据库时，直接确定数据库表名Order_cityId_on，直接从前端传来用
 	private String refundStatus;//退款状态
+	private String history;//以'订单状态=时间,订单状态2=时间2'的形式存储
 	
 	public int getId() {
 		return id;
@@ -176,6 +177,12 @@ public class OrderOn implements Serializable{
 	}
 	public void setRefundStatus(String refundStatus) {
 		this.refundStatus = refundStatus;
+	}
+	public String getHistory() {
+		return history;
+	}
+	public void setHistory(String history) {
+		this.history = history;
 	}
 	
 }

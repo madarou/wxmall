@@ -18,8 +18,11 @@ public class AllOrderTest {
 	@Test
 	public void test() {
 		JSONObject result = null;
+		String couponSCover = "1000001679510380_标准代金券小图.jpg";
+		String couponBCover = "1000001679510380_标准代金券大图.jpg";
 		String newsupervisor = "http://localhost:8080/supervisor/new";
 		String supervisor = "{\"userName\":\"darou\",\"password\":\"test\"}";
+		String userHead = "1003234393232034_head.jpg";
 		
 		String newcity = "http://localhost:8080/city/new/1";
 		String city = "{\"cityName\":\"上海\"}";
@@ -104,6 +107,20 @@ public class AllOrderTest {
 		result = HttpUtils.doGetObject(returnorderoff1);
 		assertEquals("200",result.get("msg"));
 		
+		//假装生成一个已经过期的优惠券
+		String newcouponoff = "http://localhost:8080/couponOff/new";
+		String couponoff = "{\"name\":\"10元代金券\",\"amount\":\"20\",\"point\":20,\"restrict\":10,\"type\":\"代金券兑换\",\"userId\":1,\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
+		result = HttpUtils.doPostStr(newcouponoff,couponoff);
+		assertEquals("200",result.get("msg"));
+		
+		String newuser = "http://localhost:8080/user/new";
+		String user = "{\"userName\":\"马买家\",\"openid\":\"3c5d3acb-31b9-480d-944a-516e74390ed8\",\"avatarUrl\":\""+userHead+"\",\"areaId\":1,\"areaName\":\"张江\",\"cityId\":1,\"cityName\":\"上海\",\"point\":20,\"receiveName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海复旦大学\",\"addLabel\":\"家\",\"rank\":\"中级\"}";
+		String newaddress = "http://localhost:8080/address/new/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
+		String address = "{\"userId\":1,\"userName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海张江\",\"detailAddress\":\"华佗路280弄23号\",\"label\":\"宿舍\",\"isDefault\":\"yes\",\"cityId\":1,\"areaId\":1}";
+		result = HttpUtils.doPostStr(newuser,user);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(newaddress,address);
+		assertEquals("200",result.get("msg"));
 	}
 
 }

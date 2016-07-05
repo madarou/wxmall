@@ -30,6 +30,9 @@ public class BasicTestSuite_Test {
 		String productBCover = "1000000493029796_长方形标准商品图.jpg";
 		String productDetail2 = "1000001532212560_标准商品详情.jpg";
 		
+		String couponSCover = "1000001679510380_标准代金券小图.jpg";
+		String couponBCover = "1000001679510380_标准代金券大图.jpg";
+		
 		JSONObject result = null;
 		String newsupervisor = "http://localhost:8080/supervisor/new";
 		String supervisor = "{\"userName\":\"darou\",\"password\":\"test\"}";
@@ -61,7 +64,7 @@ public class BasicTestSuite_Test {
 		String newuser = "http://localhost:8080/user/new";
 		String user = "{\"userName\":\"马买家\",\"openid\":\"3c5d3acb-31b9-480d-944a-516e74390ed8\",\"avatarUrl\":\""+userHead+"\",\"areaId\":1,\"areaName\":\"张江\",\"cityId\":1,\"cityName\":\"上海\",\"point\":20,\"receiveName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海复旦大学\",\"addLabel\":\"家\",\"rank\":\"中级\"}";
 		String newaddress = "http://localhost:8080/address/new/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
-		String address = "{\"userId\":1,\"userName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海张江\",\"detailAddress\":\"华佗路280弄23号\",\"label\":\"宿舍\",\"isDefault\":\"yes\"}";
+		String address = "{\"userId\":1,\"userName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海张江\",\"detailAddress\":\"华佗路280弄23号\",\"label\":\"宿舍\",\"isDefault\":\"yes\",\"cityId\":1,\"areaId\":1}";
 		
 		String newprodcut11_1 = "http://localhost:8080/product/vnew/1";
 		String product11_1 = "{\"productName\":\"水晶葡萄\",\"catalog\":\"水果\",\"label\":\"无标签\",\"price\":\"12.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"inventory\":12,\"sequence\":1,\"status\":\"0\",\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":7637,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
@@ -73,14 +76,14 @@ public class BasicTestSuite_Test {
 		String product22_1 = "{\"productName\":\"水晶葡萄\",\"catalog\":\"水果\",\"label\":\"无标签\",\"price\":\"12.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"inventory\":12,\"sequence\":1,\"status\":\"2\",\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":7637,\"likes\":3972,\"areaId\":2,\"cityId\":2,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
 	
 		String neworderon = "http://localhost:8080/orderOn/new/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
-		String orderon = "{\"productIds\":\"2,3\",\"productNames\":\"海南小番茄=3.50=3,广东蜜桃=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"17638372821\",\"address\":\"上海复旦大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"couponPrice\":\"2.00\",\"totalPrice\":\"14.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
-		String orderon2 = "{\"productIds\":\"3\",\"productNames\":\"广东蜜桃=4.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
+		String orderon = "{\"productIds\":\"1,2\",\"productNames\":\"水晶葡萄=12.00=3,普通葡萄=10.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"17638372821\",\"address\":\"上海复旦大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"couponPrice\":\"2.00\",\"totalPrice\":\"14.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
+		String orderon2 = "{\"productIds\":\"1\",\"productNames\":\"水晶葡萄=12.00=1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"couponPrice\":\"2.00\",\"totalPrice\":\"22.5\",\"comment\":\"越快越好\",\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		
 		String finishorderon2 = "http://localhost:8080/orderOn/vfinish/1";
 		String orderon2id = "{\"orderid\":2}";
 		
 		String newcoupon = "http://localhost:8080/coupon/new/1";
-		String coupon = "{\"name\":\"10元代金券\",\"amount\":\"10\",\"point\":20,\"restrict\":10,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\"}";
+		String coupon = "{\"name\":\"10元代金券\",\"amount\":\"10\",\"point\":20,\"restrict\":10,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
 	
 		String exchangecoupon = "http://localhost:8080/coupon/exchange/1/1/1?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
 		
@@ -188,8 +191,28 @@ public class BasicTestSuite_Test {
 //		Thread.sleep(1000);
 //		result = HttpUtils.doGetObject(exchangecoupon2);
 //		assertEquals("200",result.get("msg"));
-//		//使用优惠券
+
 		//假装生成一个已经过期的优惠券
+		String newcouponoff = "http://localhost:8080/couponOff/new";
+		String couponoff = "{\"name\":\"10元代金券\",\"amount\":\"20\",\"point\":20,\"restrict\":10,\"type\":\"代金券兑换\",\"userId\":1,\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
+		result = HttpUtils.doPostStr(newcouponoff,couponoff);
+		assertEquals("200",result.get("msg"));
+		
+		//再新增一个不是默认的地址，并尝试修改它，将默认设为true
+		String newaddress2 = "http://localhost:8080/address/new/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
+		String address2 = "{\"userId\":1,\"userName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海张江\",\"detailAddress\":\"蔡伦路299号\",\"label\":\"公司\",\"isDefault\":\"no\",\"cityId\":1,\"areaId\":1}";
+		result = HttpUtils.doPostStr(newaddress2,address2);
+		assertEquals("200",result.get("msg"));
+		
+		String editaddress2 = "http://localhost:8080/address/edit/2";
+		String editedaddress = "{\"userName\":\"郭德纲\",\"phoneNumber\":\"12345678901\",\"detailAddress\":\"张衡路434号\",\"label\":\"学校\",\"isDefault\":\"yes\"}";
+		result = HttpUtils.doPostStr(editaddress2,editedaddress);
+		assertEquals("200",result.get("msg"));
+		//再将最开始的地址1设为默认
+		String defaultaddress1 = "http://localhost:8080/address/default/1";
+		result = HttpUtils.doPostStr(defaultaddress1,"{}");
+		assertEquals("200",result.get("msg"));
+	
 	}
 	
 //	@After

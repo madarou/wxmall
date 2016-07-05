@@ -25,4 +25,6 @@ public interface IAddressService {
 
 	List<Address> queryByUserId(int userid);
 
+	List<Address> queryByCityAreaUserId(int cityid, int areaid, int userid);
+
 }

@@ -63,11 +63,11 @@ public class CouponOffController {
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
 			logger.info("增加失效优惠券成功id=" + CouponOff.getId());
-        	jsonObject.put("msg", "增加失效优惠券成功");
+        	jsonObject.put("msg", "200");
 		}
 		else{
 			logger.info("增加失效优惠券成功失败id=" + CouponOff.getId());
-        	jsonObject.put("msg", "增加失效优惠券失败");
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }
@@ -76,6 +76,7 @@ public class CouponOffController {
     Object all(@PathVariable("cityid") int cityid,@PathVariable("userid") int userid) {
         JSONObject jsonObject = new JSONObject();
 		List<CouponOff> os = this.couponOffService.queryAllByUserId("Coupon_"+cityid+"_off",userid);
+		System.out.print(os.size());
 		List<CouponOff> offs = new ArrayList<CouponOff>();
 		//只返回已过期的，不返回已使用的，已使用的券里面会有overdueDate字段记录使用时间
 		for(CouponOff c : os){
@@ -85,7 +86,7 @@ public class CouponOffController {
 		}
 		logger.info("查询城市id："+cityid+" 中的用户id为:"+userid+"的所有失效coupoff完成");
 		jsonObject.put("msg", "200");
-		jsonObject.put("coupoffs", offs);
+		jsonObject.put("coupons", offs);
 		return jsonObject;
     }
 	

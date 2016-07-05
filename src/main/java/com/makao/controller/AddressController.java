@@ -64,9 +64,10 @@ public class AddressController {
     Object add(@RequestParam(value="token", required=false) String token, @RequestBody Address Address) {
 		int res = this.addressService.insert(Address);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("增加地址成功id=" + Address.getId());
+		if(res!=0){
+			logger.info("增加地址成功id=" + res);
         	jsonObject.put("msg", "200");
+        	jsonObject.put("id", res);
 		}
 		else{
 			logger.info("增加地址失败id=" + Address.getId());
@@ -80,6 +81,16 @@ public class AddressController {
 		JSONObject jsonObject = new JSONObject();
 		List<Address> os = this.addressService.queryByUserId(userid);
 		logger.info("查询用户id："+userid+"的所有地址");
+		jsonObject.put("msg", "200");
+		jsonObject.put("addresses", os);
+		return jsonObject;
+    }
+	
+	@RequestMapping(value = "/all/{cityid:\\d+}/{areaid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody Object cityareaAddresses(@PathVariable("cityid") int cityid, @PathVariable("areaid") int areaid, @PathVariable("userid") int userid) {
+		JSONObject jsonObject = new JSONObject();
+		List<Address> os = this.addressService.queryByCityAreaUserId(cityid,areaid,userid);
+		logger.info("查询用户id："+userid+"在cityId="+cityid+"和areaId="+areaid+"下的所有地址");
 		jsonObject.put("msg", "200");
 		jsonObject.put("addresses", os);
 		return jsonObject;
@@ -112,6 +123,34 @@ public class AddressController {
 			}
 		}
 		logger.info("更新用户："+userName+" 的id为: "+addressid+" 的地址失败");
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	/**
+	 * @param addressid
+	 * @param token
+	 * @param paramObject
+	 * @return
+	 * 将地址设为默认
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/default/{addressid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody Object defaultAdress(@PathVariable("addressid") int addressid,@RequestParam(value="token", required=false) String token,
+    		@RequestBody JSONObject paramObject) {
+		
+		JSONObject jsonObject = new JSONObject();
+		Address ad = this.addressService.getById(addressid);
+		if(ad!=null){
+			ad.setIsDefault("yes");
+			int res = this.addressService.update(ad);
+			if(res==0){
+				logger.info("更新地址id为: "+addressid+" 的地址成功为默认地址成功");
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+		}
+		logger.info("更新地址id为: "+addressid+" 的地址成功为默认地址失败");
 		jsonObject.put("msg", "201");
 		return jsonObject;
     }

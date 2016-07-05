@@ -42,8 +42,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 				+ tableName
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -80,6 +80,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 						ps.setInt(21, orderOff.getAreaId());
 						ps.setInt(22, orderOff.getCityId());
 						ps.setString(23, orderOff.getRefundStatus());
+						ps.setString(24, orderOff.getHistory());
 						ps.executeUpdate();
 					} finally {
 						doClose(ps);
@@ -172,6 +173,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -236,6 +238,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -301,6 +304,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -325,9 +329,10 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int refundOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_off";
+		String history = ",退货中="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='退货中' WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='退货中',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -363,9 +368,10 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int finishReturnOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_off";
+		String history = ",已退货="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='已退货',`refundStatus`='待退款',`finalTime`=? WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='已退货',`refundStatus`='待退款',`finalTime`=?,`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -402,9 +408,10 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int finishRefundOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_off";
+		String history = ",已退款="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `refundStatus`='已退款' WHERE `id`="+orderid;
+				+ "` SET `refundStatus`='已退款',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -440,9 +447,10 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int cancelRefundOrder(int cityId, int orderid, String vcomment) {
 		String tableName = "Order_"+cityId+"_off";
+		String history = ",已取消退货="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='已取消退货',`refundStatus`='无需退款',`vcomment`='"+vcomment+"' WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='已取消退货',`refundStatus`='无需退款',`vcomment`='"+vcomment+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -518,6 +526,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -582,6 +591,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -646,6 +656,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -710,6 +721,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
 							res.add(p);
 						}
 					}finally{
@@ -734,9 +746,10 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int returnOrder(int cityid, int orderid) {
 		String tableName = "Order_"+cityid+"_off";
+		String history = ",退货申请中="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='退货申请中',`refundStatus`='无' WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='退货申请中',`refundStatus`='无',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败

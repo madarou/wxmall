@@ -26,6 +26,8 @@ public class Address implements Serializable {
 	private String detailAddress;//具体楼栋门牌
 	private String label;//地址标签
 	private String isDefault;//是否是默认地址
+	private int cityId;
+	private int areaId;
 	
 	@Id
     @GeneratedValue
@@ -83,6 +85,20 @@ public class Address implements Serializable {
 	}
 	public void setIsDefault(String isDefault) {
 		this.isDefault = isDefault;
+	}
+	@Column
+	public int getCityId() {
+		return cityId;
+	}
+	public void setCityId(int cityId) {
+		this.cityId = cityId;
+	}
+	@Column
+	public int getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(int areaId) {
+		this.areaId = areaId;
 	}
 	
 }

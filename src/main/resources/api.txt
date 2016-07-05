@@ -60,8 +60,11 @@ api															method				comment
 		detailAddress:,//具体地址
 		label:,//地址标签
 		isDefault://是否是默认[yes]/[no]
+		cityId:,
+		areaId:
 	}
 /address/all/[userId]										GET					查询用户所有地址
+/address/all/[cityId]/[areaId]/[userId]					 	GET					查询用户在cityId和areaId下的所有地址
 /address/edit/[addressId]/?token=xxx						POST				修改用户地址
 	{
 		userName:,//收货人姓名
@@ -70,4 +73,6 @@ api															method				comment
 		label:,//地址标签
 		isDefault://是否是默认[yes]/[no]
 	}
+/address/default/[addressId]/?token=xxx						POST				将地址设为默认地址
+/address/[addressId]/token=xxx								DELETE				删除地址
 /address/[addressId]/?token=xxx								DELETE				删除用户地址

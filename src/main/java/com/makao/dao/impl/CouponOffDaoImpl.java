@@ -1,6 +1,7 @@
 package com.makao.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,8 +36,56 @@ public class CouponOffDaoImpl implements ICouponOffDao {
 	private SessionFactory sessionFactory;
 	@Override
 	public int insert(CouponOff couponOff) {
-		// TODO Auto-generated method stub
-		return 0;
+		String tableName = "Coupon_"+couponOff.getCityId()+"_off";
+		System.out.println(tableName);
+		String sql1 = "INSERT INTO `"
+				+ tableName
+				+ "` (`name`,`amount`,`coverSUrl`,`coverBUrl`,`point`,`restrict`,`comment`,`cityName`,"
+				+ "`cityId`,`userId`,`type`,`from`,`to`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql1);
+						ps.setString(1, couponOff.getName());
+						ps.setString(2, couponOff.getAmount());
+						ps.setString(3, couponOff.getCoverSUrl());
+						ps.setString(4, couponOff.getCoverBUrl());
+						ps.setInt(5, couponOff.getPoint());
+						ps.setInt(6, couponOff.getRestrict());
+						ps.setString(7, couponOff.getComment());
+						ps.setString(8, couponOff.getCityName());
+						ps.setInt(9, couponOff.getCityId());
+						ps.setInt(10, couponOff.getUserId());
+						ps.setString(11, couponOff.getType());
+						ps.setDate(12, new Date(System.currentTimeMillis()));
+						ps.setDate(13, new Date(System.currentTimeMillis()+(24*60*60*1000*7)));
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override

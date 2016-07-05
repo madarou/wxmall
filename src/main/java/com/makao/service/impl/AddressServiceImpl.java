@@ -44,6 +44,11 @@ public class AddressServiceImpl implements IAddressService {
 	public List<Address> queryByUserId(int userid) {
 		return this.addressDao.queryByUserId(userid);
 	}
+	@Override
+	public List<Address> queryByCityAreaUserId(int cityid, int areaid,
+			int userid) {
+		return this.addressDao.queryByCityAreaUserId(cityid,areaid,userid);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -65,6 +65,8 @@ address			varchar(30)		收货地址			由城市名+区域名组成，城市和�
 detailAddress	varchar(120)	具体地址			具体楼栋号和门牌号，用户自己填
 label			varchar(20)		地址标签			如'家''公司'
 isDefault		varcar(5)		是否是默认			如果默认地址记录在了User表里，那这里就不要了，但为了方便前端设置时整体传入，这里还是保留
+cityId			int
+araeId			int
 
 Vendor(区域卖点用户，登录卖家系统)
 列名				类型				注释				备注
@@ -185,6 +187,7 @@ userId			int(11)			下单人id			对应User表里的Id
 areaId			int(11)			区域id			Area表里的Id，区域卖家登录时的查询条件
 cityId			int(11)			城市Id			只是为了方便可以从程序里的对象里直接取到该值来确定数据库表
 refundStatus	varchar(10)		退款状态			在on表里好像可以不要，暂时留着
+history			varchar(255)	订单历史状态		以'订单状态=时间,订单状态2=时间2'的形式存储
 
 Order_cityId_off(卖家收货或系统一段时间自动收货后，即订单状态变成'已收货'后，或者订单被买家或卖家取消后将其原封不动的从order_cityId_on移到order_cityId_off)
 列名				类型				注释				备注
@@ -212,6 +215,7 @@ userId			int(11)			下单人id			对应User表里的Id
 areaId			int(11)			区域id			Area表里的Id，区域卖家登录时的查询条件
 cityId			int(11)			城市Id			只是为了方便可以从程序里的对象里直接取到该值来确定数据库
 refundStatus	varchar(10)		退款状态
+history			varchar(255)	订单历史状态		以'订单状态=时间,订单状态2=时间2'的形式存储
 
 Coupon_cityId(我的积分中心->积分兑换里显示的优惠券类型，是静态优惠券，即没有被兑换的，兑换之后会在下面Coupon_cityId_on中生成)
 列名				类型				注释				备注

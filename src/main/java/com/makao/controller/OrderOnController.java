@@ -586,11 +586,14 @@ public class OrderOnController {
 			String[] pro_names = os.getProductNames().split(",");
 			for(int i=0; i<pro_ids.length; i++){
 				String pid = pro_ids[i];
-				String[] names = pro_names[i].split(",");
+				String[] names = pro_names[i].split("=");
 				Product p = (Product)this.productService.getById(Integer.valueOf(pid),os.getCityId(),os.getAreaId());
 				SmallProduct sp = new SmallProduct();
 				sp.setId(pid);
 				sp.setName(names[0]);//这里要显示当时下单时的名称，防止后面修改了商品名后，引起误会
+				//sp.setImage(p.getCoverSUrl());
+				sp.setCityId(os.getCityId());
+				sp.setAreaId(os.getAreaId());
 				sp.setImage(p.getCoverSUrl());
 				sp.setPrice(names[1]);//这里要显示当时用户下单时的价格，而不是现在商品实际的价格
 				sp.setNumber(names[2]);
@@ -712,6 +715,7 @@ public class OrderOnController {
 			int res = this.orderOnService.finishOrder(vendor.getCityId(),orderid);
 			if(res==0){
 				jsonObject.put("msg", "200");
+				logger.info("完成订单配送成功orderid: "+orderid);
 				return jsonObject;
 			}
 			else{
@@ -993,6 +997,8 @@ public class OrderOnController {
 		private String image;
 		private String price;
 		private String number;
+		private int cityId;
+		private int areaId;
 		public String getId() {
 			return id;
 		}
@@ -1022,6 +1028,18 @@ public class OrderOnController {
 		}
 		public void setNumber(String number) {
 			this.number = number;
+		}
+		public int getCityId() {
+			return cityId;
+		}
+		public void setCityId(int cityId) {
+			this.cityId = cityId;
+		}
+		public int getAreaId() {
+			return areaId;
+		}
+		public void setAreaId(int areaId) {
+			this.areaId = areaId;
 		}
 	}
 }

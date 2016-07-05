@@ -21,4 +21,7 @@ public interface IAddressDao {
 	public int deleteById(int id);
 
 	public List<Address> queryByUserId(int userid);
+
+	public List<Address> queryByCityAreaUserId(int cityid, int areaid,
+			int userid);
 }
