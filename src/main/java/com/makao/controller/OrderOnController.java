@@ -134,9 +134,10 @@ public class OrderOnController {
 		//订单生成后，使用微信接口向用户发送模板消息
 		int res = this.orderOnService.insert(OrderOn);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
+		if(res!=0){
 			logger.info("增加有效订单成功id=" + OrderOn.getNumber());
         	jsonObject.put("msg", "200");
+        	jsonObject.put("number", OrderOn.getNumber());
 		}
 		else{
 			logger.info("增加有效订单失败id=" + OrderOn.getNumber());
@@ -221,7 +222,7 @@ public class OrderOnController {
 		redisUtil.redisSaveObject(orderOn.getNumber(), orderOn, 15);
 		if(redisUtil.redisQueryObject(orderOn.getNumber())!=null){
 			logger.info("增加有效订单成功id=" + orderOn.getNumber());
-			jsonObject.put("orderId", orderOn.getNumber());
+			jsonObject.put("number", orderOn.getNumber());
         	jsonObject.put("msg", "200");
 		}
 		else{
@@ -327,7 +328,13 @@ public class OrderOnController {
 			out.write(page);
 			return;
 		}
-		this.orderOnService.insert(orderOn);
+		int res = this.orderOnService.insert(orderOn);
+		if(res==0){
+			page = "订单: "+orderOn.getNumber()+"生成失败！";
+			logger.info("增加有效订单失败id=" + orderOn.getNumber());
+			out.write(page);
+			return;
+		}
 		
 		// 为前端页面能够使用JSSDK设置签名
 		Map<String, String> wxConfig = JSSignatureUtil

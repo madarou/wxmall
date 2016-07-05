@@ -27,6 +27,7 @@ import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.mysql.jdbc.Statement;
 
 /**
  * @description: TODO
@@ -51,7 +52,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		List<CouponOn> co = new ArrayList<CouponOn>();
 		Session session = null;
 		Transaction tx = null;
-		int res = 0;// 返回0表示成功，1表示失败
+		List<Integer> res = new ArrayList<Integer>();// 返回0表示失败，成功则返回orderid
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
@@ -61,7 +62,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				public void execute(Connection connection) throws SQLException {
 					PreparedStatement ps = null;
 					try {
-						ps = connection.prepareStatement(sql);
+						ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 						ps.setString(1, orderOn.getNumber());
 						ps.setString(2, orderOn.getProductIds());
 						ps.setString(3, orderOn.getProductNames());
@@ -85,7 +86,13 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						ps.setInt(21, orderOn.getCityId());
 						ps.setString(22, orderOn.getRefundStatus());
 						ps.setString(23, orderOn.getStatus()+"="+orderOn.getOrderTime());
-						ps.executeUpdate();
+						int row = ps.executeUpdate();
+						ResultSet rs = ps.getGeneratedKeys();  
+					     if ( rs.next() ) {  
+					    	 int key = rs.getInt(row);  
+					         logger.info("插入的order id:"+key);  
+					         res.add(key);
+					     }  
 					} finally {
 						doClose(ps);
 					}
@@ -185,12 +192,12 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 			if (null != tx)
 				tx.rollback();// 回滚
 			logger.error(e.getMessage(), e);
-			res = 1;
+			res.add(0);
 		} finally {
 			if (null != session)
 				session.close();// 关闭回话
 		}
-		return res;
+		return (res.get(0)!=0)?res.get(0):0;
 	}
 
 	@Override
