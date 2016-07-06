@@ -32,4 +32,12 @@ public interface ICommentService {
 	 */
 	int like(int cityId, int areaId, int commentId);
 
+	/**
+	 * @param tableName
+	 * @param productId
+	 * @return
+	 * 加载tableName中所有产品id为productId的产品的评论
+	 */
+	List<Comment> queryProductComments(String tableName, Integer productId);
+
 }

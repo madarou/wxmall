@@ -82,6 +82,10 @@ public class ProductServiceImpl implements IProductService {
 	public List<Product> queryFromToIndex(int from, int to) {
 		return this.productDao.queryFromToIndex(from, to);
 	}
+	@Override
+	public int like(String tableName, int productId) {
+		return this.productDao.like(tableName, productId);
+	}
 	
 	
 //	@Override

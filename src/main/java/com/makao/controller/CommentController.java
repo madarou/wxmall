@@ -102,13 +102,13 @@ public class CommentController {
         return jsonObject;
     }
 	
-	@RequestMapping(value="/{cityid:\\d+}/{areaid:\\d+}/{productid:\\d+}",method = RequestMethod.GET)
+	@RequestMapping(value="/all/{cityid:\\d+}/{areaid:\\d+}/{productid:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Object all(@PathVariable("cityid") Integer cityId,@PathVariable("areaid") Integer areaId,@PathVariable("productid") Integer productId)
 	{
 		List<Comment> comments = null;
 		JSONObject jsonObject = new JSONObject();
 		//则根据关键字查询
-		comments = this.commentService.queryProductComments(cityId,areaId,productId);
+		comments = this.commentService.queryProductComments("Comment_"+cityId+"_"+areaId,productId);
 		logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的商品 "+productId+"的所有评论完成");
 		jsonObject.put("msg", "200");
 		jsonObject.put("comments", comments);//不用序列化，方便前端jquery遍历

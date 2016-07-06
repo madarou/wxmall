@@ -138,6 +138,13 @@ public class BasicTestSuite_Test2 {
 		
 		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
 		assertEquals("200",result.get("msg"));
+		//**********给刚加的商品点赞***********
+		String likeproduct = "http://localhost:8080/product/like/?token=xxxx";
+		String likep = "{\"productId\":1,\"cityId\":1,\"areaId\":1}";
+		result = HttpUtils.doPostStr(likeproduct,likep);
+		assertEquals("200",result.get("msg"));
+		//**********给刚加的商品点赞***********
+		
 //		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
 //		assertEquals("200",result.get("msg"));
 //		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
@@ -218,7 +225,7 @@ public class BasicTestSuite_Test2 {
 		assertEquals("200",result.get("msg"));
 	
 		//给product 1加评论
-		String commentproduct = "http://localhost:8080/comment/new/1/?token=xxx";
+		String commentproduct = "http://localhost:8080/comment/new/?token=xxx";
 		String comment = "{\"userName\":\"马买家\",\"userId\":1,\"userImgUrl\":\""+userHead+"\",\"content\":\"好吃\",\"productId\":1,\"cityId\":1,\"areaId\":1}";
 		result = HttpUtils.doPostStr(commentproduct,comment);
 		assertEquals("200",result.get("msg"));

@@ -65,4 +65,12 @@ public interface IProductService {
 	 * 从Product表中返回从指定下标开始到指定下标结束的所有记录
 	 */
 	List<Product> queryFromToIndex(int from, int to);
+
+	/**
+	 * @param string
+	 * @param productId
+	 * @return
+	 * 给商品点赞
+	 */
+	int like(String tableName, int productId);
 }

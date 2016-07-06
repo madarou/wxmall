@@ -28,4 +28,13 @@ public interface ICommentDao {
 	 * 给评论点赞
 	 */
 	public int like(int cityId, int areaId, int commentId);
+
+	/**
+	 * @param tableName
+	 * @param productId
+	 * @return
+	 * 返回tableName中所有productId的评论
+	 */
+	public List<Comment> queryProductComments(String tableName,
+			Integer productId);
 }

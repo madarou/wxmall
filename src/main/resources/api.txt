@@ -2,7 +2,12 @@ api															method				comment
 /city/all													GET					获取城市列表
 /product/all/[cityId]/[areaId]								GET					获取指定城市区域下的产品列表
 /product/[productId]/[cityId]/[areaId]						GET					获取指定城市区下的某个产品
-用户给商品点赞
+/product/like/?token=xxx									POST				用户给商品点赞
+	{
+		productId:,//被赞的商品id
+		cityId:,//所属cityId
+		areaId://所属areaId
+	}
 /banner/all/[areaId]										GET					获取areaId下所有banner
 /user/[userId]												GET					获取用户信息
 
@@ -102,7 +107,7 @@ api															method				comment
 	}
 /comment/like/?token=xxx									POST				用户给评论点赞
 	{
-		commentId:,//被评论的id
+		commentId:,//被赞的评论id
 		cityId:,//评论所属cityId
 		areaId://评论所属areaId
 	}

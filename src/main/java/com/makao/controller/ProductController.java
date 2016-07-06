@@ -21,6 +21,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.Area;
 import com.makao.entity.Banner;
 import com.makao.entity.Catalog;
@@ -99,6 +100,31 @@ public class ProductController {
 		else{
 			logger.info("删除商品信息失败id=" + id);
         	jsonObject.put("msg", "删除商品信息失败");
+		}
+        return jsonObject;
+    }
+	
+	/**
+	 * @param paramObject
+	 * @return
+	 * 给商品点赞
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/like", method = RequestMethod.POST)
+    public @ResponseBody
+    Object like(@RequestBody JSONObject paramObject) {
+		int cityId = paramObject.getIntValue("cityId");
+		int areaId = paramObject.getIntValue("areaId");
+		int productId = paramObject.getIntValue("productId");
+		int res = this.productService.like("Product_"+cityId+"_"+areaId, productId);
+		JSONObject jsonObject = new JSONObject();
+		if(res==0){
+			logger.info("商品点赞成功，被赞商品" + cityId +" "+areaId+" "+productId);
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("商品点赞失败，被赞商品" + cityId +" "+areaId+" "+productId);
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }

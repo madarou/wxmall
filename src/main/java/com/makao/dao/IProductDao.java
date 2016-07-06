@@ -63,4 +63,12 @@ public interface IProductDao {
 	 * 从Product表中返回从指定下标开始到指定下标结束的所有记录
 	 */
 	public List<Product> queryFromToIndex(int from, int to);
+
+	/**
+	 * @param tableName
+	 * @param productId
+	 * @return
+	 * 给商品点赞
+	 */
+	public int like(String tableName, int productId);
 }
