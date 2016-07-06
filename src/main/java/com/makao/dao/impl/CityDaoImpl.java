@@ -269,8 +269,23 @@ public class CityDaoImpl implements ICityDao {
 
 	@Override
 	public City getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = null;
+		Transaction tx = null;
+		City res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = (City) session.get(City.class, id);
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override

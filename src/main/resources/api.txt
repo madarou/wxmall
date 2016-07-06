@@ -1,5 +1,6 @@
 api															method				comment
 /city/all													GET					获取城市列表
+/area/change/[cityId]/[areaId]/[userId]						GET					切换当前区域(需要修改user表里的areaId,cityId,cityName和areaName,并且返回/product/all/[cityId]/[areaId]的内容)
 /product/all/[cityId]/[areaId]								GET					获取指定城市区域下的产品列表
 /product/[productId]/[cityId]/[areaId]						GET					获取指定城市区下的某个产品
 /product/like/?token=xxx									POST				用户给商品点赞

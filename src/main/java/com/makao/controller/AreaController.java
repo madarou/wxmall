@@ -16,13 +16,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.entity.Area;
+import com.makao.entity.Banner;
 import com.makao.entity.Catalog;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
 import com.makao.entity.Supervisor;
+import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
+import com.makao.service.IBannerService;
+import com.makao.service.ICityService;
+import com.makao.service.IProductService;
 import com.makao.service.ISupervisorService;
+import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
 
 /**
@@ -40,6 +46,15 @@ public class AreaController {
 	private IVendorService vendorService;
 	@Resource
 	private ISupervisorService supervisorService;
+	@Resource
+	private IProductService productService;
+	@Resource
+	private IBannerService bannerService;
+	@Resource
+	private IUserService userService;
+	@Resource
+	private ICityService cityService;
+	
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Area get(@PathVariable("id") Integer id)
@@ -194,6 +209,50 @@ public class AreaController {
         return jsonObject;
     }
 	
+	/**
+	 * @param superid
+	 * @param paramObject
+	 * @return
+	 * 切换区域，并返回新的区域下的商品列表和banner列表
+	 */
+	@RequestMapping(value = "/change/{cityid:\\d+}/{areaid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object change(@PathVariable("cityid") int cityId,@PathVariable("areaid") int areaId,@PathVariable("userid") int userId) {
+		List<Product> products = null;
+		List<Banner> banners = null;
+		JSONObject jsonObject = new JSONObject();
+		//设置用户切换后的city和area到user表中
+		User user = this.userService.getById(userId);
+		if(user!=null){
+			user.setCityId(cityId);
+			user.setAreaId(areaId);
+			String cityName = this.cityService.getById(cityId).getCityName();
+			String areaName = this.areaService.getById(areaId).getAreaName();
+			if(cityName==null || areaName==null || "".equals(cityName) || "".equals(areaName)){
+				jsonObject.put("msg", "202");
+				logger.info("未查到对应的city 或 arae. cityId="+cityId+" areaId="+areaId);
+				jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
+				jsonObject.put("banners", banners);
+				return jsonObject;
+			}
+			user.setCityName(cityName);
+			user.setAreaName(areaName);
+			this.userService.update(user);
+			products = this.productService.queryByCityAreaId(cityId,areaId);
+			logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有商品信息完成");
+			
+			banners = this.bannerService.queryByAreaId(areaId);
+			logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有Banner信息完成");
+			jsonObject.put("msg", "200");
+		}
+		else{
+			jsonObject.put("msg", "201");
+			logger.info("未查到用户id="+userId+" 的用户");
+		}
+		jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
+		jsonObject.put("banners", banners);
+		return jsonObject;
+    }
 
 	/**
 	 * @param vendorid

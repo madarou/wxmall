@@ -166,9 +166,11 @@ public class OrderOnController {
 		}
 		int cityId = smallOrder.getCityId();
 		int areaId = smallOrder.getAreaId();
-		OrderOn.setProductIds(smallOrder.getProductIds());
-		String[] ids = smallOrder.getProductIds().split(",");
-		String[] nums = smallOrder.getNums().split(",");
+		
+		String idStr = smallOrder.getProductIds();
+		String numStr = smallOrder.getNums();
+		String[] ids = idStr.substring(1,idStr.length()-1).split(",");
+		String[] nums = numStr.substring(1, numStr.length()-1).split(",");
 		StringBuilder sb = new StringBuilder();
 		float totalPrice = 0.00f;
 		for(int i=0; i<ids.length ; i++){
@@ -178,6 +180,7 @@ public class OrderOnController {
 		}
 		String productNames = sb.substring(0, sb.length()-1);//去掉最后一个逗号
 		OrderOn.setProductNames(productNames);
+		OrderOn.setProductIds(idStr.substring(1,idStr.length()-1));
 		
 		String couponPrice = "0.00";
 		if(smallOrder.getCouponId()>0){

@@ -76,8 +76,8 @@ public class BasicTestSuite_Test2 {
 		String product22_1 = "{\"productName\":\"水晶葡萄\",\"catalog\":\"水果\",\"label\":\"无标签\",\"price\":\"12.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"inventory\":12,\"sequence\":1,\"status\":\"2\",\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":7637,\"likes\":3972,\"areaId\":2,\"cityId\":2,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
 	
 		String neworderon = "http://localhost:8080/orderOn/new/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
-		String orderon = "{\"productIds\":\"1,2\",\"nums\":\"3,1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"17638372821\",\"address\":\"上海复旦大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":1,\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
-		String orderon2 = "{\"productIds\":\"1\",\"nums\":\"1\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
+		String orderon = "{\"productIds\":\"[1,2]\",\"nums\":\"[3,1]\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"17638372821\",\"address\":\"上海复旦大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":1,\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
+		String orderon2 = "{\"productIds\":\"[1]\",\"nums\":\"[1]\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		
 		String finishorderon2 = "http://localhost:8080/orderOn/vfinish/1";
 		String orderon2id = "{\"orderid\":2}";
@@ -234,6 +234,7 @@ public class BasicTestSuite_Test2 {
 		String like = "{\"commentId\":1,\"cityId\":1,\"areaId\":1}";
 		result = HttpUtils.doPostStr(likecomment,like);
 		assertEquals("200",result.get("msg"));
+		
 	}
 	
 //	@After

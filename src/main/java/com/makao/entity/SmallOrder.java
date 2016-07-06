@@ -1,4 +1,5 @@
 package com.makao.entity;
+
 /**
  * @description: TODO
  * @author makao
