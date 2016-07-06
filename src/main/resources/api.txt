@@ -2,6 +2,7 @@ api															method				comment
 /city/all													GET					获取城市列表
 /product/all/[cityId]/[areaId]								GET					获取指定城市区域下的产品列表
 /product/[productId]/[cityId]/[areaId]						GET					获取指定城市区下的某个产品
+用户给商品点赞
 /banner/all/[areaId]										GET					获取areaId下所有banner
 /user/[userId]												GET					获取用户信息
 
@@ -20,6 +21,19 @@ api															method				comment
 		couponPrice:,//优惠券面值
 		totalPrice:,//订单总价
 		comment:,//用户备注
+		cityarea:[城市名区域名],//方便直接展示
+		userId:,//用户Id
+		areaId:,//区域Id
+		cityId://城市Id，用于在访问数据库时，直接确定数据库表名
+	}
+	{
+		productIds:[id1,id2,...],//*商品id列表
+		nums:[1,2,...],//商品数量
+		receiverName:,//*收货人姓名
+		phoneNumber:,//*收货人电话
+		address:,//*收货地址
+		receiveTime://*收货时间段
+		couponId:,//优惠券ID
 		cityarea:[城市名区域名],//方便直接展示
 		userId:,//用户Id
 		areaId:,//区域Id
@@ -75,3 +89,21 @@ api															method				comment
 	}
 /address/default/[addressId]/?token=xxx						POST				将地址设为默认地址
 /address/[addressId]/?token=xxx								DELETE				删除用户地址
+
+/comment/new/?token=xxx										POST				用户评论商品
+	{
+		userName:,//评论者名，方便加载列表时直接显示
+		userId:,//评论者Id
+		userImgUrl:,//评论者头像
+		content:,//评论内容
+		productId:,//被评论商品id
+		cityId:,//被评论商品所在cityId
+		areaId://被评论商品所在areaId
+	}
+/comment/like/?token=xxx									POST				用户给评论点赞
+	{
+		commentId:,//被评论的id
+		cityId:,//评论所属cityId
+		areaId://评论所属areaId
+	}
+/comment/all/[cityId]/[areaId]/[productId]					GET					加载某个商品的所有评论

@@ -29,16 +29,19 @@ Product_cityId_areaId:
 						PRIMARY KEY (`id`))";
 						
 
-AreaName_cityId_comment:
+Comment_cityId_areaId:
 "CREATE TABLE IF NOT EXISTS `"
 				+ tableName
 				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
 						`userName` varchar(30) NOT NULL,
+						`userId` int(11),
 						`userImgUrl` varchar(50),
 						`date` date,
 						`likes` int(11),
 						`content` varchar(255),
 						`productId` int(11),
+						`cityId` int(11),
+						`areaId` int(11),
 						PRIMARY KEY (`id`))";
 						
 						

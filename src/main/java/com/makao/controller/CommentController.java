@@ -1,5 +1,6 @@
 package com.makao.controller;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.Comment;
+import com.makao.entity.Product;
 import com.makao.service.ICommentService;
 
 /**
@@ -54,21 +57,63 @@ public class CommentController {
         return jsonObject;
     }
 	
+	@AuthPassport
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Comment Comment) {
+		Comment.setDate(new Date(System.currentTimeMillis()));
 		int res = this.commentService.insert(Comment);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("增加评论成功id=" + Comment.getId());
-        	jsonObject.put("msg", "增加评论成功");
+		if(res!=0){
+			logger.info(Comment.getUserName()+" 增加评论成功,id=" + res);
+        	jsonObject.put("msg", "200");
+        	jsonObject.put("id", res);
 		}
 		else{
-			logger.info("增加评论成功失败id=" + Comment.getId());
+			logger.info( Comment.getUserName()+" 增加评论成功失败cityid,areaid,commentid=" + Comment.getCityId()
+					+" "+Comment.getAreaId()+" "+Comment.getProductId());
         	jsonObject.put("msg", "增加评论失败");
 		}
         return jsonObject;
     }
+	
+	/**
+	 * @param Comment
+	 * @return
+	 * 用户给评论点赞
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/like", method = RequestMethod.POST)
+    public @ResponseBody
+    Object like(@RequestBody JSONObject paramObject) {
+		int cityId = paramObject.getIntValue("cityId");
+		int areaId = paramObject.getIntValue("areaId");
+		int commentId = paramObject.getIntValue("commentId");
+		int res = this.commentService.like(cityId, areaId, commentId);
+		JSONObject jsonObject = new JSONObject();
+		if(res==0){
+			logger.info("评论点赞成功，被赞评论" + cityId +" "+areaId+" "+commentId);
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("评论点赞失败，被赞评论" + cityId +" "+areaId+" "+commentId);
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+	
+	@RequestMapping(value="/{cityid:\\d+}/{areaid:\\d+}/{productid:\\d+}",method = RequestMethod.GET)
+	public @ResponseBody Object all(@PathVariable("cityid") Integer cityId,@PathVariable("areaid") Integer areaId,@PathVariable("productid") Integer productId)
+	{
+		List<Comment> comments = null;
+		JSONObject jsonObject = new JSONObject();
+		//则根据关键字查询
+		comments = this.commentService.queryProductComments(cityId,areaId,productId);
+		logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的商品 "+productId+"的所有评论完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("comments", comments);//不用序列化，方便前端jquery遍历
+		return jsonObject;
+	}
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody

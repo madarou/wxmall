@@ -19,4 +19,13 @@ public interface ICommentDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param commentId
+	 * @return
+	 * 给评论点赞
+	 */
+	public int like(int cityId, int areaId, int commentId);
 }

@@ -94,6 +94,33 @@ public class AreaDaoImpl implements IAreaDao {
 							}
 						}
 					});
+			String tableName2 = "Comment_"+area.getCityId()+"_"+area.getId();
+			String sql2 = "CREATE TABLE IF NOT EXISTS `"
+					+ tableName2
+					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
+							+ "`userName` varchar(30) NOT NULL,"
+							+ "`userId` int(11),"
+							+ "`userImgUrl` varchar(50),"
+							+ "`date` date,"
+							+ "`likes` int(11),"
+							+ "`content` varchar(255),"
+							+ "`productId` int(11),"
+							+ "`cityId` int(11),"
+							+ "`areaId` int(11),"
+							+ "PRIMARY KEY (`id`))";
+			session.doWork(
+					// 定义一个匿名类，实现了Work接口
+					new Work() {
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = null;
+							try {
+								ps = connection.prepareStatement(sql2);
+								ps.execute();
+							} finally {
+								doClose(ps);
+							}
+						}
+					});
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)

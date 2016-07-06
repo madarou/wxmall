@@ -213,6 +213,16 @@ public class BasicTestSuite_Test {
 		result = HttpUtils.doPostStr(defaultaddress1,"{}");
 		assertEquals("200",result.get("msg"));
 	
+		//给product 1加评论
+		String commentproduct = "http://localhost:8080/comment/new/1/?token=xxx";
+		String comment = "{\"userName\":\"马买家\",\"userId\":1,\"userImgUrl\":\""+userHead+"\",\"content\":\"好吃\",\"productId\":1,\"cityId\":1,\"areaId\":1}";
+		result = HttpUtils.doPostStr(commentproduct,comment);
+		assertEquals("200",result.get("msg"));
+		//给刚才那条评论点赞
+		String likecomment = "http://localhost:8080/comment/like/?token=xxx";
+		String like = "{\"commentId\":1,\"cityId\":1,\"areaId\":1}";
+		result = HttpUtils.doPostStr(likecomment,like);
+		assertEquals("200",result.get("msg"));
 	}
 	
 //	@After

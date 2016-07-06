@@ -23,4 +23,13 @@ public interface ICommentService {
 
 	int deleteById(int id);
 
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param commentId
+	 * @return
+	 * 评论被点赞
+	 */
+	int like(int cityId, int areaId, int commentId);
+
 }
