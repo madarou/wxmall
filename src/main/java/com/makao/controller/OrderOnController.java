@@ -3,6 +3,7 @@ package com.makao.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,13 +36,16 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.auth.AuthPassport;
 import com.makao.entity.City;
+import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.makao.entity.SmallOrder;
 import com.makao.entity.Supervisor;
 import com.makao.entity.TokenModel;
 import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.ICityService;
+import com.makao.service.ICouponOnService;
 import com.makao.service.IOrderOnService;
 import com.makao.service.IProductService;
 import com.makao.service.ISupervisorService;
@@ -79,6 +83,8 @@ public class OrderOnController {
 	private ISupervisorService supervisorService;
 	@Resource
 	private IProductService productService;
+	@Resource
+	private ICouponOnService couponOnService;
 	@Autowired
 	private RedisUtil redisUtil;
 	
@@ -118,33 +124,33 @@ public class OrderOnController {
 	 * 最早的下单方法，由于要加入微信下单的过程和缓存校验库存，所以不用了，
 	 * 但留作测试时直接往数据库中生成订单使用
 	 */
-	@AuthPassport
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
-    public @ResponseBody
-    Object add(@RequestParam(value="token", required=false) String token, @RequestBody OrderOn OrderOn) {
-		OrderOn.setNumber(OrderNumberUtils.generateOrderNumber());
-		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
-		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
-		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
-		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
-			OrderOn.setStatus("排队中");
-		}
-		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
-		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
-		//订单生成后，使用微信接口向用户发送模板消息
-		int res = this.orderOnService.insert(OrderOn);
-		JSONObject jsonObject = new JSONObject();
-		if(res!=0){
-			logger.info("增加有效订单成功id=" + OrderOn.getNumber());
-        	jsonObject.put("msg", "200");
-        	jsonObject.put("number", OrderOn.getNumber());
-		}
-		else{
-			logger.info("增加有效订单失败id=" + OrderOn.getNumber());
-        	jsonObject.put("msg", "201");
-		}
-        return jsonObject;
-    }
+//	@AuthPassport
+//	@RequestMapping(value = "/new", method = RequestMethod.POST)
+//    public @ResponseBody
+//    Object add(@RequestParam(value="token", required=false) String token, @RequestBody OrderOn OrderOn) {
+//		OrderOn.setNumber(OrderNumberUtils.generateOrderNumber());
+//		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
+//		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
+//		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
+//		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
+//			OrderOn.setStatus("排队中");
+//		}
+//		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
+//		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
+//		//订单生成后，使用微信接口向用户发送模板消息
+//		int res = this.orderOnService.insert(OrderOn);
+//		JSONObject jsonObject = new JSONObject();
+//		if(res!=0){
+//			logger.info("增加有效订单成功id=" + OrderOn.getNumber());
+//        	jsonObject.put("msg", "200");
+//        	jsonObject.put("number", OrderOn.getNumber());
+//		}
+//		else{
+//			logger.info("增加有效订单失败id=" + OrderOn.getNumber());
+//        	jsonObject.put("msg", "201");
+//		}
+//        return jsonObject;
+//    }
 	
 	@AuthPassport
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -164,7 +170,7 @@ public class OrderOnController {
 		String[] ids = smallOrder.getProductIds().split(",");
 		String[] nums = smallOrder.getNums().split(",");
 		StringBuilder sb = new StringBuilder();
-		float totalPrice = 0;
+		float totalPrice = 0.00f;
 		for(int i=0; i<ids.length ; i++){
 			Product p = this.productService.getById(Integer.valueOf(ids[i]), cityId, areaId);
 			sb.append(p.getProductName()+"="+p.getPrice()+"="+nums[i]+",");
@@ -176,6 +182,10 @@ public class OrderOnController {
 		String couponPrice = "0.00";
 		if(smallOrder.getCouponId()>0){
 			//如果用了优惠券，查找优惠券
+			CouponOn couponOn = this.couponOnService.queryByCouponId("Coupon_"+smallOrder.getCityId()+"_on", smallOrder.getCouponId());
+			if(couponOn.getUserId()==smallOrder.getUserId()){//确保该优惠券是该用户所有
+				couponPrice = couponOn.getAmount();
+			}
 		}
 		OrderOn.setReceiverName(smallOrder.getReceiverName());
 		OrderOn.setPhoneNumber(smallOrder.getPhoneNumber());
@@ -183,8 +193,9 @@ public class OrderOnController {
 		OrderOn.setReceiveTime(smallOrder.getReceiveTime());
 		OrderOn.setCouponId(smallOrder.getCouponId());
 		OrderOn.setCouponPrice(couponPrice);
-		totalPrice = (float)(Math.round((totalPrice-Float.valueOf(couponPrice))*100)/100);//保留两位小数
-		OrderOn.setTotalPrice(String.valueOf(totalPrice));
+		DecimalFormat fnum = new  DecimalFormat("##0.00"); //保留两位小数   
+		totalPrice = totalPrice-Float.valueOf(couponPrice);
+		OrderOn.setTotalPrice(fnum.format(totalPrice));
 		OrderOn.setCityarea(smallOrder.getCityarea());
 		OrderOn.setUserId(smallOrder.getUserId());
 		OrderOn.setAreaId(smallOrder.getAreaId());
@@ -1109,84 +1120,5 @@ public class OrderOnController {
 			this.areaId = areaId;
 		}
 	}
-	
-	private class SmallOrder{
-		private String productIds;//所有购买的商品id	以'id1,id2,id3'连接
-		private String nums;//商品数量
-		private String receiverName;//收货人姓名
-		private String phoneNumber;//收货人手机号
-		private String address;//收货地址，只是用户填写的部分，后面有cityarea了
-		private String receiveTime;//收货时间段			如'2016-04-05 9时-12时'
-		private int couponId;//使用的优惠券Id
-		private String cityarea;//城市+区域名		方便后台直接显示
-		private int userId;//对应User表里的Id
-		private int areaId;//Area表里的Id，区域卖家登录时的查询条件
-		private int cityId;//用于在访问数据库时，直接确定数据库表名Order_cityId_on，直接从前端传来用
-		public String getProductIds() {
-			return productIds;
-		}
-		public void setProductIds(String productIds) {
-			this.productIds = productIds;
-		}
-		public String getNums() {
-			return nums;
-		}
-		public void setNums(String nums) {
-			this.nums = nums;
-		}
-		public String getReceiverName() {
-			return receiverName;
-		}
-		public void setReceiverName(String receiverName) {
-			this.receiverName = receiverName;
-		}
-		public String getPhoneNumber() {
-			return phoneNumber;
-		}
-		public void setPhoneNumber(String phoneNumber) {
-			this.phoneNumber = phoneNumber;
-		}
-		public String getAddress() {
-			return address;
-		}
-		public void setAddress(String address) {
-			this.address = address;
-		}
-		public String getReceiveTime() {
-			return receiveTime;
-		}
-		public void setReceiveTime(String receiveTime) {
-			this.receiveTime = receiveTime;
-		}
-		public int getCouponId() {
-			return couponId;
-		}
-		public void setCouponId(int couponId) {
-			this.couponId = couponId;
-		}
-		public String getCityarea() {
-			return cityarea;
-		}
-		public void setCityarea(String cityarea) {
-			this.cityarea = cityarea;
-		}
-		public int getUserId() {
-			return userId;
-		}
-		public void setUserId(int userId) {
-			this.userId = userId;
-		}
-		public int getAreaId() {
-			return areaId;
-		}
-		public void setAreaId(int areaId) {
-			this.areaId = areaId;
-		}
-		public int getCityId() {
-			return cityId;
-		}
-		public void setCityId(int cityId) {
-			this.cityId = cityId;
-		}
-	}
+
 }

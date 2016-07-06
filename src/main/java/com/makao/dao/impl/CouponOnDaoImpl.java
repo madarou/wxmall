@@ -182,7 +182,7 @@ public class CouponOnDaoImpl implements ICouponOnDao {
 		}
 		return res.size()>0 ? res.get(0) : null;
 	}
-
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
