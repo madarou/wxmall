@@ -1,13 +1,15 @@
 package com.makao.entity;
 
+import java.util.List;
+
 /**
  * @description: TODO
  * @author makao
  * @date 2016年7月6日
  */
 public class SmallOrder{
-	private String productIds;//所有购买的商品id	以'id1,id2,id3'连接
-	private String nums;//商品数量
+	private String[] productIds;//所有购买的商品id	以'id1,id2,id3'连接
+	private String[] nums;//商品数量
 	private String receiverName;//收货人姓名
 	private String phoneNumber;//收货人手机号
 	private String address;//收货地址，只是用户填写的部分，后面有cityarea了
@@ -17,16 +19,16 @@ public class SmallOrder{
 	private int userId;//对应User表里的Id
 	private int areaId;//Area表里的Id，区域卖家登录时的查询条件
 	private int cityId;//用于在访问数据库时，直接确定数据库表名Order_cityId_on，直接从前端传来用
-	public String getProductIds() {
+	public String[] getProductIds() {
 		return productIds;
 	}
-	public void setProductIds(String productIds) {
+	public void setProductIds(String[] productIds) {
 		this.productIds = productIds;
 	}
-	public String getNums() {
+	public String[] getNums() {
 		return nums;
 	}
-	public void setNums(String nums) {
+	public void setNums(String[] nums) {
 		this.nums = nums;
 	}
 	public String getReceiverName() {

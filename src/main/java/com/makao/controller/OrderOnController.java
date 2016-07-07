@@ -167,10 +167,13 @@ public class OrderOnController {
 		int cityId = smallOrder.getCityId();
 		int areaId = smallOrder.getAreaId();
 		
-		String idStr = smallOrder.getProductIds();
-		String numStr = smallOrder.getNums();
-		String[] ids = idStr.substring(1,idStr.length()-1).split(",");
-		String[] nums = numStr.substring(1, numStr.length()-1).split(",");
+//		String idStr = smallOrder.getProductIds();
+//		String numStr = smallOrder.getNums();
+//		String[] ids = idStr.substring(1,idStr.length()-1).split(",");
+//		String[] nums = numStr.substring(1, numStr.length()-1).split(",");
+		String[] ids = smallOrder.getProductIds();
+		String[] nums = smallOrder.getNums();
+		
 		StringBuilder sb = new StringBuilder();
 		float totalPrice = 0.00f;
 		for(int i=0; i<ids.length ; i++){
@@ -180,7 +183,12 @@ public class OrderOnController {
 		}
 		String productNames = sb.substring(0, sb.length()-1);//去掉最后一个逗号
 		OrderOn.setProductNames(productNames);
-		OrderOn.setProductIds(idStr.substring(1,idStr.length()-1));
+		//OrderOn.setProductIds(idStr.substring(1,idStr.length()-1));
+		StringBuilder sb2 = new StringBuilder();
+		for(String s: ids){
+			sb2.append(s+",");
+		}
+		OrderOn.setProductIds(sb2.substring(0, sb2.length()-1));
 		
 		String couponPrice = "0.00";
 		if(smallOrder.getCouponId()>0){

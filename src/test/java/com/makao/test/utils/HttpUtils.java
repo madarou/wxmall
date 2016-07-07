@@ -82,6 +82,29 @@ public class HttpUtils {
 		}
 		return jsonObject;
 	}
+	
+	public static JSONObject doPostJson(String url, JSONObject json){
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpPost httpPost = new HttpPost(url);
+		JSONObject jsonObject = null;
+		//设置post参数
+		StringEntity en = new StringEntity(json.toString(),"UTF-8");
+		en.setContentType("application/json");
+		httpPost.setEntity(en);
+		try {
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity entity = response.getEntity();
+			if(entity != null){
+				String result = EntityUtils.toString(entity,"UTF-8");
+				jsonObject = JSONObject.fromObject(result); 
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
 	public static void main(String[] args){
 		//JSONObject jsonObject = HttpUtils.doGetStr("curl l -H \"Content-type: application/json\" -X POST -d '{\"userName\":\"darou\",\"password\":\"test\"}' 'http://localhost:8080/wxmall/supervisor/new'");
 		JSONObject jsonObject = HttpUtils.doPostStr("http://localhost:8080/wxmall/supervisor/new","{\"userName\":\"darou\",\"password\":\"test\"}");
