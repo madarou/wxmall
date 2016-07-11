@@ -328,7 +328,7 @@ public class ProductController {
 	@RequestMapping(value = "/all/{cityId:\\d+}/{areaId:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     Object queryByCityAreaId(@PathVariable("cityId")int cityId,@PathVariable("areaId")int areaId) {
-		List<Product> products = null;
+		List<Product> products = new ArrayList<Product>();
 		JSONObject jsonObject = new JSONObject();
 		//则根据关键字查询
 		products = this.productService.queryByCityAreaId(cityId,areaId);

@@ -27,7 +27,7 @@ api															method				comment
 		couponPrice:,//优惠券面值
 		totalPrice:,//订单总价
 		comment:,//用户备注
-		cityarea:[城市名区域名],//方便直接展示
+		//cityarea:[城市名区域名],//方便直接展示
 		userId:,//用户Id
 		areaId:,//区域Id
 		cityId://城市Id，用于在访问数据库时，直接确定数据库表名
@@ -40,7 +40,7 @@ api															method				comment
 		address:,//*收货地址
 		receiveTime://*收货时间段
 		couponId:,//优惠券ID
-		cityarea:[城市名区域名],//方便直接展示
+		//cityarea:[城市名区域名],//方便直接展示
 		userId:,//用户Id
 		areaId:,//区域Id
 		cityId://城市Id，用于在访问数据库时，直接确定数据库表名

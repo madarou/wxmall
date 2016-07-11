@@ -88,8 +88,11 @@ public class BasicTestSuite_Test2 {
 		
 		String newcoupon = "http://localhost:8080/coupon/new/1";
 		String coupon = "{\"name\":\"10元代金券\",\"amount\":\"10\",\"point\":20,\"restrict\":10,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
+		String newcoupon2 = "http://localhost:8080/coupon/new/1";
+		String coupon2 = "{\"name\":\"12元代金券\",\"amount\":\"12\",\"point\":20,\"restrict\":15,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"老用户回馈礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
 	
 		String exchangecoupon = "http://localhost:8080/coupon/exchange/1/1/1?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
+		String exchangecoupon2 = "http://localhost:8080/coupon/exchange/1/2/1?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
 		
 		
 		
@@ -186,6 +189,13 @@ public class BasicTestSuite_Test2 {
 		Thread.sleep(1000);
 		result = HttpUtils.doGetObject(exchangecoupon);
 		assertEquals("200",result.get("msg"));
+		
+		result = HttpUtils.doPostStr(newcoupon2,coupon2);
+		assertEquals("200",result.get("msg"));
+		
+		Thread.sleep(1000);
+		result = HttpUtils.doGetObject(exchangecoupon2);
+		assertEquals("200",result.get("msg"));
 		//**********新增并兑换优惠券***********
 		
 		//**********提交订单***********
@@ -200,8 +210,8 @@ public class BasicTestSuite_Test2 {
 		
 		//**********提交订单***********
 //		
-//		result = HttpUtils.doPostStr(finishorderon2,orderon2id);
-//		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(finishorderon2,orderon2id);
+		assertEquals("200",result.get("msg"));
 		
 //		//要兑换并且被使用的优惠券
 //		String newcoupon2 = "http://localhost:8080/coupon/new/1";

@@ -303,7 +303,8 @@ public class ProductDaoImpl implements IProductDao {
 			if (null != session)
 				session.close();// 关闭回话
 		}
-		return (res.size()>0 ? res : null);
+		//return (res.size()>0 ? res : null);
+		return res;
 	}
 	
 	/* (non-Javadoc)

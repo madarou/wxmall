@@ -523,7 +523,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(21, orderOn.getAreaId());
 									ps.setInt(22, orderOn.getCityId());
 									ps.setString(23, "待退款");
-									ps.setString(24,orderOn.getHistory());
+									ps.setString(24,orderOn.getHistory()+",已取消="+new Timestamp(System.currentTimeMillis()));
 									ps.executeUpdate();
 								} finally {
 									doClose(ps);
@@ -737,7 +737,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(21, orderOn.getAreaId());
 									ps.setInt(22, orderOn.getCityId());
 									ps.setString(23, "无需退款");//正常完成的订单，退款状态为无
-									ps.setString(24, orderOn.getHistory());
+									ps.setString(24, orderOn.getHistory()+",已收货="+new Timestamp(System.currentTimeMillis()));
 									ps.executeUpdate();
 								} finally {
 									doClose(ps);

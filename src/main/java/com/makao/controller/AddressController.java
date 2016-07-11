@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.auth.AuthPassport;
 import com.makao.entity.Address;
+import com.makao.entity.Area;
 import com.makao.entity.OrderOn;
 import com.makao.service.IAddressService;
+import com.makao.service.IAreaService;
 
 /**
  * @description: TODO
@@ -32,6 +34,8 @@ public class AddressController {
 	private static final Logger logger = Logger.getLogger(AddressController.class);
 	@Resource
 	private IAddressService addressService;
+	@Resource
+	private IAreaService areaService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Address get(@PathVariable("id") Integer id)
@@ -62,15 +66,24 @@ public class AddressController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestParam(value="token", required=false) String token, @RequestBody Address Address) {
-		int res = this.addressService.insert(Address);
+		Area a = this.areaService.getById(Address.getAreaId());
 		JSONObject jsonObject = new JSONObject();
-		if(res!=0){
-			logger.info("增加地址成功id=" + res);
-        	jsonObject.put("msg", "200");
-        	jsonObject.put("id", res);
+		if(a!=null){
+			Address.setAddress(a.getCityName()+a.getAreaName());
+			int res = this.addressService.insert(Address);
+			
+			if(res!=0){
+				logger.info("增加地址成功id=" + res);
+	        	jsonObject.put("msg", "200");
+	        	jsonObject.put("id", res);
+			}
+			else{
+				logger.info("增加地址失败id=" + Address.getId());
+	        	jsonObject.put("msg", "201");
+			}
 		}
 		else{
-			logger.info("增加地址失败id=" + Address.getId());
+			logger.info("增加地址失败id=" + Address.getId()+" 没有查到对应area");
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;
