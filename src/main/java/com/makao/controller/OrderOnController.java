@@ -654,6 +654,32 @@ public class OrderOnController {
         return jsonObject;
     }
 	
+	/**
+	 * @param cityid
+	 * @param orderid
+	 * @param token
+	 * @return
+	 * 取消订单，从缓存里取消，不是从数据库里取消
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/cancel/{cityid:\\d+}/{orderid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object cancel(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid,
+    		@RequestParam(value="token", required=false) String token) {
+		JSONObject jsonObject = new JSONObject();
+		//int res = this.orderOnService.confirmGetOrder(cityid, orderid);
+		int res = 0;//这里实现从缓存中去掉订单信息的操作
+		if(res==0){
+			logger.info("确认收货订单成功id=" + orderid + " 所属城市id:"+cityid);
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("确认收货订单失败id=" + orderid + " 所属城市id:"+cityid);
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+	
 	@RequestMapping(value = "/all/{cityid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
     public @ResponseBody Object all(@PathVariable("cityid") int cityid, @PathVariable("userid") int userid) {
 		JSONObject jsonObject = new JSONObject();
