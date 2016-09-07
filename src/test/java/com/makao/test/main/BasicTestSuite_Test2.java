@@ -62,7 +62,7 @@ public class BasicTestSuite_Test2 {
 		String vendor3 = "{\"userName\":\"老王\",\"areaId\":3,\"cityId\":2,\"cityName\":\"北京\",\"areaName\":\"宣武\"}";
 	
 		String newuser = "http://localhost:8080/user/new";
-		String user = "{\"userName\":\"马买家\",\"openid\":\"3c5d3acb-31b9-480d-944a-516e74390ed8\",\"avatarUrl\":\""+userHead+"\",\"areaId\":1,\"areaName\":\"张江\",\"cityId\":1,\"cityName\":\"上海\",\"point\":20,\"receiveName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海复旦大学\",\"addLabel\":\"家\",\"rank\":\"中级\"}";
+		String user = "{\"userName\":\"马买家😯\",\"openid\":\"3c5d3acb-31b9-480d-944a-516e74390ed8\",\"avatarUrl\":\""+userHead+"\",\"areaId\":1,\"areaName\":\"张江\",\"cityId\":1,\"cityName\":\"上海\",\"point\":20,\"receiveName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海复旦大学\",\"addLabel\":\"家\",\"rank\":\"中级\"}";
 		String newaddress = "http://localhost:8080/address/new/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
 		String address = "{\"userId\":1,\"userName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海张江\",\"detailAddress\":\"华佗路280弄23号\",\"label\":\"宿舍\",\"isDefault\":\"yes\",\"cityId\":1,\"areaId\":1}";
 		

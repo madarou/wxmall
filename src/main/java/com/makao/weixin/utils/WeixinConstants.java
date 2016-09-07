@@ -9,8 +9,10 @@ public class WeixinConstants {
 	//public static final String APPID = "wx454e62d4ba842c70";
 	//public static final String APPSECRET = "ea2fa885539a667e302a92bb86b54e55";
 	//优格服务号
-	public static final String APPID = "wxe41d04b7ffb9ea2a";
-	public static final String APPSECRET = "cc515bcc081a76e3b85bbb370c6c7b3c";
+	//public static final String APPID = "wxe41d04b7ffb9ea2a";
+	//public static final String APPSECRET = "cc515bcc081a76e3b85bbb370c6c7b3c";
+	public static final String APPID = "wxdfbe4a14b5c766b5";
+	public static final String APPSECRET = "ca58cab704dd2477a90400feb0285bb8";
 	
 	public static final String MCHID = "1239292402";//商户号，支付用
 	public static final String PAY_KEY = "shygxx1234567890shygxx1234567890";//生成支付签名时所用的商户key
