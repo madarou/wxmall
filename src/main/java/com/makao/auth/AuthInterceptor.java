@@ -57,9 +57,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			if (authPassport == null || authPassport.validate() == false)
 				return true;
 			else {
-				//response.setHeader("content-type", "text/html;charset=UTF-8");
-				//response.setCharacterEncoding("UTF-8");
-				//PrintWriter out = response.getWriter();
+				response.reset();
+				response.setHeader("content-type", "text/html;charset=UTF-8");
+				response.setCharacterEncoding("UTF-8");
+				PrintWriter out = response.getWriter();
 				String page = "";
 				
 				// 要验证的都有token，没有token则失败
@@ -69,8 +70,8 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					if (token == null || "".equals(token.trim())) {
 						logger.info("*****"+url+" 的 "+method+" 方法需要验证token，但token不存在*****");
 						page="未登录";
-						//out.write(page);
-						//out.flush();out.close();
+						out.write(page);
+						out.flush();out.close();
 						//response.reset();
 						return false;
 					}
