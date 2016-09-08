@@ -65,10 +65,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 				// 要验证的都有token，没有token则失败
 				String token = request.getParameter("token");
 				if (token == null || "".equals(token.trim())) {
-					logger.info("*****"+url+" 的 "+method+" 方法需要验证token，但token不存在*****");
-					page="未登录";
-					out.write(page);
-					return false;
+					token = request.getHeader("token");
+					if (token == null || "".equals(token.trim())) {
+						logger.info("*****"+url+" 的 "+method+" 方法需要验证token，但token不存在*****");
+						page="未登录";
+						out.write(page);
+						return false;
+					}
 				}
 				String type = "";// 请求是用户、区域管理还是超级管理
 				if (token.length() == 36) {
