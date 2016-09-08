@@ -43,7 +43,7 @@ public class TokenManager {
 		TokenModel tm = new TokenModel(userid,userRole,s);
 		logger.info("generated token is: "+s);
 		ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.DAYS);
+		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS);
 		return tm;
 	}
 	
@@ -74,7 +74,7 @@ public class TokenManager {
             return false;
         }
 		 //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
-        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS));
+        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS));
         return true;
 	}
 	/**
@@ -98,7 +98,7 @@ public class TokenManager {
             return false;
         }
         //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
-        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS));
+        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS));
         return true;
 	}
 	
@@ -118,7 +118,7 @@ public class TokenManager {
 		tm.setOpenid(openid);
 		logger.info("generated user token is: "+s);
 		ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.DAYS);
+		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS);
 		return tm;
 	}
 	
@@ -154,7 +154,7 @@ public class TokenManager {
         	return false;
         }
 		 //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
-        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS));
+        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS));
         return true;
 	}
 	
@@ -179,7 +179,7 @@ public class TokenManager {
         	return false;
         }
         //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
-        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS));
+        System.out.println(redisTemplate.boundValueOps(tokenString.trim()).expire(MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS));
         return true;
 	}
 	
