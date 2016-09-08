@@ -71,6 +71,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 						page="未登录";
 						out.write(page);
 						out.flush();out.close();
+						response.reset();
 						return false;
 					}
 				}
@@ -94,6 +95,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 						page="需要重新登录";
 						out.write(page);
 						out.flush();out.close();
+						response.reset();
 					}
 					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
 						request.setAttribute("tokenmodel",tm);
@@ -108,6 +110,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 						out.write(page);
 						out.flush();
 						out.close();
+						response.reset();
 					}
 					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
 						request.setAttribute("tokenmodel",tm);
@@ -122,6 +125,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 						out.write(page);
 						out.flush();
 						out.close();
+						response.reset();
 					}
 					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
 						request.setAttribute("tokenmodel",tm);
@@ -132,6 +136,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					out.write(page);
 					out.flush();
 					out.close();
+					response.reset();
 					return false;
 				}
 				// 在这里实现自己的权限验证逻辑，这里模拟从servletContext中获取supervisor的登录信息
