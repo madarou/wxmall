@@ -57,18 +57,17 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			if (authPassport == null || authPassport.validate() == false)
 				return true;
 			else {
-				response.reset();
-				response.setHeader("content-type", "text/html;charset=UTF-8");
-				response.setCharacterEncoding("UTF-8");
-				PrintWriter out = response.getWriter();
-				String page = "";
-				
 				// 要验证的都有token，没有token则失败
 				String token = request.getParameter("token");
 				if (token == null || "".equals(token.trim())) {
 					token = request.getHeader("token");
 					if (token == null || "".equals(token.trim())) {
 						logger.info("*****"+url+" 的 "+method+" 方法需要验证token，但token不存在*****");
+						response.reset();
+						response.setHeader("content-type", "text/html;charset=UTF-8");
+						response.setCharacterEncoding("UTF-8");
+						PrintWriter out = response.getWriter();
+						String page = "";
 						page="未登录";
 						out.write(page);
 						out.flush();out.close();
@@ -93,7 +92,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					tm = tokenManager.getUserToken(token);
 					isValid =  tokenManager.checkUserToken(tm, token);
 					if(!isValid){
-						page="需要重新登录";
+						//page="需要重新登录";
 						//out.write(page);
 						//out.flush();out.close();
 						//response.reset();
@@ -107,7 +106,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					tm = tokenManager.getToken(token);
 					isValid =  tokenManager.checkToken(tm, token);
 					if(!isValid){
-						page="需要重新登录";
+						//page="需要重新登录";
 						//out.write(page);
 						//out.flush();
 						//out.close();
@@ -122,7 +121,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					tm = tokenManager.getToken(token);
 					isValid =  tokenManager.checkToken(tm, token);
 					if(!isValid){
-						page="需要重新登录";
+						//page="需要重新登录";
 						//out.write(page);
 						//out.flush();
 						//out.close();
@@ -133,7 +132,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					}
 					return isValid;
 				default:
-					page="没有登录，需要重新登录";
+					//page="没有登录，需要重新登录";
 					//out.write(page);
 					//out.flush();
 					//out.close();
