@@ -43,7 +43,7 @@ public class TokenManager {
 		TokenModel tm = new TokenModel(userid,userRole,s);
 		logger.info("generated token is: "+s);
 		ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS);
+		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.DAYS);
 		return tm;
 	}
 	
@@ -118,7 +118,7 @@ public class TokenManager {
 		tm.setOpenid(openid);
 		logger.info("generated user token is: "+s);
 		ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.SECONDS);
+		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.DAYS);
 		return tm;
 	}
 	

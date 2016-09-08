@@ -47,112 +47,112 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
 		System.out.println("***********拦截器************");
 		//测试时统一通过
-		return true;
-//		
-//		if (handler.getClass().isAssignableFrom(HandlerMethod.class)) {//判断该请求的路径对应的方法有没有AuthPassport标注，即有没有需要验证
-//			AuthPassport authPassport = ((HandlerMethod) handler)
-//					.getMethodAnnotation(AuthPassport.class);
-//
-//			// 没有声明需要权限,或者声明不验证权限
-//			if (authPassport == null || authPassport.validate() == false)
-//				return true;
-//			else {
-//				response.setHeader("content-type", "text/html;charset=UTF-8");
-//				response.setCharacterEncoding("UTF-8");
-//				PrintWriter out = response.getWriter();
-//				String page = "";
-//				
-//				// 要验证的都有token，没有token则失败
-//				String token = request.getParameter("token");
-//				if (token == null || "".equals(token.trim())) {
-//					logger.info("*****"+url+" 的 "+method+" 方法需要验证token，但token不存在*****");
-//					page="未登录";
-//					out.write(page);
-//					return false;
-//				}
-//				String type = "";// 请求是用户、区域管理还是超级管理
-//				if (token.length() == 36) {
-//					type = "u";
-//				} else if (token.length() > 36
-//						&& "v".equals(token.substring(token.length() - 1))) {// vendor请求
-//					type = "v";
-//				} else {
-//					type = "s";
-//				}
-//				boolean isValid = false;
-//				TokenModel tm = null;
-//				switch (type) {
-//				case "u":
-//					logger.info("handle user auth");
-//					tm = tokenManager.getUserToken(token);
-//					isValid =  tokenManager.checkUserToken(tm, token);
-//					if(!isValid){
-//						page="需要重新登录";
-//						out.write(page);
-//					}
-//					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
-//						request.setAttribute("tokenmodel",tm);
-//					}
-//					return isValid;
-//				case "v":
-//					logger.info("handle vendor auth");
-//					tm = tokenManager.getToken(token);
-//					isValid =  tokenManager.checkToken(tm, token);
-//					if(!isValid){
-//						page="需要重新登录";
-//						out.write(page);
-//					}
-//					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
-//						request.setAttribute("tokenmodel",tm);
-//					}
-//					return isValid;
-//				case "s":
-//					logger.info("handle supervisor auth");
-//					tm = tokenManager.getToken(token);
-//					isValid =  tokenManager.checkToken(tm, token);
-//					if(!isValid){
-//						page="需要重新登录";
-//						out.write(page);
-//					}
-//					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
-//						request.setAttribute("tokenmodel",tm);
-//					}
-//					return isValid;
-//				default:
-//					page="没有登录，需要重新登录";
-//					out.write(page);
-//					return false;
-//				}
-//				// 在这里实现自己的权限验证逻辑，这里模拟从servletContext中获取supervisor的登录信息
-//				// Object o =
-//				// request.getServletContext().getAttribute("supervisor");
-//
-//				/*
-//				 * // 截取到请求地址的前几位，判断是supervisor登录还是vendor登录，从而定向对应登录页面让其重新登录 //
-//				 * 返回到登录界面 String role = url.substring(getCharacterPosition(url,
-//				 * 2), getCharacterPosition(url, 3)); String loginUrl = role +
-//				 * "login"; // 开始验证token // 从header中获取token String token =
-//				 * request.getHeader("token"); if (token == null ||
-//				 * "".equals(token.trim())) {// 如果token为空 // 返回到登录界面
-//				 * response.sendRedirect(loginUrl); return false; } else {//
-//				 * 如果token不为空 Long loginTime = (Long)
-//				 * request.getServletContext() .getAttribute(token);// 登录时设置的时间
-//				 * if (loginTime == null) { response.sendRedirect(loginUrl);
-//				 * return false; } if (System.currentTimeMillis() - loginTime >
-//				 * token_pirate_interval) {// 超过了有效期
-//				 * response.sendRedirect(loginUrl); return false; } if
-//				 * ("s".equals(token.substring(token.length() - 1))) { if
-//				 * (!"/supervisor".equals(role)) {// 因为role前面还有个/ // 如果角色不对，禁止访问
-//				 * response.sendRedirect(loginUrl); return false; } } if
-//				 * ("v".equals(token.substring(token.length() - 1))) { if
-//				 * (!"/vendor".equals(role)) {// 因为role前面还有个/ // 如果角色不对，禁止访问
-//				 * response.sendRedirect(loginUrl); return false; } } }
-//				 */
-//			}
-//		} else {
-//			return true;
-//		}
-//		// return true;
+		//return true;
+		
+		if (handler.getClass().isAssignableFrom(HandlerMethod.class)) {//判断该请求的路径对应的方法有没有AuthPassport标注，即有没有需要验证
+			AuthPassport authPassport = ((HandlerMethod) handler)
+					.getMethodAnnotation(AuthPassport.class);
+
+			// 没有声明需要权限,或者声明不验证权限
+			if (authPassport == null || authPassport.validate() == false)
+				return true;
+			else {
+				response.setHeader("content-type", "text/html;charset=UTF-8");
+				response.setCharacterEncoding("UTF-8");
+				PrintWriter out = response.getWriter();
+				String page = "";
+				
+				// 要验证的都有token，没有token则失败
+				String token = request.getParameter("token");
+				if (token == null || "".equals(token.trim())) {
+					logger.info("*****"+url+" 的 "+method+" 方法需要验证token，但token不存在*****");
+					page="未登录";
+					out.write(page);
+					return false;
+				}
+				String type = "";// 请求是用户、区域管理还是超级管理
+				if (token.length() == 36) {
+					type = "u";
+				} else if (token.length() > 36
+						&& "v".equals(token.substring(token.length() - 1))) {// vendor请求
+					type = "v";
+				} else {
+					type = "s";
+				}
+				boolean isValid = false;
+				TokenModel tm = null;
+				switch (type) {
+				case "u":
+					logger.info("handle user auth");
+					tm = tokenManager.getUserToken(token);
+					isValid =  tokenManager.checkUserToken(tm, token);
+					if(!isValid){
+						page="需要重新登录";
+						out.write(page);
+					}
+					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
+						request.setAttribute("tokenmodel",tm);
+					}
+					return isValid;
+				case "v":
+					logger.info("handle vendor auth");
+					tm = tokenManager.getToken(token);
+					isValid =  tokenManager.checkToken(tm, token);
+					if(!isValid){
+						page="需要重新登录";
+						out.write(page);
+					}
+					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
+						request.setAttribute("tokenmodel",tm);
+					}
+					return isValid;
+				case "s":
+					logger.info("handle supervisor auth");
+					tm = tokenManager.getToken(token);
+					isValid =  tokenManager.checkToken(tm, token);
+					if(!isValid){
+						page="需要重新登录";
+						out.write(page);
+					}
+					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
+						request.setAttribute("tokenmodel",tm);
+					}
+					return isValid;
+				default:
+					page="没有登录，需要重新登录";
+					out.write(page);
+					return false;
+				}
+				// 在这里实现自己的权限验证逻辑，这里模拟从servletContext中获取supervisor的登录信息
+				// Object o =
+				// request.getServletContext().getAttribute("supervisor");
+
+				/*
+				 * // 截取到请求地址的前几位，判断是supervisor登录还是vendor登录，从而定向对应登录页面让其重新登录 //
+				 * 返回到登录界面 String role = url.substring(getCharacterPosition(url,
+				 * 2), getCharacterPosition(url, 3)); String loginUrl = role +
+				 * "login"; // 开始验证token // 从header中获取token String token =
+				 * request.getHeader("token"); if (token == null ||
+				 * "".equals(token.trim())) {// 如果token为空 // 返回到登录界面
+				 * response.sendRedirect(loginUrl); return false; } else {//
+				 * 如果token不为空 Long loginTime = (Long)
+				 * request.getServletContext() .getAttribute(token);// 登录时设置的时间
+				 * if (loginTime == null) { response.sendRedirect(loginUrl);
+				 * return false; } if (System.currentTimeMillis() - loginTime >
+				 * token_pirate_interval) {// 超过了有效期
+				 * response.sendRedirect(loginUrl); return false; } if
+				 * ("s".equals(token.substring(token.length() - 1))) { if
+				 * (!"/supervisor".equals(role)) {// 因为role前面还有个/ // 如果角色不对，禁止访问
+				 * response.sendRedirect(loginUrl); return false; } } if
+				 * ("v".equals(token.substring(token.length() - 1))) { if
+				 * (!"/vendor".equals(role)) {// 因为role前面还有个/ // 如果角色不对，禁止访问
+				 * response.sendRedirect(loginUrl); return false; } } }
+				 */
+			}
+		} else {
+			return true;
+		}
+		// return true;
 	}
 
 	/**

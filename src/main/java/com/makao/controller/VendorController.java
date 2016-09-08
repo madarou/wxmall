@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.Supervisor;
+import com.makao.entity.TokenModel;
 import com.makao.entity.Vendor;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
@@ -41,6 +43,8 @@ public class VendorController {
 	private IVendorService vendorService;
 	@Resource
 	private ISupervisorService supervisorService;
+	@Autowired
+	private TokenManager tokenManager;
 	
 	@RequestMapping(value="/login", method = RequestMethod.POST)
 	public @ResponseBody Object login(@RequestBody JSONObject paramObject,HttpServletRequest request, HttpServletResponse response)
@@ -48,16 +52,19 @@ public class VendorController {
 		String userName = paramObject.getString("userName");
 		String password = paramObject.getString("password");
 		JSONObject jsonObject = new JSONObject();
-		System.out.println(userName);
-		System.out.println(password);
+		//测试时用，不验证
 		jsonObject.put("msg", "登录成功");
-		String tokenstring = TokenUtils.setToken("vendor");
+		// String tokenstring =
+		// TokenUtils.setToken("supervisor");使用TokenManage替代TokenUtils
+		TokenModel tm = tokenManager.createToken(1, "v");
+		String tokenstring = tm.getToken();
 		jsonObject.put("id", 1);
-		jsonObject.put("token",tokenstring);
-		request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
+		jsonObject.put("token", tokenstring);
+		// request.getServletContext().setAttribute(tokenstring,
+		// System.currentTimeMillis());
 		return jsonObject;
 	}
-
+	@AuthPassport
 	@RequestMapping(value="/index/{id:\\d+}",method = RequestMethod.GET)
 	public ModelAndView index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
 	{
@@ -66,12 +73,9 @@ public class VendorController {
 		if(token==null){
 			return modelAndView;
 		}
-		System.out.println(id);
-		System.out.println(token);
-		System.out.println(request.getServletContext().getAttribute(token));
-		
-	    modelAndView.addObject("id", id);  
-	    modelAndView.addObject("token", token);   
+		modelAndView.addObject("id", id);  	    
+	    TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
+	    modelAndView.addObject("token", tm.getToken());      
 		return modelAndView;
 	}
 	

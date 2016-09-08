@@ -95,13 +95,13 @@ public class SupervisorController {
 //		return jsonObject;
 		
 		//测试时用，不验证
-		System.out.println(userName);
-		System.out.println(password);
 		jsonObject.put("msg", "登录成功");
-		String tokenstring = TokenUtils.setToken("supervisor");
+		//String tokenstring = TokenUtils.setToken("supervisor");使用TokenManage替代TokenUtils
+		TokenModel tm = tokenManager.createToken(1, "s");
+		String tokenstring = tm.getToken();
 		jsonObject.put("id", 1);
 		jsonObject.put("token",tokenstring);
-		request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
+		//request.getServletContext().setAttribute(tokenstring, System.currentTimeMillis());
 		return jsonObject;
 	}
 	@AuthPassport
@@ -113,11 +113,9 @@ public class SupervisorController {
 		if(token==null){
 			return modelAndView;
 		}
-		logger.info(id);
-		logger.info(token);
-		
-	    modelAndView.addObject("id", id);  
-	    modelAndView.addObject("token", token);   
+	    modelAndView.addObject("id", id);  	    
+	    TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
+	    modelAndView.addObject("token", tm.getToken());   
 		return modelAndView;
 	}
 	

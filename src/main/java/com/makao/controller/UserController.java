@@ -113,8 +113,8 @@ public class UserController {
 		System.out.println("weixin user openid: "+openid);
 		//使用该openid去数据库里查询用户信息
 		User user = this.userService.checkLogin(openid);
-		String token = TokenUtils.setToken("user");
-		//把token放到服务器缓存以备后面验证
+		//String token = TokenUtils.setToken("user");使用新的TokenManager就不用旧的TokenUtils了
+		//把token放到服务器缓存以备后面验证，这部分内容放到if语句中，因为需要存用户id，新用户需要插入后才知道id
 		if(user!=null){
 			int cityid = user.getCityId();
 			int areaid = user.getAreaId();
@@ -122,6 +122,9 @@ public class UserController {
 			String areaname = user.getAreaName();
 			Area area = this.areaService.getById(areaid);
 			String catalogs = area.getCatalogs();
+			int useid = user.getId();
+			TokenModel tm = tokenManager.createUserToken(useid, openid);
+			String token = tm.getToken();
 //			page = "<!DOCTYPE html>"
 //					+ "<html>"
 //						+ "<head>"
@@ -165,7 +168,7 @@ public class UserController {
 							+ "<script>"
 								+ "var URL = 'http://m1.shequvip.com';"
 								+ "var IMG_URL = 'http://m1.shequvip.com/static/upload/';"
-								+ "var user_id = "+user.getId()+";"
+								+ "var user_id = "+useid+";"
 								+ "var cityid="+cityid+";"
 								+ "var cityname='"+cityname+"';"
 								+ "var areaid="+areaid+";"
@@ -202,6 +205,8 @@ public class UserController {
 				Area area = this.areaService.getById(MakaoConstants.DEFAULT_AREA_ID);
 				String catalogs = area.getCatalogs();
 				int u_id = this.userService.insert(u);
+				TokenModel tm = tokenManager.createUserToken(u_id, openid);
+				String token = tm.getToken();
 //				page = "<!DOCTYPE html>"
 //						+ "<html>"
 //							+ "<head>"
