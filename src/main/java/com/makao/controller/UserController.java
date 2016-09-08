@@ -267,6 +267,7 @@ public class UserController {
 			}
 		}
 		out.write(page);
+		out.flush();out.close();
 	}
 	@RequestMapping(value="/login",method = RequestMethod.GET)
 	public void login(@RequestParam(value="openid",required = false) String openid, HttpServletRequest request,HttpServletResponse response) throws IOException{
