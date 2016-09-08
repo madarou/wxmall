@@ -1,5 +1,6 @@
 package com.makao.auth;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,15 +64,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					token = request.getHeader("token");
 					if (token == null || "".equals(token.trim())) {
 						logger.info("*****"+url+" 的 "+method+" 方法需要验证token，但token不存在*****");
-						response.reset();
-						response.setHeader("content-type", "text/html;charset=UTF-8");
-						response.setCharacterEncoding("UTF-8");
-						PrintWriter out = response.getWriter();
-						String page = "";
-						page="未登录";
-						out.write(page);
-						out.flush();out.close();
-						//response.reset();
+						tokenFailResponse(response,"未登录");
 						return false;
 					}
 				}
@@ -92,10 +85,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					tm = tokenManager.getUserToken(token);
 					isValid =  tokenManager.checkUserToken(tm, token);
 					if(!isValid){
-						//page="需要重新登录";
-						//out.write(page);
-						//out.flush();out.close();
-						//response.reset();
+						tokenFailResponse(response,"需要重新登录");
 					}
 					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
 						request.setAttribute("tokenmodel",tm);
@@ -106,11 +96,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					tm = tokenManager.getToken(token);
 					isValid =  tokenManager.checkToken(tm, token);
 					if(!isValid){
-						//page="需要重新登录";
-						//out.write(page);
-						//out.flush();
-						//out.close();
-						//response.reset();
+						tokenFailResponse(response,"需要重新登录");
 					}
 					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
 						request.setAttribute("tokenmodel",tm);
@@ -121,22 +107,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					tm = tokenManager.getToken(token);
 					isValid =  tokenManager.checkToken(tm, token);
 					if(!isValid){
-						//page="需要重新登录";
-						//out.write(page);
-						//out.flush();
-						//out.close();
-						//response.reset();
+						tokenFailResponse(response,"需要重新登录");
 					}
 					else{//如果token验证成功，将token对应的TokenModel存在request中，便于之后取
 						request.setAttribute("tokenmodel",tm);
 					}
 					return isValid;
 				default:
-					//page="没有登录，需要重新登录";
-					//out.write(page);
-					//out.flush();
-					//out.close();
-					//response.reset();
+					tokenFailResponse(response,"没有登录，需要重新登录");
 					return false;
 				}
 				// 在这里实现自己的权限验证逻辑，这里模拟从servletContext中获取supervisor的登录信息
@@ -188,5 +166,22 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			}
 		}
 		return slashMatcher.start();
+	}
+	
+	/**
+	 * @param response
+	 * @throws IOException
+	 * token验证失败时，向前端返回内容
+	 */
+	private void tokenFailResponse(HttpServletResponse response, String msg) throws IOException{
+		response.reset();
+		response.setHeader("content-type", "text/html;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		//注意out的什么不能在preHandler中return为true经过的路径上，否则会报错:
+		//java.lang.IllegalStateException: getWriter() has already been called for this response
+		//因为true后再执行后面Controller中@responseBody 返回json格式字符串时会自动调用getOutputStream方法。
+		//一个请求不能有两个getWriter()或getOutputStream()
+		PrintWriter out = response.getWriter();out.write(msg);
+		out.flush();out.close();
 	}
 }
