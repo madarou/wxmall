@@ -727,33 +727,6 @@ public class ProductDaoImpl implements IProductDao {
 		return (res.size()>0 ? res : null);
 	}
 	
-	protected void doClose(PreparedStatement stmt, ResultSet rs) {
-		if (rs != null) {
-			try {
-				rs.close();
-				rs = null;
-			} catch (Exception ex) {
-				rs = null;
-				logger.error(ex.getMessage(), ex);
-				ex.printStackTrace();
-			}
-		}
-		// Statement对象关闭时,会自动释放其管理的一个ResultSet对象
-		if (stmt != null) {
-			try {
-				stmt.close();
-				stmt = null;
-			} catch (Exception ex) {
-				stmt = null;
-				logger.error(ex.getMessage(), ex);
-			}
-		}
-		// 当Hibernate的事务由Spring接管时,session的关闭由Spring管理.不用手动关闭
-		// if(session != null){
-		// session.close();
-		// }
-	}
-
 	@Override
 	public int like(String tableName, int productId) {
 		String sql = "UPDATE `"
@@ -789,6 +762,77 @@ public class ProductDaoImpl implements IProductDao {
 				session.close();// 关闭回话
 		}
 		return res;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IProductDao#getInventory(int, int, java.lang.String)
+	 * 从Product_cityId_areaId中获取产品id的库存
+	 */
+	@Override
+	public int getInventory(int cityId, int areaId, String id) {
+		String tableName = "Product_"+cityId+"_"+areaId;
+		String sql = "SELECT inventory FROM "+tableName+ " WHERE `id`="+id;
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new ArrayList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//res = session.createQuery("from User").list();
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						rs.next();
+						res.add(rs.getInt("inventory"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return  (res.size()>0 ? res.get(0) : 0);
+	}
+	
+	protected void doClose(PreparedStatement stmt, ResultSet rs) {
+		if (rs != null) {
+			try {
+				rs.close();
+				rs = null;
+			} catch (Exception ex) {
+				rs = null;
+				logger.error(ex.getMessage(), ex);
+				ex.printStackTrace();
+			}
+		}
+		// Statement对象关闭时,会自动释放其管理的一个ResultSet对象
+		if (stmt != null) {
+			try {
+				stmt.close();
+				stmt = null;
+			} catch (Exception ex) {
+				stmt = null;
+				logger.error(ex.getMessage(), ex);
+			}
+		}
+		// 当Hibernate的事务由Spring接管时,session的关闭由Spring管理.不用手动关闭
+		// if(session != null){
+		// session.close();
+		// }
 	}
 	
 	protected void doClose(PreparedStatement stmt) {

@@ -71,4 +71,13 @@ public interface IProductDao {
 	 * 给商品点赞
 	 */
 	public int like(String tableName, int productId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param id
+	 * @return
+	 * 从Product_cityId_areaId中获取产品id的库存
+	 */
+	public int getInventory(int cityId, int areaId, String id);
 }

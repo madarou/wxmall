@@ -73,4 +73,13 @@ public interface IProductService {
 	 * 给商品点赞
 	 */
 	int like(String tableName, int productId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param id
+	 * @return
+	 * 从表Product_cityId_areaId中获取id为id的产品的库存
+	 */
+	int getInventory(int cityId, int areaId, String id);
 }

@@ -86,6 +86,10 @@ public class ProductServiceImpl implements IProductService {
 	public int like(String tableName, int productId) {
 		return this.productDao.like(tableName, productId);
 	}
+	@Override
+	public int getInventory(int cityId, int areaId, String id) {
+		return this.productDao.getInventory(cityId, areaId, id);
+	}
 	
 	
 //	@Override

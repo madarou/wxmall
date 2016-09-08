@@ -243,7 +243,7 @@ public class OrderOnController {
 	@AuthPassport
 	@RequestMapping(value = "/neworder", method = RequestMethod.POST)
     public @ResponseBody
-    Object addorder(@RequestParam(value="token", required=false) String token, @RequestBody OrderOn orderOn,
+    Object addorder(@RequestParam(value="token", required=false) String token, @RequestBody SmallOrder smallOrder,
     		HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
@@ -253,62 +253,129 @@ public class OrderOnController {
 			jsonObject.put("msg", "201");
 			return jsonObject;
 		}
-		//为了鲁棒性，检查价格是否为00.00格式
-		Pattern pattern = Pattern.compile("^(\\d+){2}.(\\d+){2}$");
-		Matcher m = pattern.matcher(orderOn.getTotalPrice());
-		if(!m.matches()){
-			logger.warn("订单提交失败，价格格式错误");
-			jsonObject.put("msg", "202");
-			return jsonObject;
-		}
-		String[] ids = orderOn.getProductIds().split(",");
+		
+		int cityId = smallOrder.getCityId();
+		int areaId = smallOrder.getAreaId();
+		String[] ids = smallOrder.getProductIds();
+		String[] nums = smallOrder.getNums();
+		//依次检查当前的商品库存是否足够，有一个不够则返回失败
 		for(String id: ids){
-			Object object = redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim());
+			Object object = redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim());
 			if(object==null){//缓存里面如果没有，从数据库里读
-				//int inv = this.productService.getInventory(orderOn.getCityId(), orderOn.getAreaId(), id);
-				//redisUtil.redisSaveObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim(), inv);
+				int inv = this.productService.getInventory(cityId, areaId, id);
+				redisUtil.redisSaveObject("pi_"+cityId+"_"+areaId+"_"+id.trim(), inv);
 			}
-			int inventory = Integer.valueOf(redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim()));
+			int inventory = Integer.valueOf(redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim()));
 			if(inventory<=0){
-				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim()+" 售罄");
+				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+cityId+"_"+areaId+"_"+id.trim()+" 售罄");
 				jsonObject.put("msg", "203");
 				return jsonObject;
 			}
 		}
 		//所有商品都有库存，则轮流为所有商品在缓存中减少对应数量的库存，如果中途有exec为null，循环执行
-		String[] names = orderOn.getProductNames().split(",");
-		for(int i=0; i<ids.length; i++){
-			int productNum = Integer.parseInt(names[i].split("=")[2]);
-			List<Object> rt = redisUtil.cutInventoryTx("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i].trim(), productNum);
-			//如果某商品扣除购买数量后，库存为负，下单失败，但是要将减掉的库存加回去
-			if(((Long)rt.get(0)).intValue()<=0){
-				//另外起一个线程来回加减掉的库存
-				AddInventoryThread ait = new AddInventoryThread("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i].trim(),productNum,redisUtil);
-				new Thread(ait,"add inventory thread").start();
-				
-				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i]+" 库存不够");
+		for (int i = 0; i < nums.length; i++) {
+			List<Object> rt = redisUtil.cutInventoryTx(
+					"pi_" + cityId + "_" + areaId
+							+ "_" + ids[i].trim(), Integer.valueOf(nums[i]));
+			// 如果某商品扣除购买数量后，库存为负，下单失败，但是要将减掉的库存加回去
+			if (((Long) rt.get(0)).intValue() <= 0) {
+				// 另外起一个线程来回加减掉的库存
+				AddInventoryThread ait = new AddInventoryThread("pi_"
+						+ cityId + "_" + areaId + "_"
+						+ ids[i].trim(), Integer.valueOf(nums[i]), redisUtil);
+				new Thread(ait, "add inventory thread").start();
+
+				logger.warn("订单提交失败，商品(cityId_areaId_Id): "
+						+ cityId+ "_" + areaId + "_"
+						+ ids[i] + " 库存不够");
 				jsonObject.put("msg", "204");
 				return jsonObject;
 			}
 		}
 		
-		orderOn.setNumber(OrderNumberUtils.generateOrderNumber());
-		orderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
-		orderOn.setPayType("微信安全支付");//现在只有这种支付方式
-		orderOn.setReceiveType("送货上门");//现在只有这种收货方式
-		orderOn.setStatus("未支付");
-		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
-		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
-		//订单生成后，使用微信接口向用户发送模板消息
+//		String[] ids = orderOn.getProductIds().split(",");
+//		for(String id: ids){
+//			Object object = redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim());
+//			if(object==null){//缓存里面如果没有，从数据库里读
+//				int inv = this.productService.getInventory(orderOn.getCityId(), orderOn.getAreaId(), id);
+//				redisUtil.redisSaveObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim(), inv);
+//			}
+//			int inventory = Integer.valueOf(redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim()));
+//			if(inventory<=0){
+//				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim()+" 售罄");
+//				jsonObject.put("msg", "203");
+//				return jsonObject;
+//			}
+//		}
+//		//所有商品都有库存，则轮流为所有商品在缓存中减少对应数量的库存，如果中途有exec为null，循环执行
+//		String[] names = orderOn.getProductNames().split(",");
+//		for(int i=0; i<ids.length; i++){
+//			int productNum = Integer.parseInt(names[i].split("=")[2]);
+//			List<Object> rt = redisUtil.cutInventoryTx("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i].trim(), productNum);
+//			//如果某商品扣除购买数量后，库存为负，下单失败，但是要将减掉的库存加回去
+//			if(((Long)rt.get(0)).intValue()<=0){
+//				//另外起一个线程来回加减掉的库存
+//				AddInventoryThread ait = new AddInventoryThread("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i].trim(),productNum,redisUtil);
+//				new Thread(ait,"add inventory thread").start();
+//				
+//				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i]+" 库存不够");
+//				jsonObject.put("msg", "204");
+//				return jsonObject;
+//			}
+//		}
+		OrderOn order = new OrderOn();
+		order.setNumber(OrderNumberUtils.generateOrderNumber());
+		order.setOrderTime(new Timestamp(System.currentTimeMillis()));
+		order.setPayType("微信安全支付");//现在只有这种支付方式
+		order.setReceiveType("送货上门");//现在只有这种收货方式
+		order.setStatus("未支付");
+		
+		StringBuilder sb = new StringBuilder();
+		float totalPrice = 0.00f;
+		for(int i=0; i<ids.length ; i++){
+			Product p = this.productService.getById(Integer.valueOf(ids[i]), cityId, areaId);
+			sb.append(p.getProductName()+"="+p.getPrice()+"="+nums[i]+",");
+			totalPrice = totalPrice + Float.valueOf(p.getPrice())*Float.valueOf(nums[i]);
+		}
+		String productNames = sb.substring(0, sb.length()-1);//去掉最后一个逗号
+		order.setProductNames(productNames);
+		StringBuilder sb2 = new StringBuilder();
+		for(String s: ids){
+			sb2.append(s+",");
+		}
+		order.setProductIds(sb2.substring(0, sb2.length()-1));
+		
+		String couponPrice = "0.00";
+		if(smallOrder.getCouponId()>0){
+			//如果用了优惠券，查找优惠券
+			CouponOn couponOn = this.couponOnService.queryByCouponId("Coupon_"+cityId+"_on", smallOrder.getCouponId());
+			if(couponOn.getUserId()==smallOrder.getUserId()){//确保该优惠券是该用户所有
+				couponPrice = couponOn.getAmount();
+			}
+		}
+		order.setReceiverName(smallOrder.getReceiverName());
+		order.setPhoneNumber(smallOrder.getPhoneNumber());
+		order.setAddress(smallOrder.getAddress());
+		order.setReceiveTime(smallOrder.getReceiveTime());
+		order.setCouponId(smallOrder.getCouponId());
+		order.setCouponPrice(couponPrice);
+		DecimalFormat fnum = new  DecimalFormat("##0.00"); //保留两位小数   
+		totalPrice = totalPrice-Float.valueOf(couponPrice);
+		order.setTotalPrice(fnum.format(totalPrice));
+		order.setCityarea(smallOrder.getCityarea());
+		order.setUserId(smallOrder.getUserId());
+		order.setAreaId(areaId);
+		order.setCityId(cityId);
+		
 		//int res = this.orderOnService.insert(orderOn);//这里不再实际往数据库里生成订单，只放在缓存中，提交支付请求时才生成
-		redisUtil.redisSaveObject(orderOn.getNumber(), orderOn, 15);
-		if(redisUtil.redisQueryObject(orderOn.getNumber())!=null){
-			logger.info("增加有效订单成功id=" + orderOn.getNumber());
-			jsonObject.put("number", orderOn.getNumber());
+		redisUtil.redisSaveObject(order.getNumber(), order, 15);
+		if(redisUtil.redisQueryObject(order.getNumber())!=null){
+			logger.info("增加有效订单成功id=" + order.getNumber());
+			jsonObject.put("number", order.getNumber());
         	jsonObject.put("msg", "200");
 		}
 		else{
-			logger.info("增加有效订单失败id=" + orderOn.getNumber());
+			logger.info("增加有效订单失败id=" + order.getNumber());
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;
