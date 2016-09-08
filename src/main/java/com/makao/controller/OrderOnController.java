@@ -369,6 +369,8 @@ public class OrderOnController {
 		
 		//int res = this.orderOnService.insert(orderOn);//这里不再实际往数据库里生成订单，只放在缓存中，提交支付请求时才生成
 		redisUtil.redisSaveObject(order.getNumber(), order, 15);
+		//按用户-》未支付订单列表的形式存储每个用户未支付的订单列表，用户在未收货订单查询时一起返回
+		redisUtil.redisSaveList("uo_"+smallOrder.getUserId(), order, 0);
 		if(redisUtil.redisQueryObject(order.getNumber())!=null){
 			logger.info("增加有效订单成功id=" + order.getNumber());
 			jsonObject.put("number", order.getNumber());
@@ -751,6 +753,22 @@ public class OrderOnController {
     public @ResponseBody Object all(@PathVariable("cityid") int cityid, @PathVariable("userid") int userid) {
 		JSONObject jsonObject = new JSONObject();
 		List<OrderOn> os = this.orderOnService.queryByUserId("Order_"+cityid+"_on", userid);
+		//试图从缓存中找用户未支付的订单
+		List<OrderOn> redis_orders = redisUtil.redisQueryList("uo_"+userid, OrderOn.class);
+		if(redis_orders!=null&&redis_orders.size()>0){
+			for(OrderOn oo : redis_orders){
+				String order_num = oo.getNumber();
+				//检查该订单号的订单还在缓存中吗？不在就从"uo_"+userid对应的order list中删除掉
+				OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(order_num);
+				if(orderOn==null){
+					redisUtil.redisDelListValue("uo_"+userid, oo);
+				}
+				//如果还存在，则将orderOn加入到os的顶部一起返回
+				else{
+					os.add(0, orderOn);
+				}
+			}
+		}
 		logger.info("查询用户id："+userid+"的所有有效订单信息完成(所属city:"+cityid+")");
 		jsonObject.put("msg", "200");
 		jsonObject.put("orders", os);

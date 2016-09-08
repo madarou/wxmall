@@ -84,7 +84,7 @@ public class RedisUtil {
     public static void redisSaveList(final RedisTemplate<String, Object> redisTemplate, final String key,  
             final Object object, int count) {  
         ListOperations<String, Object> ops = redisTemplate.opsForList();  
-        ops.leftPush(key, object);  
+        ops.rightPush(key, object);  
         if (0 < count)  
             ops.trim(key, 0, count);  
     }  
@@ -185,7 +185,7 @@ public class RedisUtil {
      */  
     public void redisSaveList(final String key, final Object object, int count) {  
         ListOperations<String, Object> ops = redisTemplate.opsForList();  
-        ops.leftPush(key, object);  
+        ops.rightPush(key, object);  
         if (0 < count)  
             ops.trim(key, 0, count);  
     }  
