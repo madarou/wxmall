@@ -29,7 +29,7 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<!-- 自定义的编码过滤器，解决图片中src='中文名.jpg'时将中文编码后无法访问到图片 -->
-	<filter>
+	<!-- <filter>
 	    <filter-name>urlFilter</filter-name>
 	    <filter-class>com.makao.utils.UrlFilter</filter-class>
 	    <init-param>
@@ -40,7 +40,7 @@
 	<filter-mapping>
 	    <filter-name>urlFilter</filter-name>
 	    <url-pattern>/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
   
 	<!-- 测试时，先自动清空数据库表，实际上线时去掉 -->
 	 <listener>
