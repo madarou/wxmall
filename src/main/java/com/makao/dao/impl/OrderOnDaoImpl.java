@@ -1251,11 +1251,11 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	}
 
 	@Override
-	public int confirmMoney(String cityid, String orderid) {
+	public int confirmMoney(String cityid, String orderNumber) {
 		String tableName = "Order_"+cityid+"_on";
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `status`='排队中' WHERE `id`="+orderid;
+				+ "` SET `status`='排队中' WHERE `number`='"+orderNumber+"'";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败

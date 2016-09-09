@@ -50,7 +50,7 @@ api															method				comment
 		msg:200,
 		number:"xxxxxxxxxxxxxxx"//订单号
 	}
-/orderOn/pay/?token=xxx										POST				提交支付订单请求
+/orderOn/pay/?token=xxx										POST				提交支付订单请求(/orderOn/pay2/?token=xxx是模拟支付不通过微信，参数也是number)
 参数:
 	{
 		number:"xxxxxxxxxxxxxxx"//订单号

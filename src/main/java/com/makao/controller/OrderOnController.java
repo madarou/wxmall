@@ -383,6 +383,61 @@ public class OrderOnController {
         return jsonObject;
     }
 	
+	
+	/**
+	 * @param token
+	 * @param paramObject
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * 模拟支付，不通过微信
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/pay2", method = RequestMethod.POST)
+    public @ResponseBody
+    void pay(@RequestParam(value="token", required=false) String token,@RequestBody JSONObject paramObject, 
+    		HttpServletRequest request,HttpServletResponse response) throws IOException {
+		response.setHeader("content-type", "text/html;charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
+		String page = "";
+		
+		String orderNumber = paramObject.getString("number");
+		
+		//模拟的数据无法从缓存区到cityid的值，所以一次从两个模拟的成熟中找
+		int res = this.orderOnService.confirmMoney("1",orderNumber);
+		if(res!=0){
+			res = this.orderOnService.confirmMoney("2",orderNumber);
+		}
+
+				page = "<!DOCTYPE html>"
+						+ "<html>"
+						+ "<head>"
+							+ "<meta charset=\"utf-8\">"
+							+ "<title>订单支付</title>"
+							+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=0\">"
+							+ "<link rel=\"stylesheet\" href=\"static/css/weixin.css\">"
+						+ "</head>"
+						+"<body>"
+							+ "<div class=\"wxapi_container\">"
+								+"<div class=\"lbox_close wxapi_form\">"
+									+ "<h3 id=\"menu-pay\">超级社区</h3>"
+									+ "<span class=\"desc\">订单总价：￥xx.xx</span>"
+									+ "<button class=\"btn btn_primary\" id=\"chooseWXPay\">支付订单</button>"
+								+"</div>"
+							+ "</div>"
+						+ "</body>"
+						+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
+						+"<script>"
+							+ "var btn2 = document.getElementById(\"chooseWXPay\");"
+							+ "btn2.onclick=function(){"
+								+ "alert('支付成功');"
+							+ "}"
+						+ "</script>"
+					+ "</html>";
+		out.write(page);
+	}
+	
 	/**
 	 * @param token
 	 * @param request
@@ -415,10 +470,10 @@ public class OrderOnController {
 			out.write(page);
 			return;
 		}
-		String orderid = paramObject.getString("orderId");
-		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderid);
+		String orderNumber = paramObject.getString("number");
+		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderNumber);
 		if(orderOn==null){
-			page = "订单支付失败，订单已过期，orderid=："+orderid;
+			page = "订单支付失败，订单已过期，orderid=："+orderNumber;
 			logger.info(page);
 			out.write("支付失败，订单已过期(15分钟)");
 			return;
@@ -597,15 +652,15 @@ public class OrderOnController {
 		}
 		if("SUCCESS".equals(resultXML.get("result_code"))){
 		    String openid = resultXML.get("openid");
-		    String orderid = resultXML.get("out_trade_no");
+		    String orderNumber = resultXML.get("out_trade_no");
 		    String cityid = resultXML.get("attach");
-		    if(orderid!=null && !"".equals(orderid)){
-		    	int res = this.orderOnService.confirmMoney(cityid,orderid);//将订单的状态从未支付改为排队中
+		    if(orderNumber!=null && !"".equals(orderNumber)){
+		    	int res = this.orderOnService.confirmMoney(cityid,orderNumber);//将订单的状态从未支付改为排队中
 		    	if(res==0){
 		    		//将缓存中如果还存在的该订单删除
-		    		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderid);
+		    		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderNumber);
 		    		if(orderOn!=null){
-		    			redisUtil.redisDeleteKey(orderid);
+		    			redisUtil.redisDeleteKey(orderNumber);
 		    		}
 		    		//通知微信端，已经收到支付结果了，不要再发了
 		    		page = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
