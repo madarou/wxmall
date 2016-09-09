@@ -780,6 +780,7 @@ public class OrderOnController {
 		logger.info("查询用户id："+userid+"的所有有效订单信息完成(所属city:"+cityid+")");
 		jsonObject.put("msg", "200");
 		jsonObject.put("orders", os);
+		logger.info("最后 os的大小: "+os.size());
 		return jsonObject;
     }
 	
