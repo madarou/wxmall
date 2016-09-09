@@ -761,6 +761,7 @@ public class OrderOnController {
 		//试图从缓存中找用户未支付的订单
 		List<OrderOn> redis_orders = redisUtil.redisQueryList("uo_"+userid, OrderOn.class);
 		logger.info("redis_orders size: "+redis_orders.size());
+		int counter = -1;
 		if(redis_orders!=null&&redis_orders.size()>0){
 			for(OrderOn oo : redis_orders){
 				logger.info("current redis order: "+oo.getNumber());
@@ -773,6 +774,7 @@ public class OrderOnController {
 				//如果还存在，则将orderOn加入到os的顶部一起返回
 				else{
 					logger.info("adding order to os: "+orderOn.getNumber());
+					orderOn.setId(counter--);
 					os.add(0, orderOn);
 				}
 			}
