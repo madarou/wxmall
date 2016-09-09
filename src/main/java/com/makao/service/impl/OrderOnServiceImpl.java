@@ -96,6 +96,10 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public int confirmMoney(String cityid, String orderid) {
 		return this.orderOnDao.confirmMoney(cityid, orderid);
 	}
+	@Override
+	public boolean isExist(int cityId, String orderNum) {
+		return this.orderOnDao.isExist(cityId, orderNum);
+	}
 	
 //	@Override
 //	public void testor() {

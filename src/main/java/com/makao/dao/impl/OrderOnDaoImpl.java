@@ -1288,6 +1288,54 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		return res;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOnDao#isExist(int, int, java.lang.String)
+	 * 根据订单号查询订单是否存在
+	 */
+	@Override
+	public boolean isExist(int cityId, String orderNum) {
+		String tableName = "Order_"+cityId+"_on";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `number`='"+orderNum+"' AND `status`='未支付'";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new ArrayList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						rs.next();
+						res.add(rs.getInt("count"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		if(res.size()<=0){
+			return false;
+		}
+		if(res.get(0)>0){
+			return true;
+		}
+		return false;
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {

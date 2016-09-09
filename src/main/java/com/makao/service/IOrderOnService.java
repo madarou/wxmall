@@ -78,4 +78,11 @@ public interface IOrderOnService {
 	 */
 	int confirmMoney(String cityid, String orderid);
 
+	/**
+	 * @param number
+	 * @return
+	 * 查询订单是否已经存在
+	 */
+	boolean isExist(int cityId, String orderNum);
+
 }

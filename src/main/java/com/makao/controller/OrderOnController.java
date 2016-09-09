@@ -479,14 +479,19 @@ public class OrderOnController {
 			out.write(page);
 			return;
 		}
-		int res = this.orderOnService.insert(orderOn);
-		if(res==0){
-			page = "订单: "+orderOn.getNumber()+"生成失败！";
-			logger.info("增加有效订单失败id=" + orderOn.getNumber());
-			out.write(page);
-			return;
+		//这里插入未支付订单到数据库时，需要先检查该订单是否已经插入过了，
+		//因为用户可能之前点了立即支付，经过此过程已经插入过该订单了，所以
+		//不用再插入一遍
+		boolean isExist = this.orderOnService.isExist(orderOn.getCityId(),orderOn.getNumber());
+		if(!isExist){
+			int res = this.orderOnService.insert(orderOn);
+			if(res==0){
+				page = "订单: "+orderOn.getNumber()+"生成失败！";
+				logger.info("增加有效订单失败id=" + orderOn.getNumber());
+				out.write(page);
+				return;
+			}
 		}
-		
 		// 为前端页面能够使用JSSDK设置签名
 		Map<String, String> wxConfig = JSSignatureUtil
 				.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");

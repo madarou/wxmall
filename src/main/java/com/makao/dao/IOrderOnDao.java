@@ -77,4 +77,12 @@ public interface IOrderOnDao {
 	 * 已付款后，将订单状态从未支付改为排队中
 	 */
 	public int confirmMoney(String cityid, String orderid);
+
+	/**
+	 * @param cityId
+	 * @param orderNum
+	 * @return
+	 * 查询订单是否存在
+	 */
+	public boolean isExist(int cityId, String orderNum);
 }
