@@ -760,8 +760,10 @@ public class OrderOnController {
 		List<OrderOn> os = this.orderOnService.queryByUserId("Order_"+cityid+"_on", userid);
 		//试图从缓存中找用户未支付的订单
 		List<OrderOn> redis_orders = redisUtil.redisQueryList("uo_"+userid, OrderOn.class);
+		logger.info("redis_orders size: "+redis_orders.size());
 		if(redis_orders!=null&&redis_orders.size()>0){
 			for(OrderOn oo : redis_orders){
+				logger.info("current redis order: "+oo.getNumber());
 				String order_num = oo.getNumber();
 				//检查该订单号的订单还在缓存中吗？不在就从"uo_"+userid对应的order list中删除掉
 				OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(order_num);
@@ -770,6 +772,7 @@ public class OrderOnController {
 				}
 				//如果还存在，则将orderOn加入到os的顶部一起返回
 				else{
+					logger.info("adding order to os: "+orderOn.getNumber());
 					os.add(0, orderOn);
 				}
 			}
