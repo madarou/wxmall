@@ -162,7 +162,7 @@ public class OrderOnController {
 		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
 		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
 		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
-			OrderOn.setStatus("排队中");
+			OrderOn.setStatus("未支付");
 		}
 		int cityId = smallOrder.getCityId();
 		int areaId = smallOrder.getAreaId();
@@ -368,6 +368,8 @@ public class OrderOnController {
 		order.setCityId(cityId);
 		
 		//int res = this.orderOnService.insert(orderOn);//这里不再实际往数据库里生成订单，只放在缓存中，提交支付请求时才生成
+		//为了前端方便，还是需要在数据库里插入，因为前端需要id，插入后才有id
+		this.orderOnService.insert(order);
 		redisUtil.redisSaveObject(order.getNumber(), order, 15);
 		//按用户-》未支付订单列表的形式存储每个用户未支付的订单列表，用户在未收货订单查询时一起返回
 		redisUtil.redisSaveList("uo_"+smallOrder.getUserId(), order, 0);
@@ -473,9 +475,11 @@ public class OrderOnController {
 		String orderNumber = paramObject.getString("number");
 		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderNumber);
 		if(orderOn==null){
-			page = "订单支付失败，订单已过期，orderid=："+orderNumber;
+			page = "订单支付失败，订单已过期，order number=："+orderNumber;
 			logger.info(page);
 			out.write("支付失败，订单已过期(15分钟)");
+			//从数据库里删除，由于没有cityid，只有number不好删除，可集中删除
+			//this.orderOnService.deleteByNumber(orderNumber);
 			return;
 		}
 		
@@ -537,16 +541,16 @@ public class OrderOnController {
 		//这里插入未支付订单到数据库时，需要先检查该订单是否已经插入过了，
 		//因为用户可能之前点了立即支付，经过此过程已经插入过该订单了，所以
 		//不用再插入一遍
-		boolean isExist = this.orderOnService.isExist(orderOn.getCityId(),orderOn.getNumber());
-		if(!isExist){
-			int res = this.orderOnService.insert(orderOn);
-			if(res==0){
-				page = "订单: "+orderOn.getNumber()+"生成失败！";
-				logger.info("增加有效订单失败id=" + orderOn.getNumber());
-				out.write(page);
-				return;
-			}
-		}
+//		boolean isExist = this.orderOnService.isExist(orderOn.getCityId(),orderOn.getNumber());
+//		if(!isExist){
+//			int res = this.orderOnService.insert(orderOn);
+//			if(res==0){
+//				page = "订单: "+orderOn.getNumber()+"生成失败！";
+//				logger.info("增加有效订单失败id=" + orderOn.getNumber());
+//				out.write(page);
+//				return;
+//			}
+//		}
 		// 为前端页面能够使用JSSDK设置签名
 		Map<String, String> wxConfig = JSSignatureUtil
 				.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");
@@ -825,7 +829,7 @@ public class OrderOnController {
 		//因为缓存中的order没有实际插入到数据库中，所以id=0，前端好像是根据id加载列表的，所以
 		//缓存中如果有多个订单的话，只会被加载一个，所以counter作为缓存中临时订单的id，可以使前端
 		//正常加载所有，如果订单实际插入数据库，会生成新的id，不会受到影响
-		int counter = -1;
+		//int counter = -1;
 		if(redis_orders!=null&&redis_orders.size()>0){
 			for(OrderOn oo : redis_orders){
 				logger.info("current redis order: "+oo.getNumber());
@@ -838,7 +842,7 @@ public class OrderOnController {
 				//如果还存在，则将orderOn加入到os的顶部一起返回
 				else{
 					logger.info("adding order to os: "+orderOn.getNumber());
-					orderOn.setId(counter--);
+					//orderOn.setId(counter--);
 					os.add(0, orderOn);
 				}
 			}
