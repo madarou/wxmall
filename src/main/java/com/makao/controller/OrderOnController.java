@@ -369,7 +369,8 @@ public class OrderOnController {
 		
 		//int res = this.orderOnService.insert(orderOn);//这里不再实际往数据库里生成订单，只放在缓存中，提交支付请求时才生成
 		//为了前端方便，还是需要在数据库里插入，因为前端需要id，插入后才有id
-		this.orderOnService.insert(order);
+		int res = this.orderOnService.insert(order);
+		order.setId(res);
 		redisUtil.redisSaveObject(order.getNumber(), order, 15);
 		//按用户-》未支付订单列表的形式存储每个用户未支付的订单列表，用户在未收货订单查询时一起返回
 		redisUtil.redisSaveList("uo_"+smallOrder.getUserId(), order, 0);
