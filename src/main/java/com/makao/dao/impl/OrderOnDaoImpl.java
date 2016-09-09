@@ -214,7 +214,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 
 	@Override
 	public List<OrderOn> queryAll(String tableName) {
-		String sql = "SELECT * FROM "+ tableName;
+		String sql = "SELECT * FROM "+ tableName+ " WHERE status<>'未支付'";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOn> res = new LinkedList<OrderOn>();
@@ -964,7 +964,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 
 	@Override
 	public List<OrderOn> queryByUserId(String tableName, int userid) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `userId`="+userid+" Order By `orderTime` DESC";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `userId`="+userid+" AND status<>'未支付' Order By `orderTime` DESC";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOn> res = new LinkedList<OrderOn>();
@@ -1213,7 +1213,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public int getRecordCount(int cityid) {
 		String tableName = "Order_"+cityid+"_on";
-		String sql = "SELECT count(id) as count FROM "+tableName;
+		String sql = "SELECT count(id) as count FROM "+tableName + " WHERE status<>'未支付'";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
