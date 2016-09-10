@@ -24,6 +24,8 @@ public class TimeUtil {
 	       
 	       System.out.println(minitesDiff("2016-x-10 14:21"));
 	       System.out.println("2012-12-11 09:21".substring(0, 16));
+	       
+	       System.out.println("10.00".split("\\.")[0]+"10.00".split("\\.")[1]);
 	    }
 	
 	/**

@@ -506,7 +506,8 @@ public class OrderOnController {
 		u.setBody("超级社区商品购买订单");
 		u.setOut_trade_no(orderOn.getNumber());
 		String price = orderOn.getTotalPrice();
-		u.setTotal_fee(Integer.parseInt(price.split(".")[0]+price.split(".")[1]));//单位为分
+		//u.setTotal_fee(Integer.parseInt(price.split("\\.")[0]+price.split("\\.")[1]));//单位为分
+		u.setTotal_fee(1);//单位为分
 		u.setSpbill_create_ip(request.getRemoteAddr());//用户下单的ip
 		u.setNotify_url(MakaoConstants.SERVER_DOMAIN+"/orderOn/postPay");// 接收微信支付异步通知回调地址
 		u.setTrade_type("JSAPI");
