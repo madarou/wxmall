@@ -1035,6 +1035,34 @@ public class OrderOnController {
 		return jsonObject;
     }
 	
+	/**
+	 * @param id
+	 * @return
+	 * 从数据库中找出需要将状态从排队中改为待处理的订单，将其状态设为待处理
+    	当配送时间起点-准备时间<=当前时间时的订单满足条件，
+    	请求路径中的参数id是机器人id的验证,加了AuthInterceptor的话可以去掉
+	 */
+	@RequestMapping(value = "/vapproach/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object vapproach(@PathVariable("id") int id) {
+		JSONObject jsonObject = new JSONObject();
+		List<String> city_area_order = new ArrayList<String>();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			//获取所有城市id
+			List<City> cities = this.cityService.queryAll();
+			for(City c : cities){
+				//获取所有满足条件的订单并设置对应的状态
+				city_area_order.addAll(this.orderOnService.approachOrders(c.getId()));
+			}
+			
+			jsonObject.put("msg", "200");
+			jsonObject.put("orders", city_area_order);
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
 	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody ModelAndView query_All(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
 		ModelAndView modelAndView = new ModelAndView();  

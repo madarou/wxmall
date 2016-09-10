@@ -27,6 +27,7 @@ import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.makao.utils.TimeUtil;
 import com.mysql.jdbc.Statement;
 
 /**
@@ -1253,9 +1254,10 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public int confirmMoney(String cityid, String orderNumber) {
 		String tableName = "Order_"+cityid+"_on";
+		String history = ",排队中="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `status`='排队中' WHERE `number`='"+orderNumber+"'";
+				+ "` SET `status`='排队中',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -1378,6 +1380,68 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				session.close();// 关闭回话
 		}
 		return res;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOnDao#appoachOrders()
+	 * 从数据库中找出需要将状态从排队中改为待处理的订单，将其状态设为待处理
+    	当配送时间起点-准备时间<=当前时间时的订单满足条件
+	 */
+	@Override
+	public List<String> appoachOrders(int cityid) {
+		String tableName = "Order_"+cityid+"_on";
+		String sql1 = "SELECT * FROM "+ tableName + " WHERE `status`='排队中'";
+
+		Session session = null;
+		Transaction tx = null;
+		List<String> res = new ArrayList<String>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql1);
+						ResultSet rs = ps.executeQuery();
+						while(rs.next()){
+							String receiveTime = rs.getString("receiveTime");
+							String receiveTime_begin = receiveTime.substring(0, 16);//取得收货的开始时间
+							int min_diff = TimeUtil.minitesDiff(receiveTime_begin);//收货开始时间与当前时间的分钟差
+							if(min_diff<=5){
+								int o_id = rs.getInt("id");
+								String history = ",待处理="+new Timestamp(System.currentTimeMillis());
+								String sql2 = "UPDATE `"
+										+ tableName
+										+ "` SET `status`='待处理',`history`=concat(`history`,'"+history+"') WHERE `id`="+o_id;
+								PreparedStatement ps2 = null;
+								try {
+									ps2 = connection.prepareStatement(sql2);
+									ps2.executeUpdate();
+									res.add(cityid+"_"+rs.getInt("areaId")+"_"+o_id);
+								} finally {
+									doClose(ps2);
+								}
+							}
+						}
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res.size()>0 ? res : null;
 	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {

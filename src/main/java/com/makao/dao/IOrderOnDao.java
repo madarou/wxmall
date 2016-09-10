@@ -93,4 +93,12 @@ public interface IOrderOnDao {
 	 * 将排队中的订单状态改为待处理
 	 */
 	public int processOrder(int cityId, String orderid);
+
+	/**
+	 * @param cityid 
+	 * @return
+	 * 从数据库中找出需要将状态从排队中改为待处理的订单，将其状态设为待处理
+    	当配送时间起点-准备时间<=当前时间时的订单满足条件
+	 */
+	public List<String> appoachOrders(int cityid);
 }
