@@ -547,6 +547,9 @@ public class OrderOnController {
 			out.write(page);
 			return;
 		}
+		for (Map.Entry<String, String> entry : returnXml.entrySet()) {  
+		    logger.info("Key = " + entry.getKey() + ", Value = " + entry.getValue());  
+		}  
 		String prepay_id = returnXml.get("prepay_id");
 		if (prepay_id == null || "".equals(prepay_id)) {
 			page = "订单号: "+orderOn.getNumber()+"没有获取到prepay_id，参数错误下单失败!";
