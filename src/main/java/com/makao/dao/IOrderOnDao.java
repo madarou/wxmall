@@ -85,4 +85,12 @@ public interface IOrderOnDao {
 	 * 查询订单是否存在
 	 */
 	public boolean isExist(int cityId, String orderNum);
+
+	/**
+	 * @param cityId
+	 * @param orderid
+	 * @return
+	 * 将排队中的订单状态改为待处理
+	 */
+	public int processOrder(int cityId, String orderid);
 }

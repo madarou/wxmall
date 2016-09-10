@@ -161,8 +161,10 @@ public class OrderOnController {
 		OrderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
 		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
 		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
-		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
+		if(smallOrder.getStatus()==null||"".equals(smallOrder.getStatus())){
 			OrderOn.setStatus("未支付");
+		}else{
+			OrderOn.setStatus(smallOrder.getStatus());
 		}
 		int cityId = smallOrder.getCityId();
 		int areaId = smallOrder.getAreaId();
@@ -939,6 +941,32 @@ public class OrderOnController {
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){
 			int res = this.orderOnService.cancelOrder(vendor.getCityId(),orderid,vcomment);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	/**
+	 * @param id
+	 * @param orderid
+	 * @return
+	 * 排队中的订单状态被设置为待处理，需要定时根据配送时间调用
+	 */
+	@RequestMapping(value = "/vprocess/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object vprocess(@PathVariable("id") int id, @RequestParam(value="orderid", required=false) String orderid) {
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			int res = this.orderOnService.processOrder(vendor.getCityId(),orderid);
 			if(res==0){
 				jsonObject.put("msg", "200");
 				return jsonObject;

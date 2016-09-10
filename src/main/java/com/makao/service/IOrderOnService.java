@@ -85,4 +85,12 @@ public interface IOrderOnService {
 	 */
 	boolean isExist(int cityId, String orderNum);
 
+	/**
+	 * @param cityId
+	 * @param orderid
+	 * @return
+	 * 将订单状态从排队中改为待处理
+	 */
+	int processOrder(int cityId, String orderid);
+
 }

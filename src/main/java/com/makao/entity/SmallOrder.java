@@ -19,6 +19,7 @@ public class SmallOrder{
 	private int userId;//对应User表里的Id
 	private int areaId;//Area表里的Id，区域卖家登录时的查询条件
 	private int cityId;//用于在访问数据库时，直接确定数据库表名Order_cityId_on，直接从前端传来用
+	private String status;//订单状态，实际环境不需要，开发测试时用
 	public String[] getProductIds() {
 		return productIds;
 	}
@@ -84,5 +85,11 @@ public class SmallOrder{
 	}
 	public void setCityId(int cityId) {
 		this.cityId = cityId;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

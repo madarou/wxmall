@@ -1336,6 +1336,50 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		return false;
 	}
 	
+
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOnDao#processOrder(int, java.lang.String)
+	 * 将排队中的订单状态改为待处理
+	 */
+	@Override
+	public int processOrder(int cityId, String orderid) {
+		String tableName = "Order_"+cityId+"_on";
+		String history = ",待处理="+new Timestamp(System.currentTimeMillis());
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `status`='待处理',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
