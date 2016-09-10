@@ -1332,7 +1332,7 @@ public class OrderOnController {
 		sb.append("{\"goods_detail\":[");
 		for(int i=0; i<ids.length; i++){
 			String[] nameDetail = names[i].split("=");
-			int price = Integer.parseInt(nameDetail[1].split(".")[0]+nameDetail[1].split(".")[1]);
+			int price = Integer.parseInt(nameDetail[1].split("\\.")[0]+nameDetail[1].split("\\.")[1]);
 			String po = "{\"goods_id\":\""+ids[i]+"\",\"goods_name\":\""+nameDetail[0]+"\",\"quantity\":"+nameDetail[2]+",\"price\":"+price+"}";
 			sb.append(po);
 		}
