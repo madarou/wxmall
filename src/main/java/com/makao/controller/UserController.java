@@ -103,14 +103,14 @@ public class UserController {
 			out.write(page);
 			return;
 		}
-		System.out.println("code:"+code);
+		logger.info("code:"+code);
 		String get_token_url = WeixinConstants.AUTH_TOKEN_URL.replace("APPID", WeixinConstants.APPID)
 				.replace("SECRET", WeixinConstants.APPSECRET).replace("CODE", code);
 		net.sf.json.JSONObject jsonObject = HttpUtil.doGetObject(get_token_url);
 		String access_token = jsonObject.getString("access_token");
-		System.out.println("weixin auth access_token: "+access_token);
+		logger.info("weixin auth access_token: "+access_token);
 		String openid = jsonObject.getString("openid");
-		System.out.println("weixin user openid: "+openid);
+		logger.info("weixin user openid: "+openid);
 		//使用该openid去数据库里查询用户信息
 		User user = this.userService.checkLogin(openid);
 		//String token = TokenUtils.setToken("user");使用新的TokenManager就不用旧的TokenUtils了
