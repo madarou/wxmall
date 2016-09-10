@@ -14,8 +14,8 @@ public class WeixinConstants {
 	public static final String APPID = "wxdfbe4a14b5c766b5";
 	public static final String APPSECRET = "ca58cab704dd2477a90400feb0285bb8";
 	
-	public static final String MCHID = "1239292402";//商户号，支付用
-	public static final String PAY_KEY = "shygxx1234567890shygxx1234567890";//生成支付签名时所用的商户key
+	public static final String MCHID = "1367159802";//商户号，支付用
+	public static final String PAY_KEY = "shexiangvip1234567890shexiangvip";//生成支付签名时所用的商户key
 	//统一下单地址，POST
 	public static final String UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	

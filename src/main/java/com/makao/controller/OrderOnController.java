@@ -398,30 +398,42 @@ public class OrderOnController {
 	 * 模拟支付，不通过微信
 	 */
 	@AuthPassport
-	@RequestMapping(value = "/pay2", method = RequestMethod.POST)
+	@RequestMapping(value = "/pay2", method = RequestMethod.GET)
     public @ResponseBody
-    void pay(@RequestParam(value="token", required=false) String token,@RequestBody JSONObject paramObject, 
+    void pay(@RequestParam(value="token", required=false) String token,@RequestParam(value="number", required=false) String number, 
     		HttpServletRequest request,HttpServletResponse response) throws IOException {
 		response.setHeader("content-type", "text/html;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
 		String page = "";
-		
-		String orderNumber = paramObject.getString("number");
+		//String orderNumber = paramObject.getString("number");
 		
 		//模拟的数据无法从缓存区到cityid的值，所以一次从两个模拟的成熟中找
-		int res = this.orderOnService.confirmMoney("1",orderNumber);
+		int res = this.orderOnService.confirmMoney("1",number);
 		if(res!=0){
-			res = this.orderOnService.confirmMoney("2",orderNumber);
+			res = this.orderOnService.confirmMoney("2",number);
 		}
 
+//				page = "<link rel=\"stylesheet\" href=\"https://res.wx.qq.com/open/libs/weui/0.4.3/weui.min.css\">"
+//						+ "<div class=\"wxapi_container\">"
+//								+"<div class=\"lbox_close wxapi_form\">"
+//									+ "<button class=\"btn btn_primary\" id=\"chooseWXPay\">支付订单</button>"
+//								+"</div>"
+//						+ "</div>"
+//						+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
+//						+"<script>"
+//							+ "var btn2 = document.getElementById(\"chooseWXPay\");"
+//							+ "btn2.onclick=function(){"
+//								+ "alert('支付成功');"
+//							+ "}"
+//						+ "</script>";
 				page = "<!DOCTYPE html>"
 						+ "<html>"
 						+ "<head>"
 							+ "<meta charset=\"utf-8\">"
 							+ "<title>订单支付</title>"
 							+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=0\">"
-							+ "<link rel=\"stylesheet\" href=\"static/css/weixin.css\">"
+							+ "<link rel=\"stylesheet\" href=\"http://115.159.109.12:8080/css/weixin.css\">"
 						+ "</head>"
 						+"<body>"
 							+ "<div class=\"wxapi_container\">"
@@ -458,9 +470,9 @@ public class OrderOnController {
 	 * 		7.真正成功的支付处理在postPay中完成，在那里根据orderid到本地数据库中更新对应订单的状态为"排队中"
 	 */
 	@AuthPassport
-	@RequestMapping(value = "/pay", method = RequestMethod.POST)
+	@RequestMapping(value = "/pay", method = RequestMethod.GET)
     public @ResponseBody
-    void payOrder(@RequestParam(value="token", required=false) String token,@RequestBody JSONObject paramObject, 
+    void payOrder(@RequestParam(value="token", required=false) String token,@RequestParam(value="number", required=false) String orderNumber, 
     		HttpServletRequest request,HttpServletResponse response) throws IOException {
 		response.setHeader("content-type", "text/html;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -475,7 +487,7 @@ public class OrderOnController {
 			out.write(page);
 			return;
 		}
-		String orderNumber = paramObject.getString("number");
+		//String orderNumber = paramObject.getString("number");
 		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderNumber);
 		if(orderOn==null){
 			page = "订单支付失败，订单已过期，order number=："+orderNumber;
