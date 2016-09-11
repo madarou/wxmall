@@ -595,7 +595,7 @@ public class OrderOnController {
 							+ "<meta charset=\"utf-8\">"
 							+ "<title>订单支付</title>"
 							+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=0\">"
-							+ "<link rel=\"stylesheet\" href=\"/static/css/weixin.css\">"
+							+ "<link rel=\"stylesheet\" href=\"/css/weixin.css\">"
 						+ "</head>"
 						+"<body>"
 							+ "<div class=\"wxapi_container\">"
