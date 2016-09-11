@@ -325,7 +325,7 @@ public class UserController {
 											+ "nonceStr:'b8b9c74ac526fffbeb2d39ab038d1cd7',"
 											+ "package:'prepay_id=wx201609111714326b1bbdee650760900346',"
 											+ "signType:'MD5',"
-											+ "paySign:'6A189E260656C977B033CE7AFC464C61,"
+											+ "paySign:'6A189E260656C977B033CE7AFC464C61',"
 											+ "success: function (res) {"
 												+ "if(res.errMsg=='chooseWXPay:ok'){"
 													+ "alert('支付成功');"
