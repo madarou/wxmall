@@ -610,6 +610,8 @@ public class OrderOnController {
 							+ "btn2.onclick=function(){"
 								+ "alert('支付成功');"
 							+ "}"
+						+ "</script>"
+						+"<script>"
 							+ "wx.config({"
 								+ "debug: true,"
 								+ "appId: '"+WeixinConstants.APPID+"',"
