@@ -455,6 +455,32 @@ public class OrderOnController {
 		out.write(page);
 	}
 	
+	@AuthPassport
+	@RequestMapping(value = "/pay3", method = RequestMethod.GET)
+    public @ResponseBody
+    Object pay3(@RequestParam(value="token", required=false) String token,@RequestParam(value="number", required=false) String number, 
+    		HttpServletRequest request,HttpServletResponse response) throws IOException {
+		
+		//模拟的数据无法从缓存区到cityid的值，所以一次从两个模拟的成熟中找
+		int res = this.orderOnService.confirmMoney("1",number);
+		if(res!=0){
+			res = this.orderOnService.confirmMoney("2",number);
+		}
+		JSONObject jsonObject = new JSONObject();
+        	jsonObject.put("msg", "200");
+        	jsonObject.put("appId", "appId");
+        	jsonObject.put("timestamp1", "timestamp1");
+        	jsonObject.put("nonceStr1", "nonceStr1");
+        	jsonObject.put("signature", "signature");
+        	jsonObject.put("timestamp2", "timestamp2");
+        	jsonObject.put("nonceStr2", "nonceStr2");
+        	jsonObject.put("package", "package");
+        	jsonObject.put("signType", "MD5");
+        	jsonObject.put("paySign", "paySign");
+        return jsonObject;
+
+	}
+	
 	/**
 	 * @param token
 	 * @param request
@@ -472,30 +498,33 @@ public class OrderOnController {
 	@AuthPassport
 	@RequestMapping(value = "/pay", method = RequestMethod.GET)
     public @ResponseBody
-    void payOrder(@RequestParam(value="token", required=false) String token,@RequestParam(value="number", required=false) String orderNumber, 
+    Object payOrder(@RequestParam(value="token", required=false) String token,@RequestParam(value="number", required=false) String orderNumber, 
     		HttpServletRequest request,HttpServletResponse response) throws IOException {
-		response.setHeader("content-type", "text/html;charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
+//		response.setHeader("content-type", "text/html;charset=UTF-8");
+//		response.setCharacterEncoding("UTF-8");
+//		PrintWriter out = response.getWriter();
 		String page = "";
+		JSONObject jsonObject = new JSONObject();
 		
 		TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
 		String openid = tm.getOpenid();
 		if(openid==null || "".equals(openid.trim())){
 			page = "订单支付失败，没有openid："+openid;
 			logger.warn(page);
-			out.write(page);
-			return;
+			//out.write(page);
+			jsonObject.put("msg", "201");
+			return jsonObject;
 		}
 		//String orderNumber = paramObject.getString("number");
 		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderNumber);
 		if(orderOn==null){
 			page = "订单支付失败，订单已过期，order number=："+orderNumber;
 			logger.info(page);
-			out.write("支付失败，订单已过期(15分钟)");
+			//out.write("支付失败，订单已过期(15分钟)");
 			//从数据库里删除，由于没有cityid，只有number不好删除，可集中删除
 			//this.orderOnService.deleteByNumber(orderNumber);
-			return;
+			jsonObject.put("msg", "202");
+			return jsonObject;
 		}
 		
 		// 生成微信订单
@@ -544,8 +573,9 @@ public class OrderOnController {
 		if (returnXml == null) {
 			page = "订单号: "+orderOn.getNumber()+"提交到微信时下单失败!";
 			logger.warn(page);
-			out.write(page);
-			return;
+			//out.write(page);
+			jsonObject.put("msg", "203");
+			return jsonObject;
 		}
 		for (Map.Entry<String, String> entry : returnXml.entrySet()) {  
 		    logger.info("Key = " + entry.getKey() + ", Value = " + entry.getValue());  
@@ -554,8 +584,9 @@ public class OrderOnController {
 		if (prepay_id == null || "".equals(prepay_id)) {
 			page = "订单号: "+orderOn.getNumber()+"没有获取到prepay_id，参数错误下单失败!";
 			logger.warn(page);
-			out.write(page);
-			return;
+			//out.write(page);
+			jsonObject.put("msg", "201");
+			return jsonObject;
 		}
 		//这里插入未支付订单到数据库时，需要先检查该订单是否已经插入过了，
 		//因为用户可能之前点了立即支付，经过此过程已经插入过该订单了，所以
@@ -641,35 +672,21 @@ public class OrderOnController {
 						+ "wx.error(function (res) {"
 						+ "alert(res.errMsg);"
 					+ "});"
-
-//					+"function onBridgeReady(){"
-//					    +"WeixinJSBridge.invoke("
-//					       +"'getBrandWCPayRequest', {"
-//					       	 + "appId: '"+WeixinConstants.APPID+"',"
-//					          + "timeStamp:"+timeStamp+","
-//							  + "nonceStr:'"+nonceStr+"',"
-//							  + "package:'"+packages+"',"
-//							  + "signType:'MD5',"
-//							  + "paySign:'"+paySign+"'"
-//					       +"},"
-//					       +"function(res){"     
-//					           +"if(res.err_msg == \"get_brand_wcpay_request：ok\" ) {alert('成功')}"    
-//					       +"}"
-//					   +");" 
-//					+"}"
-//					+"if (typeof WeixinJSBridge == \"undefined\"){"
-//					   +"if( document.addEventListener ){"
-//					       +"document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);"
-//					   +"}else if (document.attachEvent){"
-//					       +"document.attachEvent('WeixinJSBridgeReady', onBridgeReady);"
-//					       +"document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);"
-//					   +"}"
-//					+"}else{"
-//					   +"onBridgeReady();"
-//					+"}"
 						+ "</script>"
 					+ "</html>";
-		out.write(page);
+				jsonObject.put("msg", "200");
+	        	jsonObject.put("appId", WeixinConstants.APPID);
+	        	jsonObject.put("timestamp1", wxConfig.get("timestamp"));
+	        	jsonObject.put("nonceStr1", wxConfig.get("nonceStr"));
+	        	jsonObject.put("signature", wxConfig.get("signature"));
+	        	jsonObject.put("timestamp2", timeStamp);
+	        	jsonObject.put("nonceStr2", nonceStr);
+	        	jsonObject.put("package", packages);
+	        	jsonObject.put("signType", "MD5");
+	        	jsonObject.put("paySign", paySign);
+	        	return jsonObject;
+		//out.write(page);
+		
 	}
 	
 	/**
