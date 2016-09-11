@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>订单支付</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=0">
+<link rel="stylesheet" href="/css/weixin.css">
+</head>
+<body>
+	<div class="wxapi_container">
+		<div class="lbox_close wxapi_form">
+			<button class="btn btn_primary" id="chooseWXPay">支付订单</button>
+		</div>
+	</div>
+</body>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+	console.log('in script');
+	var btn2 = document.getElementById("chooseWXPay");
+	btn2.onclick = function() {
+		alert('支付成功');
+	};
+	wx.config({
+		debug : true,
+		appId : 'wxdfbe4a14b5c766b5',
+		timestamp : 1473578543,
+		nonceStr : '7f4df1aa-6c9e-4ff7-9e78-9395ba230aeb',
+		signature : '7ca596e8d865ff75a7046f209fb90533fa9df5c4',
+		jsApiList : [ 'chooseWXPay' ]
+	});
+	wx.ready(function() {
+		console.log('ready function');
+		var btn = document.getElementById("chooseWXPay");
+		btn.onclick = function() {
+			alert('click success');
+			wx.chooseWXPay({
+				timestamp : 1473578543,
+				nonceStr : '9431c87f273e507e6040fcb07dcb4509',
+				package : 'prepay_id=wx201609111522237868be89100434816536',
+				signType : 'MD5',
+				paySign : 'BFFAED9A8D14B08958EA8919DBDCB539',
+				success : function(res) {
+					if (res.errMsg == 'chooseWXPay:ok') {
+						alert('支付成功');
+					} else {
+						alert('支付失败');
+					}
+				}
+			});
+		}
+	});
+	wx.error(function(res) {
+		alert(res.errMsg);
+	});
+</script>
+</html>
