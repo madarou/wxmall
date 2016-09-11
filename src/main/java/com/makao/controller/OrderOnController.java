@@ -641,7 +641,7 @@ public class OrderOnController {
 											+ "}"
 										+ "}"
 									+ "});"
-								+ "}"
+								+ "};"
 							//+ "});"
 							+ "wx.error(function (res) {"
 								+ "alert(res.errMsg);"
