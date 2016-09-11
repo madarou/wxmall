@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @date 2016年6月6日
  */
 public class CheckUtil {
-	private static final String token = "makao";
+	private static final String token = "shexiangvip";
 	/**
 	 * @param signature
 	 * @param timestamp
