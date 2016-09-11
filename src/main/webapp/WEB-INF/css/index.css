@@ -328,6 +328,7 @@ position: absolute;right: -1em;top: -1em;line-height:2em;text-align: center;}
 .ord-sta .body .goods li .sum .price{color:#53CBE6;margin-top:1em;}
 .ord-sta .fix-bottom{background:#fff;text-align:center;}
 .ord-sta .fix-bottom a{display:inline-block;margin-top:0.5em;height:3em;line-height:3em;padding:0 2em;color:#fff;background:#58B1C5;border-radius:2em;}
+.ord-sta .fix-bottom a.disable{background:#c0c9cc;}
 .ord-sta .proc{padding:2em;margin-bottom:3em;}
 .ord-sta .proc ul{padding:1.5em;border-left:1px solid #eee;}
 .ord-sta .proc li{padding:1em 0;position:relative;}

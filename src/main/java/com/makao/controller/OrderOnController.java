@@ -602,9 +602,8 @@ public class OrderOnController {
 //			}
 //		}
 		// 为前端页面能够使用JSSDK设置签名
-		Map<String, String> wxConfig = JSSignatureUtil
-				.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");
-
+		//Map<String, String> wxConfig = JSSignatureUtil.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");
+		Map<String, String> wxConfig = JSSignatureUtil.getSignature(MakaoConstants.SERVER_DOMAIN+"/user/snsapi_userinfo");
 		// 生成支付订单需要的参数和签名
 		String timeStamp = SignatureUtil.getTimeStamp();
 		String nonceStr = SignatureUtil.getNonceStr();
