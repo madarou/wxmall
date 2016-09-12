@@ -115,3 +115,17 @@ api															method				comment
 		areaId://评论所属areaId
 	}
 /comment/all/[cityId]/[areaId]/[productId]					GET					加载某个商品的所有评论
+
+order state code:
+1				未支付
+2				排队中
+3				待处理
+4				配送中
+5				已配送
+6				已收货
+7				已取消
+8				退货申请中
+9				退货中
+10				已退货
+11				已取消退货
+12				已退款

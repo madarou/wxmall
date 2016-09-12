@@ -38,6 +38,7 @@ import com.makao.auth.AuthPassport;
 import com.makao.entity.City;
 import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOn;
+import com.makao.entity.OrderState;
 import com.makao.entity.Product;
 import com.makao.entity.SmallOrder;
 import com.makao.entity.Supervisor;
@@ -133,7 +134,7 @@ public class OrderOnController {
 //		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
 //		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
 //		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
-//			OrderOn.setStatus("排队中");
+//			OrderOn.setStatus(OrderState.QUEUE.getText());
 //		}
 //		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
 //		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
@@ -162,7 +163,7 @@ public class OrderOnController {
 		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
 		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
 		if(smallOrder.getStatus()==null||"".equals(smallOrder.getStatus())){
-			OrderOn.setStatus("未支付");
+			OrderOn.setStatus(OrderState.NOT_PAID.getText());
 		}else{
 			OrderOn.setStatus(smallOrder.getStatus());
 		}
@@ -331,7 +332,7 @@ public class OrderOnController {
 		order.setOrderTime(new Timestamp(System.currentTimeMillis()));
 		order.setPayType("微信安全支付");//现在只有这种支付方式
 		order.setReceiveType("送货上门");//现在只有这种收货方式
-		order.setStatus("未支付");
+		order.setStatus(OrderState.NOT_PAID.getText());
 		
 		StringBuilder sb = new StringBuilder();
 		float totalPrice = 0.00f;
@@ -585,6 +586,12 @@ public class OrderOnController {
 		}
 		// 为前端页面能够使用JSSDK设置签名
 		//Map<String, String> wxConfig = JSSignatureUtil.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");
+		String jsapi_ticket = (String)redisUtil.redisQueryObject("jsapi_ticket");
+		if(jsapi_ticket==null||"".equals(jsapi_ticket)){//ticket过期了
+			//重设ticket，里面会同时重设access_token，因为两个目前的过期时间相同都为2小时
+			jsapi_ticket = JSSignatureUtil.resetJsApiTicket();
+			redisUtil.redisSaveObject("jsapi_ticket", jsapi_ticket,MakaoConstants.WEIXIN_TOKEN_EXPIRE_TIME);
+		}
 		Map<String, String> wxConfig = JSSignatureUtil.getSignature(MakaoConstants.SERVER_DOMAIN+"/user/snsapi_userinfo");
 		// 生成支付订单需要的参数和签名
 		String timeStamp = SignatureUtil.getTimeStamp();

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.makao.auth.AuthPassport;
 import com.makao.entity.OrderOn;
+import com.makao.entity.OrderState;
 import com.makao.entity.TokenModel;
 import com.makao.thread.AddInventoryThread;
 import com.makao.utils.OrderNumberUtils;
@@ -113,7 +114,7 @@ public class TestController {
 		orderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
 		orderOn.setPayType("微信安全支付");//现在只有这种支付方式
 		orderOn.setReceiveType("送货上门");//现在只有这种收货方式
-		orderOn.setStatus("未支付");
+		orderOn.setStatus(OrderState.NOT_PAID.getText());
 		redisUtil.redisSaveObject(orderOn.getNumber(), orderOn, 1);
 		redisUtil.redisSaveObject("test", 1, 1);
 		try {

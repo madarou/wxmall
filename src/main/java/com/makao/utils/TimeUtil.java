@@ -8,6 +8,7 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 
 import com.makao.dao.impl.OrderOnDaoImpl;
+import com.makao.entity.OrderState;
 
 /**
  * @author makao
@@ -26,6 +27,7 @@ public class TimeUtil {
 	       System.out.println("2012-12-11 09:21".substring(0, 16));
 	       
 	       System.out.println("10.00".split("\\.")[0]+"10.00".split("\\.")[1]);
+	       System.out.println(OrderState.CANCELED.getCode());
 	    }
 	
 	/**
