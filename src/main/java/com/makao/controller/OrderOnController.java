@@ -1025,6 +1025,7 @@ public class OrderOnController {
     	当配送时间起点-准备时间<=当前时间时的订单满足条件，
     	请求路径中的参数id是机器人id的验证,加了AuthInterceptor的话可以去掉
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/vapproach/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     Object vapproach(@PathVariable("id") int id) {
@@ -1036,11 +1037,14 @@ public class OrderOnController {
 			List<City> cities = this.cityService.queryAll();
 			for(City c : cities){
 				//获取所有满足条件的订单并设置对应的状态
-				city_area_order.addAll(this.orderOnService.approachOrders(c.getId()));
+				List<String> temp = this.orderOnService.approachOrders(c.getId());
+				if(temp!=null)//注意addAll方法必须先判断是否为null，否则加入null元素时会报NPE
+					city_area_order.addAll(temp);
 			}
 			
 			jsonObject.put("msg", "200");
 			jsonObject.put("orders", city_area_order);
+			return jsonObject;
 		}
 		jsonObject.put("msg", "201");
 		return jsonObject;

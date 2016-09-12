@@ -27,6 +27,7 @@ import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
+import com.makao.utils.MakaoConstants;
 import com.makao.utils.TimeUtil;
 import com.mysql.jdbc.Statement;
 
@@ -1409,7 +1410,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							String receiveTime = rs.getString("receiveTime");
 							String receiveTime_begin = receiveTime.substring(0, 16);//取得收货的开始时间
 							int min_diff = TimeUtil.minitesDiff(receiveTime_begin);//收货开始时间与当前时间的分钟差
-							if(min_diff<=5){
+							logger.info("city_area_id:"+cityid+"_"+rs.getInt("areaId")+"_"+rs.getInt("id")+"; receiveTime:"+receiveTime+"; min_diff: "+min_diff);
+							if(min_diff<=MakaoConstants.PRETIME){
 								int o_id = rs.getInt("id");
 								String history = ",待处理="+new Timestamp(System.currentTimeMillis());
 								String sql2 = "UPDATE `"
@@ -1420,6 +1422,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps2 = connection.prepareStatement(sql2);
 									ps2.executeUpdate();
 									res.add(cityid+"_"+rs.getInt("areaId")+"_"+o_id);
+									logger.info("area:"+rs.getInt("areaId")+"; orderid:"+o_id);
 								} finally {
 									doClose(ps2);
 								}

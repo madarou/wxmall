@@ -15,4 +15,6 @@ public class MakaoConstants {
 	public static final String DEFAULT_AREA_NAME="张江";
 	public static final int DEFAULT_CITY_ID=1;
 	public static final int DEFAULT_AREA_ID=1;
+	public static final int PRETIME = 30;//从数据库中找出需要将状态从排队中改为待处理的订单，将其状态设为待处理
+											//当配送时间起点-PRETIME(min)<=当前时间时的订单满足条件
 }
