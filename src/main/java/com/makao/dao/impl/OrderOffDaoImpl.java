@@ -133,7 +133,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 
 	@Override
 	public List<OrderOff> queryConfirmGetByAreaId(String tableName, int areaId) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus`='"+OrderState.RECEIVED.getText()+"' Order By `finalTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus`='"+OrderState.RECEIVED.getCode()+"' Order By `finalTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();
@@ -198,7 +198,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	
 	@Override
 	public List<OrderOff> queryCancelByAreaId(String tableName, int areaId) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('"+OrderState.RETURNED.getText()+"','"+OrderState.CANCELED.getText()+"','"+OrderState.RETURN_CANCELED.getText()+"') Order By `finalTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('"+OrderState.RETURNED.getCode()+"','"+OrderState.CANCELED.getCode()+"','"+OrderState.RETURN_CANCELED.getCode()+"') Order By `finalTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();
@@ -264,7 +264,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	
 	@Override
 	public List<OrderOff> queryRefundByAreaId(String tableName, int areaId) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('"+OrderState.RETURN_APPLYING.getText()+"','"+OrderState.RETURNING.getText()+"') Order By `finalTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('"+OrderState.RETURN_APPLYING.getCode()+"','"+OrderState.RETURNING.getCode()+"') Order By `finalTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();
@@ -333,7 +333,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String history = ","+OrderState.RETURNING.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='"+OrderState.RETURNING.getText()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='"+OrderState.RETURNING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -372,7 +372,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String history = ","+OrderState.RETURNED.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='"+OrderState.RETURNED.getText()+"',`refundStatus`='待退款',`finalTime`=?,`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='"+OrderState.RETURNED.getCode()+"',`refundStatus`='待退款',`finalTime`=?,`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -412,7 +412,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String history = ","+OrderState.REFUNDED.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `refundStatus`='"+OrderState.REFUNDED.getText()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `refundStatus`='"+OrderState.REFUNDED.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -451,7 +451,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String history = ","+OrderState.RETURN_CANCELED.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='"+OrderState.RETURN_CANCELED.getText()+"',`refundStatus`='无需退款',`vcomment`='"+vcomment+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='"+OrderState.RETURN_CANCELED.getCode()+"',`refundStatus`='无需退款',`vcomment`='"+vcomment+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -486,7 +486,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	
 	@Override
 	public List<OrderOff> queryAllCanceledAndReturned(String tableName) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus` IN ('"+OrderState.RETURNED.getText()+"','"+OrderState.CANCELED.getText()+"') Order By `finalTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus` IN ('"+OrderState.RETURNED.getCode()+"','"+OrderState.CANCELED.getCode()+"') Order By `finalTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();
@@ -750,7 +750,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String history = ","+OrderState.RETURN_APPLYING.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='"+OrderState.RETURN_APPLYING.getText()+"',`refundStatus`='无',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='"+OrderState.RETURN_APPLYING.getCode()+"',`refundStatus`='无',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -786,7 +786,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int getConfirmRecordCount(int cityId, int areaId) {
 		String tableName = "Order_"+cityId+"_off";
-		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `finalStatus`='"+OrderState.RECEIVED.getText()+"'";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `finalStatus`='"+OrderState.RECEIVED.getCode()+"'";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -826,7 +826,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int getReturnRecordCount(int cityId, int areaId) {
 		String tableName = "Order_"+cityId+"_off";
-		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('"+OrderState.RETURN_APPLYING.getText()+"','"+OrderState.RETURNING.getText()+"')";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('"+OrderState.RETURN_APPLYING.getCode()+"','"+OrderState.RETURNING.getCode()+"')";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -866,7 +866,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int getCancelRecordCount(int cityId, int areaId) {
 		String tableName = "Order_"+cityId+"_off";
-		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('"+OrderState.RETURNED.getText()+"','"+OrderState.CANCELED.getText()+"','"+OrderState.RETURN_CANCELED.getText()+"')";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `finalStatus` IN ('"+OrderState.RETURNED.getCode()+"','"+OrderState.CANCELED.getCode()+"','"+OrderState.RETURN_CANCELED.getCode()+"')";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -946,7 +946,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int getCanceledAndReturnedRecordCount(int cityid) {
 		String tableName = "Order_"+cityid+"_off";
-		String sql = "SELECT count(id) as count FROM "+tableName+" WHERE `finalStatus` IN ('"+OrderState.RETURNED.getText()+"','"+OrderState.CANCELED.getText()+"')";
+		String sql = "SELECT count(id) as count FROM "+tableName+" WHERE `finalStatus` IN ('"+OrderState.RETURNED.getCode()+"','"+OrderState.CANCELED.getCode()+"')";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();

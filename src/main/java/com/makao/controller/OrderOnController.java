@@ -134,7 +134,7 @@ public class OrderOnController {
 //		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
 //		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
 //		if(OrderOn.getStatus()==null||"".equals(OrderOn.getStatus())){
-//			OrderOn.setStatus(OrderState.QUEUE.getText());
+//			OrderOn.setStatus(OrderState.QUEUE.getCode()+"");
 //		}
 //		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
 //		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
@@ -163,7 +163,7 @@ public class OrderOnController {
 		OrderOn.setPayType("微信安全支付");//现在只有这种支付方式
 		OrderOn.setReceiveType("送货上门");//现在只有这种收货方式
 		if(smallOrder.getStatus()==null||"".equals(smallOrder.getStatus())){
-			OrderOn.setStatus(OrderState.NOT_PAID.getText());
+			OrderOn.setStatus(OrderState.NOT_PAID.getCode()+"");
 		}else{
 			OrderOn.setStatus(smallOrder.getStatus());
 		}
@@ -332,7 +332,7 @@ public class OrderOnController {
 		order.setOrderTime(new Timestamp(System.currentTimeMillis()));
 		order.setPayType("微信安全支付");//现在只有这种支付方式
 		order.setReceiveType("送货上门");//现在只有这种收货方式
-		order.setStatus(OrderState.NOT_PAID.getText());
+		order.setStatus(OrderState.NOT_PAID.getCode()+"");
 		
 		StringBuilder sb = new StringBuilder();
 		float totalPrice = 0.00f;

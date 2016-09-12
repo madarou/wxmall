@@ -6,6 +6,7 @@ import net.sf.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 
+import com.makao.entity.OrderState;
 import com.makao.test.utils.ClearDBUtil;
 import com.makao.test.utils.HttpUtils;
 
@@ -78,7 +79,7 @@ public class BasicTestSuite_Test2 {
 		String neworderon = "http://localhost:8080/orderOn/new/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
 		//String orderon = "{\"productIds\":"+productIds.toString()+",\"nums\":"+nums+",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"17638372821\",\"address\":\"上海复旦大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":1,\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		JSONObject jb = new JSONObject();
-		jb.put("productIds", new String[] {"1","2"});jb.put("nums", new String[] {"3","1"});jb.put("receiverName", "郭德纲");jb.put("phoneNumber", "17638372821");jb.put("address", "上海复旦大学");jb.put("receiveTime", "2016-05-21 15:00-18:00");jb.put("couponId", 0);jb.put("cityarea", "上海张江");jb.put("userId", 1);jb.put("areaId", 1);jb.put("cityId", 1);jb.put("status", "排队中");
+		jb.put("productIds", new String[] {"1","2"});jb.put("nums", new String[] {"3","1"});jb.put("receiverName", "郭德纲");jb.put("phoneNumber", "17638372821");jb.put("address", "上海复旦大学");jb.put("receiveTime", "2016-05-21 15:00-18:00");jb.put("couponId", 0);jb.put("cityarea", "上海张江");jb.put("userId", 1);jb.put("areaId", 1);jb.put("cityId", 1);jb.put("status", OrderState.QUEUE.getCode()+"");
 		//String orderon2 = "{\"productIds\":\"[1]\",\"nums\":\"[1]\",\"receiverName\":\"郭德纲\",\"phoneNumber\":\"12928872821\",\"address\":\"哥伦比亚大学\",\"receiveTime\":\"2016-05-21 15:00-18:00\",\"couponId\":0,\"cityarea\":\"上海张江\",\"userId\":1,\"areaId\":1,\"cityId\":1}";
 		JSONObject orderon2 = new JSONObject();
 		orderon2.put("productIds", new String[] {"1"});orderon2.put("nums", new String[] {"3"});orderon2.put("receiverName", "郭德纲");orderon2.put("phoneNumber", "12928872821");orderon2.put("address", "哥伦比亚大学");orderon2.put("receiveTime", "2016-05-21 15:00-18:00");orderon2.put("couponId", 0);orderon2.put("cityarea", "上海张江");orderon2.put("userId", 1);orderon2.put("areaId", 1);orderon2.put("cityId", 1);

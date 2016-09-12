@@ -114,7 +114,7 @@ public class TestController {
 		orderOn.setOrderTime(new Timestamp(System.currentTimeMillis()));
 		orderOn.setPayType("微信安全支付");//现在只有这种支付方式
 		orderOn.setReceiveType("送货上门");//现在只有这种收货方式
-		orderOn.setStatus(OrderState.NOT_PAID.getText());
+		orderOn.setStatus(OrderState.NOT_PAID.getCode()+"");
 		redisUtil.redisSaveObject(orderOn.getNumber(), orderOn, 1);
 		redisUtil.redisSaveObject("test", 1, 1);
 		try {

@@ -217,7 +217,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 
 	@Override
 	public List<OrderOn> queryAll(String tableName) {
-		String sql = "SELECT * FROM "+ tableName+ " WHERE status<>'"+OrderState.NOT_PAID.getText()+"'";
+		String sql = "SELECT * FROM "+ tableName+ " WHERE status<>'"+OrderState.NOT_PAID.getCode()+"'";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOn> res = new LinkedList<OrderOn>();
@@ -303,7 +303,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	 */
 	@Override
 	public List<OrderOn> queryQueueByAreaId(String tableName, int areaId) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `status`='"+OrderState.QUEUE.getText()+"' Order By `orderTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `status`='"+OrderState.QUEUE.getCode()+"' Order By `orderTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOn> res = new LinkedList<OrderOn>();
@@ -367,7 +367,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	
 	@Override
 	public List<OrderOn> queryProcessByAreaId(String tableName, int areaId) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `status` IN ('"+OrderState.PROCESS_WAITING.getText()+"','"+OrderState.DISTRIBUTING.getText()+"') Order By `receiveTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `status` IN ('"+OrderState.PROCESS_WAITING.getCode()+"','"+OrderState.DISTRIBUTING.getCode()+"') Order By `receiveTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOn> res = new LinkedList<OrderOn>();
@@ -519,7 +519,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setString(14, orderOn.getFreight());
 									ps.setString(15, orderOn.getComment());
 									ps.setString(16, orderOn.getVcomment());
-									ps.setString(17, OrderState.CANCELED.getText());
+									ps.setString(17, OrderState.CANCELED.getCode()+"");
 									ps.setString(18, orderOn.getCityarea());
 									ps.setTimestamp(19, new Timestamp(System.currentTimeMillis()));
 									ps.setInt(20, orderOn.getUserId());
@@ -572,7 +572,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		String history = ","+OrderState.DISTRIBUTING.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `status`='"+OrderState.DISTRIBUTING.getText()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `status`='"+OrderState.DISTRIBUTING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -614,7 +614,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		String history = ","+OrderState.DISTRIBUTED.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `status`='"+OrderState.DISTRIBUTED.getText()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `status`='"+OrderState.DISTRIBUTED.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -733,7 +733,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setString(14, orderOn.getFreight());
 									ps.setString(15, orderOn.getComment());
 									ps.setString(16, orderOn.getVcomment());
-									ps.setString(17, OrderState.RECEIVED.getText());
+									ps.setString(17, OrderState.RECEIVED.getCode()+"");
 									ps.setString(18, orderOn.getCityarea());
 									ps.setTimestamp(19, new Timestamp(System.currentTimeMillis()));
 									ps.setInt(20, orderOn.getUserId());
@@ -778,7 +778,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 
 	@Override
 	public List<OrderOn> queryDistributedByAreaId(String tableName, int areaId) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `status`='"+OrderState.DISTRIBUTED.getText()+"' Order By `receiveTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `status`='"+OrderState.DISTRIBUTED.getCode()+"' Order By `receiveTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOn> res = new LinkedList<OrderOn>();
@@ -967,7 +967,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 
 	@Override
 	public List<OrderOn> queryByUserId(String tableName, int userid) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `userId`="+userid+" AND status<>'"+OrderState.NOT_PAID.getText()+"' Order By `orderTime` DESC";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `userId`="+userid+" AND status<>'"+OrderState.NOT_PAID.getCode()+"' Order By `orderTime` DESC";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOn> res = new LinkedList<OrderOn>();
@@ -1096,7 +1096,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public int getQueueRecordCount(int cityid, int areaid) {
 		String tableName = "Order_"+cityid+"_on";
-		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaid+" AND `status`='"+OrderState.QUEUE.getText()+"'";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaid+" AND `status`='"+OrderState.QUEUE.getCode()+"'";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -1136,7 +1136,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public int getProcessRecordCount(int cityId, int areaId) {
 		String tableName = "Order_"+cityId+"_on";
-		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `status` IN ('"+OrderState.PROCESS_WAITING.getText()+"','"+OrderState.DISTRIBUTING.getText()+"')";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `status` IN ('"+OrderState.PROCESS_WAITING.getCode()+"','"+OrderState.DISTRIBUTING.getCode()+"')";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -1176,7 +1176,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public int getDistributedRecordCount(int cityId, int areaId) {
 		String tableName = "Order_"+cityId+"_on";
-		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `status`='"+OrderState.DISTRIBUTED.getText()+"'";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `status`='"+OrderState.DISTRIBUTED.getCode()+"'";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -1216,7 +1216,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public int getRecordCount(int cityid) {
 		String tableName = "Order_"+cityid+"_on";
-		String sql = "SELECT count(id) as count FROM "+tableName + " WHERE status<>'"+OrderState.NOT_PAID.getText()+"'";
+		String sql = "SELECT count(id) as count FROM "+tableName + " WHERE status<>'"+OrderState.NOT_PAID.getCode()+"'";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -1259,7 +1259,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		String history = ","+OrderState.QUEUE.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `status`='"+OrderState.QUEUE.getText()+"',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
+				+ "` SET `status`='"+OrderState.QUEUE.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -1299,7 +1299,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public boolean isExist(int cityId, String orderNum) {
 		String tableName = "Order_"+cityId+"_on";
-		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `number`='"+orderNum+"' AND `status`='"+OrderState.NOT_PAID.getText()+"'";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `number`='"+orderNum+"' AND `status`='"+OrderState.NOT_PAID.getCode()+"'";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -1351,7 +1351,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		String history = ","+OrderState.PROCESS_WAITING.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `status`='"+OrderState.PROCESS_WAITING.getText()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `status`='"+OrderState.PROCESS_WAITING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -1392,7 +1392,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public List<String> appoachOrders(int cityid) {
 		String tableName = "Order_"+cityid+"_on";
-		String sql1 = "SELECT * FROM "+ tableName + " WHERE `status`='"+OrderState.QUEUE.getText()+"'";
+		String sql1 = "SELECT * FROM "+ tableName + " WHERE `status`='"+OrderState.QUEUE.getCode()+"'";
 
 		Session session = null;
 		Transaction tx = null;
@@ -1417,7 +1417,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 								String history = ","+OrderState.PROCESS_WAITING.getText()+"="+new Timestamp(System.currentTimeMillis());
 								String sql2 = "UPDATE `"
 										+ tableName
-										+ "` SET `status`='"+OrderState.PROCESS_WAITING.getText()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+o_id;
+										+ "` SET `status`='"+OrderState.PROCESS_WAITING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+o_id;
 								PreparedStatement ps2 = null;
 								try {
 									ps2 = connection.prepareStatement(sql2);
