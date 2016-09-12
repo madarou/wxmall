@@ -16,8 +16,9 @@ public class AccessTokenUtil {
 	public static AccessToken getToken(){
 		return token;
 	}
-	public static void resetToken(){
+	public static AccessToken resetToken(){
 		token = getAccessToken();
+		return token;
 	}
 	/**
 	 * @return

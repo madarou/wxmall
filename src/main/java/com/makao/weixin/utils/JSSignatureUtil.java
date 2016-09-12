@@ -24,9 +24,15 @@ import net.sf.json.JSONObject;
  */
 public class JSSignatureUtil {
 	private static final Logger logger = Logger.getLogger(JSSignatureUtil.class);
-	private static String jsapi_ticket = getJsApiTicket(AccessTokenUtil.getToken().getToken());
+	private static String jsapi_ticket = freshJsApiTicket(AccessTokenUtil.resetToken().getToken());//因为ticket和token目前的过期时间都是2小时，所以获取新ticket的同时也重新获取token
 	//private static String jsapi_ticket = "kgt8ON7yVITDhtdwci0qeX6wTpn15xQ_HJUqdWfRW-9-EjYL1HCmjYvn9joC_B5XJpePVLgFl5oFUlTy_YSTkg";
-	public static String getJsApiTicket(String access_token) {
+	
+	/**
+	 * @param access_token
+	 * @return
+	 * 重新获取ticket
+	 */
+	public static String freshJsApiTicket(String access_token) {
         String requestUrl = WeixinConstants.JSAPI_TICKET_URL.replace("ACCESS_TOKEN", access_token);
         // 发起GET请求获取凭证
         JSONObject jsonObject = HttpUtil.doGetObject(requestUrl);
@@ -42,6 +48,23 @@ public class JSSignatureUtil {
         }
         return ticket;
     }
+	
+	/**
+	 * @return
+	 * 获取现有的jsapi_ticket
+	 */
+	public static String getJsApiTicket(){
+		return jsapi_ticket;
+	}
+	
+	/**
+	 * 重新设置ticket
+	 */
+	public static String resetJsApiTicket(){
+		jsapi_ticket = freshJsApiTicket(AccessTokenUtil.resetToken().getToken());//因为ticket和token目前的过期时间都是2小时，所以获取新ticket的同时也重新获取token
+		return jsapi_ticket;
+	}
+	
     public static Map<String, String> getSignature(String url) {
         Map<String, String> ret = new HashMap<String, String>();
         String nonce_str = create_nonce_str();
