@@ -500,18 +500,14 @@ public class OrderOnController {
     public @ResponseBody
     Object payOrder(@RequestParam(value="token", required=false) String token,@RequestParam(value="number", required=false) String orderNumber, 
     		HttpServletRequest request,HttpServletResponse response) throws IOException {
-//		response.setHeader("content-type", "text/html;charset=UTF-8");
-//		response.setCharacterEncoding("UTF-8");
-//		PrintWriter out = response.getWriter();
 		String page = "";
 		JSONObject jsonObject = new JSONObject();
 		
 		TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
 		String openid = tm.getOpenid();
 		if(openid==null || "".equals(openid.trim())){
-			page = "订单支付失败，没有openid："+openid;
+			page = "订单"+orderNumber+"支付失败，没有openid："+openid;
 			logger.warn(page);
-			//out.write(page);
 			jsonObject.put("msg", "201");
 			return jsonObject;
 		}
@@ -520,7 +516,6 @@ public class OrderOnController {
 		if(orderOn==null){
 			page = "订单支付失败，订单已过期，order number=："+orderNumber;
 			logger.info(page);
-			//out.write("支付失败，订单已过期(15分钟)");
 			//从数据库里删除，由于没有cityid，只有number不好删除，可集中删除
 			//this.orderOnService.deleteByNumber(orderNumber);
 			jsonObject.put("msg", "202");
@@ -573,7 +568,6 @@ public class OrderOnController {
 		if (returnXml == null) {
 			page = "订单号: "+orderOn.getNumber()+"提交到微信时下单失败!";
 			logger.warn(page);
-			//out.write(page);
 			jsonObject.put("msg", "203");
 			return jsonObject;
 		}
@@ -584,23 +578,9 @@ public class OrderOnController {
 		if (prepay_id == null || "".equals(prepay_id)) {
 			page = "订单号: "+orderOn.getNumber()+"没有获取到prepay_id，参数错误下单失败!";
 			logger.warn(page);
-			//out.write(page);
 			jsonObject.put("msg", "201");
 			return jsonObject;
 		}
-		//这里插入未支付订单到数据库时，需要先检查该订单是否已经插入过了，
-		//因为用户可能之前点了立即支付，经过此过程已经插入过该订单了，所以
-		//不用再插入一遍
-//		boolean isExist = this.orderOnService.isExist(orderOn.getCityId(),orderOn.getNumber());
-//		if(!isExist){
-//			int res = this.orderOnService.insert(orderOn);
-//			if(res==0){
-//				page = "订单: "+orderOn.getNumber()+"生成失败！";
-//				logger.info("增加有效订单失败id=" + orderOn.getNumber());
-//				out.write(page);
-//				return;
-//			}
-//		}
 		// 为前端页面能够使用JSSDK设置签名
 		//Map<String, String> wxConfig = JSSignatureUtil.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");
 		Map<String, String> wxConfig = JSSignatureUtil.getSignature(MakaoConstants.SERVER_DOMAIN+"/user/snsapi_userinfo");
@@ -618,74 +598,17 @@ public class OrderOnController {
 		// 生成统一订单时的签名算法与支付时使用的签名算法一样，只是用到的key=value不一样
 		String paySign = SignatureUtil.createSign(signMap,
 				WeixinConstants.PAY_KEY);
-
-				page = "<!DOCTYPE html>"
-						+ "<html>"
-						+ "<head>"
-							+ "<meta charset=\"utf-8\">"
-							+ "<title>订单支付</title>"
-							+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, user-scalable=0\">"
-							+ "<link rel=\"stylesheet\" href=\"/css/weixin.css\">"
-						+ "</head>"
-						+"<body>"
-							+ "<div class=\"wxapi_container\">"
-								+"<div class=\"lbox_close wxapi_form\">"
-									+ "<button class=\"btn btn_primary\" id=\"chooseWXPay\">支付订单</button>"
-								+"</div>"
-							+ "</div>"
-						+ "</body>"
-						+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
-						+"<script>"
-							+ "wx.config({"
-								+ "debug: true,"
-								+ "appId: '"+WeixinConstants.APPID+"',"
-								+ "timestamp: "+wxConfig.get("timestamp")+","
-								+ "nonceStr: '"+wxConfig.get("nonceStr")+"',"
-								+ "signature: '"+wxConfig.get("signature")+"',"
-								+ "jsApiList: ["
-									+ "'chooseWXPay'"
-								+ "]"
-							+ "});"
-							+ "wx.ready(function () {"
-								+ "console.log('ready function');"
-								+ "var btn = document.getElementById(\"chooseWXPay\");"
-								+ "btn.onclick=function(){"
-									+ "alert('click success');"
-									+ "wx.chooseWXPay({"
-										+ "timestamp:"+timeStamp+","
-										+ "nonceStr:'"+nonceStr+"',"
-										+ "package:'"+packages+"',"
-										+ "signType:'MD5',"
-										+ "paySign:'"+paySign+"',"
-										+ "success: function (res) {"
-											+ "if(res.errMsg=='chooseWXPay:ok'){"
-												+ "alert('支付成功');"
-											+ "}"
-											+ "else{"
-												+ "alert('支付失败');"
-											+ "}"
-										+ "}"
-									+ "});"
-								+ "};"
-							+"});"
-						+ "wx.error(function (res) {"
-						+ "alert(res.errMsg);"
-					+ "});"
-						+ "</script>"
-					+ "</html>";
-				jsonObject.put("msg", "200");
-	        	jsonObject.put("appId", WeixinConstants.APPID);
-	        	jsonObject.put("timestamp1", wxConfig.get("timestamp"));
-	        	jsonObject.put("nonceStr1", wxConfig.get("nonceStr"));
-	        	jsonObject.put("signature", wxConfig.get("signature"));
-	        	jsonObject.put("timestamp2", timeStamp);
-	        	jsonObject.put("nonceStr2", nonceStr);
-	        	jsonObject.put("package", packages);
-	        	jsonObject.put("signType", "MD5");
-	        	jsonObject.put("paySign", paySign);
-	        	return jsonObject;
-		//out.write(page);
-		
+		jsonObject.put("msg", "200");
+		jsonObject.put("appId", WeixinConstants.APPID);
+		jsonObject.put("timestamp1", wxConfig.get("timestamp"));
+		jsonObject.put("nonceStr1", wxConfig.get("nonceStr"));
+		jsonObject.put("signature", wxConfig.get("signature"));
+		jsonObject.put("timestamp2", timeStamp);
+		jsonObject.put("nonceStr2", nonceStr);
+		jsonObject.put("package", packages);
+		jsonObject.put("signType", "MD5");
+		jsonObject.put("paySign", paySign);
+		return jsonObject;
 	}
 	
 	/**

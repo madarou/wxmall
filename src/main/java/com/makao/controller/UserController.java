@@ -152,9 +152,6 @@ public class UserController {
 //							+ "<script src=\"/static/bundle.js\"></script>"
 //						+ "</body>"
 //					+ "</html>";
-			// 为前端页面能够使用JSSDK设置签名
-			Map<String, String> wxConfig = JSSignatureUtil
-					.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");
 			page = "<!DOCTYPE html>"
 					+ "<html>"
 						+ "<head>"
@@ -238,9 +235,6 @@ public class UserController {
 //								+ "<script src=\"/static/bundle.js\"></script>"
 //							+ "</body>"
 //						+ "</html>";
-				// 为前端页面能够使用JSSDK设置签名
-				Map<String, String> wxConfig = JSSignatureUtil
-						.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");
 				page = "<!DOCTYPE html>"
 						+ "<html>"
 							+ "<head>"
