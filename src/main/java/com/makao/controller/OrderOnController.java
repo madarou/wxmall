@@ -222,6 +222,7 @@ public class OrderOnController {
 			logger.info("增加有效订单成功id=" + OrderOn.getNumber());
         	jsonObject.put("msg", "200");
         	jsonObject.put("number", OrderOn.getNumber());
+        	jsonObject.put("id", res);
 		}
 		else{
 			logger.info("增加有效订单失败id=" + OrderOn.getNumber());
@@ -380,6 +381,7 @@ public class OrderOnController {
 			logger.info("增加有效订单成功id=" + order.getNumber());
 			jsonObject.put("number", order.getNumber());
         	jsonObject.put("msg", "200");
+        	jsonObject.put("id", res);
 		}
 		else{
 			logger.info("增加有效订单失败id=" + order.getNumber());
