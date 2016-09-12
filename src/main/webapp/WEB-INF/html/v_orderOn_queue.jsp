@@ -251,8 +251,73 @@
 				</div>
 			</section>
 			<!-- 取消订单 --> 
-	     
-     <section>
+			
+			     <script>
+     $(document).ready(function(){
+    	 var showTips = function(content){
+  			$("#tips").text(content);
+  			$(".loading_area").fadeIn();
+              $(".loading_area").fadeOut(1500);
+  		}
+    	var orderId_toCancel = 0;//要取消的订单
+     //弹出文本性提示框
+     $(".processOrder").click(function(){
+       $(".process_pop_bg").fadeIn();
+       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
+       var clickedId = $(this).attr("id");
+       orderId_toProcess = clickedId.split("-")[1];
+       });
+     //弹出：确认按钮
+     $("#confirmProcess").click(function(){
+    	 if(orderId_toProcess==0){
+    		 alert("请重新选择要取消的订单");
+    		 return false;
+    	 }
+        	$.ajax({
+    		  type: "POST",
+  	          contentType: "application/json",
+  	          url: "/orderOn/vprocess/"+$("#loginUserId").val(),
+  	          dataType: "json",
+  	          data: JSON.stringify({"orderid":orderId_toProcess}),
+  	          success: function(data){
+  	        	  if(data.msg=="200"){
+  	        		  //alert("删除区域管理员账号成功");
+  	        		  alert("订单进入待处理列表");
+  	        		  window.location.reload();//刷新页面
+  	        		  orderId_toProcess=0;
+  	        	  }
+  	          }
+    	 	});
+       $(".process_pop_bg").fadeOut();
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelProcess").click(function(){
+       $(".process_pop_bg").fadeOut();
+       orderId_toProcess=0;
+       });
+     });
+     </script>
+			<!-- 立即处理订单 -->
+			<section class="process_pop_bg">
+				<div class="pop_cont">
+					<!--title-->
+					<h3>温馨提示</h3>
+					<!--content-->
+					<div class="small_pop_cont_input">
+						<!--以pop_cont_text分界-->
+						<div class="pop_cont_text">确认要立即处理该订单吗?</div>
+						<!--bottom:operate->button-->
+						<div class="btm_btn">
+							<input type="button" value="确认" id="confirmProcess"
+								class="input_btn trueBtn" /> <input type="button" value="关闭"
+								id="cancelProcess" class="input_btn falseBtn" />
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- 立即处理订单 -->
+
+			<section>
       <div class="page_title">
        <a class="fr top_rt_btn" href="/orderOn/v_query_queue/${id}?token=${token}">刷新</a>
       </div>
@@ -266,6 +331,7 @@
         <th>下单时间</th>
         <th>配送时段</th>
         <th>订单状态</th>
+        <th>操作</th>
        </tr>
        	<c:forEach var="item" items="${orders}" varStatus="status">
          	<tr>
@@ -277,6 +343,7 @@
          		<td id="orderTime-${item.id}">${item.orderTime}</td>
          		<td id="receiveTime-${item.id}">${item.receiveTime}</td>
 		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${item.id}">${item.status}</button></td>
+		        <td><button class="linkStyle processOrder" id="processPopTxt-${item.id}">立即处理</button></td>
 		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
 		        <td id="address-${item.id}" style="display:none">${item.address}</td>
 		         <td id="comment-${item.id}" style="display:none">${item.comment}</td>

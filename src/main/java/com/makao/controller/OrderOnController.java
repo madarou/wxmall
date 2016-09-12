@@ -940,11 +940,12 @@ public class OrderOnController {
 	 * @param id
 	 * @param orderid
 	 * @return
-	 * 排队中的订单状态被设置为待处理，需要定时根据配送时间调用
+	 * 排队中的订单状态被设置为待处理
 	 */
-	@RequestMapping(value = "/vprocess/{id:\\d+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/vprocess/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object vprocess(@PathVariable("id") int id, @RequestParam(value="orderid", required=false) String orderid) {
+    Object vprocess(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		String orderid = paramObject.getString("orderid");
 		JSONObject jsonObject = new JSONObject();
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){

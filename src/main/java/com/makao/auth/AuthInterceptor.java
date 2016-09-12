@@ -45,8 +45,11 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			HttpServletResponse response, Object handler) throws Exception {
 		String url = request.getRequestURI();// 获取到的是/product/1这类地址
 		String method = request.getMethod();
+		boolean DEBUG = false;
 
 		System.out.println("***********拦截器************");
+		if(DEBUG)
+			return true;
 		//测试时统一通过
 		//return true;
 		
