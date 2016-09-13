@@ -1,5 +1,9 @@
 <%@ page pageEncoding="utf-8" contentType="text/html; charset=utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<% 
+	String[] orderStates={"","未支付","排队中","待处理","配送中","已配送","已收货","已取消","退货申请中","退货中","已退货","已取消退货","已退款","已评价",};
+	pageContext.setAttribute("orderStates",orderStates); 
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -358,6 +362,7 @@
         <th>订单状态</th>
        </tr>
        	<c:forEach var="item" items="${orders}" varStatus="status">
+       		<c:set var="index" value="${item.finalStatus}" ></c:set>
          	<tr>
          		<td><button class="linkStyle viewOrder" id="viewPopTxt-${item.id}">${item.number}</button></td>
          		<td id="totalPrice-${item.id}">￥${item.totalPrice}</td>
@@ -367,16 +372,16 @@
          		<td id="orderTime-${item.id}" style="display:none">${item.orderTime}</td>
          		<td id="receiveTime-${item.id}">${item.receiveTime}</td>
          		<td>
-         			<c:if test="${item.finalStatus=='退货申请中'}">
+         			<c:if test="${item.finalStatus=='8'}">
          				<button class="linkStyle handleOrder" id="refund-${item.id}">退货</button>|
          				<button class="linkStyle" id="finishPopTxt-${item.id}" style="color:grey;cursor:default">完成</button>
          			</c:if>
-         			<c:if test="${item.finalStatus=='退货中'}">
+         			<c:if test="${item.finalStatus=='9'}">
          				<button class="linkStyle" id="distributePopTxt-${item.id}" style="color:grey;cursor:default">退货</button>|
          				<button class="linkStyle handleOrder" id="finish-${item.id}">完成</button>
          			</c:if>
          		</td>
-		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${item.id}">${item.finalStatus}</button></td>
+		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${item.id}">${pageScope.orderStates[pageScope.index]}</button></td>
 		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
 		        <td id="address-${item.id}" style="display:none">${item.address}</td>
 		         <td id="comment-${item.id}" style="display:none">${item.comment}</td>

@@ -23,6 +23,15 @@ public enum OrderState {
         this.code = code;
     }
 
+    public static String getText(int code) {
+        for (OrderState c : OrderState.values()) {
+            if (c.getCode() == code) {
+                return c.text;
+            }
+        }
+        return null;
+    }
+    
 	public String getText() {
 		return text;
 	}

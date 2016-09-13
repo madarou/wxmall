@@ -88,7 +88,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						ps.setInt(20, orderOn.getAreaId());
 						ps.setInt(21, orderOn.getCityId());
 						ps.setString(22, orderOn.getRefundStatus());
-						ps.setString(23, orderOn.getStatus()+"="+orderOn.getOrderTime());
+						ps.setString(23, OrderState.getText(Integer.parseInt(orderOn.getStatus()))+"="+orderOn.getOrderTime());
 						int row = ps.executeUpdate();
 						ResultSet rs = ps.getGeneratedKeys();  
 					     if ( rs.next() ) {  

@@ -1,5 +1,9 @@
 <%@ page pageEncoding="utf-8" contentType="text/html; charset=utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<% 
+	String[] orderStates={"","未支付","排队中","待处理","配送中","已配送","已收货","已取消","退货申请中","退货中","已退货","已取消退货","已退款","已评价",};
+	pageContext.setAttribute("orderStates",orderStates); 
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -261,6 +265,7 @@
         <th>订单状态</th>
        </tr>
        	<c:forEach var="item" items="${orderOff}" varStatus="status">
+       	<c:set var="index" value="${item.finalStatus}" ></c:set>   
          	<tr>
          		<td><button class="linkStyle viewOrder" id="viewPopTxt-${item.id}">${item.number}</button></td>
          		<td id="totalPrice-${item.id}">￥${item.totalPrice}</td>
@@ -280,7 +285,7 @@
 					</c:choose>
 		        </td>
 		        <td>${item.refundStatus}</td>
-		        <td>${item.finalStatus}</td>
+		        <td>${pageScope.orderStates[pageScope.index]}</td>
 		        <td id="cityId-${item.id}" style="display:none">${item.cityId}</td>
 		         <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
 		        <td id="address-${item.id}" style="display:none">${item.address}</td>
