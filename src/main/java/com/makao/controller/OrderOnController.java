@@ -52,6 +52,7 @@ import com.makao.service.IProductService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.thread.AddInventoryThread;
+import com.makao.thread.SendNewsThread;
 import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
 import com.makao.utils.RedisUtil;
@@ -661,6 +662,9 @@ public class OrderOnController {
 		    		//通知微信端，已经收到支付结果了，不要再发了
 		    		page = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
 		    		out.write(page);
+		    		//推送下单成功的模板消息
+		    		SendNewsThread snt = new SendNewsThread(openid);
+					new Thread(snt, "send order created mb msg thread").start();
 		    	}
 		    }
 		}

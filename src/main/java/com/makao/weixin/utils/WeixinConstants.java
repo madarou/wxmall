@@ -35,4 +35,10 @@ public class WeixinConstants {
 	public static final String AUTH_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
 	//网页授权登录第三步获取用户基本信息
 	public static final String AUTH_USERINFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+	//消息发送方的username，即微信公众号的微信号
+	public static final String MSG_FROM_USERNAME = "shequvip_com";
+	//模板消息发送地址
+	public static final String MUBAN_MSG_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
+	//支付成功后推送的模板消息id
+	public static final String ORDER_CREATED_MBMSG = "Zpbhr-8MfZwo9IRByujQnjYapcPFpn0MoqgrgYwNsHM";
 }
