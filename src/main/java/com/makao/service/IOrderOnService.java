@@ -76,7 +76,7 @@ public interface IOrderOnService {
 	 * @param orderid
 	 * 已付款后，将订单状态从未支付改为排队中
 	 */
-	int confirmMoney(String cityid, String orderid);
+	OrderOn confirmMoney(String cityid, String orderid);
 
 	/**
 	 * @param number

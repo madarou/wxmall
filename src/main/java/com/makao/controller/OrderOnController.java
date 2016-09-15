@@ -413,9 +413,9 @@ public class OrderOnController {
 		//String orderNumber = paramObject.getString("number");
 		
 		//模拟的数据无法从缓存区到cityid的值，所以一次从两个模拟的成熟中找
-		int res = this.orderOnService.confirmMoney("1",number);
-		if(res!=0){
-			res = this.orderOnService.confirmMoney("2",number);
+		OrderOn oo = this.orderOnService.confirmMoney("1",number);
+		if(oo!=null){
+			oo = this.orderOnService.confirmMoney("2",number);
 		}
 
 //				page = "<link rel=\"stylesheet\" href=\"https://res.wx.qq.com/open/libs/weui/0.4.3/weui.min.css\">"
@@ -466,9 +466,9 @@ public class OrderOnController {
     		HttpServletRequest request,HttpServletResponse response) throws IOException {
 		
 		//模拟的数据无法从缓存区到cityid的值，所以一次从两个模拟的成熟中找
-		int res = this.orderOnService.confirmMoney("1",number);
-		if(res!=0){
-			res = this.orderOnService.confirmMoney("2",number);
+		OrderOn oo = this.orderOnService.confirmMoney("1",number);
+		if(oo!=null){
+			oo = this.orderOnService.confirmMoney("2",number);
 		}
 		JSONObject jsonObject = new JSONObject();
         	jsonObject.put("msg", "200");
@@ -652,8 +652,8 @@ public class OrderOnController {
 		    String orderNumber = resultXML.get("out_trade_no");
 		    String cityid = resultXML.get("attach");
 		    if(orderNumber!=null && !"".equals(orderNumber)){
-		    	int res = this.orderOnService.confirmMoney(cityid,orderNumber);//将订单的状态从未支付改为排队中
-		    	if(res==0){
+		    	OrderOn oo = this.orderOnService.confirmMoney(cityid,orderNumber);//将订单的状态从未支付改为排队中
+		    	if(oo!=null){
 		    		//将缓存中如果还存在的该订单删除
 		    		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderNumber);
 		    		if(orderOn!=null){
@@ -663,7 +663,7 @@ public class OrderOnController {
 		    		page = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
 		    		out.write(page);
 		    		//推送下单成功的模板消息
-		    		SendNewsThread snt = new SendNewsThread(openid);
+		    		SendNewsThread snt = new SendNewsThread(openid,oo);
 					new Thread(snt, "send order created mb msg thread").start();
 		    	}
 		    }

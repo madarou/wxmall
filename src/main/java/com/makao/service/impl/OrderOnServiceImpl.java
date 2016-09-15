@@ -93,7 +93,7 @@ public class OrderOnServiceImpl implements IOrderOnService {
 		return this.orderOnDao.getRecordCount(cityid);
 	}
 	@Override
-	public int confirmMoney(String cityid, String orderNumber) {
+	public OrderOn confirmMoney(String cityid, String orderNumber) {
 		return this.orderOnDao.confirmMoney(cityid, orderNumber);
 	}
 	@Override

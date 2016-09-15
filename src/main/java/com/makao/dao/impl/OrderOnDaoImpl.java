@@ -1254,15 +1254,17 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	}
 
 	@Override
-	public int confirmMoney(String cityid, String orderNumber) {
+	public OrderOn confirmMoney(String cityid, String orderNumber) {
 		String tableName = "Order_"+cityid+"_on";
 		String history = ","+OrderState.QUEUE.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `status`='"+OrderState.QUEUE.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
+		String sql2 = "SELECT * FROM "+tableName+ " WHERE `number`='"+orderNumber;
+		
 		Session session = null;
 		Transaction tx = null;
-		int res = 0;// 返回0表示成功，1表示失败
+		List<OrderOn> res = new LinkedList<OrderOn>();
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
@@ -1273,23 +1275,55 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 					PreparedStatement ps = null;
 					try {
 						ps = connection.prepareStatement(sql);
-						ps.executeUpdate();
+						int returncount = ps.executeUpdate();
+						if(returncount!=0){//如果执行成功，则查询order对象并返回
+							ps=connection.prepareStatement(sql2);
+							ResultSet rs = ps.executeQuery();
+							while(rs.next()){
+								OrderOn p = new OrderOn();
+								p.setId(rs.getInt("id"));
+								p.setNumber(rs.getString("number"));
+								p.setProductIds(rs.getString("productIds"));
+								p.setProductNames(rs.getString("productNames"));
+								p.setOrderTime(rs.getTimestamp("orderTime"));
+								p.setReceiverName(rs.getString("receiverName"));
+								p.setPhoneNumber(rs.getString("phoneNumber"));
+								p.setAddress(rs.getString("address"));
+								p.setPayType(rs.getString("payType"));
+								p.setReceiveType(rs.getString("receiveType"));
+								p.setReceiveTime(rs.getString("receiveTime"));
+								p.setCouponId(rs.getInt("couponId"));
+								p.setCouponPrice(rs.getString("couponPrice"));
+								p.setTotalPrice(rs.getString("totalPrice"));
+								p.setFreight(rs.getString("freight"));
+								p.setComment(rs.getString("comment"));
+								p.setVcomment(rs.getString("vcomment"));
+								p.setStatus(rs.getString("status"));
+								p.setCityarea(rs.getString("cityarea"));
+								p.setUserId(rs.getInt("userId"));
+								p.setAreaId(rs.getInt("areaId"));
+								p.setCityId(rs.getInt("cityId"));
+								p.setRefundStatus(rs.getString("refundStatus"));
+								p.setHistory(rs.getString("history"));
+								res.add(p);
+							}
+						}
 					} finally {
 						doClose(ps);
 					}
 				}
 			});
 			tx.commit(); // 使用 Hibernate事务处理边界
+
 		} catch (HibernateException e) {
 			if (null != tx)
 				tx.rollback();// 回滚
 			logger.error(e.getMessage(), e);
-			res = 1;
 		} finally {
 			if (null != session)
 				session.close();// 关闭回话
 		}
-		return res;
+		return (res.size()>0 ? res.get(0) : null);
 	}
 	
 	/* (non-Javadoc)

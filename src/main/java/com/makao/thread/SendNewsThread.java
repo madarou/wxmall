@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import net.sf.json.JSONObject;
 
+import com.makao.entity.OrderOn;
 import com.makao.weixin.utils.AccessTokenUtil;
 import com.makao.weixin.utils.HttpUtil;
 import com.makao.weixin.utils.WeixinConstants;
@@ -19,15 +20,18 @@ public class SendNewsThread implements Runnable {
 	private static final Logger logger = Logger.getLogger(SendNewsThread.class);
 	private String fromUserName;
 	private String toUserOpenid;
+	private OrderOn order;
 
-	public SendNewsThread(String fromUserName, String toUserOpenid){
+	public SendNewsThread(String fromUserName, String toUserOpenid, OrderOn order){
 		this.fromUserName = fromUserName;
 		this.toUserOpenid = toUserOpenid;
+		this.order = order;
 	}
 	
-	public SendNewsThread(String toUserOpenid){
+	public SendNewsThread(String toUserOpenid, OrderOn order){
 		this.fromUserName = WeixinConstants.MSG_FROM_USERNAME;
 		this.toUserOpenid = toUserOpenid;
+		this.order = order;
 	}
 	
 	/**
@@ -76,14 +80,14 @@ public class SendNewsThread implements Runnable {
 		
 		temp = new JSONObject();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-		temp.put("value", df.format(new Date()));
+		temp.put("value",this.order.getOrderTime());
 		temp.put("color", "#173177");
 		data.put("keyword5", temp);
 		
 		temp = new JSONObject();
 		temp.put("value", "欢迎下次再来！");
 		temp.put("color", "#173177");
-		data.put("keyword5", temp);
+		data.put("remark", temp);
 		
 		msg.put("data", data);
 		

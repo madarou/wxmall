@@ -76,7 +76,7 @@ public interface IOrderOnDao {
 	 * @return
 	 * 已付款后，将订单状态从未支付改为排队中
 	 */
-	public int confirmMoney(String cityid, String orderid);
+	public OrderOn confirmMoney(String cityid, String orderid);
 
 	/**
 	 * @param cityId
