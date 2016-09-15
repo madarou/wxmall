@@ -27,7 +27,7 @@ public interface IOrderOnDao {
 
 	public List<OrderOn> queryProcessByAreaId(String tableName, int areaId);
 
-	public int distributeOrder(int cityId, int orderid);
+	public OrderOn distributeOrder(int cityId, int orderid);
 
 	public int finishOrder(int cityId, int orderid);
 

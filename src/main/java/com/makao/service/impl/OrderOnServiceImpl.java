@@ -53,7 +53,7 @@ public class OrderOnServiceImpl implements IOrderOnService {
 		return this.orderOnDao.queryProcessByAreaId(tableName,areaId);
 	}
 	@Override
-	public int distributeOrder(int cityId, int orderid) {
+	public OrderOn distributeOrder(int cityId, int orderid) {
 		return this.orderOnDao.distributeOrder(cityId, orderid);
 	}
 	@Override

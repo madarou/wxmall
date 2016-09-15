@@ -50,9 +50,10 @@ import com.makao.service.ICouponOnService;
 import com.makao.service.IOrderOnService;
 import com.makao.service.IProductService;
 import com.makao.service.ISupervisorService;
+import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
 import com.makao.thread.AddInventoryThread;
-import com.makao.thread.SendNewsThread;
+import com.makao.thread.SendMSGThread;
 import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
 import com.makao.utils.RedisUtil;
@@ -87,6 +88,8 @@ public class OrderOnController {
 	private IProductService productService;
 	@Resource
 	private ICouponOnService couponOnService;
+	@Resource
+	private IUserService userService;
 	@Autowired
 	private RedisUtil redisUtil;
 	
@@ -663,7 +666,7 @@ public class OrderOnController {
 		    		page = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
 		    		out.write(page);
 		    		//推送下单成功的模板消息
-		    		SendNewsThread snt = new SendNewsThread(openid,oo);
+		    		SendMSGThread snt = new SendMSGThread(openid,oo,1);
 					new Thread(snt, "send order created mb msg thread").start();
 		    	}
 		    }
@@ -987,8 +990,14 @@ public class OrderOnController {
 		JSONObject jsonObject = new JSONObject();
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){
-			int res = this.orderOnService.distributeOrder(vendor.getCityId(),orderid);
-			if(res==0){
+			OrderOn res = this.orderOnService.distributeOrder(vendor.getCityId(),orderid);
+			if(res!=null){
+				//由于之前设计的order里只存了userid，没有openid，
+				//为了能给用户发送模板消息，这里要多一步获取其openid操作
+				User u = this.userService.getById(res.getUserId());
+				//推送马上配送的的模板消息
+	    		SendMSGThread snt = new SendMSGThread(u.getOpenid(),res,2);
+				new Thread(snt, "send sending order mb msg thread").start();
 				jsonObject.put("msg", "200");
 				return jsonObject;
 			}

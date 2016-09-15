@@ -41,4 +41,8 @@ public class WeixinConstants {
 	public static final String MUBAN_MSG_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
 	//支付成功后推送的模板消息id
 	public static final String ORDER_CREATED_MBMSG = "Zpbhr-8MfZwo9IRByujQnjYapcPFpn0MoqgrgYwNsHM";
+	//开始配送订单时的模板消息id
+	public static final String ORDER_SENDING_MBMSG = "N39-YCQJJh_oZSdvisN8NCNGeTaOc3dbfR14fBxeQrw";
+	//订单完成时的模板消息id
+	public static final String ORDER_FINISHED_MBMSG = "3_1SehxgLVb8WYFtlwoIIUofBf0GD1fECzZCqSwZ3Lo";
 }

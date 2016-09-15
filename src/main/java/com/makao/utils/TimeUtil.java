@@ -30,9 +30,9 @@ public class TimeUtil {
 	       
 	       System.out.println("10.00".split("\\.")[0]+"10.00".split("\\.")[1]);
 	       System.out.println(OrderState.CANCELED.getCode());
-	       JSONObject jb = new JSONObject();
-	       jb.put("productIds", new String[] {"1","2"});jb.put("nums", new String[] {"3","1"});jb.put("receiverName", "郭德纲");jb.put("phoneNumber", "17638372821");jb.put("address", "上海复旦大学");jb.put("receiveTime", "2016-05-21 15:00-18:00");jb.put("couponId", 0);jb.put("cityarea", "上海张江");jb.put("userId", 1);jb.put("areaId", 1);jb.put("cityId", 1);jb.put("status", OrderState.QUEUE.getCode()+"");
-	       System.out.println(jb.toString());
+	       
+	       String aa= "a";
+	       System.out.println(aa.split(",")[0]);
 	    }
 	
 	/**
