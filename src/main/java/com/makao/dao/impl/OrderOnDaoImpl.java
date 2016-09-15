@@ -1273,12 +1273,13 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
 					PreparedStatement ps = null;
+					PreparedStatement ps2 = null;
 					try {
 						ps = connection.prepareStatement(sql);
 						int returncount = ps.executeUpdate();
 						if(returncount!=0){//如果执行成功，则查询order对象并返回
-							ps=connection.prepareStatement(sql2);
-							ResultSet rs = ps.executeQuery();
+							ps2=connection.prepareStatement(sql2);
+							ResultSet rs = ps2.executeQuery();
 							while(rs.next()){
 								OrderOn p = new OrderOn();
 								p.setId(rs.getInt("id"));
@@ -1309,7 +1310,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							}
 						}
 					} finally {
-						doClose(ps);
+						doClose(ps);doClose(ps2);
 					}
 				}
 			});
