@@ -10,6 +10,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import net.sf.json.JSONObject;
+
+import com.makao.weixin.utils.AccessTokenUtil;
 import com.makao.weixin.utils.HttpUtil;
 import com.makao.weixin.utils.WeixinConstants;
 
@@ -32,7 +34,8 @@ public class SendNewsThread implements Runnable {
 	 * 用户支付成功后给他推送模板消息
 	 */
 	private void sendOrderCreatedMessage(){
-		JSONObject result = HttpUtil.doPostStr(WeixinConstants.MUBAN_MSG_URL, orderCreatedMsg());
+		String requestUrl = WeixinConstants.MUBAN_MSG_URL.replace("ACCESS_TOKEN", AccessTokenUtil.resetToken().getToken());
+		JSONObject result = HttpUtil.doPostStr(requestUrl, orderCreatedMsg());
 		logger.info("send order created mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
 	}
 	
