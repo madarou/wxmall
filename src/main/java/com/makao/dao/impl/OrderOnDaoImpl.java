@@ -1260,7 +1260,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `status`='"+OrderState.QUEUE.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
-		String sql2 = "SELECT * FROM "+tableName+ " WHERE `number`='"+orderNumber;
+		String sql2 = "SELECT * FROM "+tableName+ " WHERE `number`='"+orderNumber+"'";
 		
 		Session session = null;
 		Transaction tx = null;
