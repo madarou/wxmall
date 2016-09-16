@@ -50,8 +50,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ tableName
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`status`,`cityarea`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`status`,`cityarea`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		List<CouponOn> co = new ArrayList<CouponOn>();
 		Session session = null;
 		Transaction tx = null;
@@ -89,6 +89,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						ps.setInt(21, orderOn.getCityId());
 						ps.setString(22, orderOn.getRefundStatus());
 						ps.setString(23, OrderState.getText(Integer.parseInt(orderOn.getStatus()))+"="+orderOn.getOrderTime());
+						ps.setInt(24, orderOn.getPoint());
+						ps.setString(25, orderOn.getSender());
+						ps.setString(26, orderOn.getSenderPhone());
 						int row = ps.executeUpdate();
 						ResultSet rs = ps.getGeneratedKeys();  
 					     if ( rs.next() ) {  
@@ -258,6 +261,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -344,6 +350,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -408,6 +417,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -443,8 +455,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ Order_cityId_off
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		String sql3 = "DELETE FROM `"+Order_cityId_on+"` WHERE `id`="+orderid;
 		List<OrderOn> oo = new ArrayList<OrderOn>();
 		Session session = null;
@@ -487,6 +499,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							oo.add(p);
 						}
 					} finally {
@@ -527,6 +542,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(22, orderOn.getCityId());
 									ps.setString(23, "待退款");
 									ps.setString(24,orderOn.getHistory()+","+OrderState.CANCELED.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									ps.setInt(25, orderOn.getPoint());
+									ps.setString(26, orderOn.getSender());
+									ps.setString(27, orderOn.getSenderPhone());
 									ps.executeUpdate();
 								} finally {
 									doClose(ps);
@@ -617,6 +635,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 								p.setCityId(rs.getInt("cityId"));
 								p.setRefundStatus(rs.getString("refundStatus"));
 								p.setHistory(rs.getString("history"));
+								p.setPoint(rs.getInt("point"));
+								p.setSender(rs.getString("sender"));
+								p.setSenderPhone(rs.getString("senderPhone"));
 								res.add(p);
 							}
 						}
@@ -689,8 +710,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ Order_cityId_off
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		String sql3 = "DELETE FROM `"+Order_cityId_on+"` WHERE `id`="+orderid;
 		List<OrderOn> oo = new ArrayList<OrderOn>();
 		Session session = null;
@@ -733,6 +754,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							oo.add(p);
 						}
 					} finally {
@@ -773,6 +797,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(22, orderOn.getCityId());
 									ps.setString(23, "无需退款");//正常完成的订单，退款状态为无
 									ps.setString(24, orderOn.getHistory()+","+OrderState.RECEIVED.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									ps.setInt(25, orderOn.getPoint());
+									ps.setString(26, orderOn.getSender());
+									ps.setString(27, orderOn.getSenderPhone());
 									ps.executeUpdate();
 								} finally {
 									doClose(ps);
@@ -851,6 +878,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -1040,6 +1070,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -1104,6 +1137,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -1338,6 +1374,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 								p.setCityId(rs.getInt("cityId"));
 								p.setRefundStatus(rs.getString("refundStatus"));
 								p.setHistory(rs.getString("history"));
+								p.setPoint(rs.getInt("point"));
+								p.setSender(rs.getString("sender"));
+								p.setSenderPhone(rs.getString("senderPhone"));
 								res.add(p);
 							}
 						}

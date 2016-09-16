@@ -43,8 +43,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 				+ tableName
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender,`senderPhone`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -82,6 +82,9 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 						ps.setInt(22, orderOff.getCityId());
 						ps.setString(23, orderOff.getRefundStatus());
 						ps.setString(24, orderOff.getHistory());
+						ps.setInt(25, orderOff.getPoint());
+						ps.setString(26, orderOff.getSender());
+						ps.setString(27, orderOff.getSenderPhone());
 						ps.executeUpdate();
 					} finally {
 						doClose(ps);
@@ -175,6 +178,9 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -240,6 +246,9 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -306,6 +315,9 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -528,6 +540,9 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -593,6 +608,9 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -658,6 +676,9 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{
@@ -723,6 +744,9 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setCityId(rs.getInt("cityId"));
 							p.setRefundStatus(rs.getString("refundStatus"));
 							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
 							res.add(p);
 						}
 					}finally{

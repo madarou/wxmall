@@ -71,6 +71,10 @@ Order_cityId_on:
 						`areaId` int(11),
 						`cityId` int(11),
 						`refundStatus` varchar(10),
+						`history` varchar(255),
+						`point` int(11),
+						`sender` varchar(30),
+						`senderPhone` varchar(12),
 						PRIMARY KEY (`id`))";
 						
 				
@@ -101,6 +105,10 @@ Order_cityId_off:
 						`areaId` int(11),
 						`cityId` int(11),
 						`refundStatus` varchar(10),
+						`history` varchar(255),
+						`point` int(11),
+						`sender` varchar(30),
+						`senderPhone` varchar(12),
 						PRIMARY KEY (`id`))";
 						
 						

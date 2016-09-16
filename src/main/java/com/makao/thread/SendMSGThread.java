@@ -76,22 +76,22 @@ public class SendMSGThread implements Runnable {
 		data.put("first", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", "上海张江");
+		temp.put("value", order.getCityarea());
 		temp.put("color", "#173177");
 		data.put("keyword1", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", "微信支付");
+		temp.put("value", order.getPayType());
 		temp.put("color", "#173177");
 		data.put("keyword2", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", "0.01元");
+		temp.put("value", order.getTotalPrice()+"元");
 		temp.put("color", "#173177");
 		data.put("keyword3", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", "0分");
+		temp.put("value", order.getPoint());
 		temp.put("color", "#173177");
 		data.put("keyword4", temp);
 		
@@ -101,7 +101,7 @@ public class SendMSGThread implements Runnable {
 		data.put("keyword5", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", "欢迎下次再来！");
+		temp.put("value", "我们会按时为您配送，感谢您的光临！");
 		temp.put("color", "#173177");
 		data.put("remark", temp);
 		
@@ -141,12 +141,12 @@ public class SendMSGThread implements Runnable {
 		data.put("keyword2", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", "张全蛋");
+		temp.put("value", order.getSender());
 		temp.put("color", "#173177");
 		data.put("keyword3", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", "18621988959");
+		temp.put("value", order.getSenderPhone());
 		temp.put("color", "#173177");
 		data.put("keyword4", temp);
 		
@@ -187,7 +187,7 @@ public class SendMSGThread implements Runnable {
 		data.put("keyword2", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", "如有任何疑问，请拨打：4008888888");
+		temp.put("value", "如有任何疑问，请拨打："+order.getSenderPhone());
 		temp.put("color", "#173177");
 		data.put("remark", temp);
 		

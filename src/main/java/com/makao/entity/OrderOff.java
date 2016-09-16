@@ -33,6 +33,9 @@ public class OrderOff {
 	private int cityId;
 	private String refundStatus;//退款状态
 	private String history;//以'订单状态=时间,订单状态2=时间2'的形式存储
+	private int point;//赠送积分
+	private String sender;//配送员姓名
+	private String senderPhone;//配送员电话
 	
 	public int getId() {
 		return id;
@@ -183,6 +186,24 @@ public class OrderOff {
 	}
 	public void setHistory(String history) {
 		this.history = history;
+	}
+	public int getPoint() {
+		return point;
+	}
+	public void setPoint(int point) {
+		this.point = point;
+	}
+	public String getSender() {
+		return sender;
+	}
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
+	public String getSenderPhone() {
+		return senderPhone;
+	}
+	public void setSenderPhone(String senderPhone) {
+		this.senderPhone = senderPhone;
 	}
 	
 }

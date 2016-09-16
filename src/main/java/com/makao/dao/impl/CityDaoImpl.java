@@ -70,6 +70,9 @@ public class CityDaoImpl implements ICityDao {
 					+ "`cityId` int(11),"
 					+ "`refundStatus` varchar(10),"
 					+ "`history` varchar(255),"
+					+ "`point` int(11),"
+					+ "`sender` varchar(30),"
+					+ "`senderPhone` varchar(12),"
 					+ "PRIMARY KEY (`id`))";
 			session.doWork(
 					// 定义一个匿名类，实现了Work接口
@@ -113,6 +116,9 @@ public class CityDaoImpl implements ICityDao {
 					+ "`cityId` int(11),"
 					+ "`refundStatus` varchar(10),"
 					+ "`history` varchar(255),"
+					+ "`point` int(11),"
+					+ "`sender` varchar(30),"
+					+ "`senderPhone` varchar(12),"
 					+ "PRIMARY KEY (`id`))";
 			session.doWork(
 					// 定义一个匿名类，实现了Work接口

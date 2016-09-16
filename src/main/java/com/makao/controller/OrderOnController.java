@@ -35,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.makao.auth.AuthPassport;
+import com.makao.entity.Area;
 import com.makao.entity.City;
 import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOn;
@@ -45,6 +46,7 @@ import com.makao.entity.Supervisor;
 import com.makao.entity.TokenModel;
 import com.makao.entity.User;
 import com.makao.entity.Vendor;
+import com.makao.service.IAreaService;
 import com.makao.service.ICityService;
 import com.makao.service.ICouponOnService;
 import com.makao.service.IOrderOnService;
@@ -80,6 +82,8 @@ public class OrderOnController {
 	private IOrderOnService orderOnService;
 	@Resource
 	private ICityService cityService;
+	@Resource
+	private IAreaService areaService;
 	@Resource
 	private IVendorService vendorService;
 	@Resource
@@ -374,6 +378,12 @@ public class OrderOnController {
 		order.setUserId(smallOrder.getUserId());
 		order.setAreaId(areaId);
 		order.setCityId(cityId);
+		Area area = this.areaService.getById(areaId);
+		if(area!=null){
+			order.setSender("由社享网-"+area.getCityName()+area.getAreaName()+"随机分配");
+			order.setSenderPhone(area.getPhoneNumber());
+			order.setCityarea(area.getCityName()+area.getAreaName());
+		}
 		
 		//int res = this.orderOnService.insert(orderOn);//这里不再实际往数据库里生成订单，只放在缓存中，提交支付请求时才生成
 		//为了前端方便，还是需要在数据库里插入，因为前端需要id，插入后才有id
