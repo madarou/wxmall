@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.makao.controller.UserController;
 import com.makao.weixin.po.AccessToken;
+import com.makao.weixin.po.JSSignature;
 
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -24,46 +25,50 @@ import net.sf.json.JSONObject;
  */
 public class JSSignatureUtil {
 	private static final Logger logger = Logger.getLogger(JSSignatureUtil.class);
-	private static String jsapi_ticket = freshJsApiTicket(AccessTokenUtil.resetToken().getToken());//因为ticket和token目前的过期时间都是2小时，所以获取新ticket的同时也重新获取token
-	//private static String jsapi_ticket = "kgt8ON7yVITDhtdwci0qeX6wTpn15xQ_HJUqdWfRW-9-EjYL1HCmjYvn9joC_B5XJpePVLgFl5oFUlTy_YSTkg";
-	
+	//private static String jsapi_ticket = freshJsApiTicket(AccessTokenUtil.getAccessToken().getToken());
+	private static JSSignature jSSignature = getJsApiTicket(AccessTokenUtil.getAccessToken().getToken());
 	/**
 	 * @param access_token
 	 * @return
 	 * 重新获取ticket
 	 */
-	public static String freshJsApiTicket(String access_token) {
-        String requestUrl = WeixinConstants.JSAPI_TICKET_URL.replace("ACCESS_TOKEN", access_token);
-        // 发起GET请求获取凭证
-        JSONObject jsonObject = HttpUtil.doGetObject(requestUrl);
-        String ticket = null;
-        if (null != jsonObject) {
-            try {
-                ticket = jsonObject.getString("ticket");
-                System.out.println("jsapi_ticket: "+ticket);
-            } catch (JSONException e) {
-                // 获取token失败
-            	logger.error("获取token失败 errcode:{"+jsonObject.getInt("errcode")+"} errmsg:{"+jsonObject.getString("errmsg")+"}");
-            }
-        }
-        return ticket;
+	public static JSSignature getJsApiTicket(String access_token) {
+		if(jSSignature==null||jSSignature.isExpired()){
+			jSSignature = new JSSignature();
+			 String requestUrl = WeixinConstants.JSAPI_TICKET_URL.replace("ACCESS_TOKEN", access_token);
+		        // 发起GET请求获取凭证
+		        JSONObject jsonObject = HttpUtil.doGetObject(requestUrl);
+		        if (null != jsonObject) {
+		            try {
+		                String ticket = jsonObject.getString("ticket");
+		                System.out.println("jsapi_ticket: "+ticket);
+		                jSSignature.setTicket(ticket);
+		                jSSignature.setExpires_in(jsonObject.getInt("expires_in"));
+		            } catch (JSONException e) {
+		                // 获取token失败
+		            	logger.error("获取token失败 errcode:{"+jsonObject.getInt("errcode")+"} errmsg:{"+jsonObject.getString("errmsg")+"}");
+		            }
+		        }
+		        return jSSignature;
+		}
+		return jSSignature;
     }
 	
 	/**
 	 * @return
 	 * 获取现有的jsapi_ticket
 	 */
-	public static String getJsApiTicket(){
-		return jsapi_ticket;
+	public static JSSignature getJsApiTicket(){
+		return jSSignature;
 	}
 	
 	/**
 	 * 重新设置ticket
 	 */
-	public static String resetJsApiTicket(){
-		jsapi_ticket = freshJsApiTicket(AccessTokenUtil.resetToken().getToken());//因为ticket和token目前的过期时间都是2小时，所以获取新ticket的同时也重新获取token
-		return jsapi_ticket;
-	}
+//	public static String resetJsApiTicket(){
+//		jsapi_ticket = freshJsApiTicket(AccessTokenUtil.getAccessToken().getToken());//因为ticket和token目前的过期时间都是2小时，所以获取新ticket的同时也重新获取token
+//		return jsapi_ticket;
+//	}
 	
     public static Map<String, String> getSignature(String url) {
         Map<String, String> ret = new HashMap<String, String>();
@@ -73,7 +78,7 @@ public class JSSignatureUtil {
         String signature = "";
  
         //注意这里参数名必须全部小写，且必须有序
-        str = "jsapi_ticket=" + jsapi_ticket +
+        str = "jsapi_ticket=" + getJsApiTicket(AccessTokenUtil.getAccessToken().getToken()).getTicket() +
                   "&noncestr=" + nonce_str +
                   "&timestamp=" + timestamp +
                   "&url=" + url;
@@ -95,7 +100,7 @@ public class JSSignatureUtil {
         }
  
         ret.put("url", url);
-        ret.put("jsapi_ticket", jsapi_ticket);
+        ret.put("jsapi_ticket", getJsApiTicket(AccessTokenUtil.getAccessToken().getToken()).getTicket());
         ret.put("nonceStr", nonce_str);
         ret.put("timestamp", timestamp);
         ret.put("signature", signature);

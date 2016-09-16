@@ -606,12 +606,6 @@ public class OrderOnController {
 		}
 		// 为前端页面能够使用JSSDK设置签名
 		//Map<String, String> wxConfig = JSSignatureUtil.getSignature(MakaoConstants.SERVER_DOMAIN+"/orderOn/pay");
-		String jsapi_ticket = (String)redisUtil.redisQueryObject("jsapi_ticket");
-		if(jsapi_ticket==null||"".equals(jsapi_ticket)){//ticket过期了
-			//重设ticket，里面会同时重设access_token，因为两个目前的过期时间相同都为2小时
-			jsapi_ticket = JSSignatureUtil.resetJsApiTicket();
-			redisUtil.redisSaveObject("jsapi_ticket", jsapi_ticket,MakaoConstants.WEIXIN_TOKEN_EXPIRE_TIME);
-		}
 		Map<String, String> wxConfig = JSSignatureUtil.getSignature(MakaoConstants.SERVER_DOMAIN+"/user/snsapi_userinfo");
 		// 生成支付订单需要的参数和签名
 		String timeStamp = SignatureUtil.getTimeStamp();

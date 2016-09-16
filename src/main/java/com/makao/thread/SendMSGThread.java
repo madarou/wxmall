@@ -41,7 +41,7 @@ public class SendMSGThread implements Runnable {
 	 * 推送模板消息
 	 */
 	private void sendMBMsg(){
-		String requestUrl = WeixinConstants.MUBAN_MSG_URL.replace("ACCESS_TOKEN", AccessTokenUtil.resetToken().getToken());
+		String requestUrl = WeixinConstants.MUBAN_MSG_URL.replace("ACCESS_TOKEN", AccessTokenUtil.getAccessToken().getToken());
 		switch(this.msgType){
 		case 1:
 			JSONObject result = HttpUtil.doPostStr(requestUrl, orderCreatedMsg());
