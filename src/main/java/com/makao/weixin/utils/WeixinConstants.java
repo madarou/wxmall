@@ -45,4 +45,6 @@ public class WeixinConstants {
 	public static final String ORDER_SENDING_MBMSG = "N39-YCQJJh_oZSdvisN8NCNGeTaOc3dbfR14fBxeQrw";
 	//订单完成时的模板消息id
 	public static final String ORDER_FINISHED_MBMSG = "3_1SehxgLVb8WYFtlwoIIUofBf0GD1fECzZCqSwZ3Lo";
+	//生成带参数的二维码
+	public static final String QR_CODE_CREATE_URL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=ACCESS_TOKEN";
 }

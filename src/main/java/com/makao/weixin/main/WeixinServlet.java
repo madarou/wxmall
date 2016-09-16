@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dom4j.DocumentException;
 
+import com.makao.entity.Vendor;
+import com.makao.service.IVendorService;
+import com.makao.service.impl.VendorServiceImpl;
 import com.makao.weixin.po.Image;
 import com.makao.weixin.po.Music;
 import com.makao.weixin.po.News;
@@ -120,17 +123,41 @@ public class WeixinServlet extends HttpServlet {
 				//这里客户端会收到自己地理位置信息的回复
 				message = MessageUtil.textMessageToXml(toUserName, fromUserName, location_label+" "+map.get("EventKey"));
 			}else if(MessageUtil.MESSAGE_EVENT.equals(msgType)){//如果用户触发了某个事件，处理事件
-				String eventType = map.get("Event");
-				if(MessageUtil.MESSAGE_SUBSCRIBE.equals(eventType)){//如果事件是关注事件，则回复关注者一条欢迎关注的相关信息
-					message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply()+" "+map.get("EventKey"));
-				}else if(MessageUtil.MESSAGE_CLICK.equals(eventType)){//如果事件是click事件，则回复关注者一条CLick相关信息
-					message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onClickAutoReply()+" "+map.get("EventKey"));
-				}else if(MessageUtil.MESSAGE_VIEW.equals(eventType)){//如果事件是view事件，则回复关注者一条View相关信息
-					//这里消息message是组装成功的，但是客户端不会收到下面设置的回复，这里主要用来做其他逻辑
-					message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onViewAutoReply()+" "+map.get("EventKey"));
-				}else if(MessageUtil.MESSAGE_SCANCODE.equals(eventType)){//如果事件是扫码事件，则回复关注者一条View相关信息
-					//这里消息message是组装成功的，但是客户端不会收到下面设置的回复，这里主要用来做其他逻辑
-					message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onScanCodeAutoReply()+" "+map.get("EventKey"));
+				String event = map.get("Event");
+				if(MessageUtil.MESSAGE_SUBSCRIBE.equals(event)){//如果是关注事件
+					String eventKey = map.get("eventKey");
+					if(eventKey!=null&&!"".equals(eventKey)){//管理员关注
+						if(eventKey.indexOf(MessageUtil.MESSAGE_VENDOR_SUBSCRIBE)>-1){
+							int vendorid = Integer.valueOf(eventKey.split("_")[1]);
+							//根据fromUserName openid去Vender表里查
+							IVendorService vendorService = new VendorServiceImpl();
+							Vendor v = vendorService.getById(vendorid);
+							v.setOpenid(fromUserName);
+							vendorService.update(v);
+							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
+						}
+					}
+					else{
+						message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
+					}
+				}else if(MessageUtil.MESSAGE_SCAN.equals(event)){//如果事件是扫码事件，则判断如果是管理员扫码，可能是管理员绑定账号
+					String eventKey = map.get("eventKey");
+					if(eventKey!=null&&!"".equals(eventKey)){//管理员关注
+						if(isNumeric(eventKey)){
+							int vendorid = Integer.valueOf(eventKey);
+							//根据fromUserName openid去Vender表里查
+							IVendorService vendorService = new VendorServiceImpl();
+							Vendor v = vendorService.getById(vendorid);
+							v.setOpenid(fromUserName);
+							vendorService.update(v);
+							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
+						}else{
+							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
+						}
+					}
+					else{
+						message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
+					}
 				}
 			}
 			System.out.println(message);
@@ -142,4 +169,13 @@ public class WeixinServlet extends HttpServlet {
 		}
 
 	}
+	
+	public static boolean isNumeric(String str){
+		  for (int i = 0; i < str.length(); i++){
+		   if (!Character.isDigit(str.charAt(i))){
+		    return false;
+		   }
+		  }
+		  return true;
+		 }
 }

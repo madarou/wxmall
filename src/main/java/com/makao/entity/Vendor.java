@@ -37,7 +37,8 @@ public class Vendor implements Serializable {
 	private Timestamp lastTime;//上次登录时间
 	private String isLock;//账号是否冻结
 	private String isDelete;//暂用该字段代替删除，防止物理删除后关联数据出错
-	//private Area area;
+	private String ticket;//二维码ticket
+	private String openid;//管理员微信
 	
 	@Id
     @GeneratedValue
@@ -117,18 +118,25 @@ public class Vendor implements Serializable {
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
 	}
+	@Column(length=5)
 	public String getIsDelete() {
 		return isDelete;
 	}
 	public void setIsDelete(String isDelete) {
 		this.isDelete = isDelete;
 	}
-//	@ManyToOne
-//	@JoinColumn(name="areaId")
-//	public Area getArea() {
-//		return area;
-//	}
-//	public void setArea(Area area) {
-//		this.area = area;
-//	}
+	@Column(length=120)
+	public String getTicket() {
+		return ticket;
+	}
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
+	}
+	@Column(length=40)
+	public String getOpenid() {
+		return openid;
+	}
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
 }

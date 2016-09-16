@@ -166,45 +166,12 @@
 
      <!-- 搜索 -->
      <section style="text-align:center">
-        
-       
-        <label class="uploadImg">
-         <input type="file"/>
-         <span>微信图片</span>
-        </label>
+        <img src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${ticket}"/><br/>
          <span class="item_name" style="width:120px;">立即绑定个人微信号接收订单!
         扫描左侧二维码实现绑定微信号后，可接收订单信息</span>
      </section><br/>
 
-     <section>
-      绑定列表
-      <table class="table">
-       <tr>
-        <th>微信昵称</th>
-        <th>微信号</th>
-        <th>操作</th>
-       </tr>
-       <tr>
-        <td></td>
-        <td></td>
-        <td style="text-align:center">
-           <button class="linkStyle">启/停用</button>|
-           <button class="linkStyle">删除</button>
-        </td>
-       </tr>
-      </table>
-      <aside class="paging">
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a>
-      </aside>
-     </section>
 
-    <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
 </body>

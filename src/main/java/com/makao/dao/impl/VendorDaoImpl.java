@@ -33,16 +33,15 @@ public class VendorDaoImpl implements IVendorDao {
 	public int insert(Vendor vendor) {
 		Session session = null;
 		Transaction tx = null;
-		int res = 0;// 返回0表示成功，1表示失败
+		int res = 0;// 返回0表示失败
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
-			session.save(vendor);// 保存用户
+			res = (int) session.save(vendor);// 保存用户
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)
 				tx.rollback();// 回滚
-			res = 1;
 			logger.error(e.getMessage(), e);
 		} finally {
 			if (null != session)

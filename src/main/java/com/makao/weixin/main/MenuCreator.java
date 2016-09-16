@@ -80,7 +80,7 @@ public class MenuCreator {
 	
 	//创建菜单只创建一次，不用启动服务器
 	public static void main(String[] args) throws UnsupportedEncodingException {
-		AccessToken token = AccessTokenUtil.getToken();
+		AccessToken token = AccessTokenUtil.getAccessToken();
 		System.out.println(token.getToken());
 		System.out.println(token.getExpiresIn());
 		//测试创建菜单功能

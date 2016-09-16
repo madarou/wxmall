@@ -46,6 +46,7 @@ public class MessageUtil {
 	public static final String MESSAGE_CLICK = "CLICK";
 	public static final String MESSAGE_VIEW = "VIEW";
 	public static final String MESSAGE_SCAN = "SCAN";
+	public static final String MESSAGE_VENDOR_SUBSCRIBE = "qrscene_";//管理员扫码绑定
 	
 	/**
 	 * @param request
@@ -75,7 +76,7 @@ public class MessageUtil {
 	 * 用户关注时的自动回复
 	 */
 	public static String onSubscriptionAutoReply(){
-		return "才来？！等你很久了";
+		return "欢迎关注社享网!";
 	}
 	
 	/**
@@ -271,6 +272,10 @@ public class MessageUtil {
 		musicMessage.setMusic(music);
 		
 		return musicMessageToXml(musicMessage);
+	}
+
+	public static String onVendorSubscriptionAutoReply() {
+		return "微信号绑定社享网成功！";
 	}
 	
 }

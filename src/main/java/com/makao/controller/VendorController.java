@@ -29,6 +29,7 @@ import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
 import com.makao.utils.TokenManager;
 import com.makao.utils.TokenUtils;
+import com.makao.weixin.utils.QRCodeUtil;
 
 /**
  * @description: TODO
@@ -123,7 +124,10 @@ public class VendorController {
 			vendor.setIsDelete("no");
 			vendor.setPassword(EncryptUtils.passwordEncryptor.encryptPassword("shygxx"));
 			int res = this.vendorService.insert(vendor);
-			if(res==0){
+			if(res!=0){
+				String ticket = QRCodeUtil.generateQRCode(res);
+				vendor.setTicket(ticket);
+				this.vendorService.update(vendor);
 				logger.info("增加vendor成功id=" + vendor.getId());
 	        	jsonObject.put("msg", "200");
 	        	 return jsonObject;
@@ -218,8 +222,12 @@ public class VendorController {
 		if (token == null) {
 			return modelAndView;
 		}
-		modelAndView.addObject("id", id);
-		modelAndView.addObject("token", token);
+		Vendor vendor = (Vendor)this.vendorService.getById(id);
+		if(vendor!=null){
+			modelAndView.addObject("ticket", vendor.getTicket());
+			modelAndView.addObject("id", id);
+			modelAndView.addObject("token", token);
+		}
 		return modelAndView;
     }
 }

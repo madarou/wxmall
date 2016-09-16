@@ -83,6 +83,8 @@ lastIp			varchar(30)		上次登录ip
 lastTime		datetime		上次登录时间
 isLock			varchar(5)		是否锁定			被超级管理员锁定后不能登录
 isDelete		varchar(5)		是否已删除			暂用该字段代替删除，防止物理删除后关联数据出错
+ticket 			varchar(120)	二维码ticket		用于https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=TICKET获取绑定的二维码图片
+openid			varchar(40)		管理员微信openid
 
 Supervisor(超级管理员)
 列名				类型				注释				备注
