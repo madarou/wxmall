@@ -57,7 +57,7 @@ public class OrderOnServiceImpl implements IOrderOnService {
 		return this.orderOnDao.distributeOrder(cityId, orderid);
 	}
 	@Override
-	public int finishOrder(int cityId, int orderid) {
+	public OrderOn finishOrder(int cityId, int orderid) {
 		return this.orderOnDao.finishOrder(cityId, orderid);
 	}
 	@Override

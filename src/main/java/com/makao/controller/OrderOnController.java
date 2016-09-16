@@ -222,6 +222,12 @@ public class OrderOnController {
 		OrderOn.setUserId(smallOrder.getUserId());
 		OrderOn.setAreaId(smallOrder.getAreaId());
 		OrderOn.setCityId(smallOrder.getCityId());
+		Area area = this.areaService.getById(areaId);
+		if(area!=null){
+			OrderOn.setSender("由社享网-"+area.getCityName()+area.getAreaName()+"随机分配");
+			OrderOn.setSenderPhone(area.getPhoneNumber());
+			OrderOn.setCityarea(area.getCityName()+area.getAreaName());
+		}
 		//这里可以验证传来的userid在数据库对应的openid与服务端的(token,openid)对应的openid是否相同,
 		//防止恶意访问api提交订单，通过userId与openid的验证至少多了一层验证。获取到的openid还会用来后面
 		//订单生成后，使用微信接口向用户发送模板消息
@@ -1033,8 +1039,14 @@ public class OrderOnController {
 		JSONObject jsonObject = new JSONObject();
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){
-			int res = this.orderOnService.finishOrder(vendor.getCityId(),orderid);
-			if(res==0){
+			OrderOn res = this.orderOnService.finishOrder(vendor.getCityId(),orderid);
+			if(res!=null){
+				//由于之前设计的order里只存了userid，没有openid，
+				//为了能给用户发送模板消息，这里要多一步获取其openid操作
+				User u = this.userService.getById(res.getUserId());
+				//推送配送完成的模板消息
+	    		SendMSGThread snt = new SendMSGThread(u.getOpenid(),res,3);
+				new Thread(snt, "send order finished mb msg thread").start();
 				jsonObject.put("msg", "200");
 				logger.info("完成订单配送成功orderid: "+orderid);
 				return jsonObject;

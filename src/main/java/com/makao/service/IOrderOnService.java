@@ -31,7 +31,7 @@ public interface IOrderOnService {
 
 	OrderOn distributeOrder(int cityId, int orderid);
 
-	int finishOrder(int cityId, int orderid);
+	OrderOn finishOrder(int cityId, int orderid);
 
 	List<OrderOn> queryByUserId(String string, int userid);
 

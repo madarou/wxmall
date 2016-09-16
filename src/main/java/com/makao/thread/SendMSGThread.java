@@ -49,11 +49,11 @@ public class SendMSGThread implements Runnable {
 			break;
 		case 2:
 			result = HttpUtil.doPostStr(requestUrl, orderSendingMsg());
-			logger.info("send order created mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
+			logger.info("send order sending mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
 			break;
 		case 3:
 			result = HttpUtil.doPostStr(requestUrl, orderFinishedMsg());
-			logger.info("send order created mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
+			logger.info("send order finished mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
 			break;
 		default:
 			break;
