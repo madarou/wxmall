@@ -91,7 +91,7 @@ public interface IOrderOnService {
 	 * @return
 	 * 将订单状态从排队中改为待处理
 	 */
-	int processOrder(int cityId, String orderid);
+	OrderOn processOrder(int cityId, String orderid);
 
 	/**
 	 * @param cityid 

@@ -92,7 +92,7 @@ public interface IOrderOnDao {
 	 * @return
 	 * 将排队中的订单状态改为待处理
 	 */
-	public int processOrder(int cityId, String orderid);
+	public OrderOn processOrder(int cityId, String orderid);
 
 	/**
 	 * @param cityid 

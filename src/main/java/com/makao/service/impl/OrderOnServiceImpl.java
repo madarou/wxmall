@@ -101,7 +101,7 @@ public class OrderOnServiceImpl implements IOrderOnService {
 		return this.orderOnDao.isExist(cityId, orderNum);
 	}
 	@Override
-	public int processOrder(int cityId, String orderid) {
+	public OrderOn processOrder(int cityId, String orderid) {
 		return this.orderOnDao.processOrder(cityId, orderid);
 	}
 	@Override

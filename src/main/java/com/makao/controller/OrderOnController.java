@@ -973,8 +973,14 @@ public class OrderOnController {
 		JSONObject jsonObject = new JSONObject();
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){
-			int res = this.orderOnService.processOrder(vendor.getCityId(),orderid);
-			if(res==0){
+			OrderOn res = this.orderOnService.processOrder(vendor.getCityId(),orderid);
+			if(res!=null){
+				//如果绑定了微信，推送消息到配送员微信
+				String vendor_openid = vendor.getOpenid();
+				if(vendor_openid!=null&&!"".equals(vendor_openid)){
+					SendMSGThread snt = new SendMSGThread(vendor_openid,res,4);
+					new Thread(snt, "send prepare order mb msg thread").start();
+				}
 				jsonObject.put("msg", "200");
 				return jsonObject;
 			}

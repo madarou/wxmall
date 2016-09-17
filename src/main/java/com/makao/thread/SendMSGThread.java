@@ -55,6 +55,10 @@ public class SendMSGThread implements Runnable {
 			result = HttpUtil.doPostStr(requestUrl, orderFinishedMsg());
 			logger.info("send order finished mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
 			break;
+		case 4:
+			result = HttpUtil.doPostStr(requestUrl, orderPrepareMsg());
+			logger.info("send order finished mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
+			break;
 		default:
 			break;
 		}
@@ -195,6 +199,48 @@ public class SendMSGThread implements Runnable {
 		
 		return msg.toString();
 	}
+	
+	/**
+	 * @return
+	 * 订单配送时间要到时，提前推送的准备订单的模板消息给配送员
+	 */
+	private String orderPrepareMsg(){
+		JSONObject msg = new JSONObject();
+		msg.put("touser", this.toUserOpenid);
+		msg.put("template_id", WeixinConstants.ORDER_PREPARE_MBMSG);
+		msg.put("url", "www.baidu.com");
+		JSONObject data = new JSONObject();
+		JSONObject temp = new JSONObject();
+		temp.put("value", "您好，近期您有一笔即将配送的订单：");
+		temp.put("color", "#173177");
+		data.put("first", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", this.order.getNumber());
+		temp.put("color", "#173177");
+		data.put("keyword1", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", this.order.getReceiveTime());
+		temp.put("color", "#173177");
+		data.put("keyword2", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", this.order.getAddress()+" "+this.order.getReceiverName()+" "+order.getPhoneNumber());
+		temp.put("color", "#173177");
+		data.put("keyword3", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", "请及时登录后台系统，准备订单！");
+		temp.put("color", "#173177");
+		data.put("remark", temp);
+		
+		
+		msg.put("data", data);
+		
+		return msg.toString();
+	}
+	
 	@Override
 	public void run() {
 		sendMBMsg();	
