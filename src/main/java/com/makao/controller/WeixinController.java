@@ -1,21 +1,25 @@
-package com.makao.weixin.main;
+package com.makao.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.makao.entity.Vendor;
 import com.makao.service.IVendorService;
@@ -26,27 +30,18 @@ import com.makao.weixin.po.News;
 import com.makao.weixin.po.TextMessage;
 import com.makao.weixin.utils.CheckUtil;
 import com.makao.weixin.utils.MessageUtil;
-import com.makao.weixin.utils.QRCodeUtil;
 
-/**
- * @description: TODO
- * @author makao
- * @date 2016年6月6日
- */
-@WebServlet(name = "WeixinServlet", urlPatterns = { "/WeixinServlet2" }, loadOnStartup = 1)
-public class WeixinServlet extends HttpServlet {
-	private static final Logger logger = Logger.getLogger(WeixinServlet.class);
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-	}
+@CrossOrigin(origins = "*", maxAge = 3600)
+@Controller
+@RequestMapping("/WeixinServlet")
+public class WeixinController {
+	private static final Logger logger = Logger.getLogger(WeixinController.class);
+	@Resource
+	private IVendorService vendorService;
 
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 * 微信平台接入时验证的，之后就没用了
-	 */
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(value="",method = RequestMethod.GET)
+	public void get(HttpServletRequest request,HttpServletResponse response) throws IOException
+	{
 		String signature = request.getParameter("signature");
 		String timestamp = request.getParameter("timestamp");
 		String nonce = request.getParameter("nonce");
@@ -57,13 +52,10 @@ public class WeixinServlet extends HttpServlet {
 		}
 		out.close();
 	}
-
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 * 处理微信平台传来的用户请求的主入口
-	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	
+	@RequestMapping(value="",method = RequestMethod.POST)
+	public void post(HttpServletRequest request,HttpServletResponse response) throws IOException
+	{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -155,13 +147,12 @@ public class WeixinServlet extends HttpServlet {
 							int vendorid = Integer.valueOf(eventKey);
 							//根据fromUserName openid去Vender表里查
 							logger.info("vendorid : "+vendorid);
-//							IVendorService vendorService = new VendorServiceImpl();
-//							Vendor v = vendorService.getById(vendorid);
-//							logger.info("vendor: "+v.getUserName());
-//							v.setOpenid(fromUserName);
-//							logger.info("set fromUserName: "+fromUserName);
-//							vendorService.update(v);
-//							logger.info("updated:  "+v.getOpenid());
+							Vendor v = vendorService.getById(vendorid);
+							logger.info("vendor: "+v.getUserName());
+							v.setOpenid(fromUserName);
+							logger.info("set fromUserName: "+fromUserName);
+							vendorService.update(v);
+							logger.info("updated:  "+v.getOpenid());
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
 							logger.info("message created:  "+ message);
 						}else{
@@ -180,7 +171,6 @@ public class WeixinServlet extends HttpServlet {
 		} finally {
 			out.close();
 		}
-
 	}
 	
 	public static boolean isNumeric(String str){

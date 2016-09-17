@@ -45,7 +45,7 @@
 	<mvc:resources mapping="/font/**" location="/WEB-INF/font/" />
 	<mvc:resources mapping="/img/**" location="/WEB-INF/img/" />
 	<mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
-	<mvc:resources mapping="/js/lib/**" location="/WEB-INF/js/lib" />
+	<mvc:resources mapping="/js/lib/**" location="/WEB-INF/js/lib/" />
 	<mvc:resources mapping="/address/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/area/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/area/s_queryall/static/**" location="/WEB-INF/static/" />
