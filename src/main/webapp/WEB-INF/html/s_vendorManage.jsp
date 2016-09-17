@@ -445,6 +445,68 @@
      </section>
      <!-- 添加账号结束 -->
      
+     
+      <!--解除微信绑定弹出框效果-->
+     <script>
+     $(document).ready(function(){
+    	var vendorId_toUnbind = 0;//要解绑的用户
+     //弹出文本性提示框
+     $(".unBind").click(function(){
+       $(".unbind_pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       vendorId_toUnbind = clickedId.split("-")[1];
+
+       });
+     //弹出：确认按钮
+     $("#confirmUnbind").click(function(){
+    	 if(vendorId_toUnbind==0){
+    		 alert("请重新选择要删除的账户");
+    		 return false;
+    	 }
+        	$.ajax({
+    		  type: "POST",
+  	          contentType: "application/json",
+  	          url: "/vendor/unbind/"+$("#loginUserId").val(),
+  	          data: JSON.stringify({"vendorId":vendorId_toUnbind}),
+	          dataType: "json",
+  	          success: function(data){
+  	        	  if(data.msg=="200"){
+  	        		  alert("解绑成功");
+  	        		  window.location.reload();
+  	        		vendorId_toUnbind=0;
+  	        	  }
+  	          }
+    	 	});
+       $(".unbind_pop_bg").fadeOut();
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelUnbind").click(function(){
+       $(".unbind_pop_bg").fadeOut();
+       vendorId_toUnbind=0;
+       });
+     });
+     </script>
+     <section class="unbind_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>温馨提示</h3>
+       <!--content-->
+       <div class="small_pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          确认解绑该区域管理员账户与其微信吗?
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="继续" id="confirmUnbind" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelUnbind" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
+     <!-- 删除分类弹出框 -->
+     
+     
      <section style="text-align:right">
       <div class="btm_btn">
         <input type="button" value="添加账号" id="addVendor" class="input_btn trueBtn"/>
@@ -458,15 +520,26 @@
         <th>密码</th>
         <th>区域</th>
         <th>操作</th>
+        <th>微信</th>
        </tr>
        	<c:forEach var="item" items="${vendors}" varStatus="status">
          	<tr>
          		<td>${item.userName}</td>
-         		<td>${item.password}</td>
+         		<td>********</td>
          		<td>${item.cityName}-${item.areaName}</td>
          		<td style="text-align:center">
 		           <button class="linkStyle editvendor" id="showPopTxt-${item.id}">编辑</button>|
 		           <button class="linkStyle delvendor" id="delPopTxt-${item.id}">删除</button>
+		        </td>
+		        <td style="text-align:center">
+		           <c:choose> 
+		  				<c:when test="${empty item.openid}">   
+		  					<button class="linkStyle" style="color:grey;cursor:default">未绑定</button>
+						</c:when> 
+						<c:otherwise>   
+		  					<button class="linkStyle unBind" id="unbind-${item.id}">解除绑定</button>
+						</c:otherwise> 
+					</c:choose>
 		        </td>
          	</tr>
 		</c:forEach> 

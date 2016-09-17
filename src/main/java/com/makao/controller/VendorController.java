@@ -170,6 +170,36 @@ public class VendorController {
         return jsonObject;
     }
 	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 解绑微信号
+	 */
+	@RequestMapping(value = "/unbind/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object unbind(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		int vendorid = paramObject.getInteger("vendorId");
+		Vendor vendor = this.vendorService.getById(vendorid);
+		JSONObject jsonObject = new JSONObject();
+		if(vendor!=null){
+			vendor.setOpenid(null);
+			int res = this.vendorService.update(vendor);
+			if(res==0){
+				logger.info("解绑vendor微信成功id=" + vendor.getId());
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("解绑vendor微信失败id=" + vendor.getId());
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+    }
+	
 	
 	@RequestMapping(value = "/query/{name:\\S+}", method = RequestMethod.GET)
     public @ResponseBody
