@@ -154,11 +154,16 @@ public class WeixinServlet extends HttpServlet {
 							logger.info("scan add vendor openid: "+eventKey);
 							int vendorid = Integer.valueOf(eventKey);
 							//根据fromUserName openid去Vender表里查
+							logger.info("vendorid : "+vendorid);
 							IVendorService vendorService = new VendorServiceImpl();
 							Vendor v = vendorService.getById(vendorid);
+							logger.info("vendor: "+v.getUserName());
 							v.setOpenid(fromUserName);
+							logger.info("set fromUserName: "+fromUserName);
 							vendorService.update(v);
+							logger.info("updated:  "+v.getOpenid());
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
+							logger.info("message created:  "+ message);
 						}else{
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
 						}
