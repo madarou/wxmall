@@ -31,6 +31,10 @@ import com.makao.weixin.po.TextMessage;
 import com.makao.weixin.utils.CheckUtil;
 import com.makao.weixin.utils.MessageUtil;
 
+/**
+ * @author makao
+ *接收处理用户和微信服务器的消息
+ */
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/WeixinServlet")
@@ -128,11 +132,11 @@ public class WeixinController {
 							logger.info("subcribe add vendor openid: "+eventKey);
 							int vendorid = Integer.valueOf(eventKey.split("_")[1]);
 							//根据fromUserName openid去Vender表里查
-							IVendorService vendorService = new VendorServiceImpl();
 							Vendor v = vendorService.getById(vendorid);
 							v.setOpenid(fromUserName);
 							vendorService.update(v);
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
+							logger.info("message created:  "+ message);
 						}
 					}
 					else{
@@ -146,13 +150,9 @@ public class WeixinController {
 							logger.info("scan add vendor openid: "+eventKey);
 							int vendorid = Integer.valueOf(eventKey);
 							//根据fromUserName openid去Vender表里查
-							logger.info("vendorid : "+vendorid);
 							Vendor v = vendorService.getById(vendorid);
-							logger.info("vendor: "+v.getUserName());
 							v.setOpenid(fromUserName);
-							logger.info("set fromUserName: "+fromUserName);
 							vendorService.update(v);
-							logger.info("updated:  "+v.getOpenid());
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
 							logger.info("message created:  "+ message);
 						}else{
