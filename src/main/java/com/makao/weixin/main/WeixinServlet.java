@@ -129,7 +129,7 @@ public class WeixinServlet extends HttpServlet {
 				String event = map.get("Event");
 				logger.info("event: "+event);
 				if(MessageUtil.MESSAGE_SUBSCRIBE.equals(event)){//如果是关注事件
-					String eventKey = map.get("eventKey");
+					String eventKey = map.get("EventKey");
 					logger.info("eventKey: "+eventKey);
 					if(eventKey!=null&&!"".equals(eventKey)){//管理员关注
 						if(eventKey.indexOf(MessageUtil.MESSAGE_VENDOR_SUBSCRIBE)>-1){
@@ -144,10 +144,10 @@ public class WeixinServlet extends HttpServlet {
 						}
 					}
 					else{
-						message = MessageUtil.textMessageToXml(toUserName, fromUserName, "subscribe 1");
+						message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
 					}
 				}else if(MessageUtil.MESSAGE_SCAN.equals(event)){//如果事件是扫码事件，则判断如果是管理员扫码，可能是管理员绑定账号
-					String eventKey = map.get("eventKey");
+					String eventKey = map.get("EventKey");
 					logger.info("eventKey: "+eventKey);
 					if(eventKey!=null&&!"".equals(eventKey)){//管理员关注
 						if(isNumeric(eventKey)){
@@ -160,11 +160,11 @@ public class WeixinServlet extends HttpServlet {
 							vendorService.update(v);
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
 						}else{
-							message = MessageUtil.textMessageToXml(toUserName, fromUserName, "scan 1");
+							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
 						}
 					}
 					else{
-						message = MessageUtil.textMessageToXml(toUserName, fromUserName, "scan 2");
+						message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
 					}
 				}
 			}
