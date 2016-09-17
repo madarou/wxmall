@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
 import com.makao.entity.Vendor;
@@ -25,6 +26,7 @@ import com.makao.weixin.po.News;
 import com.makao.weixin.po.TextMessage;
 import com.makao.weixin.utils.CheckUtil;
 import com.makao.weixin.utils.MessageUtil;
+import com.makao.weixin.utils.QRCodeUtil;
 
 /**
  * @description: TODO
@@ -33,6 +35,7 @@ import com.makao.weixin.utils.MessageUtil;
  */
 @WebServlet(name = "WeixinServlet", urlPatterns = { "/WeixinServlet" }, loadOnStartup = 1)
 public class WeixinServlet extends HttpServlet {
+	private static final Logger logger = Logger.getLogger(WeixinServlet.class);
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 	}
@@ -74,8 +77,8 @@ public class WeixinServlet extends HttpServlet {
 			String content = map.get("Content");
 			System.out.println(content);
 			String msgId = map.get("MsgId");
-			System.out.println("message fromUserName: "+ fromUserName);//其实就是发送者的微信openid
-			System.out.println("message toUserName: "+ toUserName);//其实就是公众号的微信号
+			logger.info("message fromUserName: "+ fromUserName);//其实就是发送者的微信openid
+			logger.info("message toUserName: "+ toUserName);//其实就是公众号的微信号
 			
 			String message = null;
 			//如果用户发送过来的是文本消息，处理文本消息
@@ -124,10 +127,13 @@ public class WeixinServlet extends HttpServlet {
 				message = MessageUtil.textMessageToXml(toUserName, fromUserName, location_label+" "+map.get("EventKey"));
 			}else if(MessageUtil.MESSAGE_EVENT.equals(msgType)){//如果用户触发了某个事件，处理事件
 				String event = map.get("Event");
+				logger.info("event: "+event);
 				if(MessageUtil.MESSAGE_SUBSCRIBE.equals(event)){//如果是关注事件
 					String eventKey = map.get("eventKey");
+					logger.info("eventKey: "+eventKey);
 					if(eventKey!=null&&!"".equals(eventKey)){//管理员关注
 						if(eventKey.indexOf(MessageUtil.MESSAGE_VENDOR_SUBSCRIBE)>-1){
+							logger.info("subcribe add vendor openid: "+eventKey);
 							int vendorid = Integer.valueOf(eventKey.split("_")[1]);
 							//根据fromUserName openid去Vender表里查
 							IVendorService vendorService = new VendorServiceImpl();
@@ -138,12 +144,14 @@ public class WeixinServlet extends HttpServlet {
 						}
 					}
 					else{
-						message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
+						message = MessageUtil.textMessageToXml(toUserName, fromUserName, "subscribe 1");
 					}
 				}else if(MessageUtil.MESSAGE_SCAN.equals(event)){//如果事件是扫码事件，则判断如果是管理员扫码，可能是管理员绑定账号
 					String eventKey = map.get("eventKey");
+					logger.info("eventKey: "+eventKey);
 					if(eventKey!=null&&!"".equals(eventKey)){//管理员关注
 						if(isNumeric(eventKey)){
+							logger.info("scan add vendor openid: "+eventKey);
 							int vendorid = Integer.valueOf(eventKey);
 							//根据fromUserName openid去Vender表里查
 							IVendorService vendorService = new VendorServiceImpl();
@@ -152,11 +160,11 @@ public class WeixinServlet extends HttpServlet {
 							vendorService.update(v);
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
 						}else{
-							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
+							message = MessageUtil.textMessageToXml(toUserName, fromUserName, "scan 1");
 						}
 					}
 					else{
-						message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
+						message = MessageUtil.textMessageToXml(toUserName, fromUserName, "scan 2");
 					}
 				}
 			}
