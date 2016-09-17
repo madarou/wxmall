@@ -9,11 +9,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import com.makao.weixin.main.WeixinServlet;
 import com.makao.weixin.po.Image;
 import com.makao.weixin.po.ImageMessage;
 import com.makao.weixin.po.Music;
@@ -32,6 +34,7 @@ import com.thoughtworks.xstream.XStream;
  * @date 2016年4月17日
  */
 public class MessageUtil {
+	private static final Logger logger = Logger.getLogger(MessageUtil.class);
 	public static final String MESSAGE_TEXT = "text";
 	public static final String MESSAGE_NEWS = "news";//图文消息
 	public static final String MESSAGE_IMAGE = "image";
@@ -66,6 +69,7 @@ public class MessageUtil {
 		List<Element> list = root.elements();
 		for(Element e : list){
 			map.put(e.getName(), e.getText());
+			logger.info(e.getName()+": "+ e.getText());
 		}
 		ins.close();
 		return map;
