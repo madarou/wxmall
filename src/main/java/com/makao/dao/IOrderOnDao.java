@@ -100,5 +100,5 @@ public interface IOrderOnDao {
 	 * 从数据库中找出需要将状态从排队中改为待处理的订单，将其状态设为待处理
     	当配送时间起点-准备时间<=当前时间时的订单满足条件
 	 */
-	public List<String> appoachOrders(int cityid);
+	public List<OrderOn> appoachOrders(int cityid);
 }

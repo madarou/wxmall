@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-DOMAIN='http://115.159.109.12:8080'
+DOMAIN='http://m1.shequvip.com'
 DBSERVER='115.159.109.12:3306'
 DBNAME='wxmall'
 DBUSER='root'

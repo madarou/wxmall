@@ -55,6 +55,7 @@ import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
 import com.makao.thread.AddInventoryThread;
+import com.makao.thread.BatchSendMSGThread;
 import com.makao.thread.SendMSGThread;
 import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
@@ -1072,20 +1073,23 @@ public class OrderOnController {
     public @ResponseBody
     Object vapproach(@PathVariable("id") int id) {
 		JSONObject jsonObject = new JSONObject();
-		List<String> city_area_order = new ArrayList<String>();
+		List<OrderOn> processed_orders = new ArrayList<OrderOn>();
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){
 			//获取所有城市id
 			List<City> cities = this.cityService.queryAll();
 			for(City c : cities){
 				//获取所有满足条件的订单并设置对应的状态
-				List<String> temp = this.orderOnService.approachOrders(c.getId());
+				List<OrderOn> temp = this.orderOnService.approachOrders(c.getId());
 				if(temp!=null)//注意addAll方法必须先判断是否为null，否则加入null元素时会报NPE
-					city_area_order.addAll(temp);
+					processed_orders.addAll(temp);
 			}
-			
+			if(processed_orders!=null&&processed_orders.size()>0){
+				BatchSendMSGThread snt = new BatchSendMSGThread(processed_orders, vendorService);
+				new Thread(snt, "batch send order preprare mb msg thread").start();
+			}
 			jsonObject.put("msg", "200");
-			jsonObject.put("orders", city_area_order);
+			jsonObject.put("orders", processed_orders);
 			return jsonObject;
 		}
 		jsonObject.put("msg", "201");

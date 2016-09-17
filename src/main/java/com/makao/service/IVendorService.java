@@ -23,4 +23,11 @@ public interface IVendorService {
 
 	int deleteById(int id);
 
+	/**
+	 * @param areaId
+	 * @return
+	 * 根据areaId获取其下所有vendor
+	 */
+	List<Vendor> getByAreaId(int areaId);
+
 }

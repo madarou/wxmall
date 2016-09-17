@@ -100,7 +100,7 @@ public class SendMSGThread implements Runnable {
 		data.put("keyword4", temp);
 		
 		temp = new JSONObject();
-		temp.put("value",this.order.getOrderTime());
+		temp.put("value",this.order.getOrderTime().toString());
 		temp.put("color", "#173177");
 		data.put("keyword5", temp);
 		

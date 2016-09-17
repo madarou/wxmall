@@ -105,7 +105,7 @@ public class OrderOnServiceImpl implements IOrderOnService {
 		return this.orderOnDao.processOrder(cityId, orderid);
 	}
 	@Override
-	public List<String> approachOrders(int cityid) {
+	public List<OrderOn> approachOrders(int cityid) {
 		return this.orderOnDao.appoachOrders(cityid);
 	}
 	

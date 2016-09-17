@@ -1567,13 +1567,13 @@ public class OrderOnDaoImpl implements IOrderOnDao {
     	当配送时间起点-准备时间<=当前时间时的订单满足条件
 	 */
 	@Override
-	public List<String> appoachOrders(int cityid) {
+	public List<OrderOn> appoachOrders(int cityid) {
 		String tableName = "Order_"+cityid+"_on";
 		String sql1 = "SELECT * FROM "+ tableName + " WHERE `status`='"+OrderState.QUEUE.getCode()+"'";
 
 		Session session = null;
 		Transaction tx = null;
-		List<String> res = new ArrayList<String>();
+		List<OrderOn> res = new ArrayList<OrderOn>();
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
@@ -1598,9 +1598,39 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 								PreparedStatement ps2 = null;
 								try {
 									ps2 = connection.prepareStatement(sql2);
-									ps2.executeUpdate();
-									res.add(cityid+"_"+rs.getInt("areaId")+"_"+o_id);
-									logger.info("area:"+rs.getInt("areaId")+"; orderid:"+o_id);
+									int returncount = ps2.executeUpdate();
+									if(returncount!=0){//如果执行成功，则order返回
+										OrderOn p = new OrderOn();
+										p.setId(rs.getInt("id"));
+										p.setNumber(rs.getString("number"));
+										p.setProductIds(rs.getString("productIds"));
+										p.setProductNames(rs.getString("productNames"));
+										p.setOrderTime(rs.getTimestamp("orderTime"));
+										p.setReceiverName(rs.getString("receiverName"));
+										p.setPhoneNumber(rs.getString("phoneNumber"));
+										p.setAddress(rs.getString("address"));
+										p.setPayType(rs.getString("payType"));
+										p.setReceiveType(rs.getString("receiveType"));
+										p.setReceiveTime(rs.getString("receiveTime"));
+										p.setCouponId(rs.getInt("couponId"));
+										p.setCouponPrice(rs.getString("couponPrice"));
+										p.setTotalPrice(rs.getString("totalPrice"));
+										p.setFreight(rs.getString("freight"));
+										p.setComment(rs.getString("comment"));
+										p.setVcomment(rs.getString("vcomment"));
+										p.setStatus(rs.getString("status"));
+										p.setCityarea(rs.getString("cityarea"));
+										p.setUserId(rs.getInt("userId"));
+										p.setAreaId(rs.getInt("areaId"));
+										p.setCityId(rs.getInt("cityId"));
+										p.setRefundStatus(rs.getString("refundStatus"));
+										p.setHistory(rs.getString("history"));
+										p.setPoint(rs.getInt("point"));
+										p.setSender(rs.getString("sender"));
+										p.setSenderPhone(rs.getString("senderPhone"));
+										res.add(p);
+										logger.info("成功将订单移到待处理列表："+"area:"+rs.getInt("areaId")+"; orderid:"+o_id);
+									}
 								} finally {
 									doClose(ps2);
 								}

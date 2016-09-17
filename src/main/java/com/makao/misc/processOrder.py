@@ -21,11 +21,11 @@ def main(argv=None):
 #    process(1,1)
     second = sleeptime(0,1,0);
     while 1==1:
-        (msg,city_area_id)=approachOrders("1",'fdsfdsfds')
+        (msg,orders)=approachOrders("1",'fdsfdsfds')
         print msg
-        print city_area_id
+        print orders
         logger.info(msg)
-        logger.info(city_area_id)
+        logger.info(orders)
         if msg !=200:
             #vendor登录查找失败，发送通知
             pass

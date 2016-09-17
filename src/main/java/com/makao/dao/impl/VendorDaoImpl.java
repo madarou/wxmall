@@ -150,4 +150,25 @@ public class VendorDaoImpl implements IVendorDao {
 		return res;
 	}
 
+	@Override
+	public List<Vendor> getByAreaId(int areaId) {
+		Session session = null;
+		Transaction tx = null;
+		List<Vendor> res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = session.createQuery("from Vendor v where v.isDelete='no' and v.areaId=?").setInteger(0, areaId).list();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
 }

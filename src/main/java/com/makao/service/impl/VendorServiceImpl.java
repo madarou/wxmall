@@ -40,6 +40,10 @@ public class VendorServiceImpl implements IVendorService {
 	public List<Vendor> queryByName(String name) {
 		return this.vendorDao.queryByName(name);
 	}
+	@Override
+	public List<Vendor> getByAreaId(int areaId) {
+		return this.vendorDao.getByAreaId(areaId);
+	}
 	
 //	@Override
 //	public void testor() {

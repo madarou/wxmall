@@ -19,4 +19,11 @@ public interface IVendorDao {
 	public void testor();
 
 	public int deleteById(int id);
+
+	/**
+	 * @param areaId
+	 * @return
+	 * 根据areaId获取其下所有vendor
+	 */
+	public List<Vendor> getByAreaId(int areaId);
 }
