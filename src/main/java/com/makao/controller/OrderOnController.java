@@ -1068,7 +1068,7 @@ public class OrderOnController {
     	当配送时间起点-准备时间<=当前时间时的订单满足条件，
     	请求路径中的参数id是机器人id的验证,加了AuthInterceptor的话可以去掉
 	 */
-	@AuthPassport
+//	@AuthPassport
 	@RequestMapping(value = "/vapproach/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     Object vapproach(@PathVariable("id") int id) {
