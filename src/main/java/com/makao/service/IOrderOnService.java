@@ -108,4 +108,13 @@ public interface IOrderOnService {
 	 */
 	List<String> confirmOrders(int cityid);
 
+	/**
+	 * @param cityId
+	 * @param orderid
+	 * @param vcomment
+	 * @return
+	 * 商户为订单添加备注
+	 */
+	int vcommentOrder(int cityId, int orderid, String vcomment);
+
 }

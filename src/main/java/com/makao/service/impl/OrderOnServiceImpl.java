@@ -112,6 +112,10 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public List<String> confirmOrders(int cityid) {
 		return this.orderOnDao.confirmOrders(cityid);
 	}
+	@Override
+	public int vcommentOrder(int cityId, int orderid, String vcomment) {
+		return this.orderOnDao.vcommentOrder(cityId, orderid, vcomment);
+	}
 	
 //	@Override
 //	public void testor() {

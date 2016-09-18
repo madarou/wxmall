@@ -10,6 +10,7 @@
 <meta charset="utf-8"/>
 <title>超级管理员系统</title>
 <meta name="author" content="DeathGhost" />
+<meta http-equiv="refresh" content="300">
 <link rel="stylesheet" type="text/css" href="static/css/style.css" />
 <!--[if lt IE 9]>
 <script src="static/js/html5.js"></script>

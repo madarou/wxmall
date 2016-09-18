@@ -963,6 +963,34 @@ public class OrderOnController {
 	
 	/**
 	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 商户为订单添加备注
+	 */
+	@RequestMapping(value = "/vcomment/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vcomment(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		int orderid = paramObject.getIntValue("orderid");
+		String vcomment = paramObject.getString("vcomment");
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			int res = this.orderOnService.vcommentOrder(vendor.getCityId(),orderid,vcomment);
+			if(res==0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	/**
+	 * @param id
 	 * @param orderid
 	 * @return
 	 * 排队中的订单状态被设置为待处理

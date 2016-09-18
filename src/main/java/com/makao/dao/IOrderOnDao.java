@@ -108,4 +108,13 @@ public interface IOrderOnDao {
 	 * @return
 	 */
 	public List<String> confirmOrders(int cityid);
+
+	/**
+	 * @param cityId
+	 * @param orderid
+	 * @param vcomment
+	 * @return
+	 * 商户添加备注
+	 */
+	public int vcommentOrder(int cityId, int orderid, String vcomment);
 }

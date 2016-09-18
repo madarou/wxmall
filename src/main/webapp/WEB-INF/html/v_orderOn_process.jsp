@@ -10,6 +10,7 @@
 <meta charset="utf-8"/>
 <title>区域后台管理系统</title>
 <meta name="author" content="DeathGhost" />
+<meta http-equiv="refresh" content="300">
 <link rel="stylesheet" type="text/css" href="static/css/style.css" />
 <!--[if lt IE 9]>
 <script src="static/js/html5.js"></script>
@@ -122,6 +123,7 @@
        $("#ototalPrice").text($("#totalPrice-"+orderId_toView).text());
        $("#ocouponPrice").text($("#couponPrice-"+orderId_toView).text());
        $("#ocomment").text($("#comment-"+orderId_toView).text());
+       $("#vendorcomment").val($("#vcomment-"+orderId_toView).text());
        
      //商品详细列表
   	   var table= $("#productList");
@@ -139,12 +141,37 @@
      $(".trueBtn").click(function(){
        $(".pop_bg").fadeOut();
        orderId_toView=0;
+       window.location.reload();
        });
      //弹出：取消或关闭按钮
      $(".falseBtn").click(function(){
        $(".pop_bg").fadeOut();
        orderId_toView=0;
+       window.location.reload();
        });
+     
+	     //添加商户备注
+	     $("#subComment").click(function(){
+			 var vcontent = $.trim($("#vendorcomment").val());
+			 if(vcontent.length>0){
+				 $.ajax({
+		    		  type: "POST",
+		  	          contentType: "application/json",
+		  	          url: "/orderOn/vcomment/"+$("#loginUserId").val(),
+		  	          dataType: "json",
+		  	          data: JSON.stringify({"orderid":orderId_toView,"vcomment":vcontent}),
+		  	          success: function(data){
+		  	        	  if(data.msg=="200"){
+		  	        		  //alert("删除区域管理员账号成功");
+		  	        		  alert("备注添加成功");
+		  	        	  }
+		  	          }
+		    	 	});
+			 }
+			 else{
+				 alert("请输入备注内容");
+			 }
+		 });
      });
      </script>
      <section class="pop_bg">
@@ -386,6 +413,7 @@
 		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
 		        <td id="address-${item.id}" style="display:none">${item.address}</td>
 		         <td id="comment-${item.id}" style="display:none">${item.comment}</td>
+		         <td id="vcomment-${item.id}" style="display:none">${item.vcomment}</td>
          	</tr>
 		</c:forEach> 
       </table>

@@ -533,7 +533,10 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setString(13, orderOn.getTotalPrice());
 									ps.setString(14, orderOn.getFreight());
 									ps.setString(15, orderOn.getComment());
-									ps.setString(16, orderOn.getVcomment());
+									if(orderOn.getVcomment()!=null&&!"".equals(orderOn.getVcomment()))
+										ps.setString(16, orderOn.getVcomment()+";"+vcomment);
+									else
+										ps.setString(16, vcomment);
 									ps.setString(17, OrderState.CANCELED.getCode()+"");
 									ps.setString(18, orderOn.getCityarea());
 									ps.setTimestamp(19, new Timestamp(System.currentTimeMillis()));
@@ -1783,6 +1786,46 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				session.close();// 关闭回话
 		}
 		return res.size()>0 ? res : null;
+	}
+	
+	@Override
+	public int vcommentOrder(int cityId, int orderid, String vcomment) {
+		String tableName = "Order_"+cityId+"_on";
+		String vComment = vcomment;
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `vcomment`='"+vComment+"' WHERE `id`="+orderid;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+					    ps.executeUpdate();
+						
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
