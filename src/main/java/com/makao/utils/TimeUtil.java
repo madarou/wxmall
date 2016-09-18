@@ -33,6 +33,9 @@ public class TimeUtil {
 	       
 	       String aa= "a";
 	       System.out.println(aa.split(",")[0]);
+	       
+	       Date dt1 = df.parse("2016-09-17 15:40:04.095");
+	       System.out.println(dt1);
 	    }
 	
 	/**

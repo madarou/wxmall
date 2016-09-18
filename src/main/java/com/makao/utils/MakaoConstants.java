@@ -17,5 +17,7 @@ public class MakaoConstants {
 	public static final int DEFAULT_AREA_ID=1;
 	public static final int PRETIME = 30;//从数据库中找出需要将状态从排队中改为待处理的订单，将其状态设为待处理
 											//当配送时间起点-PRETIME(min)<=当前时间时的订单满足条件
+	public static final int COMFIRMTIME = -3;//完成配送的时间与当前时间的分钟差
+												//如果时间差(是负数)小于预先定义的COMFIRMTIME，系统帮助确认收货，单位为分
 	public static final int WEIXIN_TOKEN_EXPIRE_TIME = 110;//微信的access_token和jsapi_ticket的在缓存中的有效时间，单位为分
 }

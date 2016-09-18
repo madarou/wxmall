@@ -65,9 +65,9 @@
     
     <!-- quartz -->
     <bean id="approachOrders" class="com.makao.quartz.ApproachOrdersJob"/>
-	<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-	    <property name="group" value="job_work"/>
-	    <property name="name" value="job_work_name"/>
+	<bean id="approachDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="group" value="job_approach"/>
+	    <property name="name" value="job_approach_name"/>
 	    <!--false表示等上一个任务执行完后再开启新的任务-->
 	    <property name="concurrent" value="false"/>
 	    <property name="targetObject">
@@ -77,23 +77,49 @@
 	        <value>execute</value>
 	    </property>
 	</bean>
-	<!--  调度触发器 -->
-	<bean id="myTrigger"
+	<!--  approach调度触发器 -->
+	<bean id="approachTrigger"
 	      class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-	    <property name="name" value="work_default_name"/>
-	    <property name="group" value="work_default"/>
+	    <property name="name" value="work_approach_name"/>
+	    <property name="group" value="work_approach"/>
 	    <property name="jobDetail">
-	        <ref bean="jobDetail" />
+	        <ref bean="approachDetail" />
 	    </property>
 	    <property name="cronExpression">
 	        <value>* 1/5 * * * ?</value>
+	    </property>
+	</bean>
+	<!--  comfrim orders -->
+	<bean id="confirmOrders" class="com.makao.quartz.ComfirmOrdersJob"/>
+	<bean id="confirmDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="group" value="confirm"/>
+	    <property name="name" value="confirm"/>
+	    <!--false表示等上一个任务执行完后再开启新的任务-->
+	    <property name="concurrent" value="false"/>
+	    <property name="targetObject">
+	        <ref bean="confirmOrders"/>
+	    </property>
+	    <property name="targetMethod">
+	        <value>execute</value>
+	    </property>
+	</bean>
+	<bean id="confirmTrigger"
+	      class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="work_confirm_name"/>
+	    <property name="group" value="work_confirm"/>
+	    <property name="jobDetail">
+	        <ref bean="confirmDetail" />
+	    </property>
+	    <property name="cronExpression">
+	        <value>* 2/5 * * * ?</value>
 	    </property>
 	</bean>
 	<!-- 调度工厂 -->
 	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 	    <property name="triggers">
 	        <list>
-	            <ref bean="myTrigger"/>
+	            <ref bean="approachTrigger"/>
+	            <ref bean="confirmTrigger"/>
 	        </list>
 	    </property>
 	</bean>

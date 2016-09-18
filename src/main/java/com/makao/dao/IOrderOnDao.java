@@ -101,4 +101,11 @@ public interface IOrderOnDao {
     	当配送时间起点-准备时间<=当前时间时的订单满足条件
 	 */
 	public List<OrderOn> appoachOrders(int cityid);
+
+	/**
+	 * @param cityid
+	 * 订单配送完一定时间后，如果其状态还是已配送(即用户没有手动确认收货)，自动将其状态改为已收货
+	 * @return
+	 */
+	public List<String> confirmOrders(int cityid);
 }

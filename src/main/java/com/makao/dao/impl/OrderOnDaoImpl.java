@@ -1655,6 +1655,107 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		return res.size()>0 ? res : null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOnDao#confirmOrders(int)
+	 * 订单配送完一定时间后，如果其状态还是已配送(即用户没有手动确认收货)，自动将其状态改为已收货
+	 */
+	@Override
+	public List<String> confirmOrders(int cityid) {
+		String tableName = "Order_"+cityid+"_on";
+		String Order_cityId_on = "Order_"+cityid+"_on";
+		String Order_cityId_off = "Order_"+cityid+"_off";
+		String sql1 = "SELECT * FROM "+ tableName + " WHERE `status`='"+OrderState.DISTRIBUTED.getCode()+"'";
+		String sql2 = "INSERT INTO `"
+				+ Order_cityId_off
+				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
+				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		Session session = null;
+		Transaction tx = null;
+		List<String> res = new ArrayList<String>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					PreparedStatement ps2 = null;
+					PreparedStatement ps3 = null;
+					try {
+						ps = connection.prepareStatement(sql1);
+						ResultSet rs = ps.executeQuery();
+						while(rs.next()){
+							String hist = rs.getString("history");
+							String ditributed_time = "";
+							for(String str:hist.split(",")){
+								if(str.indexOf(OrderState.DISTRIBUTED.getText())>-1){//取出'已配送=xxxx:xx:xx'的时间
+									ditributed_time=str.split("=")[1];
+								}
+							}
+							if(!"".equals(ditributed_time)){
+								int min_diff = TimeUtil.minitesDiff(ditributed_time);//完成配送的时间与当前时间的分钟差
+								//如果时间差(是负数)小于预先定义的COMFIRMTIME，系统帮助确认收货
+								if(min_diff<=MakaoConstants.COMFIRMTIME){
+									String sql3 = "DELETE FROM `"+Order_cityId_on+"` WHERE `id`="+rs.getInt("id");
+									ps2 = connection.prepareStatement(sql2);
+									ps.setString(1, rs.getString("number"));
+									ps.setString(2, rs.getString("productIds"));
+									ps.setString(3, rs.getString("productNames"));
+									ps.setTimestamp(4, rs.getTimestamp("orderTime"));
+									ps.setString(5, rs.getString("receiverName"));
+									ps.setString(6, rs.getString("phoneNumber"));
+									ps.setString(7, rs.getString("address"));
+									ps.setString(8, rs.getString("payType"));
+									ps.setString(9, rs.getString("receiveType"));
+									ps.setString(10, rs.getString("receiveTime"));
+									ps.setInt(11, rs.getInt("couponId"));
+									ps.setString(12, rs.getString("couponPrice"));
+									ps.setString(13, rs.getString("totalPrice"));
+									ps.setString(14, rs.getString("freight"));
+									ps.setString(15, rs.getString("comment"));
+									ps.setString(16, rs.getString("vcomment"));
+									ps.setString(17, OrderState.RECEIVED.getCode()+"");
+									ps.setString(18, rs.getString("cityarea"));
+									ps.setTimestamp(19, new Timestamp(System.currentTimeMillis()));
+									ps.setInt(20, rs.getInt("userId"));
+									ps.setInt(21, rs.getInt("areaId"));
+									ps.setInt(22, rs.getInt("cityId"));
+									ps.setString(23, "无需退款");//正常完成的订单，退款状态为无
+									ps.setString(24, rs.getString("history")+","+OrderState.RECEIVED.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									ps.setInt(25, rs.getInt("point"));
+									ps.setString(26,rs.getString("sender"));
+									ps.setString(27, rs.getString("senderPhone"));
+									ps.executeUpdate();
+									
+									ps3 = connection.prepareStatement(sql3);
+									ps3.executeUpdate();
+									String comfirmed = rs.getInt("cityId")+"_"+rs.getInt("areaId")+"_"+rs.getString("number");
+									res.add(comfirmed);
+									logger.info("自动确认收货订单(cityid_areaid_number)："+comfirmed);
+								}
+							}
+						}
+					}finally{
+						doClose(ps);doClose(ps2);doClose(ps3);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res.size()>0 ? res : null;
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
