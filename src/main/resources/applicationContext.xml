@@ -86,7 +86,7 @@
 	        <ref bean="approachDetail" />
 	    </property>
 	    <property name="cronExpression">
-	        <value>* 1/5 * * * ?</value>
+	        <value>59/5 * * * * ?</value>
 	    </property>
 	</bean>
 	<!--  comfrim orders -->
@@ -111,7 +111,7 @@
 	        <ref bean="confirmDetail" />
 	    </property>
 	    <property name="cronExpression">
-	        <value>* 2/5 * * * ?</value>
+	        <value>59/1 * * * * ?</value>
 	    </property>
 	</bean>
 	<!-- 调度工厂 -->
