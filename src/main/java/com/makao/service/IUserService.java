@@ -34,4 +34,5 @@ public interface IUserService {
 	 * 返回areaid对应的记录数
 	 */
 	public int getRecordCountByAreaId(int areaId);
+	public List<User> searchUser(int areaId, String keyword);
 }

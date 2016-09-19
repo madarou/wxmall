@@ -2,6 +2,7 @@ package com.makao.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -575,6 +576,29 @@ public class UserController {
 	    modelAndView.addObject("users", users);
 	    modelAndView.addObject("pageCount", pageCount); 
 	    return modelAndView;
+    }
+	
+	@RequestMapping(value = "/search/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView search(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token,
+			@RequestParam(value="keyword", required=false) String keyword) throws UnsupportedEncodingException {
+		keyword = new String(keyword.getBytes("iso8859-1"),"utf-8");
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("v_userSearch");
+		if (token == null) {
+			return modelAndView;
+		}
+		//查询该area下所有用户，即当前area是该vendor负责的area
+		Vendor vendor = this.vendorService.getById(id);
+		List<User> users = null;
+		if(vendor!=null)
+			users = this.userService.searchUser(vendor.getAreaId(),keyword);
+		
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		modelAndView.addObject("users", users);
+		return modelAndView;
     }
 	
 	@RequestMapping(value = "/v_usermanage/{id:\\d+}", method = RequestMethod.GET)

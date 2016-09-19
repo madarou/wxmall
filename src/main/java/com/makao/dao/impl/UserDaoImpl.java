@@ -341,7 +341,27 @@ public class UserDaoImpl implements IUserDao {
 		}
 		return res;
 	}
-	
+
+	@Override
+	public List<User> searchUser(int areaId, String keyword) {
+		Session session = null;
+		Transaction tx = null;
+		List<User> res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = session.createQuery("from User u where u.areaId = ? and u.userName like ?").setInteger(0, areaId).setString(1, "%"+keyword+"%").list();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
@@ -398,5 +418,6 @@ public class UserDaoImpl implements IUserDao {
 		testor.setName("madarou");
 		insertProduct(testor,tableName);
 	}
+
 
 }

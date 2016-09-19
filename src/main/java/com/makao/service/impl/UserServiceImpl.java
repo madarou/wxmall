@@ -66,6 +66,10 @@ public class UserServiceImpl implements IUserService {
 	public int getRecordCountByAreaId(int areaId) {
 		return this.userDao.getRecordCountByAreaId(areaId);
 	}
+	@Override
+	public List<User> searchUser(int areaId, String keyword) {
+		return this.userDao.searchUser(areaId, keyword);
+	}
 	
 
 }

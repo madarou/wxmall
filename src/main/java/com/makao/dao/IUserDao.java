@@ -44,4 +44,6 @@ public interface IUserDao {
 	 * 返回areaId对应的记录总数
 	 */
 	public int getRecordCountByAreaId(int areaId);
+
+	public List<User> searchUser(int areaId, String keyword);
 }

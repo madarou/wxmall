@@ -99,6 +99,7 @@
 	<mvc:resources mapping="/test/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/user/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/user/v_usermanage/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/user/search/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/user/v_usermanage/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/user/s_queryall/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/user/s_queryall/{\\d+}/static/**" location="/WEB-INF/static/" />

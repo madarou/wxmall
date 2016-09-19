@@ -274,19 +274,6 @@
 			 return false;
 		 }
 		 var cat = $("#catalogp").val();
-    		 /* $.ajax({
-       		  type: "POST",
-     	          contentType: "application/json",
-     	          url: "/product/search/"+$("#loginUserId").val(),
-     	          dataType: "json",
-     	          data: JSON.stringify({"keyword":content,"catalog":cat}),
-     	          success: function(data){
-     	        	  //var cities = JSON.stringify(data.cities);
-     	        	  if(data.msg=="200"){
-     	   	 
-     	        	  }
-     	          }
-       	 	});  */
        	 window.location="/product/search/"+$("#loginUserId").val()+"?token="+$("#loginToken").val()+"&keyword="+content+"&catalog="+cat;
        });
      });
