@@ -162,7 +162,6 @@
 		  	          data: JSON.stringify({"orderid":orderId_toView,"vcomment":vcontent}),
 		  	          success: function(data){
 		  	        	  if(data.msg=="200"){
-		  	        		  //alert("删除区域管理员账号成功");
 		  	        		  alert("备注添加成功");
 		  	        	  }
 		  	          }
@@ -245,9 +244,13 @@
   	        		  window.location.reload();//刷新页面
   	        		  orderId_toCancel=0;
   	        	  }
+  	        	  else{
+  	        		 alert("订单取消失败，请重试");
+ 	        		  window.location.reload();//刷新页面
+ 	        		 orderId_toCancel=0;
+  	        	  }
   	          }
     	 	});
-       $(".del_pop_bg").fadeOut();
        });
      //弹出：取消或关闭按钮
      $("#cancelCancel").click(function(){

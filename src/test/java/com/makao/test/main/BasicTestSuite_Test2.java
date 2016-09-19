@@ -208,7 +208,18 @@ public class BasicTestSuite_Test2 {
 //		assertEquals("200",result.get("msg"));
 //		result = HttpUtils.doPostStr(neworderon,orderon2);
 //		assertEquals("200",result.get("msg"));
-		
+		result = HttpUtils.doPostJson(neworderon,jb);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostJson(neworderon,jb);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostJson(neworderon,jb);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostJson(neworderon,jb);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostJson(neworderon,jb);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostJson(neworderon,jb);
+		assertEquals("200",result.get("msg"));
 		//**********提交订单***********
 //		
 		result = HttpUtils.doPostStr(finishorderon2,orderon2id);

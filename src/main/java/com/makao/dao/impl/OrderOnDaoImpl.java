@@ -533,10 +533,10 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setString(13, orderOn.getTotalPrice());
 									ps.setString(14, orderOn.getFreight());
 									ps.setString(15, orderOn.getComment());
-									if(orderOn.getVcomment()!=null&&!"".equals(orderOn.getVcomment()))
-										ps.setString(16, orderOn.getVcomment()+";"+vcomment);
-									else
-										ps.setString(16, vcomment);
+									if(orderOn.getVcomment()!=null&&!"".equals(orderOn.getVcomment())){
+										ps.setString(16, orderOn.getVcomment()+";"+vcomment);}
+									else{
+										ps.setString(16, vcomment);}
 									ps.setString(17, OrderState.CANCELED.getCode()+"");
 									ps.setString(18, orderOn.getCityarea());
 									ps.setTimestamp(19, new Timestamp(System.currentTimeMillis()));
