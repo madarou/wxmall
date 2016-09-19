@@ -147,7 +147,7 @@ public class RedisUtil {
             return (T) ops.get(key);
     	}catch(Exception e){
     		logger.info("get value by get(0,-1)");
-    		logger.error(e.getMessage(),e);
+    		//logger.error(e.getMessage(),e);
     		return (T)redisTemplate.boundValueOps(key).get(0, -1);
     	}
     }  
