@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -183,6 +184,8 @@ public class RedisUtil {
     	redisTemplate.afterPropertiesSet();
         ValueOperations<String, Object> ops = redisTemplate.opsForValue();  
         ops.getAndSet(key, object);  
+        redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
+    	redisTemplate.afterPropertiesSet();
     }  
   
     /** 

@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import com.makao.entity.OrderOn;
 import com.makao.entity.OrderState;
 import com.makao.entity.TokenModel;
 import com.makao.thread.AddInventoryThread;
+import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
 import com.makao.utils.RedisUtil;
 import com.makao.utils.SerializeUtils;
@@ -149,9 +151,13 @@ public class TestController {
     		System.out.println(s);
     	}
  
+    	ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+		vop.set("token", new OrderOn(), MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS);
+		
     	redisUtil.redisSaveInventory("pi_"+1+"_"+1+"_"+1, String.valueOf(2));
     	Thread.sleep(2000);
-    	//System.out.println(redisUtil.redisQueryObject("pi_1_1_1"));
+    	System.out.println(redisUtil.redisQueryObject("pi_1_1_1"));
+    	System.out.println(redisUtil.redisQueryObject("token"));
     	List<Object> rt = redisUtil.cutInventoryTx2(
 				"pi_" + 1 + "_" + 1
 						+ "_" + 1, 1);
