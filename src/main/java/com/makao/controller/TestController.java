@@ -156,8 +156,8 @@ public class TestController {
 		
     	redisUtil.redisSaveInventory("pi_"+1+"_"+1+"_"+1, String.valueOf(2));
     	Thread.sleep(2000);
-    	System.out.println(redisUtil.redisQueryObject("pi_1_1_1"));
-    	System.out.println(redisUtil.redisQueryObject("token"));
+    	//System.out.println(redisUtil.redisQueryObject("pi_1_1_1"));
+    	//System.out.println(redisUtil.redisQueryObject("token"));
     	List<Object> rt = redisUtil.cutInventoryTx2(
 				"pi_" + 1 + "_" + 1
 						+ "_" + 1, 1);
