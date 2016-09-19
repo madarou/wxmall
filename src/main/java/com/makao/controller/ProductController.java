@@ -1,6 +1,7 @@
 package com.makao.controller;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -571,6 +572,48 @@ public class ProductController {
         jsonObject.put("msg", "201");
         return jsonObject;
     }
+	
+	@RequestMapping(value = "/search/{id:\\d+}", method = RequestMethod.GET)
+  public @ResponseBody
+  ModelAndView search(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token,
+			@RequestParam(value="keyword", required=false) String keyword,
+			@RequestParam(value="catalog", required=false) String cat) throws UnsupportedEncodingException {
+		keyword = new String(keyword.getBytes("iso8859-1"),"utf-8");
+		cat = new String(cat.getBytes("iso8859-1"),"utf-8");
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("v_productSearch");
+		if (token == null) {
+			return modelAndView;
+		}
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		Vendor vendor = this.vendorService.getById(id);
+		List<Product> products = null;
+		List<Catalog> catalogs = new ArrayList<Catalog>();
+		if(vendor!=null){
+			products = this.productService.searchProduct(vendor.getCityId(),vendor.getAreaId(),keyword,cat);
+			Area area = this.areaService.getById(vendor.getAreaId());
+			if(area!=null){
+				String catalogStr = area.getCatalogs();
+				if(catalogStr!=null && !"".equals(catalogStr.trim())){
+					String[] catalogList = catalogStr.split(",");
+					for(String c : catalogList){
+						Catalog cc = new Catalog();
+						cc.setName(c.split("=")[0]);
+						cc.setSequence(c.split("=")[1]);
+						catalogs.add(cc);
+					}
+				}
+			}
+			modelAndView.addObject("city_id", vendor.getCityId());
+			modelAndView.addObject("area_id", vendor.getAreaId());
+		}
+	    modelAndView.addObject("products", products);  
+	    modelAndView.addObject("catalogs", catalogs); 
+	    
+		return modelAndView;
+	}
 	
 	/**
 	 * @return

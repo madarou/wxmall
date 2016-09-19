@@ -83,4 +83,15 @@ public interface IProductDao {
 
 	public int updateInventory(String tableName, String productid,
 			String inventN);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param keyword
+	 * @param cat
+	 * @return
+	 * 根据关键字和分类搜索产品
+	 */
+	public List<Product> searchProduct(int cityId, int areaId, String keyword,
+			String cat);
 }

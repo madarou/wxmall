@@ -76,7 +76,8 @@ public class VendorController {
 		}
 		modelAndView.addObject("id", id);  	    
 	    TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
-	    modelAndView.addObject("token", tm.getToken());      
+	    //modelAndView.addObject("token", tm.getToken()); 
+	    modelAndView.addObject("token","dfsdfdfdfd");     
 		return modelAndView;
 	}
 	

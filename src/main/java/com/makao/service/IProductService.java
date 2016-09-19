@@ -91,4 +91,15 @@ public interface IProductService {
 	 * @return 
 	 */
 	int updateInventory(String tableName, String productid, String inventN);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param keyword
+	 * @param cat
+	 * @return
+	 * 根据关键字搜索产品
+	 */
+	List<Product> searchProduct(int cityId, int areaId, String keyword,
+			String cat);
 }
