@@ -284,7 +284,7 @@ public class OrderOnController {
 				int inv = this.productService.getInventory(cityId, areaId, id);
 				redisUtil.redisSaveInventory("pi_"+cityId+"_"+areaId+"_"+id.trim(), String.valueOf(inv));
 			}
-			int inventory = redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim());
+			int inventory = Integer.valueOf(redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim()));
 			if(inventory<=0){
 				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+cityId+"_"+areaId+"_"+id.trim()+" 售罄");
 				jsonObject.put("msg", "203");

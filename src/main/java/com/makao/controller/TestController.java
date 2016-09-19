@@ -47,6 +47,8 @@ public class TestController {
 	private RedisTemplate<String, Object> stringRedisTemplate;
 	@Autowired
 	private RedisUtil redisUtil;
+	@Autowired
+	private TokenManager tokenManager;
 	
 	private static final Logger logger = Logger.getLogger(TestController.class);
 	@RequestMapping(value="/supervisor")
@@ -144,12 +146,10 @@ public class TestController {
         ops.getAndSet("pi_"+1+1, oo);
         OrderOn oo2 = new OrderOn();oo2.setNumber("bbbadfdsfdsf");
         ops.getAndSet("pi_"+1+2, oo2);
-        Thread.sleep(3000);
-    	Set<String> pi_keys = stringRedisTemplate.keys("\\xac\\xed\\x00\\x05t\\x00\\x05pi_11");
-    	System.out.println("size:"+pi_keys.size());
-    	for(String s:pi_keys){
-    		System.out.println(s);
-    	}
+     
+		TokenModel tm = this.tokenManager.createUserToken(1, "qwer");
+		String token = tm.getToken();
+    	System.out.println("token: "+token);
  
     	ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 		vop.set("token", new OrderOn(), MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS);
@@ -163,5 +163,9 @@ public class TestController {
 						+ "_" + 1, 1);
     	System.out.println(((Long) rt.get(0)).intValue());
     	System.out.println(redisUtil.getKeys("*"));
+    	
+    	TokenModel tm2 = tokenManager.getUserToken(token);
+		boolean isValid = tokenManager.checkUserToken(tm2, token);
+		System.out.println(isValid);
 	}
 }
