@@ -21,7 +21,7 @@ import com.makao.entity.TokenModel;
 @Component
 public class TokenManager {
 	@Autowired
-	private RedisTemplate<String, TokenModel> redisTemplate;
+	private RedisTemplate<String, Object> redisTemplate;
 	private static final Logger logger = Logger.getLogger(TokenManager.class);
 	
 	/**
@@ -42,7 +42,7 @@ public class TokenManager {
 		}
 		TokenModel tm = new TokenModel(userid,userRole,s);
 		logger.info("generated token is: "+s);
-		ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
+		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS);
 		return tm;
 	}
@@ -56,8 +56,8 @@ public class TokenManager {
 		if (tokenString==null || "".equals(tokenString.trim())) {
             return null;
         }
-        ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-        TokenModel tm = vop.get(tokenString.trim());
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+        TokenModel tm = (TokenModel) vop.get(tokenString.trim());
         logger.info("get TM from redis:"+tm);
         return tm;
 	}
@@ -90,8 +90,8 @@ public class TokenManager {
         if (tokenString==null || "".equals(tokenString.trim())) {
             return false;
         }
-        ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-        TokenModel tm = vop.get(tokenString.trim());
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+        TokenModel tm = (TokenModel) vop.get(tokenString.trim());
         logger.info("get TM from redis:"+tm);
         if (tm == null || !tm.getToken().equals(tokenString.trim())) {
         	logger.info("check failed: token string not match");
@@ -117,7 +117,7 @@ public class TokenManager {
 		TokenModel tm = new TokenModel(userid,userRole,s);
 		tm.setOpenid(openid);
 		logger.info("generated user token is: "+s);
-		ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
+		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 		vop.set(s, tm, MakaoConstants.TOKEN_EXPIRE, TimeUnit.HOURS);
 		return tm;
 	}
@@ -132,8 +132,8 @@ public class TokenManager {
 		if (tokenString==null || "".equals(tokenString.trim())) {
             return null;
         }
-        ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-        TokenModel tm = vop.get(tokenString.trim());
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+        TokenModel tm = (TokenModel) vop.get(tokenString.trim());
         logger.info("get TM from redis:"+tm);
         return tm;
 	}
@@ -168,8 +168,8 @@ public class TokenManager {
         if (tokenString==null || "".equals(tokenString.trim())) {
             return false;
         }
-        ValueOperations<String, TokenModel> vop = redisTemplate.opsForValue();
-        TokenModel tm = vop.get(tokenString.trim());
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+        TokenModel tm = (TokenModel) vop.get(tokenString.trim());
         if (tm == null || !tm.getToken().equals(tokenString.trim())) {
         	logger.info("check user token failed: token string not match");
             return false;
