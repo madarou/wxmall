@@ -82,4 +82,13 @@ public interface IProductService {
 	 * 从表Product_cityId_areaId中获取id为id的产品的库存
 	 */
 	int getInventory(int cityId, int areaId, String id);
+
+	/**
+	 * @param tableName
+	 * @param productid
+	 * @param inventN
+	 * 修改商品的库存为inventN
+	 * @return 
+	 */
+	int updateInventory(String tableName, String productid, String inventN);
 }

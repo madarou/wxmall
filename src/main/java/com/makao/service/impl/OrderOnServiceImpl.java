@@ -116,6 +116,10 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public int vcommentOrder(int cityId, int orderid, String vcomment) {
 		return this.orderOnDao.vcommentOrder(cityId, orderid, vcomment);
 	}
+	@Override
+	public List<OrderOn> unPaidOrders(int id) {
+		return this.orderOnDao.unPaidOrders(id);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -2,21 +2,26 @@ package com.makao.utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.makao.controller.TestController;
+import com.makao.entity.OrderOn;
 import com.makao.entity.TokenModel;
 
 /**
@@ -165,6 +170,19 @@ public class RedisUtil {
         ValueOperations<String, Object> ops = redisTemplate.opsForValue();  
         ops.getAndSet(key, object);  
     }  
+    
+    /**
+     * @param key
+     * @param object
+     * 为了使inventory能够通过increment方法加减,StringRedisSerializer为其valueSerializer才行,
+     * 取值的时候不需要再声明
+     */
+    public void redisSaveInventory(final String key, final Object object) {  
+    	redisTemplate.setValueSerializer(new StringRedisSerializer());
+    	redisTemplate.afterPropertiesSet();
+        ValueOperations<String, Object> ops = redisTemplate.opsForValue();  
+        ops.getAndSet(key, object);  
+    }  
   
     /** 
      * @description 保存对象到redis 
@@ -238,7 +256,32 @@ public class RedisUtil {
 				  operations.watch(key);
 				  operations.multi();
 				  //必须用increment的才能在exec()方法得到之后的inventory值，使用set(key,value)方法没有返回，
-				  operations.opsForValue().increment("inventory", 0-productNum);
+				  operations.opsForValue().increment(key, 0-productNum);
+				  //				    logger.info("decreasing inventory to: "+ inventory);
+				  rt = operations.exec();
+				  logger.info("exec cut inventory "+key+" by "+productNum+" rt: " + rt);
+				  if(rt!=null){
+					  //int inventory = (int) rt.get(0);
+					  logger.info("exec success rt: " + rt.get(0));
+					  break;
+				  }
+			  }
+		    return rt;
+		  }
+		});
+		return txResults;
+	}
+    
+    public List<Object> cutInventoryTx2(String key, int productNum){
+		//execute a transaction
+		List<Object> txResults = redisTemplate.execute(new SessionCallback<List<Object>>() {
+		  public List<Object> execute(RedisOperations operations) throws DataAccessException {
+			  List<Object> rt = null;
+			  while(true){
+				  operations.watch(key);
+				  operations.multi();
+				  //必须用increment的才能在exec()方法得到之后的inventory值，使用set(key,value)方法没有返回，
+				  operations.opsForValue().increment(key, 0-productNum);
 				  //				    logger.info("decreasing inventory to: "+ inventory);
 				  rt = operations.exec();
 				  logger.info("exec cut inventory "+key+" by "+productNum+" rt: " + rt);
@@ -269,7 +312,7 @@ public class RedisUtil {
 				  operations.watch(key);
 				  operations.multi();
 				  //必须用increment的才能在exec()方法得到之后的inventory值，使用set(key,value)方法没有返回，
-				  operations.opsForValue().increment("inventory", productNum);
+				  operations.opsForValue().increment(key, productNum);
 				  rt = operations.exec();
 				  logger.info("exec add inventory "+key+" by "+productNum+" rt: " + rt);
 				  if(rt!=null){
@@ -282,4 +325,34 @@ public class RedisUtil {
 		});
 		return txResults;
 	}
+    
+    public List<String> getKeys(String pattern){
+    	if(pattern==null||"".equals(pattern))
+    		return null;
+    	RedisConnection redisConnection = redisTemplate.getConnectionFactory().getConnection();
+    	Set<byte[]> keys = redisConnection.keys(pattern.getBytes());
+    	Iterator<byte[]> it = keys.iterator();
+    	List<String> keylist = new ArrayList<String>();
+    	while(it.hasNext()){
+    	    byte[] data = (byte[])it.next();
+    	    String k = new String(data, 0, data.length);
+    	    keylist.add(k);
+    	    System.out.println(k);
+    	}
+    	redisConnection.close();
+    	return keylist;
+    }
+    
+    public static void main(String[] args){
+    	RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
+    	ValueOperations<String, Object> ops = redisTemplate.opsForValue();  
+    	OrderOn oo = new OrderOn();oo.setNumber("adfdsfdsf");
+        ops.getAndSet("pi_"+1+1, oo);
+        OrderOn oo2 = new OrderOn();oo2.setNumber("bbbadfdsfdsf");
+        ops.getAndSet("pi_"+1+1, oo2);
+    	Set<String> pi_keys = redisTemplate.keys("pi_*");
+    	for(String s:pi_keys){
+    		System.out.println(s);
+    	}
+    }
 }

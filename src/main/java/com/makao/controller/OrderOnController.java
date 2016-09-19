@@ -282,7 +282,7 @@ public class OrderOnController {
 			Object object = redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim());
 			if(object==null){//缓存里面如果没有，从数据库里读
 				int inv = this.productService.getInventory(cityId, areaId, id);
-				redisUtil.redisSaveObject("pi_"+cityId+"_"+areaId+"_"+id.trim(), inv);
+				redisUtil.redisSaveInventory("pi_"+cityId+"_"+areaId+"_"+id.trim(), String.valueOf(inv));
 			}
 			int inventory = redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim());
 			if(inventory<=0){

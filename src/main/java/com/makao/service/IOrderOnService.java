@@ -117,4 +117,11 @@ public interface IOrderOnService {
 	 */
 	int vcommentOrder(int cityId, int orderid, String vcomment);
 
+	/**
+	 * @param id
+	 * @return
+	 * 数据库中查到所有15分钟内未支付或支付失败的订单，同时删除它们，并且返回订单列表
+	 */
+	List<OrderOn> unPaidOrders(int id);
+
 }

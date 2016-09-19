@@ -19,5 +19,7 @@ public class MakaoConstants {
 											//当配送时间起点-PRETIME(min)<=当前时间时的订单满足条件
 	public static final int COMFIRMTIME = -3;//完成配送的时间与当前时间的分钟差
 												//如果时间差(是负数)小于预先定义的COMFIRMTIME，系统帮助确认收货，单位为分
+	public static final int REMOVETIME = -3;//数据库中查到所有15分钟内未支付或支付失败的订单，同时删除它们，并且返回订单列表
+											//下单时间与当前时间的分钟差，小于该时间则开始删除，单位为分，为负值，注意其绝对值必须大于ORDER_EXPIRE
 	public static final int WEIXIN_TOKEN_EXPIRE_TIME = 110;//微信的access_token和jsapi_ticket的在缓存中的有效时间，单位为分
 }

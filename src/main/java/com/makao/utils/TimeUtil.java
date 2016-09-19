@@ -1,9 +1,11 @@
 package com.makao.utils;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import net.sf.json.JSONObject;
 
@@ -36,6 +38,16 @@ public class TimeUtil {
 	       
 	       Date dt1 = df.parse("2016-09-17 15:40:04.095");
 	       System.out.println(dt1);
+	       
+	       Timestamp t = new Timestamp((System.currentTimeMillis()));
+	       System.out.println(t.toString());
+	       Date dt2 = df.parse(t.toString());
+	       System.out.println(dt2);
+	       
+	       List<String> l = null;
+	       for(String s:l){
+	    	   System.out.println(s);
+	       }
 	    }
 	
 	/**

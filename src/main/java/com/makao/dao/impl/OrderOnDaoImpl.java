@@ -1828,6 +1828,88 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		return res;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOnDao#unPaidOrders(int)
+	 * 数据库中查到所有15分钟内未支付或支付失败的订单，同时删除它们，并且返回订单列表
+	 */
+	@Override
+	public List<OrderOn> unPaidOrders(int id) {
+		String tableName = "Order_"+id+"_on";
+		String sql1 = "SELECT * FROM "+ tableName + " WHERE `status`='"+OrderState.NOT_PAID.getCode()+"'";
+
+		Session session = null;
+		Transaction tx = null;
+		List<OrderOn> res = new ArrayList<OrderOn>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;PreparedStatement ps2 = null;
+					try {
+						ps = connection.prepareStatement(sql1);
+						ResultSet rs = ps.executeQuery();
+						while(rs.next()){
+							String orderTime = rs.getTimestamp("orderTime").toString();
+							int min_diff = TimeUtil.minitesDiff(orderTime);//收货开始时间与当前时间的分钟差
+							logger.info("city_area_id:"+id+"_"+rs.getInt("areaId")+"_"+rs.getInt("id")+"; receiveTime:"+orderTime+"; min_diff: "+min_diff);
+							if(min_diff<=MakaoConstants.REMOVETIME){
+								OrderOn p = new OrderOn();
+								p.setId(rs.getInt("id"));
+								p.setNumber(rs.getString("number"));
+								p.setProductIds(rs.getString("productIds"));
+								p.setProductNames(rs.getString("productNames"));
+								p.setOrderTime(rs.getTimestamp("orderTime"));
+								p.setReceiverName(rs.getString("receiverName"));
+								p.setPhoneNumber(rs.getString("phoneNumber"));
+								p.setAddress(rs.getString("address"));
+								p.setPayType(rs.getString("payType"));
+								p.setReceiveType(rs.getString("receiveType"));
+								p.setReceiveTime(rs.getString("receiveTime"));
+								p.setCouponId(rs.getInt("couponId"));
+								p.setCouponPrice(rs.getString("couponPrice"));
+								p.setTotalPrice(rs.getString("totalPrice"));
+								p.setFreight(rs.getString("freight"));
+								p.setComment(rs.getString("comment"));
+								p.setVcomment(rs.getString("vcomment"));
+								p.setStatus(rs.getString("status"));
+								p.setCityarea(rs.getString("cityarea"));
+								p.setUserId(rs.getInt("userId"));
+								p.setAreaId(rs.getInt("areaId"));
+								p.setCityId(rs.getInt("cityId"));
+								p.setRefundStatus(rs.getString("refundStatus"));
+								p.setHistory(rs.getString("history"));
+								p.setPoint(rs.getInt("point"));
+								p.setSender(rs.getString("sender"));
+								p.setSenderPhone(rs.getString("senderPhone"));
+								res.add(p);
+								logger.info("成功将订单删除："+"area:"+rs.getInt("areaId")+"; orderid:"+rs.getInt("id"));
+								
+								String sql3 = "DELETE FROM `"+tableName+"` WHERE `id`="+rs.getInt("id");
+								ps2 = connection.prepareStatement(sql3);
+								ps2.executeUpdate();
+							}
+						}
+					}finally{
+						doClose(ps);doClose(ps2);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res.size()>0 ? res : null;
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {

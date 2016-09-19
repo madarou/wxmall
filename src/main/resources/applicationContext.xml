@@ -53,10 +53,28 @@
 	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="localhost" p:port="6379" />
 	<bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate" p:connection-factory-ref="jedisConnectionFactory"/>
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="jedisConnectionFactory">
-      	<!-- <property name="defaultSerializer">  
-	        <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>  
-	    </property>  -->
+      	<property name="KeySerializer"> 
+          <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean> 
+	      </property> 
+	      <!-- <property name="ValueSerializer"> 
+	          <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean> 
+	      </property>
+	       
+	      <property name="HashKeySerializer"> 
+	        <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean> 
+	      </property>   
+	      <property name="HashValueSerializer"> 
+	        <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean> 
+	      </property> -->
     </bean>
+  <!--   <bean id="inventoryRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="jedisConnectionFactory">
+      	<property name="KeySerializer"> 
+          <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean> 
+	      </property> 
+	      <property name="ValueSerializer"> 
+	          <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean> 
+	      </property>
+    </bean> -->
     <!-- 配置声明式事务管理（采用注解的方式） -->
     <bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"></property>
@@ -114,12 +132,39 @@
 	        <value>59/1 * * * * ?</value>
 	    </property>
 	</bean>
+	<!-- optimize inventory -->
+	<bean id="optInventory" class="com.makao.quartz.InventoryOptJob"/>
+	<bean id="inventoryDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="group" value="inventory"/>
+	    <property name="name" value="inventory"/>
+	    <!--false表示等上一个任务执行完后再开启新的任务-->
+	    <property name="concurrent" value="false"/>
+	    <property name="targetObject">
+	        <ref bean="optInventory"/>
+	    </property>
+	    <property name="targetMethod">
+	        <value>execute</value>
+	    </property>
+	</bean>
+	<bean id="inventoryTrigger"
+	      class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="work_inventory_name"/>
+	    <property name="group" value="work_inventory"/>
+	    <property name="jobDetail">
+	        <ref bean="inventoryDetail" />
+	    </property>
+	    <property name="cronExpression">
+	        <value>59/10 * * * * ?</value>
+	    </property>
+	</bean>
+	
 	<!-- 调度工厂 -->
 	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 	    <property name="triggers">
 	        <list>
 	            <ref bean="approachTrigger"/>
 	            <ref bean="confirmTrigger"/>
+	            <ref bean="inventoryTrigger"/>
 	        </list>
 	    </property>
 	</bean>

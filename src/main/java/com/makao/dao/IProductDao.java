@@ -80,4 +80,7 @@ public interface IProductDao {
 	 * 从Product_cityId_areaId中获取产品id的库存
 	 */
 	public int getInventory(int cityId, int areaId, String id);
+
+	public int updateInventory(String tableName, String productid,
+			String inventN);
 }

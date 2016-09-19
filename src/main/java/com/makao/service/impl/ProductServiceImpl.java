@@ -90,6 +90,11 @@ public class ProductServiceImpl implements IProductService {
 	public int getInventory(int cityId, int areaId, String id) {
 		return this.productDao.getInventory(cityId, areaId, id);
 	}
+	@Override
+	public int updateInventory(String tableName, String productid,
+			String inventN) {
+		return this.productDao.updateInventory(tableName, productid,inventN);
+	}
 	
 	
 //	@Override

@@ -2,16 +2,20 @@ package com.makao.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +41,8 @@ import com.makao.utils.TokenManager;
 public class TestController {
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
+	@Autowired
+	private RedisTemplate<String, Object> stringRedisTemplate;
 	@Autowired
 	private RedisUtil redisUtil;
 	
@@ -128,4 +134,28 @@ public class TestController {
 		logger.info(redisUtil.redisQueryObject("test"));
 	}
 	
+	@RequestMapping(value={"/redistx4"},method = RequestMethod.GET)
+	public void testKeys() throws InterruptedException{
+		//redisUtil.testKeys();
+		ValueOperations<String, Object> ops = stringRedisTemplate.opsForValue();  
+    	OrderOn oo = new OrderOn();oo.setNumber("adfdsfdsf");
+        ops.getAndSet("pi_"+1+1, oo);
+        OrderOn oo2 = new OrderOn();oo2.setNumber("bbbadfdsfdsf");
+        ops.getAndSet("pi_"+1+2, oo2);
+        Thread.sleep(3000);
+    	Set<String> pi_keys = stringRedisTemplate.keys("\\xac\\xed\\x00\\x05t\\x00\\x05pi_11");
+    	System.out.println("size:"+pi_keys.size());
+    	for(String s:pi_keys){
+    		System.out.println(s);
+    	}
+ 
+    	redisUtil.redisSaveInventory("pi_"+1+"_"+1+"_"+1, String.valueOf(2));
+    	Thread.sleep(2000);
+    	System.out.println(redisUtil.redisQueryObject("pi_1_1_1"));
+    	List<Object> rt = redisUtil.cutInventoryTx2(
+				"pi_" + 1 + "_" + 1
+						+ "_" + 1, 1);
+    	System.out.println(((Long) rt.get(0)).intValue());
+    	System.out.println(redisUtil.getKeys("*"));
+	}
 }

@@ -50,8 +50,8 @@ public class RedisInitialOnInit implements ServletContextListener {
 		//这里不能用set(key, value)，因为已经使用了StringRedisSerializer，Long类型不能cast成String
 		//而如果使用默认的JDKSerializer，increment会在加时报错，因为JDKSerializer把Long值序列化成了不
 		//规则的一些字串，不能直接拿出来做加减。如果key不存在，直接增加会从0开始加
-		vop.increment("inventory", 20);
-		logger.info("set inventory to: "+ 20);
+//		vop.increment("inventory", 20);
+//		logger.info("set inventory to: "+ 20);
 	}
 
 }
