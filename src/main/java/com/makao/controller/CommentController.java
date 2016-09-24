@@ -115,6 +115,27 @@ public class CommentController {
 		return jsonObject;
 	}
 	
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param userId
+	 * @param productId
+	 * @return
+	 * 加载用户userId对商品productId的所有评论
+	 */
+	@RequestMapping(value="/{cityid:\\d+}/{areaid:\\d+}/{userid:\\d+}/{productid:\\d+}",method = RequestMethod.GET)
+	public @ResponseBody Object queryUserComment(@PathVariable("cityid") Integer cityId,@PathVariable("areaid") Integer areaId,
+			@PathVariable("userid") Integer userId,@PathVariable("productid") Integer productId)
+	{
+		List<Comment> comments = null;
+		JSONObject jsonObject = new JSONObject();
+		comments = this.commentService.queryUserComments("Comment_"+cityId+"_"+areaId,userId,productId);
+		logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的商品 "+productId+"的所有评论完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("comments", comments);//不用序列化，方便前端jquery遍历
+		return jsonObject;
+	}
+	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@RequestBody Comment Comment) {

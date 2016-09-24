@@ -1910,6 +1910,126 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		return res.size()>0 ? res : null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOnDao#userCancelOrder(int, int)
+	 * 用户取消订单
+	 */
+	@Override
+	public OrderOn userCancelOrder(int cityid, int orderid) {
+		String tableName = "Order_"+cityid+"_on";
+		String Order_cityId_on = "Order_"+cityid+"_on";
+		String Order_cityId_off = "Order_"+cityid+"_off";
+		String sql1 = "SELECT * FROM "+ tableName + " WHERE `id`="+orderid;
+		String sql2 = "INSERT INTO `"
+				+ Order_cityId_off
+				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
+				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		Session session = null;
+		Transaction tx = null;
+		List<OrderOn> res = new ArrayList<OrderOn>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					PreparedStatement ps2 = null;
+					PreparedStatement ps3 = null;
+					try {
+						ps = connection.prepareStatement(sql1);
+						ResultSet rs = ps.executeQuery();
+						while(rs.next()){
+									OrderOn p = new OrderOn();
+									p.setId(rs.getInt("id"));
+									p.setNumber(rs.getString("number"));
+									p.setProductIds(rs.getString("productIds"));
+									p.setProductNames(rs.getString("productNames"));
+									p.setOrderTime(rs.getTimestamp("orderTime"));
+									p.setReceiverName(rs.getString("receiverName"));
+									p.setPhoneNumber(rs.getString("phoneNumber"));
+									p.setAddress(rs.getString("address"));
+									p.setPayType(rs.getString("payType"));
+									p.setReceiveType(rs.getString("receiveType"));
+									p.setReceiveTime(rs.getString("receiveTime"));
+									p.setCouponId(rs.getInt("couponId"));
+									p.setCouponPrice(rs.getString("couponPrice"));
+									p.setTotalPrice(rs.getString("totalPrice"));
+									p.setFreight(rs.getString("freight"));
+									p.setComment(rs.getString("comment"));
+									p.setVcomment(rs.getString("vcomment"));
+									p.setStatus(rs.getString("status"));
+									p.setCityarea(rs.getString("cityarea"));
+									p.setUserId(rs.getInt("userId"));
+									p.setAreaId(rs.getInt("areaId"));
+									p.setCityId(rs.getInt("cityId"));
+									p.setRefundStatus(rs.getString("refundStatus"));
+									p.setHistory(rs.getString("history"));
+									p.setPoint(rs.getInt("point"));
+									p.setSender(rs.getString("sender"));
+									p.setSenderPhone(rs.getString("senderPhone"));
+									
+									String sql3 = "DELETE FROM `"+Order_cityId_on+"` WHERE `id`="+rs.getInt("id");
+									ps2 = connection.prepareStatement(sql2);
+									ps2.setString(1, rs.getString("number"));
+									ps2.setString(2, rs.getString("productIds"));
+									ps2.setString(3, rs.getString("productNames"));
+									ps2.setTimestamp(4, rs.getTimestamp("orderTime"));
+									ps2.setString(5, rs.getString("receiverName"));
+									ps2.setString(6, rs.getString("phoneNumber"));
+									ps2.setString(7, rs.getString("address"));
+									ps2.setString(8, rs.getString("payType"));
+									ps2.setString(9, rs.getString("receiveType"));
+									ps2.setString(10, rs.getString("receiveTime"));
+									ps2.setInt(11, rs.getInt("couponId"));
+									ps2.setString(12, rs.getString("couponPrice"));
+									ps2.setString(13, rs.getString("totalPrice"));
+									ps2.setString(14, rs.getString("freight"));
+									ps2.setString(15, rs.getString("comment"));
+									ps2.setString(16, rs.getString("vcomment"));
+									ps2.setString(17, OrderState.CANCELED.getCode()+"");
+									ps2.setString(18, rs.getString("cityarea"));
+									ps2.setTimestamp(19, new Timestamp(System.currentTimeMillis()));
+									ps2.setInt(20, rs.getInt("userId"));
+									ps2.setInt(21, rs.getInt("areaId"));
+									ps2.setInt(22, rs.getInt("cityId"));
+									if("1".equals(rs.getString("status")))//未付款的无需退款
+										ps2.setString(23, "无需退款");
+									else
+										ps2.setString(23, "待退款");
+									ps2.setString(24, rs.getString("history")+","+OrderState.CANCELED.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									ps2.setInt(25, rs.getInt("point"));
+									ps2.setString(26,rs.getString("sender"));
+									ps2.setString(27, rs.getString("senderPhone"));
+									ps2.executeUpdate();
+									
+									ps3 = connection.prepareStatement(sql3);
+									ps3.executeUpdate();
+									String comfirmed = rs.getInt("cityId")+"_"+rs.getInt("areaId")+"_"+rs.getString("number");
+									res.add(p);
+									logger.info("自动确认收货订单(cityid_areaid_number)："+comfirmed);
+						}
+					}finally{
+						doClose(ps);doClose(ps2);doClose(ps3);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res.size()>0 ? res.get(0) : null;
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {

@@ -124,4 +124,12 @@ public interface IOrderOnDao {
 	 * 数据库中查到所有15分钟内未支付或支付失败的订单，同时删除它们，并且返回订单列表
 	 */
 	public List<OrderOn> unPaidOrders(int id);
+
+	/**
+	 * @param cityid
+	 * @param orderid
+	 * @return
+	 * 用户取消订单
+	 */
+	public OrderOn userCancelOrder(int cityid, int orderid);
 }

@@ -115,7 +115,7 @@ api															method				comment
 		areaId://评论所属areaId
 	}
 /comment/all/[cityId]/[areaId]/[productId]					GET					加载某个商品的所有评论
-
+/comment/[cityId]/[areaId]/[userId]/[productId]				GET					加载用户userId对商品productId的所有评论
 order state code:
 1				未支付
 2				排队中

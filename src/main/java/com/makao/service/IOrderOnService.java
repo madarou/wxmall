@@ -124,4 +124,12 @@ public interface IOrderOnService {
 	 */
 	List<OrderOn> unPaidOrders(int id);
 
+	/**
+	 * @param cityid
+	 * @param orderid
+	 * @return
+	 * 用户取消订单
+	 */
+	OrderOn userCancelOrder(int cityid, int orderid);
+
 }

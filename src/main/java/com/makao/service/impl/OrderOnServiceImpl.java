@@ -120,6 +120,10 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public List<OrderOn> unPaidOrders(int id) {
 		return this.orderOnDao.unPaidOrders(id);
 	}
+	@Override
+	public OrderOn userCancelOrder(int cityid, int orderid) {
+		return this.orderOnDao.userCancelOrder(cityid, orderid);
+	}
 	
 //	@Override
 //	public void testor() {

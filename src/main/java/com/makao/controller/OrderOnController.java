@@ -808,7 +808,7 @@ public class OrderOnController {
 	 * @param orderid
 	 * @param token
 	 * @return
-	 * 取消订单，从缓存里取消，不是从数据库里取消
+	 * 取消订单，从缓存里取消，也是从数据库里取消
 	 */
 	@AuthPassport
 	@RequestMapping(value = "/cancel/{cityid:\\d+}/{orderid:\\d+}", method = RequestMethod.GET)
@@ -816,9 +816,11 @@ public class OrderOnController {
     Object cancel(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid,
     		@RequestParam(value="token", required=false) String token) {
 		JSONObject jsonObject = new JSONObject();
-		//int res = this.orderOnService.confirmGetOrder(cityid, orderid);
-		int res = 0;//这里实现从缓存中去掉订单信息的操作
-		if(res==0){
+		OrderOn res = this.orderOnService.userCancelOrder(cityid, orderid);
+		if(res!=null){
+			OrderOn order = this.redisUtil.redisQueryObject(res.getNumber());
+			if(order!=null)
+				this.redisUtil.redisDeleteKey(res.getNumber());
 			logger.info("确认收货订单成功id=" + orderid + " 所属城市id:"+cityid);
         	jsonObject.put("msg", "200");
 		}

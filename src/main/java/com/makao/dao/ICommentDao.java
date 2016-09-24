@@ -37,4 +37,14 @@ public interface ICommentDao {
 	 */
 	public List<Comment> queryProductComments(String tableName,
 			Integer productId);
+
+	/**
+	 * @param string
+	 * @param userId
+	 * @param productId
+	 * @return
+	 * 加载用户userId对商品productId的所有评论
+	 */
+	public List<Comment> queryUserComments(String string, Integer userId,
+			Integer productId);
 }

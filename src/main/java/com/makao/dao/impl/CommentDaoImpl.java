@@ -214,6 +214,62 @@ public class CommentDaoImpl implements ICommentDao{
 		return res;
 	}
 	
+
+	/* (non-Javadoc)
+	 * @see com.makao.dao.ICommentDao#queryUserComments(java.lang.String, java.lang.Integer, java.lang.Integer)
+	 * 加载用户userId对商品productId的所有评论
+	 */
+	@Override
+	public List<Comment> queryUserComments(String tableName, Integer userId,
+			Integer productId) {
+		String sql = "SELECT * FROM "+ tableName + " WHERE `productId`="+productId+" AND `userId`="+userId+" Order By `date` Desc";
+		Session session = null;
+		Transaction tx = null;
+		List<Comment> res = new LinkedList<Comment>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							Comment p = new Comment();
+							p.setId(rs.getInt("id"));
+							p.setUserName(rs.getString("userName"));
+							p.setUserId(rs.getInt("userId"));
+							p.setUserImgUrl(rs.getString("userImgUrl"));
+							p.setDate(rs.getDate("date"));
+							p.setLikes(rs.getInt("likes"));
+							p.setContent(rs.getString("content"));
+							p.setProductId(rs.getInt("productId"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setAreaId(rs.getInt("areaId"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
