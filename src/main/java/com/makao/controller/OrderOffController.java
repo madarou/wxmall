@@ -21,12 +21,16 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.auth.AuthPassport;
 import com.makao.entity.City;
+import com.makao.entity.Comment;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
+import com.makao.entity.Product;
 import com.makao.entity.Supervisor;
 import com.makao.entity.Vendor;
 import com.makao.service.ICityService;
+import com.makao.service.ICommentService;
 import com.makao.service.IOrderOffService;
+import com.makao.service.IProductService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.MakaoConstants;
@@ -50,6 +54,10 @@ public class OrderOffController {
 	private ISupervisorService supervisorService;
 	@Resource
 	private ICityService cityService;
+	@Resource
+	private IProductService productService;
+	@Resource
+	private ICommentService commentService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody OrderOff get(@PathVariable("id") Integer id)
@@ -114,9 +122,51 @@ public class OrderOffController {
     public @ResponseBody Object get(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid) {
 		JSONObject jsonObject = new JSONObject();
 		OrderOff os = this.orderOffService.queryByOrderId("Order_"+cityid+"_off", orderid);
+		List<SmallProduct> sps = new ArrayList<SmallProduct>();
+		if(os!=null){
+			//重新组装商品列表，方便前端直接显示
+			String[] pro_ids = os.getProductIds().split(",");
+			String[] pro_names = os.getProductNames().split(",");
+			String pcomments = os.getPcomments();
+			String[] coms = null;
+			if(pcomments!=null&&!"".equals(pcomments))
+			{	
+				coms = pcomments.split(",");
+			}
+			for(int i=0; i<pro_ids.length; i++){
+				String pid = pro_ids[i];
+				String[] names = pro_names[i].split("=");
+				Product p = (Product)this.productService.getById(Integer.valueOf(pid),os.getCityId(),os.getAreaId());
+				SmallProduct sp = new SmallProduct();
+				sp.setId(pid);
+				sp.setName(names[0]);//这里要显示当时下单时的名称，防止后面修改了商品名后，引起误会
+				//sp.setImage(p.getCoverSUrl());
+				sp.setCityId(os.getCityId());
+				sp.setAreaId(os.getAreaId());
+				sp.setImage(p.getCoverSUrl());
+				sp.setPrice(names[1]);//这里要显示当时用户下单时的价格，而不是现在商品实际的价格
+				sp.setNumber(names[2]);
+				if(coms!=null&&coms.length>0)
+				{
+					for(String c : coms){
+						if(c!=null&&!"".equals(c)){
+							String proid = c.split("=")[0];
+							if(pid.equals(proid)){
+								String comid = c.split("=")[1];
+								Comment com = this.commentService.getByCityAreaComentId(os.getCityId(),os.getAreaId(),Integer.valueOf(comid));
+								sp.setComment(com.getContent());
+							}
+						}
+					}
+				}
+				sps.add(sp);
+			}
+			
+		}
 		logger.info("查询失效订单id："+orderid+" 信息完成(所属city:"+cityid+")");
 		jsonObject.put("msg", "200");
 		jsonObject.put("order", os);
+		jsonObject.put("products", sps);
 		return jsonObject;
     }
 	
@@ -611,5 +661,63 @@ public class OrderOffController {
 		return modelAndView;
     }
 	
+	private class SmallProduct{
+		private String id;
+		private String name;
+		private String image;
+		private String price;
+		private String number;
+		private int cityId;
+		private int areaId;
+		private String comment;
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getImage() {
+			return image;
+		}
+		public void setImage(String image) {
+			this.image = image;
+		}
+		public String getPrice() {
+			return price;
+		}
+		public void setPrice(String price) {
+			this.price = price;
+		}
+		public String getNumber() {
+			return number;
+		}
+		public void setNumber(String number) {
+			this.number = number;
+		}
+		public int getCityId() {
+			return cityId;
+		}
+		public void setCityId(int cityId) {
+			this.cityId = cityId;
+		}
+		public int getAreaId() {
+			return areaId;
+		}
+		public void setAreaId(int areaId) {
+			this.areaId = areaId;
+		}
+		public String getComment() {
+			return comment;
+		}
+		public void setComment(String comment) {
+			this.comment = comment;
+		}
+	}
 	
 }

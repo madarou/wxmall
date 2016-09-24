@@ -215,6 +215,7 @@ history			varchar(255)	订单历史状态		以'订单状态=时间,订单状态2
 point			int(11)			下单赠送的积分
 sender			varchar(30)		配送员姓名
 senderPhone		varchar(12)		配送员电话
+pcomments		varchar(255)	商品评论的id列表	以"商品id=评论id,"的形式插入
 
 Coupon_cityId(我的积分中心->积分兑换里显示的优惠券类型，是静态优惠券，即没有被兑换的，兑换之后会在下面Coupon_cityId_on中生成)
 列名				类型				注释				备注
@@ -330,6 +331,7 @@ userId			int(11)			评论者Id
 date			date			评论时间
 cityId			int(11)			商品所属城市id
 areaId			int(11)			商品所属区域id
+orderId			int(11)			对应订单的id
 
 //一下评论不使用，使用上面那个
 AreaName_cityId_comment

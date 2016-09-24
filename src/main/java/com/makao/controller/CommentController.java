@@ -19,6 +19,8 @@ import com.makao.auth.AuthPassport;
 import com.makao.entity.Comment;
 import com.makao.entity.Product;
 import com.makao.service.ICommentService;
+import com.makao.service.IOrderOffService;
+import com.makao.service.IOrderOnService;
 
 /**
  * @description: TODO
@@ -32,6 +34,8 @@ public class CommentController {
 	private static final Logger logger = Logger.getLogger(CommentController.class);
 	@Resource
 	private ICommentService commentService;
+	@Resource
+	private IOrderOffService orderOffService;
 	
 	@RequestMapping(value="/{id:\\d+}",method = RequestMethod.GET)
 	public @ResponseBody Comment get(@PathVariable("id") Integer id)
@@ -65,6 +69,10 @@ public class CommentController {
 		int res = this.commentService.insert(Comment);
 		JSONObject jsonObject = new JSONObject();
 		if(res!=0){
+			//添加了评论后需要将评论的id号插入到对应订单中，方便后面读取
+			//以"商品id=评论id,"的形式插入
+			Comment.setId(res);
+			this.orderOffService.updateComment(Comment);
 			logger.info(Comment.getUserName()+" 增加评论成功,id=" + res);
         	jsonObject.put("msg", "200");
         	jsonObject.put("id", res);

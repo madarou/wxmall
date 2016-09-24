@@ -2,6 +2,7 @@ package com.makao.dao;
 
 import java.util.List;
 
+import com.makao.entity.Comment;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 
@@ -81,4 +82,12 @@ public interface IOrderOffDao {
 	 * 查询所有已取消(卖家取消)的和已退货的订单记录数
 	 */
 	public int getCanceledAndReturnedRecordCount(int cityid);
+
+	/**
+	 * @param comment
+	 * @return
+	 * //添加了评论后需要将评论的id号插入到对应订单中，方便后面读取
+			//以"商品id=评论id,"的形式插入
+	 */
+	public int updateComment(Comment comment);
 }

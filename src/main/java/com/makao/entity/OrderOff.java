@@ -36,6 +36,7 @@ public class OrderOff {
 	private int point;//赠送积分
 	private String sender;//配送员姓名
 	private String senderPhone;//配送员电话
+	private String pcomments;//评论，商品id=评论id
 	
 	public int getId() {
 		return id;
@@ -204,6 +205,12 @@ public class OrderOff {
 	}
 	public void setSenderPhone(String senderPhone) {
 		this.senderPhone = senderPhone;
+	}
+	public String getPcomments() {
+		return pcomments;
+	}
+	public void setPcomments(String pcomments) {
+		this.pcomments = pcomments;
 	}
 	
 }

@@ -41,8 +41,8 @@ public class CommentDaoImpl implements ICommentDao{
 		String sql = "INSERT INTO `"
 				+ tableName
 				+ "` (`userName`,`userId`,`userImgUrl`,`date`,`likes`,`content`,`productId`,`cityId`,"
-				+ "`areaId`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?)";
+				+ "`areaId`,`orderId`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();// 返回0表示失败，成功则返回id
@@ -65,6 +65,7 @@ public class CommentDaoImpl implements ICommentDao{
 						ps.setInt(7, comment.getProductId());
 						ps.setInt(8, comment.getCityId());
 						ps.setInt(9, comment.getAreaId());
+						ps.setInt(10, comment.getOrderId());
 						int row = ps.executeUpdate();
 						ResultSet rs = ps.getGeneratedKeys();  
 					     if ( rs.next() ) {  
@@ -194,6 +195,7 @@ public class CommentDaoImpl implements ICommentDao{
 							p.setProductId(rs.getInt("productId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setAreaId(rs.getInt("areaId"));
+							p.setOrderId(rs.getInt("orderId"));
 							res.add(p);
 						}
 					}finally{
@@ -249,6 +251,7 @@ public class CommentDaoImpl implements ICommentDao{
 							p.setProductId(rs.getInt("productId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setAreaId(rs.getInt("areaId"));
+							p.setOrderId(rs.getInt("orderId"));
 							res.add(p);
 						}
 					}finally{
@@ -308,6 +311,57 @@ public class CommentDaoImpl implements ICommentDao{
 				logger.error(ex.getMessage(), ex);
 			}
 		}
+	}
+
+	@Override
+	public Comment getByCityAreaComentId(int cityId, int areaId, int commentid) {
+		String tableName = "Comment_"+cityId+"_"+areaId;
+		String sql = "SELECT * FROM "+ tableName + " WHERE `id`="+commentid;
+		Session session = null;
+		Transaction tx = null;
+		List<Comment> res = new LinkedList<Comment>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							Comment p = new Comment();
+							p.setId(rs.getInt("id"));
+							p.setUserName(rs.getString("userName"));
+							p.setUserId(rs.getInt("userId"));
+							p.setUserImgUrl(rs.getString("userImgUrl"));
+							p.setDate(rs.getDate("date"));
+							p.setLikes(rs.getInt("likes"));
+							p.setContent(rs.getString("content"));
+							p.setProductId(rs.getInt("productId"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setAreaId(rs.getInt("areaId"));
+							p.setOrderId(rs.getInt("orderId"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return (res.size()>0)?res.get(0):null;
 	}
 
 }

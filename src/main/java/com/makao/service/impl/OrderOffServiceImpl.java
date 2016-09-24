@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.makao.dao.IOrderOffDao;
+import com.makao.entity.Comment;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 import com.makao.service.IOrderOffService;
@@ -105,6 +106,11 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	@Override
 	public int getCanceledAndReturnedRecordCount(int cityid) {
 		return this.orderOffDao.getCanceledAndReturnedRecordCount(cityid);
+	}
+	@Override
+	public int updateComment(Comment comment) {
+		return this.orderOffDao.updateComment(comment);
+		
 	}
 	
 //	@Override

@@ -18,6 +18,7 @@ public class Comment {
 	private int productId;
 	private int cityId;
 	private int areaId;
+	private int orderId;
 	public int getId() {
 		return id;
 	}
@@ -77,5 +78,11 @@ public class Comment {
 	}
 	public void setAreaId(int areaId) {
 		this.areaId = areaId;
+	}
+	public int getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 }

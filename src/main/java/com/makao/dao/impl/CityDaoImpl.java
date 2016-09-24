@@ -119,6 +119,7 @@ public class CityDaoImpl implements ICityDao {
 					+ "`point` int(11),"
 					+ "`sender` varchar(30),"
 					+ "`senderPhone` varchar(12),"
+					+ "`pcomments` varchar(255),"
 					+ "PRIMARY KEY (`id`))";
 			session.doWork(
 					// 定义一个匿名类，实现了Work接口

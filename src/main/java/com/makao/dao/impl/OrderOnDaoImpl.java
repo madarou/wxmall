@@ -455,8 +455,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ Order_cityId_off
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`,`pcomments`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		String sql3 = "DELETE FROM `"+Order_cityId_on+"` WHERE `id`="+orderid;
 		List<OrderOn> oo = new ArrayList<OrderOn>();
 		Session session = null;
@@ -548,6 +548,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(25, orderOn.getPoint());
 									ps.setString(26, orderOn.getSender());
 									ps.setString(27, orderOn.getSenderPhone());
+									ps.setString(28, "");
 									ps.executeUpdate();
 								} finally {
 									doClose(ps);
@@ -749,8 +750,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ Order_cityId_off
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`,`pcomments`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		String sql3 = "DELETE FROM `"+Order_cityId_on+"` WHERE `id`="+orderid;
 		List<OrderOn> oo = new ArrayList<OrderOn>();
 		Session session = null;
@@ -839,6 +840,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(25, orderOn.getPoint());
 									ps.setString(26, orderOn.getSender());
 									ps.setString(27, orderOn.getSenderPhone());
+									ps.setString(28, "");
 									ps.executeUpdate();
 								} finally {
 									doClose(ps);
@@ -1672,8 +1674,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ Order_cityId_off
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`,`pcomments`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		List<String> res = new ArrayList<String>();
@@ -1759,6 +1761,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps2.setInt(25, rs.getInt("point"));
 									ps2.setString(26,rs.getString("sender"));
 									ps2.setString(27, rs.getString("senderPhone"));
+									ps2.setString(28, "");
 									ps2.executeUpdate();
 									
 									ps3 = connection.prepareStatement(sql3);
@@ -1924,8 +1927,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ Order_cityId_off
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender`,`senderPhone`,`pcomments`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOn> res = new ArrayList<OrderOn>();
@@ -2003,6 +2006,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps2.setInt(25, rs.getInt("point"));
 									ps2.setString(26,rs.getString("sender"));
 									ps2.setString(27, rs.getString("senderPhone"));
+									ps2.setString(28, "");
 									ps2.executeUpdate();
 									
 									ps3 = connection.prepareStatement(sql3);

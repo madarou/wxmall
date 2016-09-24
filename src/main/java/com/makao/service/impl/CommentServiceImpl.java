@@ -54,6 +54,10 @@ public class CommentServiceImpl implements ICommentService {
 			Integer productId) {
 		return this.commentDao.queryUserComments(string, userId, productId);
 	}
+	@Override
+	public Comment getByCityAreaComentId(int cityId, int areaId, int commentid) {
+		return this.commentDao.getByCityAreaComentId(cityId, areaId, commentid);
+	}
 	
 //	@Override
 //	public void testor() {

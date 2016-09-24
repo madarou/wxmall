@@ -106,7 +106,8 @@ api															method				comment
 		content:,//评论内容
 		productId:,//被评论商品id
 		cityId:,//被评论商品所在cityId
-		areaId://被评论商品所在areaId
+		areaId:,//被评论商品所在areaId
+		orderId://当前被评论的商品所对应的orderId
 	}
 /comment/like/?token=xxx									POST				用户给评论点赞
 	{

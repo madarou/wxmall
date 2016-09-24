@@ -42,6 +42,7 @@ Comment_cityId_areaId:
 						`productId` int(11),
 						`cityId` int(11),
 						`areaId` int(11),
+						`orderId` int(11),
 						PRIMARY KEY (`id`))";
 						
 						
@@ -109,6 +110,7 @@ Order_cityId_off:
 						`point` int(11),
 						`sender` varchar(30),
 						`senderPhone` varchar(12),
+						`pcomments` varchar(255),
 						PRIMARY KEY (`id`))";
 						
 						

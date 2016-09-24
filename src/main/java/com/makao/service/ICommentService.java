@@ -50,4 +50,6 @@ public interface ICommentService {
 	List<Comment> queryUserComments(String string, Integer userId,
 			Integer productId);
 
+	Comment getByCityAreaComentId(int cityId, int areaId, int valueOf);
+
 }

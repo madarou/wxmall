@@ -107,6 +107,7 @@ public class AreaDaoImpl implements IAreaDao {
 							+ "`productId` int(11),"
 							+ "`cityId` int(11),"
 							+ "`areaId` int(11),"
+							+ "`orderId int(11),"
 							+ "PRIMARY KEY (`id`))";
 			session.doWork(
 					// 定义一个匿名类，实现了Work接口

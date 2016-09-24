@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.makao.dao.IOrderOffDao;
+import com.makao.entity.Comment;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 import com.makao.entity.OrderState;
@@ -43,8 +44,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 				+ tableName
 				+ "` (`number`,`productIds`,`productNames`,`orderTime`,`receiverName`,`phoneNumber`,`address`,`payType`,"
 				+ "`receiveType`,`receiveTime`,`couponId`,`couponPrice`,`totalPrice`,"
-				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender,`senderPhone`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`freight`,`comment`,`vcomment`,`finalStatus`,`cityarea`,`finalTime`,`userId`,`areaId`,`cityId`,`refundStatus`,`history`,`point`,`sender,`senderPhone`,`pcomments`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -85,6 +86,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 						ps.setInt(25, orderOff.getPoint());
 						ps.setString(26, orderOff.getSender());
 						ps.setString(27, orderOff.getSenderPhone());
+						ps.setString(28, "");
 						ps.executeUpdate();
 					} finally {
 						doClose(ps);
@@ -181,6 +183,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setPoint(rs.getInt("point"));
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
 							res.add(p);
 						}
 					}finally{
@@ -249,6 +252,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setPoint(rs.getInt("point"));
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
 							res.add(p);
 						}
 					}finally{
@@ -318,6 +322,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setPoint(rs.getInt("point"));
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
 							res.add(p);
 						}
 					}finally{
@@ -543,6 +548,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setPoint(rs.getInt("point"));
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
 							res.add(p);
 						}
 					}finally{
@@ -611,6 +617,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setPoint(rs.getInt("point"));
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
 							res.add(p);
 						}
 					}finally{
@@ -679,6 +686,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setPoint(rs.getInt("point"));
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
 							res.add(p);
 						}
 					}finally{
@@ -747,6 +755,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setPoint(rs.getInt("point"));
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
 							res.add(p);
 						}
 					}finally{
@@ -1007,6 +1016,46 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		return  (res.size()>0 ? res.get(0) : 0);
 	}
 	
+
+	@Override
+	public int updateComment(Comment comment) {
+		String tableName = "Order_"+comment.getCityId()+"_off";
+		String com = ","+comment.getProductId()+"="+comment.getId();
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `pcomments`=concat(IFNULL(`pcomments`,''),'"+com+"') WHERE `id`="+comment.getOrderId();
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {
@@ -1046,4 +1095,5 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 			}
 		}
 	}
+
 }

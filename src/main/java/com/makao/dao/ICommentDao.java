@@ -47,4 +47,6 @@ public interface ICommentDao {
 	 */
 	public List<Comment> queryUserComments(String string, Integer userId,
 			Integer productId);
+
+	public Comment getByCityAreaComentId(int cityId, int areaId, int commentid);
 }
