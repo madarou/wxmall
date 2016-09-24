@@ -837,7 +837,10 @@ public class OrderOnController {
 		List<OrderOn> os = this.orderOnService.queryByUserId("Order_"+cityid+"_on", userid);
 		//试图从缓存中找用户未支付的订单
 		List<OrderOn> redis_orders = redisUtil.redisQueryList("uo_"+userid, OrderOn.class);
-		logger.info("redis_orders size: "+redis_orders.size());
+		if(redis_orders!=null)
+			logger.info("redis_orders size: "+redis_orders.size());
+		else
+			logger.info("redis_orders size: "+0);
 		//因为缓存中的order没有实际插入到数据库中，所以id=0，前端好像是根据id加载列表的，所以
 		//缓存中如果有多个订单的话，只会被加载一个，所以counter作为缓存中临时订单的id，可以使前端
 		//正常加载所有，如果订单实际插入数据库，会生成新的id，不会受到影响
