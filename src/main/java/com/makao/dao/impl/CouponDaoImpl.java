@@ -367,7 +367,7 @@ public class CouponDaoImpl implements ICouponDao {
 				+ tableName2
 				+ "` (`name`,`amount`,`point`,`restrict`,"
 				+ "`cityId`,`userId`,`from`,`to`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ " VALUES (?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -405,12 +405,12 @@ public class CouponDaoImpl implements ICouponDao {
 							ps2 = connection.prepareStatement(sql2);
 							ps2.setString(1, coupon.getName());
 							ps2.setString(2, coupon.getAmount());
-							ps2.setInt(5, coupon.getPoint());
-							ps2.setInt(6, coupon.getRestrict());
-							ps2.setInt(9, coupon.getCityId());
-							ps2.setInt(10, user.getId());
-							ps2.setDate(12, from);
-							ps2.setDate(13, to);
+							ps2.setInt(3, coupon.getPoint());
+							ps2.setInt(4, coupon.getRestrict());
+							ps2.setInt(5, coupon.getCityId());
+							ps2.setInt(6, user.getId());
+							ps2.setDate(7, from);
+							ps2.setDate(8, to);
 							ps2.executeUpdate();
 						}
 					} finally {

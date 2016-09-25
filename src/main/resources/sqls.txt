@@ -26,6 +26,7 @@ Product_cityId_areaId:
 						`isShow` varchar(5) DEFAULT 'yes',
 						`areaId` int(11),
 						`cityId` int(11),
+						`threhold` int(11),
 						PRIMARY KEY (`id`))";
 						
 
