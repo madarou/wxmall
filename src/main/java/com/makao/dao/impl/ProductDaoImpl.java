@@ -41,8 +41,8 @@ public class ProductDaoImpl implements IProductDao {
 				+ tableName
 				+ "` (`productName`,`catalog`,`label`,`standard`,`price`,`marketPrice`,`inventory`,`isShow`,"
 				+ "`showWay`,`sequence`,`description`,`origin`,`status`,"
-				+ "`salesVolume`,`likes`,`coverSUrl`,`coverBUrl`,`subdetailUrl`,`detailUrl`,`areaId`,`cityId`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`salesVolume`,`likes`,`coverSUrl`,`coverBUrl`,`subdetailUrl`,`detailUrl`,`areaId`,`cityId`,`threhold`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -77,6 +77,7 @@ public class ProductDaoImpl implements IProductDao {
 						ps.setString(19, product.getDetailUrl());
 						ps.setInt(20, product.getAreaId());
 						ps.setInt(21, product.getCityId());
+						ps.setInt(22, product.getThrehold());
 						ps.executeUpdate();
 					} finally {
 						doClose(ps);
@@ -141,6 +142,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
+							p.setThrehold(rs.getInt("threhold"));
 							products.add(p);
 						}
 					}finally{
@@ -185,7 +187,8 @@ public class ProductDaoImpl implements IProductDao {
 												+ "`subdetailUrl`='"+product.getSubdetailUrl()+"',"
 														+ "`detailUrl`='"+product.getDetailUrl()+"',"
 																+ "`areaId`="+product.getAreaId()+","
-																		+ "`cityId`="+product.getCityId()
+																		+ "`cityId`="+product.getCityId()+","
+																		+ "`threhold`="+product.getThrehold()
 																				+ " WHERE `id`=" + product.getId();
 		Session session = null;
 		Transaction tx = null;
@@ -285,6 +288,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
+							p.setThrehold(rs.getInt("threhold"));
 							res.add(p);
 						}
 					}finally{
@@ -601,6 +605,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
+							p.setThrehold(rs.getInt("threhold"));
 							res.add(p);
 						}
 					}finally{
@@ -998,6 +1003,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
+							p.setThrehold(rs.getInt("threhold"));
 							res.add(p);
 						}
 					}finally{

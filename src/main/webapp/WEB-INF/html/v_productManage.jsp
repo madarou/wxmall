@@ -302,7 +302,14 @@
         <th>操作</th>
        </tr>
        <c:forEach var="item" items="${products}" varStatus="status">
-         	<tr>
+       		<c:choose> 
+		  		<c:when test="${item.inventory>item.threhold}">   
+		  			<tr>
+				</c:when> 
+				<c:otherwise>   
+					<tr style="color:red">
+				</c:otherwise> 
+			</c:choose>
          		<td><img id="pcoversurl-${item.id}" style="width:50px;height:50px" alt="缩略图" src="/static/upload/${item.coverSUrl}"></td>
          		<td id="pproductname-${item.id}">${item.productName}</td>
          		<td id="pcatalog-${item.id}">${item.catalog}</td>
@@ -336,6 +343,7 @@
 		        <td style="display:none" id="pshowstatus-${item.id}">${item.isShow}</td>
 		        <td style="display:none" id="pcityid-${item.id}">${item.cityId}</td>
 		        <td style="display:none" id="pareaid-${item.id}">${item.areaId}</td>
+		        <td style="display:none" id="pthrehold-${item.id}">${item.threhold}</td>
          	</tr>
 		</c:forEach> 
 		
@@ -398,6 +406,7 @@ $(document).ready(function(){
     	var isShowO = "";
     	var areaIdO = 0;
     	var cityIdO = 0;
+    	var threholdO = 0;
     	//弹出文本性提示框
      $(".editProduct").click(function(){
        $(".editproduct_pop_bg").fadeIn();
@@ -426,6 +435,7 @@ $(document).ready(function(){
        isShowO = $.trim($("#pshowstatus-"+editHandle_Id).text());
        areaIdO = $.trim($("#pareaid-"+editHandle_Id).text());
        cityIdO = $.trim($("#pcityid-"+editHandle_Id).text());
+       threholdO = $.trim($("#pthrehold-"+editHandle_Id).text());
 
        $("#proname").val(productNameO);
        $("input[type=radio][value="+catalogO+"]").attr("checked",'checked');
@@ -437,6 +447,7 @@ $(document).ready(function(){
        $("#promarketprice").val(marketPriceO);
        $("#proprice").val(priceO);
        $("#proinventory").val(inventoryO);
+       $("#prothrehold").val(threholdO);
        $("#prosequence").val(sequenceO);
        $("#prodescription").val(descriptionO);
 
@@ -465,6 +476,7 @@ $(document).ready(function(){
 		 	var price = $.trim($("#proprice").val());
 		 	var marketPrice = $.trim($("#promarketprice").val());
 		 	var inventory = $.trim($("#proinventory").val());//分库里必须有库存值，没有则为0
+		 	var threhold = $.trim($("#prothrehold").val());
 		 	var isShow = $('input:radio[name=proisshow]:checked').val();
 		 	var showWay = $('input:radio[name=proshowway]:checked').val();
 		 	var sequence = $.trim($("#prosequence").val());
@@ -486,7 +498,7 @@ $(document).ready(function(){
 		 	if(productName == productNameO && origin==originO && standard==standardO && price==priceO && showWay==showWayO &&
 		 			marketPrice==marketPriceO && inventory== inventoryO && sequence==sequenceO && label==labelO &&
 		 			catalog==catalogO && isShow==isShowO && description==descriptionO && coverSUrl==coverSUrlO
-		 			&& coverBUrl==coverBUrlO && subdetailUrl==subdetailUrlO && detailUrl==detailUrlO){
+		 			&& coverBUrl==coverBUrlO && subdetailUrl==subdetailUrlO && detailUrl==detailUrlO && threhold==threholdO){
 		 		alert("并未做修改");
 		 		return false;
 		 	}
@@ -498,7 +510,7 @@ $(document).ready(function(){
      	          dataType: "json",
      	          data: JSON.stringify({"id":editHandle_Id,"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
 	  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
-	  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl}),
+	  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold}),
      	          success: function(data){
      	        	  if(data.msg=="200"){
      	        		  alert("商品修改成功");
@@ -563,6 +575,10 @@ $(document).ready(function(){
 		       <li>
 		        <span class="item_name" style="width:120px;">库存：</span>
 		        <input type="text" id="proinventory" class="inventory_input textbox_295" placeholder="" value="0"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">最低库存：</span>
+		        <input type="text" id="prothrehold" class="inventory_input textbox_295" placeholder="" value="0"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">上架状态：</span>

@@ -27,6 +27,7 @@ public class Product {
 	private String isShow;//否在商品列表显示	值为'yes'或'no'，与status有区别，是完全不在列表中显示
 	private int areaId;//所属的网点名，方便直接查找确定其数据库表
 	private int cityId;//同上
+	private int threhold;//库存最低线
 	public int getId() {
 		return id;
 	}
@@ -158,5 +159,11 @@ public class Product {
 	}
 	public void setSubdetailUrl(String subdetailUrl) {
 		this.subdetailUrl = subdetailUrl;
+	}
+	public int getThrehold() {
+		return threhold;
+	}
+	public void setThrehold(int threhold) {
+		this.threhold = threhold;
 	}
 }
