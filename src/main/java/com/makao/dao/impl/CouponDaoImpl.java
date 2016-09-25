@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.makao.dao.ICouponDao;
 import com.makao.entity.Coupon;
 import com.makao.entity.CouponOn;
+import com.makao.entity.History;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
 import com.makao.entity.User;
@@ -356,10 +357,16 @@ public class CouponDaoImpl implements ICouponDao {
 	@Override
 	public int exchangeCoupon(Coupon coupon, User user) {
 		String tableName = "Coupon_"+coupon.getCityId()+"_on";
+		String tableName2 = "Exchange_"+coupon.getCityId();
 		String sql1 = "INSERT INTO `"
 				+ tableName
 				+ "` (`name`,`amount`,`coverSUrl`,`coverBUrl`,`point`,`restrict`,`comment`,`cityName`,"
 				+ "`cityId`,`userId`,`type`,`from`,`to`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql2 = "INSERT INTO `"
+				+ tableName2
+				+ "` (`name`,`amount`,`point`,`restrict`,"
+				+ "`cityId`,`userId`,`from`,`to`)"
 				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
@@ -373,7 +380,7 @@ public class CouponDaoImpl implements ICouponDao {
 			// 定义一个匿名类，实现了Work接口
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
-					PreparedStatement ps = null;
+					PreparedStatement ps = null;PreparedStatement ps2 =null;
 					try {
 						ps = connection.prepareStatement(sql1);
 						ps.setString(1, coupon.getName());
@@ -387,11 +394,27 @@ public class CouponDaoImpl implements ICouponDao {
 						ps.setInt(9, coupon.getCityId());
 						ps.setInt(10, user.getId());
 						ps.setString(11, coupon.getType());
-						ps.setDate(12, new Date(System.currentTimeMillis()));
-						ps.setDate(13, new Date(System.currentTimeMillis()+(24*60*60*1000*COUPON_EXPIRE_DAY)));
-						ps.executeUpdate();
+						Date from = new Date(System.currentTimeMillis());
+						Date to = new Date(System.currentTimeMillis()+(24*60*60*1000*COUPON_EXPIRE_DAY));
+						ps.setDate(12, from);
+						ps.setDate(13, to);
+						int res = ps.executeUpdate();
+						
+						//插入兑换历史
+						if(res>0){
+							ps2 = connection.prepareStatement(sql2);
+							ps2.setString(1, coupon.getName());
+							ps2.setString(2, coupon.getAmount());
+							ps2.setInt(5, coupon.getPoint());
+							ps2.setInt(6, coupon.getRestrict());
+							ps2.setInt(9, coupon.getCityId());
+							ps2.setInt(10, user.getId());
+							ps2.setDate(12, from);
+							ps2.setDate(13, to);
+							ps2.executeUpdate();
+						}
 					} finally {
-						doClose(ps);
+						doClose(ps);doClose(ps2);
 					}
 				}
 			});
@@ -401,6 +424,55 @@ public class CouponDaoImpl implements ICouponDao {
 				tx.rollback();// 回滚
 			logger.error(e.getMessage(), e);
 			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+
+	@Override
+	public List<History> queryHistory(String tableName, int userid) {
+		String sql = "SELECT * FROM "+ tableName + " WHERE `userId`="+userid+" Order By `from` DESC";
+		Session session = null;
+		Transaction tx = null;
+		List<History> res = new LinkedList<History>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						while(rs.next()){
+							History p = new History();
+							p.setId(rs.getInt("id"));
+							p.setName(rs.getString("name"));
+							p.setAmount(rs.getString("amount"));
+							p.setPoint(rs.getInt("point"));
+							p.setRestrict(rs.getInt("restrict"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setUserId(rs.getInt("userId"));
+							p.setFrom(rs.getDate("from"));
+							p.setTo(rs.getDate("to"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (null != session)
 				session.close();// 关闭回话
@@ -447,5 +519,6 @@ public class CouponDaoImpl implements ICouponDao {
 			}
 		}
 	}
+
 
 }

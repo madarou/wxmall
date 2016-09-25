@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.makao.dao.ICouponDao;
 import com.makao.entity.Coupon;
 import com.makao.entity.CouponOn;
+import com.makao.entity.History;
 import com.makao.entity.User;
 import com.makao.service.ICouponService;
 
@@ -53,6 +54,10 @@ public class CouponServiceImpl implements ICouponService {
 	@Override
 	public int exchangeCoupon(Coupon coupon, User user) {
 		return this.couponDao.exchangeCoupon(coupon, user);
+	}
+	@Override
+	public List<History> queryHistory(String string, int userid) {
+		return this.couponDao.queryHistory(string, userid);
 	}
 	
 //	@Override

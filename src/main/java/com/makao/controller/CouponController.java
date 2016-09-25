@@ -26,6 +26,7 @@ import com.makao.entity.Banner;
 import com.makao.entity.City;
 import com.makao.entity.Coupon;
 import com.makao.entity.CouponOn;
+import com.makao.entity.History;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Supervisor;
 import com.makao.entity.User;
@@ -154,7 +155,13 @@ public class CouponController {
         JSONObject jsonObject = new JSONObject();
         Coupon coupon = this.couponService.queryByCouponId("Coupon_"+cityid, couponid);
         User user = this.userService.getById(userid);
+        
         if(coupon!=null && user!=null){
+        	if(user.getPoint()-coupon.getPoint() < 0){
+        		jsonObject.put("msg", "202");
+        		jsonObject.put("detail", "积分不足");
+            	return jsonObject;
+        	}
         	int res = this.couponService.exchangeCoupon(coupon, user);
         	if(res==0){
     			logger.info("兑换优惠券成功面值=" + coupon.getAmount() + "，所属城市id:"+cityid);
@@ -164,6 +171,22 @@ public class CouponController {
         }
         logger.info("兑换优惠券失败id=" + couponid+" 所属城市id:"+cityid);
         jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	/**
+	 * @param cityid
+	 * @return
+	 * 用户查询兑换历史
+	 */
+	@RequestMapping(value = "/history/{cityid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object history(@PathVariable("cityid") int cityid,@PathVariable("userid") int userid) {
+        JSONObject jsonObject = new JSONObject();
+		List<History> hs = this.couponService.queryHistory("Coupon_"+cityid,userid);
+		logger.info("查询城市id："+cityid+"的所有静态coupon完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("history", hs);
 		return jsonObject;
     }
 	

@@ -237,3 +237,18 @@ Gift_cityId_changed:
 						`areaName` varchar(30),
 						`cityId` int(11),
 						PRIMARY KEY (`id`))";
+						
+						
+Exchange_cityId:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`name` varchar(30) NOT NULL,
+						`amount` varchar(10),
+						`point` int(11),
+						`restrict` int(11),
+						`cityId` int(11),
+						`userId` int(11),
+						`from` date,
+						`to` date,
+						PRIMARY KEY (`id`))";

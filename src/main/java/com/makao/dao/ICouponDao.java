@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.makao.entity.Coupon;
 import com.makao.entity.CouponOn;
+import com.makao.entity.History;
 import com.makao.entity.User;
 
 public interface ICouponDao {
@@ -27,4 +28,12 @@ public interface ICouponDao {
 	public Coupon queryByCouponId(String tableName, int couponid);
 
 	public int exchangeCoupon(Coupon coupon, User user);
+
+	/**
+	 * @param tableName
+	 * @param userid
+	 * @return
+	 * 查询用户兑换历史
+	 */
+	public List<History> queryHistory(String tableName, int userid);
 }

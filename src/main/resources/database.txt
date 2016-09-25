@@ -344,3 +344,15 @@ likes			int(11)			评论被赞次数
 content			varchar(255)	评论内容			前端要做字数限制
 productId		int(11)			被评论的商品主键	关联areaName_cityId_product的主键，定期可根据主键将表排序，或者
 												插入评论时	根据productId的大小按序插入，从而在加载商品评论时查找更快
+
+Exchange_cityId(代金券兑换历史)
+列名				类型				注释				备注
+id				int(11)
+point			int(11)			消耗积分
+name			varchar(30)		代金券名称			如'10元代金券'
+from			date			起始有效期			领券的日期
+to				date			截止有效期
+cityId			int(11)			城市Id
+userId			int(11)			优惠券拥有者
+amount			varchar(10)		优惠券面值
+restrict		int(11)			使用限制			至少消费到xx元才能使用，在购物车时根据此限制加载可用券，如'消费满10元'
