@@ -616,6 +616,36 @@ public class ProductController {
 	}
 	
 	/**
+	 * @param id
+	 * @param token
+	 * @param keyword
+	 * @param cat
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * 总后台搜索商品库
+	 */
+	@RequestMapping(value = "/searchrep/{id:\\d+}", method = RequestMethod.GET)
+	  public @ResponseBody
+	  ModelAndView searchrep(@PathVariable("id") int id,
+				@RequestParam(value = "token", required = false) String token,
+				@RequestParam(value="keyword", required=false) String keyword) throws UnsupportedEncodingException {
+			keyword = new String(keyword.getBytes("iso8859-1"),"utf-8");
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("s_productSearch");
+			if (token == null) {
+				return modelAndView;
+			}
+			modelAndView.addObject("id", id);
+			modelAndView.addObject("token", token);
+			List<Product> ps = this.productService.searchRepProducts(keyword);
+			//这里假设放一些东西进去
+			logger.info("搜索商品库信息完成(keyword):"+keyword);
+		    modelAndView.addObject("products", ps);    
+		    
+			return modelAndView;
+		}
+	
+	/**
 	 * @return
 	 * 这个是从所有Product_cityId表里查所有分库里的商品
 	 */

@@ -101,4 +101,11 @@ public interface IProductDao {
 	 * 查询库存小于最低库存的商品
 	 */
 	public List<Product> queryThreholds(String table);
+
+	/**
+	 * @param keyword
+	 * @return
+	 *搜索总库里的商品
+	 */
+	public List<Product> searchRepProduct(String keyword);
 }

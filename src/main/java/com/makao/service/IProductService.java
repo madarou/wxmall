@@ -109,4 +109,11 @@ public interface IProductService {
 	 * 查询表里库存小于最低库存的商品
 	 */
 	List<Product> queryThreholds(String table);
+
+	/**
+	 * @param keyword
+	 * @return
+	 * 总库里查询商品
+	 */
+	List<Product> searchRepProducts(String keyword);
 }

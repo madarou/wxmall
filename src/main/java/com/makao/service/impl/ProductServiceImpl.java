@@ -104,6 +104,10 @@ public class ProductServiceImpl implements IProductService {
 	public List<Product> queryThreholds(String table) {
 		return this.productDao.queryThreholds(table);
 	}
+	@Override
+	public List<Product> searchRepProducts(String keyword) {
+		return this.productDao.searchRepProduct(keyword);
+	}
 	
 	
 //	@Override
