@@ -28,6 +28,8 @@ public class Product {
 	private int areaId;//所属的网点名，方便直接查找确定其数据库表
 	private int cityId;//同上
 	private int threhold;//库存最低线
+	private int prethrehold;//预设库存量
+	private int supply;//本次供货量，如果为0表示未供货
 	public int getId() {
 		return id;
 	}
@@ -165,5 +167,17 @@ public class Product {
 	}
 	public void setThrehold(int threhold) {
 		this.threhold = threhold;
+	}
+	public int getPrethrehold() {
+		return prethrehold;
+	}
+	public void setPrethrehold(int prethrehold) {
+		this.prethrehold = prethrehold;
+	}
+	public int getSupply() {
+		return supply;
+	}
+	public void setSupply(int supply) {
+		this.supply = supply;
 	}
 }

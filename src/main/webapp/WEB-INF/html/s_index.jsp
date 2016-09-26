@@ -39,11 +39,11 @@
 <header>
  <h1><img src="static/images/admin_logo.png"/></h1>
  <ul class="rt_nav">
-  <li><a href="#" class="website_icon">订单管理</a></li>
-  <li><a href="#" class="admin_icon">会员管理</a></li>
-  <li><a href="#" class="admin_icon">商品管理</a></li>
-  <li><a href="#" class="set_icon">账号设置</a></li>
-  <li><a href="login.php" class="quit_icon">安全退出</a></li>
+  <li><a href="/orderOn/s_queryall/${id}/1?token=${token}" class="website_icon">订单管理</a></li>
+  <li><a href="/user/s_queryall/${id}/1?token=${token}" class="admin_icon">会员管理</a></li>
+  <li><a href="/product/s_products/${id}/1?token=${token}" class="admin_icon">商品管理</a></li>
+  <li><a href="/vendor/s_queryall/${id}?token=${token}" class="set_icon">账号设置</a></li>
+  <li><a href="/supervisor/logout?token=${token}" class="quit_icon">安全退出</a></li>
  </ul>
 </header>
 
@@ -64,6 +64,7 @@
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
     <dd><a href="/product/s_products/${id}/1?token=${token}">商品库</a></dd>
+    <dd><a href="/product/s_threhold/${id}?token=${token}">待补货商品</a></dd>
    </dl>
   </li>
   <li>
@@ -90,17 +91,17 @@
     <dd><a href="/coupon/s_queryall/${id}?token=${token}">优惠券管理</a></dd>
    </dl>
   <li>
-   <p class="btm_infor">© 优格信息 版权所有</p>
+   <p class="btm_infor">© 社享网 版权所有</p>
   </li>
  </ul>
 </aside>
 
 <section class="rt_wrap content mCustomScrollbar">
- <div class="rt_content">
+<div class="rt_content" style="display:none"> 
      <!--开始：以下内容则可删除，仅为素材引用参考-->
      <h1 style="color:red;font-size:20px;font-weight:bold;text-align:center;">Example/Explanation</h1>
      <p style="color:red;font-size:16px;font-weight:bold;text-align:center;">这里是相关常用性样式预设，具体根据内容版块调整，列表添加字段注意考虑笔记本屏幕显示；<br/>此页面仅为样式参考，程序对接可移除，具体布局根据项目内容而定<br/>注意保留rt_content.parent</p>
-     <!--点击加载-->
+     点击加载
      <script>
      $(document).ready(function(){
 		$("#loading").click(function(){
@@ -115,8 +116,8 @@
        <div class="loading_txt"><mark>数据正在加载，请稍后！</mark></div>
       </div>
      </section>
-     <!--结束加载-->
-     <!--弹出框效果-->
+     结束加载
+     弹出框效果
      <script>
      $(document).ready(function(){
 		 //弹出文本性提示框
@@ -137,9 +138,9 @@
      </script>
      <section class="pop_bg">
       <div class="pop_cont">
-       <!--title-->
+       title
        <h3>弹出提示标题</h3>
-       <!--content-->
+       content
        <div class="pop_cont_input">
         <ul>
          <li>
@@ -168,18 +169,18 @@
          </li>
         </ul>
        </div>
-       <!--以pop_cont_text分界-->
+       以pop_cont_text分界
        <div class="pop_cont_text">
         这里是文字性提示信息！
        </div>
-       <!--bottom:operate->button-->
+       bottom:operate->button
        <div class="btm_btn">
         <input type="button" value="确认" class="input_btn trueBtn"/>
         <input type="button" value="关闭" class="input_btn falseBtn"/>
        </div>
       </div>
      </section>
-     <!--结束：弹出框效果-->
+     结束：弹出框效果
 
      <section>
       <h2><strong style="color:grey;">常用按钮（水平块元素，无区域限制）</strong></h2>
@@ -298,7 +299,7 @@
        </li>
       </ul>
      </section>
-     <!--tabStyle-->
+     tabStyle
      <script>
      $(document).ready(function(){
 		 //tab
@@ -315,7 +316,7 @@
        <li><a>自定义标题</a></li>
        <li><a>...可追加</a></li>
       </ul>
-      <!--tabCont-->
+      tabCont
       <div class="admin_tab_cont" style="display:block;">添加时，对其增加一个父级，tabContent01子项无样式，具体情况单独定义。</div>
       <div class="admin_tab_cont">tabContent02，内容根据具体数据二次单独定义，公共样式单独调用</div>
       <div class="admin_tab_cont">可追加</div>
@@ -326,9 +327,9 @@
        <li><a>自定义标题</a></li>
        <li><a>...可追加</a></li>
       </ul>
-      <!--tabCont-->
+      tabCont
       <div class="admin_tab_cont" style="display:block;">
-      <!--左右分栏：左侧栏目-->
+      左右分栏：左侧栏目
        <div class="cont_col_lt mCustomScrollbar" style="height:500px;">
            <table class="table fl">
             <tr>
@@ -359,7 +360,7 @@
             </tr>
            </table>
        </div>
-       <!--左右分栏：右侧栏-->
+       左右分栏：右侧栏
        <div class="cont_col_rt">
            <table class="table fl">
             <tr>
@@ -383,7 +384,7 @@
       <div class="admin_tab_cont">tabContent02，内容根据具体数据二次单独定义，公共样式单独调用</div>
       <div class="admin_tab_cont">可追加</div>
      </section>
-    <!--结束：以下内容则可删除，仅为素材引用参考-->
+    结束：以下内容则可删除，仅为素材引用参考
  </div>
 </section>
 </body>

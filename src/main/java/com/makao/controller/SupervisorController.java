@@ -115,10 +115,17 @@ public class SupervisorController {
 		}
 	    modelAndView.addObject("id", id);  	    
 	    TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
-	    modelAndView.addObject("token", tm.getToken());   
+	    //modelAndView.addObject("token", tm.getToken()); 
+	    modelAndView.addObject("token","dfsdfdfdfd");     
 		return modelAndView;
 	}
 	
+	@RequestMapping(value="/logout", method = RequestMethod.GET)
+	public String logout(@RequestParam(value="token", required=false) String token, HttpServletRequest request)
+	{
+		//从缓存中清除token对应的TokenModel
+		return "s_login";
+	}
 	@RequestMapping(value="",method = RequestMethod.GET)
 	public String main()
 	{

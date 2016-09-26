@@ -100,6 +100,10 @@ public class ProductServiceImpl implements IProductService {
 			String cat) {
 		return this.productDao.searchProduct(cityId, areaId, keyword, cat);
 	}
+	@Override
+	public List<Product> queryThreholds(String table) {
+		return this.productDao.queryThreholds(table);
+	}
 	
 	
 //	@Override

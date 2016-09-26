@@ -68,7 +68,7 @@ public class BasicTestSuite_Test2 {
 		String address = "{\"userId\":1,\"userName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海张江\",\"detailAddress\":\"华佗路280弄23号\",\"label\":\"宿舍\",\"isDefault\":\"yes\",\"cityId\":1,\"areaId\":1}";
 		
 		String newprodcut11_1 = "http://localhost:8080/product/vnew/1";
-		String product11_1 = "{\"productName\":\"水晶葡萄\",\"catalog\":\"水果\",\"label\":\"无标签\",\"price\":\"12.99\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"inventory\":12,\"sequence\":1,\"status\":\"0\",\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":7637,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
+		String product11_1 = "{\"productName\":\"水晶葡萄\",\"catalog\":\"水果\",\"label\":\"无标签\",\"price\":\"12.99\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"inventory\":12,\"threhold\":13,\"sequence\":1,\"status\":\"0\",\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":7637,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
 	
 		String newprodcut11_2 = "http://localhost:8080/product/vnew/1";
 		String product11_2 = "{\"productName\":\"普通葡萄\",\"catalog\":\"水果\",\"label\":\"无标签\",\"price\":\"10.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"13.00\",\"inventory\":12,\"sequence\":1,\"status\":\"1\",\"origin\":\"海南\",\"isShow\":\"yes\",\"showWay\":\"b\",\"salesVolume\":7637,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";

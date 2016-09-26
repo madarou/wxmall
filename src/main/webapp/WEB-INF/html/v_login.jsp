@@ -28,12 +28,12 @@ $(document).ready(function() {
 	  $.ajax({
           type: "POST",
           contentType: "application/json",
-          url: "vendor/login",
+          url: "/vendor/login",
           data: JSON.stringify({"userName":$("#userName").val(),"password":$("#password").val()}),
           dataType: "json",
           success: function(data){
                   if(data.msg=="登录成功"){
-                	  window.location="vendor/index/"+data.id+"?token="+data.token;
+                	  window.location="/vendor/index/"+data.id+"?token="+data.token;
                   }
           }
       });
@@ -44,7 +44,7 @@ $(document).ready(function() {
 <body>
 <dl class="admin_login">
  <dt>
-  <strong>站点后台管理系统</strong>
+  <strong>社享网后台管理系统</strong>
   <em>Management System</em>
  </dt>
  <dd class="user_icon">
@@ -64,7 +64,7 @@ $(document).ready(function() {
   <input type="button" value="立即登陆" class="submit_btn"/>
  </dd>
  <dd>
-  <p>© 2015-2016 优格信息 版权所有</p>
+  <p>© 社享网 版权所有</p>
   <p>021-34938353</p>
  </dd>
 </dl>

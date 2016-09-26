@@ -81,6 +81,8 @@ public class AreaDaoImpl implements IAreaDao {
 					+ "`areaId` int(11),"
 					+ "`cityId` int(11),"
 					+ "`threhold` int(11),"
+					+ "`prethrehold` int(11),"
+					+ "`supply` int(11),"
 					+ "PRIMARY KEY (`id`))";
 			session.doWork(
 					// 定义一个匿名类，实现了Work接口

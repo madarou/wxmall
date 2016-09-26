@@ -93,6 +93,7 @@
 	<mvc:resources mapping="/product/s_products/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/s_catalogs/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/s_new/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/product/s_threhold/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/product/s_products/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/supervisor/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/supervisor/index/static/**" location="/WEB-INF/static/" />
@@ -108,6 +109,7 @@
 	<mvc:resources mapping="/vendor/index/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/s_queryall/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/vendor/v_bindwx/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/vendor/logout/static/**" location="/WEB-INF/static/" />
    	<mvc:default-servlet-handler/>
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">  
     <property name="messageConverters">  

@@ -94,4 +94,11 @@ public interface IProductDao {
 	 */
 	public List<Product> searchProduct(int cityId, int areaId, String keyword,
 			String cat);
+
+	/**
+	 * @param table
+	 * @return
+	 * 查询库存小于最低库存的商品
+	 */
+	public List<Product> queryThreholds(String table);
 }

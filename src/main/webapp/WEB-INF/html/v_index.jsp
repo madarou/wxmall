@@ -40,14 +40,17 @@
 <header>
  <h1><img src="static/images/admin_logo.png"/></h1>
  <ul class="rt_nav">
-  <li><a href="#" class="set_icon">订单提醒</a></li>
-  <li><a href="login.php" class="quit_icon">安全退出</a></li>
+  <li><a href="/orderOn/v_query_process/${id}/1?token=${token}" class="website_icon">订单管理</a></li>
+  <li><a href="/user/v_usermanage/${id}/1?token=${token}" class="admin_icon">会员管理</a></li>
+  <li><a href="/product/v_manage/${id}/1?token=${token}" class="admin_icon">商品管理</a></li>
+  <li><a href="/vendor/v_bindwx/${id}?token=${token}" class="set_icon">绑定微信</a></li>
+  <li><a href="/vendor/logout/?token=${token}" class="quit_icon">安全退出</a></li>
  </ul>
 </header>
 
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
- <h2><a href="index.php">常州-某某区</a></h2>
+ <h2><a href="#">社享网</a></h2>
  <ul>
   <li>
    <dl>
@@ -87,13 +90,13 @@
    </dl>
   </li>
   <li>
-   <p class="btm_infor">© 优格信息 版权所有</p>
+   <p class="btm_infor">© 社享网 版权所有</p>
   </li>
  </ul>
 </aside>
 
 <section class="rt_wrap content mCustomScrollbar">
- <div class="rt_content">
+ <div class="rt_content" style="display:none">
      <!--开始：以下内容则可删除，仅为素材引用参考-->
      <h1 style="color:red;font-size:20px;font-weight:bold;text-align:center;">Example/Explanation</h1>
      <p style="color:red;font-size:16px;font-weight:bold;text-align:center;">这里是相关常用性样式预设，具体根据内容版块调整，列表添加字段注意考虑笔记本屏幕显示；<br/>此页面仅为样式参考，程序对接可移除，具体布局根据项目内容而定<br/>注意保留rt_content.parent</p>

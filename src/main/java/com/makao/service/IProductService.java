@@ -102,4 +102,11 @@ public interface IProductService {
 	 */
 	List<Product> searchProduct(int cityId, int areaId, String keyword,
 			String cat);
+
+	/**
+	 * @param table
+	 * @return
+	 * 查询表里库存小于最低库存的商品
+	 */
+	List<Product> queryThreholds(String table);
 }

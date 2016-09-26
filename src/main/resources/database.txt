@@ -146,6 +146,8 @@ isShow			varchar(5)		是否在商品列表显示	值为'yes'(默认)或'no'，�
 areaId			int(11)			所属区域
 cityId			int(11)			所属城市
 threhold		int(11)			库存最低限
+prethrehold		int(11)			预设库存
+supply			int(11)			补货量，如果为0就是未补货
 												
 Cart(好像不用设计购物车表，因为没有提交成订单的购物车在用户退出页面重新进来或者切换area后会被清空，不用保存)
 

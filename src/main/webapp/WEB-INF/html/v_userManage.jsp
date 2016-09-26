@@ -43,14 +43,17 @@
 <header>
  <h1><img src="static/images/admin_logo.png"/></h1>
  <ul class="rt_nav">
-  <li><a href="#" class="set_icon">订单提醒</a></li>
-  <li><a href="login.php" class="quit_icon">安全退出</a></li>
+  <li><a href="/orderOn/v_query_process/${id}/1?token=${token}" class="website_icon">订单管理</a></li>
+  <li><a href="/user/v_usermanage/${id}/1?token=${token}" class="admin_icon">会员管理</a></li>
+  <li><a href="/product/v_manage/${id}/1?token=${token}" class="admin_icon">商品管理</a></li>
+  <li><a href="/vendor/v_bindwx/${id}?token=${token}" class="set_icon">绑定微信</a></li>
+  <li><a href="/vendor/logout/?token=${token}" class="quit_icon">安全退出</a></li>
  </ul>
 </header>
 
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
- <h2><a href="index.php">常州-某某区</a></h2>
+ <h2><a href="#">社享网</a></h2>
  <ul>
   <li>
    <dl>
@@ -90,7 +93,7 @@
    </dl>
   </li>
   <li>
-   <p class="btm_infor">© 优格信息 版权所有</p>
+   <p class="btm_infor">© 社享网 版权所有</p>
   </li>
  </ul>
 </aside>

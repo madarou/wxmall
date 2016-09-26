@@ -733,6 +733,47 @@ public class ProductController {
 	 * @param id
 	 * @param token
 	 * @return
+	 * 查看所有区域下需要补货的商品
+	 */
+	@RequestMapping(value = "/s_threhold/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView queryThrehold(@PathVariable("id") int id,
+			@RequestParam(value = "token", required = false) String token) {
+		ModelAndView modelAndView = new ModelAndView();  
+	    modelAndView.setViewName("s_productThrehold");  
+		if (token == null) {
+			return modelAndView;
+		}
+		modelAndView.addObject("id", id);
+		modelAndView.addObject("token", token);
+		//获取所有区域，遍历它们
+		List<Area> areas = this.areaService.queryAll();
+		List<Product> ps = new LinkedList<Product>();
+		if(areas==null){
+			modelAndView.addObject("products", ps);  
+		    return modelAndView;
+		}			
+		for(Area a : areas){
+			String table = "Product_"+a.getCityId()+"_"+a.getId();
+			List<Product> pros= this.productService.queryThreholds(table);
+			//总后台需要在商品列表里显示其所在城市区域，但product里没有该字段，这里用description字段来存放
+			if(pros!=null){
+				for(Product p:pros){
+					p.setDescription(a.getCityName()+a.getAreaName()+"(电话:"+a.getPhoneNumber()+")");
+				}
+				ps.addAll(pros);
+			}
+		}
+		logger.info("查询商品库信息完成");
+	    modelAndView.addObject("products", ps);  
+	    return modelAndView;
+    }
+	
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
 	 * 跳转时要获取当前area已有的catalog，已有的总库里的所有商品
 	 */
 	@RequestMapping(value = "/v_new/{id:\\d+}", method = RequestMethod.GET)

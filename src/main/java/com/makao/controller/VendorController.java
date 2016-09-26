@@ -81,6 +81,12 @@ public class VendorController {
 		return modelAndView;
 	}
 	
+	@RequestMapping(value="/logout", method = RequestMethod.GET)
+	public String logout(@RequestParam(value="token", required=false) String token)
+	{	
+		//从缓存中清除token
+		return "v_login";
+	}
 	@RequestMapping(value="",method = RequestMethod.GET)
 	public String main()
 	{

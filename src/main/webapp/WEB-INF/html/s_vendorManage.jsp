@@ -48,11 +48,11 @@
 <header>
  <h1><img src="static/images/admin_logo.png"/></h1>
  <ul class="rt_nav">
-  <li><a href="#" class="website_icon">订单管理</a></li>
-  <li><a href="#" class="admin_icon">会员管理</a></li>
-  <li><a href="#" class="admin_icon">商品管理</a></li>
-  <li><a href="#" class="set_icon">账号设置</a></li>
-  <li><a href="login.php" class="quit_icon">安全退出</a></li>
+  <li><a href="/orderOn/s_queryall/${id}/1?token=${token}" class="website_icon">订单管理</a></li>
+  <li><a href="/user/s_queryall/${id}/1?token=${token}" class="admin_icon">会员管理</a></li>
+  <li><a href="/product/s_products/${id}/1?token=${token}" class="admin_icon">商品管理</a></li>
+  <li><a href="/vendor/s_queryall/${id}?token=${token}" class="set_icon">账号设置</a></li>
+  <li><a href="/supervisor/logout?token=${token}" class="quit_icon">安全退出</a></li>
  </ul>
 </header>
 
@@ -73,6 +73,7 @@
     <dt>商品信息</dt>
     <!--当前链接则添加class:active-->
     <dd><a href="/product/s_products/${id}/1?token=${token}">商品库</a></dd>
+    <dd><a href="/product/s_threhold/${id}?token=${token}">待补货商品</a></dd>
    </dl>
   </li>
   <li>
@@ -99,14 +100,14 @@
     <dd><a href="/coupon/s_queryall/${id}?token=${token}">优惠券管理</a></dd>
    </dl>
   <li>
-   <p class="btm_infor">© 优格信息 版权所有</p>
+   <p class="btm_infor">© 社享网 版权所有</p>
   </li>
  </ul>
 </aside>
 <section class="rt_wrap content mCustomScrollbar">
  <div class="rt_content">
      <section>
-        <h3 style="text-align:right;">欢迎您，某某管理员</h3>
+        <!-- <h3 style="text-align:right;">欢迎您，某某管理员</h3> -->
         <hr/>
      </section>
 	

@@ -1023,7 +1023,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String com = ","+comment.getProductId()+"="+comment.getId();
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `pcomments`=concat(IFNULL(`pcomments`,''),'"+com+"') WHERE `id`="+comment.getOrderId();
+				+ "` SET `status`='"+OrderState.COMMETED.getCode()+", `pcomments`=concat(IFNULL(`pcomments`,''),'"+com+"') WHERE `id`="+comment.getOrderId();
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败

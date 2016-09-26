@@ -41,8 +41,9 @@ public class ProductDaoImpl implements IProductDao {
 				+ tableName
 				+ "` (`productName`,`catalog`,`label`,`standard`,`price`,`marketPrice`,`inventory`,`isShow`,"
 				+ "`showWay`,`sequence`,`description`,`origin`,`status`,"
-				+ "`salesVolume`,`likes`,`coverSUrl`,`coverBUrl`,`subdetailUrl`,`detailUrl`,`areaId`,`cityId`,`threhold`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`salesVolume`,`likes`,`coverSUrl`,`coverBUrl`,`subdetailUrl`,`detailUrl`,`areaId`,`cityId`,`threhold`,"
+				+ "`prethrehold`,`supply`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -78,6 +79,8 @@ public class ProductDaoImpl implements IProductDao {
 						ps.setInt(20, product.getAreaId());
 						ps.setInt(21, product.getCityId());
 						ps.setInt(22, product.getThrehold());
+						ps.setInt(23, product.getPrethrehold());
+						ps.setInt(24, product.getSupply());
 						ps.executeUpdate();
 					} finally {
 						doClose(ps);
@@ -143,6 +146,8 @@ public class ProductDaoImpl implements IProductDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setThrehold(rs.getInt("threhold"));
+							p.setPrethrehold(rs.getInt("prethrehold"));
+							p.setSupply(rs.getInt("supply"));
 							products.add(p);
 						}
 					}finally{
@@ -188,7 +193,9 @@ public class ProductDaoImpl implements IProductDao {
 														+ "`detailUrl`='"+product.getDetailUrl()+"',"
 																+ "`areaId`="+product.getAreaId()+","
 																		+ "`cityId`="+product.getCityId()+","
-																		+ "`threhold`="+product.getThrehold()
+																		+ "`threhold`="+product.getThrehold()+","
+																		+ "`prethrehold`="+product.getPrethrehold()+","
+																		+ "`supply`="+product.getSupply()
 																				+ " WHERE `id`=" + product.getId();
 		Session session = null;
 		Transaction tx = null;
@@ -289,6 +296,8 @@ public class ProductDaoImpl implements IProductDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setThrehold(rs.getInt("threhold"));
+							p.setPrethrehold(rs.getInt("prethrehold"));
+							p.setSupply(rs.getInt("supply"));
 							res.add(p);
 						}
 					}finally{
@@ -606,6 +615,8 @@ public class ProductDaoImpl implements IProductDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setThrehold(rs.getInt("threhold"));
+							p.setPrethrehold(rs.getInt("prethrehold"));
+							p.setSupply(rs.getInt("supply"));
 							res.add(p);
 						}
 					}finally{
@@ -1004,6 +1015,73 @@ public class ProductDaoImpl implements IProductDao {
 							p.setAreaId(rs.getInt("areaId"));
 							p.setCityId(rs.getInt("cityId"));
 							p.setThrehold(rs.getInt("threhold"));
+							p.setPrethrehold(rs.getInt("prethrehold"));
+							p.setSupply(rs.getInt("supply"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
+	@Override
+	public List<Product> queryThreholds(String tableName) {
+		String sql = "SELECT * FROM "+tableName+" t WHERE t.inventory<=t.threhold";
+		Session session = null;
+		Transaction tx = null;
+		List<Product> res = new LinkedList<Product>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//res = session.createQuery("from User").list();
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							Product p = new Product();
+							p.setId(rs.getInt("id"));
+							p.setProductName(rs.getString("productName"));
+							p.setCatalog(rs.getString("catalog"));
+							p.setShowWay(rs.getString("showWay"));
+							p.setPrice(rs.getString("price"));
+							p.setStandard(rs.getString("standard"));
+							p.setMarketPrice(rs.getString("marketPrice"));
+							p.setLabel(rs.getString("label"));
+							p.setCoverSUrl(rs.getString("coverSUrl"));
+							p.setCoverBUrl(rs.getString("coverBUrl"));
+							p.setInventory(rs.getInt("inventory"));
+							p.setSequence(rs.getInt("sequence"));
+							p.setStatus(rs.getString("status"));
+							p.setDescription(rs.getString("description"));
+							p.setOrigin(rs.getString("origin"));
+							p.setSalesVolume(rs.getInt("salesVolume"));
+							p.setLikes(rs.getInt("likes"));
+							p.setDetailUrl(rs.getString("detailUrl"));
+							p.setIsShow(rs.getString("isShow"));
+							p.setAreaId(rs.getInt("areaId"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setThrehold(rs.getInt("threhold"));
+							p.setPrethrehold(rs.getInt("prethrehold"));
+							p.setSupply(rs.getInt("supply"));
 							res.add(p);
 						}
 					}finally{
