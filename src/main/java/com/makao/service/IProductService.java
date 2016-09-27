@@ -116,4 +116,13 @@ public interface IProductService {
 	 * 总库里查询商品
 	 */
 	List<Product> searchRepProducts(String keyword);
+
+	/**
+	 * @param string
+	 * @param productId
+	 * @param num
+	 * @return
+	 * 给商品补货
+	 */
+	int supplyProduct(String string, int productId, int num);
 }

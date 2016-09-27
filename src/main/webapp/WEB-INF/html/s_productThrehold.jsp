@@ -133,7 +133,8 @@
          		<td id="pinventory-${item.id}">${item.inventory}</td>
          		<td id="pthrehold-${item.id}">${item.threhold}</td>
          		<td style="text-align:center">
-		           <button class="linkStyle editProduct" id="showPopTxt-${item.id}">查看</button>
+		           <button class="linkStyle editProduct" id="showPopTxt-${item.id}">查看</button>|
+		           <button class="linkStyle supplyProduct" id="supply-${item.id}">补货</button>
 		        </td>
          		<td style="display:none" id="psalesvolume-${item.id}">${item.salesVolume}</td>
 		        <td style="display:none" id="pshowway-${item.id}">${item.showWay}</td>
@@ -151,6 +152,7 @@
 		        <td style="display:none" id="pcityid-${item.id}">${item.cityId}</td>
 		        <td style="display:none" id="pareaid-${item.id}">${item.areaId}</td>
          		<td style="display:none" id="pcatalog-${item.id}">${item.catalog}</td>
+         		<td style="display:none" id="pprethrehold-${item.id}">${item.threhold}</td>
          	</tr>
 		</c:forEach> 
 		
@@ -160,6 +162,93 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+
+	<!-- 补货 -->
+   <script>
+     $(document).ready(function(){
+    	 var showTips = function(content){
+  			$("#tips").text(content);
+  			$(".loading_area").fadeIn();
+              $(".loading_area").fadeOut(1500);
+  		}
+    	var orderId_toCancel = 0;//要取消的订单
+     //弹出文本性提示框
+     $(".supplyProduct").click(function(){
+       $(".del_pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       orderId_toCancel = clickedId.split("-")[1];
+
+       });
+     //弹出：确认按钮
+     $("#confirmCancel").click(function(){
+    	 if(orderId_toCancel==0){
+    		 alert("请重新选择要补货的商品");
+    		 return false;
+    	 }
+    	 var cityid = $("#pcityid-"+orderId_toCancel).text();
+    	 var areaid = $("#pareaid-"+orderId_toCancel).text();
+    	 if(cityid.length==0 || areaid.length==0){
+    		 alert("请重新选择要补货的商品");
+    		 return false;
+    	 }
+    	 var num = $.trim($("#supplynum").val());
+    	 if(num==null || num.length==0){
+    		 alert("请输入补货数量");
+    		 return false;
+    	 }
+    	 if(cityid)
+        	$.ajax({
+    		  type: "POST",
+  	          contentType: "application/json",
+  	          url: "/product/supply/"+$("#loginUserId").val(),
+  	          dataType: "json",
+  	          data: JSON.stringify({"cityid":cityid,"areaid":areaid,"productid":orderId_toCancel,"num":num}),
+  	          success: function(data){
+  	        	  if(data.msg=="200"){
+  	        		  alert("商品补货成功");
+  	        		  window.location.reload();//刷新页面
+  	        		  orderId_toCancel=0;
+  	        	  }
+  	          }
+    	 	});
+       $(".del_pop_bg").fadeOut();
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelCancel").click(function(){
+       $(".del_pop_bg").fadeOut();
+       orderId_toCancel=0;
+       });
+     });
+     </script>
+     <!-- 取消订单 -->
+			<section class="del_pop_bg">
+				<div class="pop_cont">
+					<!--title-->
+					<h3>温馨提示</h3>
+					<!--content-->
+					<div class="small_pop_cont_input">
+						<!--以pop_cont_text分界-->
+						<div class="pop_cont_text">请输入商品的补货量：
+						</div>
+						  <section>
+						      <ul class="ulColumn2">
+						       <li>
+						        <span class="item_name">数量：</span>
+						        <input type="text" id="supplynum" class="inventory_input textbox_225" placeholder="如'10'"/>
+						       </li>
+						       <li>
+						      </ul>
+						  </section>
+						<!--bottom:operate->button-->
+						<div class="btm_btn">
+							<input type="button" value="确认" id="confirmCancel"
+								class="input_btn trueBtn" /> <input type="button" value="关闭"
+								id="cancelCancel" class="input_btn falseBtn" />
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- 补货框 --> 
 
 <!-- 编辑产品 -->
  <script>
@@ -216,6 +305,7 @@
        areaIdO = $.trim($("#pareaid-"+editHandle_Id).text());
        cityIdO = $.trim($("#pcityid-"+editHandle_Id).text());
        threholdO = $.trim($("#pthrehold-"+editHandle_Id).text());
+       prethreholdO = $.trim($("#pprethrehold-"+editHandle_Id).text());
 
        $("#proname").val(productNameO);
        $("input[type=radio][value="+catalogO+"]").attr("checked",'checked');
@@ -228,6 +318,7 @@
        $("#proprice").val(priceO);
        $("#proinventory").val(inventoryO);
        $("#prothrehold").val(threholdO);
+       $("#proprethrehold").val(prethreholdO);
        $("#prosequence").val(sequenceO);
        $("#prodescription").val(descriptionO);
 
@@ -288,7 +379,11 @@
 		        <input type="text" id="promarketprice" class="price_input textbox_295" placeholder=""/>
 		       </li>
 		       <li>
-		        <span class="item_name" style="width:120px;">库存：</span>
+		        <span class="item_name" style="width:120px;">预设库存：</span>
+		        <input type="text" id="proprethrehold" class="inventory_input textbox_295" placeholder="" value="0"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">当前库存：</span>
 		        <input type="text" id="proinventory" class="inventory_input textbox_295" placeholder="" value="0"/>
 		       </li>
 		       <li>

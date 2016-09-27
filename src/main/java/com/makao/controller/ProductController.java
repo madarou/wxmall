@@ -131,6 +131,32 @@ public class ProductController {
     }
 	
 	/**
+	 * @param paramObject
+	 * @return
+	 * 超级管理员补货
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/supply/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object supply(@RequestBody JSONObject paramObject) {
+		int cityId = paramObject.getIntValue("cityid");
+		int areaId = paramObject.getIntValue("areaid");
+		int productId = paramObject.getIntValue("productid");
+		int num = paramObject.getIntValue("num");
+		int res = this.productService.supplyProduct("Product_"+cityId+"_"+areaId, productId,num);
+		JSONObject jsonObject = new JSONObject();
+		if(res==0){
+			logger.info("商品点赞成功，被赞商品" + cityId +" "+areaId+" "+productId);
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("商品点赞失败，被赞商品" + cityId +" "+areaId+" "+productId);
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+	
+	/**
 	 * @param Product
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"number":"海南千禧小番茄","catalog":"水果","price":"12.00","standard":"一份足2斤","marketPrice":"30.00","inventory":12,"sequence":3,"status":"库存紧张","origin":"海南","salesVolume":7637,"likes":3972,"areaId":1,"cityId":1}' 'http://localhost:8080/wxmall/product/new'

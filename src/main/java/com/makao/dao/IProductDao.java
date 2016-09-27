@@ -108,4 +108,13 @@ public interface IProductDao {
 	 *搜索总库里的商品
 	 */
 	public List<Product> searchRepProduct(String keyword);
+
+	/**
+	 * @param string
+	 * @param productId
+	 * @param num
+	 * @return
+	 * 给商品补货
+	 */
+	public int supplyProduct(String string, int productId, int num);
 }

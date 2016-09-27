@@ -260,6 +260,7 @@
 			 	var marketPrice = $.trim($("#promarketprice").val());
 			 	var inventory = $.trim($("#proinventory").val());//分库里必须有库存值，没有则为0
 			 	var threhold = $.trim($("#prothrehold").val());
+			 	var prethrehold = $.trim($("#proprethrehold").val());
 			 	var isShow = $('input:radio[name=proisshow]:checked').val();
 			 	var showWay = $('input:radio[name=proshowway]:checked').val();
 			 	var sequence = $.trim($("#prosequence").val());
@@ -285,7 +286,7 @@
 		  	          dataType: "json",
 		  	          data: JSON.stringify({"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
 		  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
-		  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold}),
+		  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold,"prethrehold":prethrehold}),
 		  	          success: function(data){
 		  	        	  if(data.msg=="200"){
 		  	        		  alert("商品添加成功");
@@ -343,7 +344,11 @@
         <input type="text" id="promarketprice" class="textbox textbox_295 price_input" placeholder="12.00"/>
        </li>
        <li>
-        <span class="item_name" style="width:120px;">库存：</span>
+        <span class="item_name" style="width:120px;">预设库存：</span>
+        <input type="text" id="proprethrehold" class="textbox textbox_295 inventory_input" placeholder="" value="0"/>
+       </li>
+       <li>
+        <span class="item_name" style="width:120px;">当前库存：</span>
         <input type="text" id="proinventory" class="textbox textbox_295 inventory_input" placeholder="" value="0"/>
        </li>
 					<li><span class="item_name" style="width: 120px;">最低库存：</span>

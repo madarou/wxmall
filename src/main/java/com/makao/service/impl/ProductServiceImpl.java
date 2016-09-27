@@ -108,6 +108,10 @@ public class ProductServiceImpl implements IProductService {
 	public List<Product> searchRepProducts(String keyword) {
 		return this.productDao.searchRepProduct(keyword);
 	}
+	@Override
+	public int supplyProduct(String string, int productId, int num) {
+		return this.productDao.supplyProduct(string, productId, num);
+	}
 	
 	
 //	@Override

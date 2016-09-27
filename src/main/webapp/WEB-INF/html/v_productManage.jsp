@@ -330,6 +330,9 @@
 						</c:otherwise> 
 					</c:choose>|
 		           <button class="linkStyle copyProduct" id="copy-${item.id}" style="position: relative;">复制链接</button>
+		            <c:if test="${item.supply>0}">
+		            	|<button class="linkStyle supplyProduct" id="supply-${item.id}" style="position: relative;">补货(${item.supply})</button>
+					</c:if>
 		        </td>
 		        <td style="display:none" id="pshowway-${item.id}">${item.showWay}</td>
 		        <td style="display:none" id="pstandard-${item.id}">${item.standard}</td>
