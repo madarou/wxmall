@@ -11,7 +11,7 @@ public class MakaoConstants {
 	
 	public static final long ORDER_EXPIRE = 15;//下单等待支付的时间限制，单位为分
 	
-	public static final String DEFAULT_CITY_NAME="上海";//主页默认进来的城市
+	public static final String DEFAULT_CITY_NAME="上海";
 	public static final String DEFAULT_AREA_NAME="张江";
 	public static final int DEFAULT_CITY_ID=1;
 	public static final int DEFAULT_AREA_ID=1;
@@ -21,5 +21,6 @@ public class MakaoConstants {
 												//如果时间差(是负数)小于预先定义的COMFIRMTIME，系统帮助确认收货，单位为分
 	public static final int REMOVETIME = -18;//数据库中查到所有15分钟内未支付或支付失败的订单，同时删除它们，并且返回订单列表
 											//下单时间与当前时间的分钟差，小于该时间则开始删除，单位为分，为负值，注意其绝对值必须大于ORDER_EXPIRE
+	public static final int RETURN_EXPIRE_TIME = 2;//从确认收货到不能申请退货的时间差，单位为小时
 	public static final int WEIXIN_TOKEN_EXPIRE_TIME = 110;//微信的access_token和jsapi_ticket的在缓存中的有效时间，单位为分
 }
