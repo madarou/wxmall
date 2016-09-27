@@ -112,6 +112,10 @@ public class OrderOffServiceImpl implements IOrderOffService {
 		return this.orderOffDao.updateComment(comment);
 		
 	}
+	@Override
+	public List<OrderOff> inventoryBackCanceledAndReturned(String string) {
+		return this.orderOffDao.inventoryBackCanceledAndReturned(string);
+	}
 	
 //	@Override
 //	public void testor() {

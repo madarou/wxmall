@@ -114,6 +114,8 @@ Order_cityId_off:
 						`sender` varchar(30),
 						`senderPhone` varchar(12),
 						`pcomments` varchar(255),
+						`commented` int(11),
+						`inventBack` int(11),
 						PRIMARY KEY (`id`))";
 						
 						

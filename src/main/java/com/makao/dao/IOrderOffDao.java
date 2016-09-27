@@ -90,4 +90,11 @@ public interface IOrderOffDao {
 			//以"商品id=评论id,"的形式插入
 	 */
 	public int updateComment(Comment comment);
+
+	/**
+	 * @param string
+	 * @return
+	 * 将取消或退货的的订单的inventBack字段设为1
+	 */
+	public List<OrderOff> inventoryBackCanceledAndReturned(String string);
 }

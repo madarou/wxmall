@@ -188,14 +188,15 @@ public class BasicTestSuite_Test2 {
 		assertEquals("200",result.get("msg"));
 		
 		Thread.sleep(1000);
-		result = HttpUtils.doGetObject(exchangecoupon);
+		//result = HttpUtils.doGetObject(exchangecoupon);
+		result = HttpUtils.doPostStr(exchangecoupon,"{}");
 		assertEquals("200",result.get("msg"));
 		
 		result = HttpUtils.doPostStr(newcoupon2,coupon2);
 		assertEquals("200",result.get("msg"));
 		
 		Thread.sleep(1000);
-		result = HttpUtils.doGetObject(exchangecoupon2);
+		result = HttpUtils.doPostStr(exchangecoupon2,"{}");
 		assertEquals("200",result.get("msg"));
 		//**********新增并兑换优惠券***********
 		

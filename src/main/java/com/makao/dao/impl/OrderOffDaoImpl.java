@@ -184,6 +184,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
 							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
 							res.add(p);
 						}
 					}finally{
@@ -253,6 +255,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
 							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
 							res.add(p);
 						}
 					}finally{
@@ -323,6 +327,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
 							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
 							res.add(p);
 						}
 					}finally{
@@ -549,6 +555,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
 							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
 							res.add(p);
 						}
 					}finally{
@@ -618,6 +626,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
 							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
 							res.add(p);
 						}
 					}finally{
@@ -687,6 +697,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
 							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
 							res.add(p);
 						}
 					}finally{
@@ -756,6 +768,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							p.setSender(rs.getString("sender"));
 							p.setSenderPhone(rs.getString("senderPhone"));
 							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
 							res.add(p);
 						}
 					}finally{
@@ -1049,6 +1063,87 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 				tx.rollback();// 回滚
 			logger.error(e.getMessage(), e);
 			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOffDao#inventoryBackCanceledAndReturned(java.lang.String)
+	 * 将取消或退货的的订单的inventBack字段设为1
+	 */
+	@Override
+	public List<OrderOff> inventoryBackCanceledAndReturned(String tableName) {
+		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus` IN ('"+OrderState.RETURNED.getCode()+"','"+OrderState.CANCELED.getCode()+"') AND `inventBack`=0";
+		Session session = null;
+		Transaction tx = null;
+		List<OrderOff> res = new LinkedList<OrderOff>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;PreparedStatement ps2 = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						while(rs.next()){
+							OrderOff p = new OrderOff();
+							p.setId(rs.getInt("id"));
+							p.setNumber(rs.getString("number"));
+							p.setProductIds(rs.getString("productIds"));
+							p.setProductNames(rs.getString("productNames"));
+							p.setOrderTime(rs.getTimestamp("orderTime"));
+							p.setReceiverName(rs.getString("receiverName"));
+							p.setPhoneNumber(rs.getString("phoneNumber"));
+							p.setAddress(rs.getString("address"));
+							p.setPayType(rs.getString("payType"));
+							p.setReceiveType(rs.getString("receiveType"));
+							p.setReceiveTime(rs.getString("receiveTime"));
+							p.setCouponId(rs.getInt("couponId"));
+							p.setCouponPrice(rs.getString("couponPrice"));
+							p.setTotalPrice(rs.getString("totalPrice"));
+							p.setFreight(rs.getString("freight"));
+							p.setComment(rs.getString("comment"));
+							p.setVcomment(rs.getString("vcomment"));
+							p.setFinalStatus(rs.getString("finalStatus"));
+							p.setCityarea(rs.getString("cityarea"));
+							p.setFinalTime(rs.getTimestamp("finalTime"));
+							p.setUserId(rs.getInt("userId"));
+							p.setAreaId(rs.getInt("areaId"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
+							res.add(p);
+							String sql2 = "UPDATE `"
+									+ tableName
+									+ "` SET `inventBack`=1 WHERE `id`="+rs.getInt("id");
+							ps2 = connection.prepareStatement(sql2);
+							ps2.executeUpdate();
+							String added = rs.getInt("cityId")+"_"+rs.getInt("areaId")+"_"+rs.getString("number");
+							logger.info("将取消或退货订单(cityid_areaid_number)的库存加回："+added);
+						}
+					}finally{
+						doClose(ps);doClose(ps2);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (null != session)
 				session.close();// 关闭回话

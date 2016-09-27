@@ -219,6 +219,8 @@ point			int(11)			下单赠送的积分
 sender			varchar(30)		配送员姓名
 senderPhone		varchar(12)		配送员电话
 pcomments		varchar(255)	商品评论的id列表	以"商品id=评论id,"的形式插入
+commented		int(11)			是否已评论			0表示没有，1表示已评论
+inventBack		int(11)			状态是已取消或已退货的订单是否已将减掉的库存加回，0表示没有，1表示已加回
 
 Coupon_cityId(我的积分中心->积分兑换里显示的优惠券类型，是静态优惠券，即没有被兑换的，兑换之后会在下面Coupon_cityId_on中生成)
 列名				类型				注释				备注

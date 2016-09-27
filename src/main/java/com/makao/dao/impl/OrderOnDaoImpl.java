@@ -1855,7 +1855,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						ResultSet rs = ps.executeQuery();
 						while(rs.next()){
 							String orderTime = rs.getTimestamp("orderTime").toString();
-							int min_diff = TimeUtil.minitesDiff(orderTime);//收货开始时间与当前时间的分钟差
+							int min_diff = TimeUtil.minitesDiff(orderTime);//下单时间与当前时间的分钟差
 							if(min_diff<=MakaoConstants.REMOVETIME){
 								logger.info("[unPaidOrders]city_area_id:"+id+"_"+rs.getInt("areaId")+"_"+rs.getInt("id")+"; orderTime:"+orderTime+"; min_diff: "+min_diff);
 								OrderOn p = new OrderOn();

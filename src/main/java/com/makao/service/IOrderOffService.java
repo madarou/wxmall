@@ -98,4 +98,11 @@ public interface IOrderOffService {
 	 */
 	int updateComment(Comment comment);
 
+	/**
+	 * @param string
+	 * @return
+	 * 将取消或退货的的订单的inventBack字段设为1
+	 */
+	List<OrderOff> inventoryBackCanceledAndReturned(String string);
+
 }

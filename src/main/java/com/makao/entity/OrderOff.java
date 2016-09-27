@@ -37,6 +37,8 @@ public class OrderOff {
 	private String sender;//配送员姓名
 	private String senderPhone;//配送员电话
 	private String pcomments;//评论，商品id=评论id
+	private int commented;//是否已评论,0表示没有，1表示已评论
+	private int inventBack;//状态是已取消或已退货的订单是否已将减掉的库存加回，0表示没有，1表示已加回
 	
 	public int getId() {
 		return id;
@@ -211,6 +213,18 @@ public class OrderOff {
 	}
 	public void setPcomments(String pcomments) {
 		this.pcomments = pcomments;
+	}
+	public int getCommented() {
+		return commented;
+	}
+	public void setCommented(int commented) {
+		this.commented = commented;
+	}
+	public int getInventBack() {
+		return inventBack;
+	}
+	public void setInventBack(int inventBack) {
+		this.inventBack = inventBack;
 	}
 	
 }
