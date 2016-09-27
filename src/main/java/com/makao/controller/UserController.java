@@ -202,7 +202,7 @@ public class UserController {
 				u.setAvatarUrl(userObject.getString("headimgurl"));
 				u.setRank("初级会员");
 				u.setRegistTime(new Timestamp(System.currentTimeMillis()));
-				u.setPoint(0);
+				u.setPoint(MakaoConstants.INITIAL_POINT);
 				u.setCityId(MakaoConstants.DEFAULT_CITY_ID);
 				u.setAreaId(MakaoConstants.DEFAULT_AREA_ID);
 				u.setCityName(MakaoConstants.DEFAULT_CITY_NAME);
