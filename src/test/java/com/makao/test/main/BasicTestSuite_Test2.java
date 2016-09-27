@@ -63,7 +63,7 @@ public class BasicTestSuite_Test2 {
 		String vendor3 = "{\"userName\":\"老王\",\"areaId\":3,\"cityId\":2,\"cityName\":\"北京\",\"areaName\":\"宣武\"}";
 	
 		String newuser = "http://localhost:8080/user/new";
-		String user = "{\"userName\":\"马买家😯\",\"openid\":\"3c5d3acb-31b9-480d-944a-516e74390ed8\",\"avatarUrl\":\""+userHead+"\",\"areaId\":1,\"areaName\":\"张江\",\"cityId\":1,\"cityName\":\"上海\",\"point\":20,\"receiveName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海复旦大学\",\"addLabel\":\"家\",\"rank\":\"中级\"}";
+		String user = "{\"userName\":\"马买家😯\",\"openid\":\"3c5d3acb-31b9-480d-944a-516e74390ed8\",\"avatarUrl\":\""+userHead+"\",\"areaId\":1,\"areaName\":\"张江\",\"cityId\":1,\"cityName\":\"上海\",\"point\":180,\"receiveName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海复旦大学\",\"addLabel\":\"家\",\"rank\":\"中级\"}";
 		String newaddress = "http://localhost:8080/address/new/?token=3c5d3acb-31b9-480d-944a-516e74390ed8";
 		String address = "{\"userId\":1,\"userName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海张江\",\"detailAddress\":\"华佗路280弄23号\",\"label\":\"宿舍\",\"isDefault\":\"yes\",\"cityId\":1,\"areaId\":1}";
 		
@@ -201,22 +201,43 @@ public class BasicTestSuite_Test2 {
 		//**********新增并兑换优惠券***********
 		
 		//**********提交订单***********
+
+		//**********提交订单***********
 		result = HttpUtils.doPostJson(neworderon,jb);
 		assertEquals("200",result.get("msg"));
 		result = HttpUtils.doPostJson(neworderon,orderon2);
+		assertEquals("200",result.get("msg"));
+		
+		jb = new JSONObject();
+		jb.put("productIds", new String[] {"1","2"});jb.put("nums", new String[] {"3","1"});
+		jb.put("receiverName", "郭德纲");jb.put("phoneNumber", "17638372821");
+		jb.put("address", "上海复旦大学");jb.put("receiveTime", "2016-05-21 15:00-18:00");
+		jb.put("couponId", 0);jb.put("cityarea", "上海张江");jb.put("userId", 1);
+		jb.put("areaId", 1);jb.put("cityId", 1);jb.put("status", OrderState.QUEUE.getCode()+"");
+		result = HttpUtils.doPostJson(neworderon,jb);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostJson(neworderon,jb);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostJson(neworderon,jb);
 		assertEquals("200",result.get("msg"));
 //		result = HttpUtils.doPostStr(neworderon,orderon);
 //		assertEquals("200",result.get("msg"));
 //		result = HttpUtils.doPostStr(neworderon,orderon2);
 //		assertEquals("200",result.get("msg"));
+		jb = new JSONObject();
+		jb.put("productIds", new String[] {"1","2"});jb.put("nums", new String[] {"3","1"});
+		jb.put("receiverName", "郭德纲");jb.put("phoneNumber", "17638372821");
+		jb.put("address", "上海复旦大学");jb.put("receiveTime", "2016-05-21 15:00-18:00");
+		jb.put("couponId", 0);jb.put("cityarea", "上海张江");jb.put("userId", 1);
+		jb.put("areaId", 1);jb.put("cityId", 1);jb.put("status", OrderState.PROCESS_WAITING.getCode()+"");
 		result = HttpUtils.doPostJson(neworderon,jb);
 		assertEquals("200",result.get("msg"));
-		result = HttpUtils.doPostJson(neworderon,jb);
-		assertEquals("200",result.get("msg"));
-		result = HttpUtils.doPostJson(neworderon,jb);
-		assertEquals("200",result.get("msg"));
-		result = HttpUtils.doPostJson(neworderon,jb);
-		assertEquals("200",result.get("msg"));
+		jb = new JSONObject();
+		jb.put("productIds", new String[] {"1","2"});jb.put("nums", new String[] {"3","1"});
+		jb.put("receiverName", "郭德纲");jb.put("phoneNumber", "17638372821");
+		jb.put("address", "上海复旦大学");jb.put("receiveTime", "2016-05-21 15:00-18:00");
+		jb.put("couponId", 0);jb.put("cityarea", "上海张江");jb.put("userId", 1);
+		jb.put("areaId", 1);jb.put("cityId", 1);jb.put("status", OrderState.DISTRIBUTED.getCode()+"");
 		result = HttpUtils.doPostJson(neworderon,jb);
 		assertEquals("200",result.get("msg"));
 		result = HttpUtils.doPostJson(neworderon,jb);
