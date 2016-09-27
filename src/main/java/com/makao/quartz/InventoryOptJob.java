@@ -47,7 +47,9 @@ public class InventoryOptJob {
 			//遍历返回的订单列表，取出其中的(城市区域商品)-(数量)
 			//加入到对应pi_cityId_areaId_id缓存中
 			if(orders!=null)
-			{	for(OrderOn o:orders){
+			{	
+				System.out.println("orders");
+				for(OrderOn o:orders){
 					int areaId = o.getAreaId();
 					String[] ids = o.getProductIds().split(",");
 					String[] names = o.getProductNames().split(",");
@@ -59,7 +61,7 @@ public class InventoryOptJob {
 					}
 				}
 			}
-			if(canceled!=null){
+			if(canceled!=null&&canceled.size()>0){
 				for(OrderOff o:canceled){
 					int areaId = o.getAreaId();
 					String[] ids = o.getProductIds().split(",");
@@ -73,13 +75,15 @@ public class InventoryOptJob {
 				}
 			}
 			//遍历当前city的pi_cityid_*为key的所有值，将这些新的库存值写入商品数据库
-			if(orders!=null||canceled!=null){
+			if(orders!=null||canceled.size()>0){
 				List<String> keys = redisUtil.getKeys("pi_"+c.getId()+"_*");
 				for(String key : keys){
 					String tableName = "Product_"+c.getId()+"_"+key.split("_")[2];
 					String productid = key.split("_")[3];
 					String inventN = redisUtil.redisQueryObject(key);
-					int res = this.productService.updateInventory(tableName, productid, inventN);
+					if(inventN!=null&&!"".equals(inventN)){
+						int res = this.productService.updateInventory(tableName, productid, inventN);
+					}
 				}
 			}
 		}
