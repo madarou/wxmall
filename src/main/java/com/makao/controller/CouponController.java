@@ -148,7 +148,7 @@ public class CouponController {
     }
 	
 	@AuthPassport
-	@RequestMapping(value = "/exchange/{cityid:\\d+}/{couponid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+	@RequestMapping(value = "/exchange/{cityid:\\d+}/{couponid:\\d+}/{userid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object exchange(@PathVariable("cityid") int cityid,@PathVariable("couponid") int couponid,@PathVariable("userid") int userid,
     		@RequestParam(value="token", required=false) String token) {
