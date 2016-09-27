@@ -1,11 +1,17 @@
 package com.makao.utils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -44,9 +50,16 @@ public class RedisInitialOnInit implements ServletContextListener {
 		ApplicationContext application=WebApplicationContextUtils.getWebApplicationContext(event.getServletContext()); 
 		RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>) application.getBean("redisTemplate");
 		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-		if(redisTemplate.hasKey("inventory")){
-			redisTemplate.delete("inventory");
-		}
+		//清空缓存
+		RedisConnection redisConnection = redisTemplate.getConnectionFactory().getConnection();
+    	Set<byte[]> keys = redisConnection.keys("*".getBytes());
+    	Iterator<byte[]> it = keys.iterator();
+    	while(it.hasNext()){
+    	    byte[] data = (byte[])it.next();
+    	    String k = new String(data, 0, data.length);
+    	    redisTemplate.delete(k);
+    	}
+    	redisConnection.close();
 		//这里不能用set(key, value)，因为已经使用了StringRedisSerializer，Long类型不能cast成String
 		//而如果使用默认的JDKSerializer，increment会在加时报错，因为JDKSerializer把Long值序列化成了不
 		//规则的一些字串，不能直接拿出来做加减。如果key不存在，直接增加会从0开始加

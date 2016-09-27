@@ -182,6 +182,77 @@
       </div>
      </section>
      <!--结束：弹出框效果-->
+     <!-- 补货 -->
+   <script>
+     $(document).ready(function(){
+    	var orderId_toSupply = 0;//要取消的订单
+     //弹出文本性提示框
+     $(".supplyProduct").click(function(){
+       $(".supply_pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       orderId_toSupply = clickedId.split("-")[1];
+
+       });
+     //弹出：确认按钮
+     $("#confirmCancel").click(function(){
+    	 if(orderId_toSupply==0){
+    		 alert("请重新选择要补货的商品");
+    		 return false;
+    	 }
+    	 var cityid = $("#pcityid-"+orderId_toSupply).text();
+    	 var areaid = $("#pareaid-"+orderId_toSupply).text();
+    	 if(cityid.length==0 || areaid.length==0){
+    		 alert("请重新选择要补货的商品");
+    		 return false;
+    	 }
+		 var num = $("#psupply-"+orderId_toSupply).text();
+		 if(num==null||num.length==0){
+    		 alert("请重新选择要补货的商品");
+    		 return false;
+    	 }
+        	$.ajax({
+    		  type: "POST",
+  	          contentType: "application/json",
+  	          url: "/product/supplied/"+$("#loginUserId").val(),
+  	          dataType: "json",
+  	          data: JSON.stringify({"cityid":cityid,"areaid":areaid,"productid":orderId_toSupply,"num":num}),
+  	          success: function(data){
+  	        	  if(data.msg=="200"){
+  	        		  alert("商品补货完成");
+  	        		  window.location.reload();//刷新页面
+  	        		orderId_toSupply=0;
+  	        	  }
+  	          }
+    	 	});
+       $(".supply_pop_bg").fadeOut();
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelCancel").click(function(){
+       $(".supply_pop_bg").fadeOut();
+       orderId_toSupply=0;
+       });
+     });
+     </script>
+			<section class="supply_pop_bg">
+				<div class="pop_cont">
+					<!--title-->
+					<h3>温馨提示</h3>
+					<!--content-->
+					<div class="small_pop_cont_input">
+						<!--以pop_cont_text分界-->
+						<div class="pop_cont_text">确认完成补货吗？(请确认商品数量无误后操作)
+						</div>
+						<!--bottom:operate->button-->
+						<div class="btm_btn">
+							<input type="button" value="确认" id="confirmCancel"
+								class="input_btn trueBtn" /> <input type="button" value="关闭"
+								id="cancelCancel" class="input_btn falseBtn" />
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- 补货框 --> 
+			
      
      <!-- 上架下架提示框 -->
       <script>
@@ -351,6 +422,7 @@
 		        <td style="display:none" id="pareaid-${item.id}">${item.areaId}</td>
 		        <td style="display:none" id="psalesvolume-${item.id}">${item.salesVolume}</td>
 		        <td style="display:none" id="pprethrehold-${item.id}">${item.prethrehold}</td>
+		         <td style="display:none" id="psupply-${item.id}">${item.supply}</td>
          	</tr>
 		</c:forEach> 
 		

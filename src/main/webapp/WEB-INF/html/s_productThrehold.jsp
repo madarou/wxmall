@@ -196,7 +196,6 @@
     		 alert("请输入补货数量");
     		 return false;
     	 }
-    	 if(cityid)
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",

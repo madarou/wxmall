@@ -117,4 +117,13 @@ public interface IProductDao {
 	 * 给商品补货
 	 */
 	public int supplyProduct(String string, int productId, int num);
+
+	/**
+	 * @param string
+	 * @param productId
+	 * @param num
+	 * @return
+	 * 更新库存为num，同时将supply设为0
+	 */
+	public int suppliedProduct(String string, int productId, int num);
 }

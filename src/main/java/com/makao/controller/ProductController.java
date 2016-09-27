@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
+import com.makao.utils.RedisUtil;
 
 /**
  * @description: TODO
@@ -58,6 +60,8 @@ public class ProductController {
 	private IBannerService bannerService;
 	@Resource
 	private ISupervisorService supervisorService;
+	@Autowired
+	private RedisUtil redisUtil;
 	
 	/**
 	 * @param id
@@ -146,11 +150,52 @@ public class ProductController {
 		int res = this.productService.supplyProduct("Product_"+cityId+"_"+areaId, productId,num);
 		JSONObject jsonObject = new JSONObject();
 		if(res==0){
-			logger.info("商品点赞成功，被赞商品" + cityId +" "+areaId+" "+productId);
+			logger.info("商品设置补货成功，商品：" + cityId +" "+areaId+" "+productId);
         	jsonObject.put("msg", "200");
 		}
 		else{
-			logger.info("商品点赞失败，被赞商品" + cityId +" "+areaId+" "+productId);
+			logger.info("商品设置补货失败，商品：" + cityId +" "+areaId+" "+productId);
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+	
+	/**
+	 * @param paramObject
+	 * @return
+	 * 区域管理员操作后完成补货
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/supplied/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object supplied(@RequestBody JSONObject paramObject) {
+		int cityId = paramObject.getIntValue("cityid");
+		int areaId = paramObject.getIntValue("areaid");
+		int productId = paramObject.getIntValue("productid");
+		int num = paramObject.getIntValue("num");
+		String k = "pi_"+cityId+"_"+areaId+"_"+productId;
+		//先从缓存中获取到该商品的库存
+		Object object = redisUtil.redisQueryObject(k);
+		if(object==null){//缓存里面如果没有，从数据库里读
+			int inv = this.productService.getInventory(cityId, areaId, productId+"");
+			redisUtil.redisSaveInventory(k, String.valueOf(inv));
+		}
+		//加入缓存中
+		List<Object> rt = redisUtil.addInventoryTx(
+				k, num);
+		//再从缓存读出
+		String inventN = redisUtil.redisQueryObject(k);
+		JSONObject jsonObject = new JSONObject();
+		if(inventN!=null&&!"".equals(inventN)){
+			int res = this.productService.suppliedProduct("Product_"+cityId+"_"+areaId, productId,Integer.valueOf(inventN));
+			if(res==0){
+				logger.info("商品补货成功，商品：" + cityId +" "+areaId+" "+productId);
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+		}
+		else{
+			logger.info("商品补货失败，商品：" + cityId +" "+areaId+" "+productId);
         	jsonObject.put("msg", "201");
 		}
         return jsonObject;

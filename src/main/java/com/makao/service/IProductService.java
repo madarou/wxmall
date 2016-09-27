@@ -125,4 +125,13 @@ public interface IProductService {
 	 * 给商品补货
 	 */
 	int supplyProduct(String string, int productId, int num);
+
+	/**
+	 * @param string
+	 * @param productId
+	 * @param valueOf
+	 * @return
+	 * 更新库存为num，同时将supply设为0
+	 */
+	int suppliedProduct(String string, int productId, int num);
 }

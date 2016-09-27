@@ -443,9 +443,6 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	
 	@Override
 	public int cancelOrder(int cityId, int orderid, String vcomment) {
-//		String sql = "UPDATE `"
-//				+ tableName
-//				+ "` SET `vcomment`="+vcomment+" AND `status`='卖家取消' WHERE `id`="+orderid;
 		//先从Order_on查出订单内容，在写入到Order_off中，并追加finalStatus和vcomment
 		String Order_cityId_on = "Order_"+cityId+"_on";
 		String Order_cityId_off = "Order_"+cityId+"_off";
