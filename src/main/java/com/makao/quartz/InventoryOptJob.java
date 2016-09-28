@@ -83,16 +83,16 @@ public class InventoryOptJob {
 					String productid = key.split("_")[3];
 					String inventN = redisUtil.redisQueryObject(key);
 					if(inventN!=null&&!"".equals(inventN)){
-						if(orders!=null||canceled.size()>0){//如果本轮发现未支付的订单或取消或退货的订单，才去更新缓存，以免频繁操作缓存
+						//if(orders!=null||canceled.size()>0){//如果本轮发现未支付的订单或取消或退货的订单，才去更新缓存，以免频繁操作缓存
 							int res = this.productService.updateInventory(tableName, productid, inventN);
-						}
+						//}
 						//更新销量
 						String lastInventN = redisUtil.redisQueryObject("last"+key);
 						if(lastInventN!=null&&!"".equals(lastInventN)){
 							int saled = Integer.valueOf(lastInventN)-Integer.valueOf(inventN);
 							if(saled>0){
 								redisUtil.redisSaveInventory("last"+key, inventN);
-								int res = this.productService.updateSalesVolume(tableName, productid, saled);
+								int res2 = this.productService.updateSalesVolume(tableName, productid, saled);
 							}
 						}
 						else{//没有lastpi值的话，现在的库存重新写入
