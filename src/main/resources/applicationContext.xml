@@ -154,7 +154,7 @@
 	        <ref bean="inventoryDetail" />
 	    </property>
 	    <property name="cronExpression">
-	        <value>* 5 * * * ?</value>
+	        <value>59/10 * * * * ?</value>
 	    </property>
 	</bean>
 	
