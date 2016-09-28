@@ -1260,15 +1260,17 @@ public class ProductDaoImpl implements IProductDao {
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
 					PreparedStatement ps = null;
-					String sql ="";
-					if(saled>0)
-						sql = "UPDATE `"
+					String sql = "UPDATE `"
 							+ tableName
 							+ "` SET `salesVolume`=`salesVolume`+"+saled+" WHERE `id`=" + productid;
-					else
-						sql = "UPDATE `"
-								+ tableName
-								+ "` SET `salesVolume`=`salesVolume`-"+saled+" WHERE `id`=" + productid;
+//					if(saled>0)
+//						sql = "UPDATE `"
+//							+ tableName
+//							+ "` SET `salesVolume`=`salesVolume`+"+saled+" WHERE `id`=" + productid;
+//					else
+//						sql = "UPDATE `"
+//								+ tableName
+//								+ "` SET `salesVolume`=`salesVolume`-"+saled+" WHERE `id`=" + productid;
 					try {
 						ps = connection.prepareStatement(sql);
 						ps.executeUpdate();
