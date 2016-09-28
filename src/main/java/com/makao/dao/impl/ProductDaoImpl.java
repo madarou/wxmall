@@ -1248,9 +1248,7 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public int updateSalesVolume(String tableName, String productid, int saled) {
 		logger.info("更新销量，更新产品salesVolume(tableName-productId-saled): "+tableName+"-"+productid+"-"+saled);
-		String sql = "UPDATE `"
-				+ tableName
-				+ "` SET `salesVolume`=`salesVolume`+"+saled+" WHERE `id`=" + productid;
+		
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -1262,6 +1260,15 @@ public class ProductDaoImpl implements IProductDao {
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
 					PreparedStatement ps = null;
+					String sql ="";
+					if(saled>0)
+						sql = "UPDATE `"
+							+ tableName
+							+ "` SET `salesVolume`=`salesVolume`+"+saled+" WHERE `id`=" + productid;
+					else
+						sql = "UPDATE `"
+								+ tableName
+								+ "` SET `salesVolume`=`salesVolume`-"+saled+" WHERE `id`=" + productid;
 					try {
 						ps = connection.prepareStatement(sql);
 						ps.executeUpdate();

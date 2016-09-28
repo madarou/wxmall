@@ -90,7 +90,7 @@ public class InventoryOptJob {
 						String lastInventN = redisUtil.redisQueryObject("last"+key);
 						if(lastInventN!=null&&!"".equals(lastInventN)){
 							int saled = Integer.valueOf(lastInventN)-Integer.valueOf(inventN);
-							if(saled>0){
+							if(saled!=0){//不一定上次的库存大于这次，因为如果取消订单或退货后，现在的库存反而大
 								redisUtil.redisSaveInventory("last"+key, inventN);
 								int res2 = this.productService.updateSalesVolume(tableName, productid, saled);
 							}
