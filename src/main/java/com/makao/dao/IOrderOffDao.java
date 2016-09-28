@@ -97,4 +97,11 @@ public interface IOrderOffDao {
 	 * 将取消或退货的的订单的inventBack字段设为1
 	 */
 	public List<OrderOff> inventoryBackCanceledAndReturned(String string);
+
+	/**
+	 * @param cityid
+	 * @return
+	 * 将已收货一定时间后的订单状态改为已完成
+	 */
+	public List<OrderOff> terminateOrders(int cityid);
 }

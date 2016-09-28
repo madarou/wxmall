@@ -118,17 +118,17 @@ api															method				comment
 	}
 /comment/all/[cityId]/[areaId]/[productId]					GET					加载某个商品的所有评论
 /comment/[cityId]/[areaId]/[userId]/[productId]				GET					加载用户userId对商品productId的所有评论
-order state code:
+order state code:(带*的是最终状态)
 1				未支付
 2				排队中
 3				待处理
 4				配送中
 5				已配送
 6				已收货
-7				已取消
+7				已取消(*没付款情况下取消订单的最终状态)
 8				退货申请中
 9				退货中
 10				已退货
-11				已取消退货
-12				已退款
-13				已评价
+11				已取消退货(*)
+12				已退款(*付款后取消或退货后的最终状态)
+13				已完成(*正常已收货一定时间后变成已完成，其余情况不能)

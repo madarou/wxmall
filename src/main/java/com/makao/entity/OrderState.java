@@ -13,7 +13,7 @@ public enum OrderState {
 	RETURNED("已退货",10),
 	RETURN_CANCELED("已取消退货",11),
 	REFUNDED("已退款",12),
-	COMMETED("已评论",13);
+	TERMINALED("已完成",13);
 	
 	private String text;
     private int code;

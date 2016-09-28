@@ -25,6 +25,8 @@ import com.makao.entity.Comment;
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 import com.makao.entity.OrderState;
+import com.makao.utils.MakaoConstants;
+import com.makao.utils.TimeUtil;
 
 /**
  * @description: TODO
@@ -395,7 +397,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String history = ","+OrderState.RETURNED.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='"+OrderState.RETURNED.getCode()+"',`refundStatus`='待退款',`finalTime`=?,`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `finalStatus`='"+OrderState.RETURNED.getCode()+"',`refundStatus`='待退款',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -409,7 +411,6 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 					PreparedStatement ps = null;
 					try {
 						ps = connection.prepareStatement(sql);
-						ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
 						ps.executeUpdate();
 					} finally {
 						doClose(ps);
@@ -1037,7 +1038,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String com = ","+comment.getProductId()+"="+comment.getId();
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `finalStatus`='"+OrderState.COMMETED.getCode()+"', `pcomments`=concat(IFNULL(`pcomments`,''),'"+com+"') WHERE `id`="+comment.getOrderId();
+				+ "` SET `pcomments`=concat(IFNULL(`pcomments`,''),'"+com+"'), `commented`=1 WHERE `id`="+comment.getOrderId();
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -1131,6 +1132,90 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 							ps2.executeUpdate();
 							String added = rs.getInt("cityId")+"_"+rs.getInt("areaId")+"_"+rs.getString("number");
 							logger.info("将取消或退货订单(cityid_areaid_number)的库存加回："+added);
+						}
+					}finally{
+						doClose(ps);doClose(ps2);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+	@Override
+	public List<OrderOff> terminateOrders(int cityid) {
+		String tableName = "Order_"+cityid+"_off";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus`='"+OrderState.RECEIVED.getCode()+"'";
+		Session session = null;
+		Transaction tx = null;
+		List<OrderOff> res = new LinkedList<OrderOff>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;PreparedStatement ps2 = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						while(rs.next()){
+							String confirmTime = rs.getTimestamp("finalTime").toString();
+							int min_diff = TimeUtil.minitesDiff(confirmTime);//确认收货时间与当前时间的分钟差
+							if(min_diff<=MakaoConstants.RETURN_EXPIRE_TIME){
+								logger.info("[terminateOrders]city_area_id:"+cityid+"_"+rs.getInt("areaId")+"_"+rs.getInt("id")+"; confirmTime:"+confirmTime+"; min_diff: "+min_diff);
+								OrderOff p = new OrderOff();
+								p.setId(rs.getInt("id"));
+								p.setNumber(rs.getString("number"));
+								p.setProductIds(rs.getString("productIds"));
+								p.setProductNames(rs.getString("productNames"));
+								p.setOrderTime(rs.getTimestamp("orderTime"));
+								p.setReceiverName(rs.getString("receiverName"));
+								p.setPhoneNumber(rs.getString("phoneNumber"));
+								p.setAddress(rs.getString("address"));
+								p.setPayType(rs.getString("payType"));
+								p.setReceiveType(rs.getString("receiveType"));
+								p.setReceiveTime(rs.getString("receiveTime"));
+								p.setCouponId(rs.getInt("couponId"));
+								p.setCouponPrice(rs.getString("couponPrice"));
+								p.setTotalPrice(rs.getString("totalPrice"));
+								p.setFreight(rs.getString("freight"));
+								p.setComment(rs.getString("comment"));
+								p.setVcomment(rs.getString("vcomment"));
+								p.setFinalStatus(rs.getString("finalStatus"));
+								p.setCityarea(rs.getString("cityarea"));
+								p.setFinalTime(rs.getTimestamp("finalTime"));
+								p.setUserId(rs.getInt("userId"));
+								p.setAreaId(rs.getInt("areaId"));
+								p.setCityId(rs.getInt("cityId"));
+								p.setRefundStatus(rs.getString("refundStatus"));
+								p.setHistory(rs.getString("history"));
+								p.setPoint(rs.getInt("point"));
+								p.setSender(rs.getString("sender"));
+								p.setSenderPhone(rs.getString("senderPhone"));
+								p.setPcomments(rs.getString("pcomments"));
+								p.setCommented(rs.getInt("commented"));
+								p.setInventBack(rs.getInt("inventBack"));
+								res.add(p);
+								String history = ","+OrderState.TERMINALED.getText()+"="+new Timestamp(System.currentTimeMillis());
+								String sql2 = "UPDATE `"
+										+ tableName
+										+ "` SET `finalStatus`='"+OrderState.TERMINALED.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+rs.getInt("id");
+								ps2 = connection.prepareStatement(sql2);
+								ps2.executeUpdate();
+								String termed = rs.getInt("cityId")+"_"+rs.getInt("areaId")+"_"+rs.getString("number");
+								logger.info("将已完成的订单(cityid_areaid_number)的状态设为Terminated："+termed);
+							}
 						}
 					}finally{
 						doClose(ps);doClose(ps2);

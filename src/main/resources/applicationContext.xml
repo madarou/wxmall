@@ -157,6 +157,31 @@
 	        <value>59/10 * * * * ?</value>
 	    </property>
 	</bean>
+	<!-- terminate orders -->
+	<bean id="terminate" class="com.makao.quartz.TerminateOrdersJob"/>
+	<bean id="terminateDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="group" value="terminate"/>
+	    <property name="name" value="terminate"/>
+	    <!--false表示等上一个任务执行完后再开启新的任务-->
+	    <property name="concurrent" value="false"/>
+	    <property name="targetObject">
+	        <ref bean="terminate"/>
+	    </property>
+	    <property name="targetMethod">
+	        <value>execute</value>
+	    </property>
+	</bean>
+	<bean id="terminateTrigger"
+	      class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="work_terminate_name"/>
+	    <property name="group" value="work_terminate"/>
+	    <property name="jobDetail">
+	        <ref bean="terminateDetail" />
+	    </property>
+	    <property name="cronExpression">
+	        <value>59/15 * * * * ?</value>
+	    </property>
+	</bean>
 	
 	<!-- 调度工厂 -->
 	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -165,6 +190,7 @@
 	            <ref bean="approachTrigger"/>
 	            <ref bean="confirmTrigger"/>
 	            <ref bean="inventoryTrigger"/>
+	            <ref bean="terminateTrigger"/>
 	        </list>
 	    </property>
 	</bean>

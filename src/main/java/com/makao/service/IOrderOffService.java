@@ -105,4 +105,11 @@ public interface IOrderOffService {
 	 */
 	List<OrderOff> inventoryBackCanceledAndReturned(String string);
 
+	/**
+	 * @param id
+	 * @return
+	 * 将所有已收货一定时间后的订单状态设为已完成
+	 */
+	List<OrderOff> terminateOrders(int cityid);
+
 }
