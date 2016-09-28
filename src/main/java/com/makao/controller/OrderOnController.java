@@ -280,7 +280,9 @@ public class OrderOnController {
 		//依次检查当前的商品库存是否足够，有一个不够则返回失败
 		for(String id: ids){
 			Object object = redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim());
+			logger.warn("object: "+object);
 			if(object==null){//缓存里面如果没有，从数据库里读
+				logger.warn("缓存里没有该库存："+"pi_"+cityId+"_"+areaId+"_"+id.trim());
 				int inv = this.productService.getInventory(cityId, areaId, id);
 				redisUtil.redisSaveInventory("pi_"+cityId+"_"+areaId+"_"+id.trim(), String.valueOf(inv));
 				//每次更新销量后的缓存
