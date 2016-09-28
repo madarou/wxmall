@@ -284,6 +284,7 @@ public class OrderOnController {
 			if(object==null){//缓存里面如果没有，从数据库里读
 				logger.warn("缓存里没有该库存："+"pi_"+cityId+"_"+areaId+"_"+id.trim());
 				int inv = this.productService.getInventory(cityId, areaId, id);
+				logger.warn("数据库里的值："+inv);
 				redisUtil.redisSaveInventory("pi_"+cityId+"_"+areaId+"_"+id.trim(), String.valueOf(inv));
 				//每次更新销量后的缓存
 				redisUtil.redisSaveInventory("lastpi_"+cityId+"_"+areaId+"_"+id.trim(), String.valueOf(inv));

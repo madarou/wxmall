@@ -793,7 +793,7 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public int getInventory(int cityId, int areaId, String id) {
 		String tableName = "Product_"+cityId+"_"+areaId;
-		String sql = "SELECT inventory FROM "+tableName+ " WHERE `id`="+id;
+		String sql = "SELECT `inventory` FROM "+tableName+ " WHERE `id`="+id;
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();
@@ -808,7 +808,6 @@ public class ProductDaoImpl implements IProductDao {
 					try {
 						ps = connection.prepareStatement(sql);
 						ResultSet rs = ps.executeQuery();
-						//int col = rs.getMetaData().getColumnCount();
 						rs.next();
 						res.add(rs.getInt("inventory"));
 					}finally{
