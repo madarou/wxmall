@@ -126,4 +126,14 @@ public interface IProductDao {
 	 * 更新库存为num，同时将supply设为0
 	 */
 	public int suppliedProduct(String string, int productId, int num);
+
+	/**
+	 * @param tableName
+	 * @param productid
+	 * @param saled
+	 * @return
+	 * 增加saled个销量
+	 */
+	public int updateSalesVolume(String tableName, String productid,
+			int saled);
 }

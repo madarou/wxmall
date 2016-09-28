@@ -215,7 +215,11 @@ public class ProductController {
 			Product.setAreaId(vendor.getAreaId());
 			Product.setCityId(vendor.getCityId());
 			int res = this.productService.insert(Product);
-			if(res==0){
+			if(res!=0){
+				//将商品库存放入缓存
+				redisUtil.redisSaveInventory("pi_"+Product.getCityId()+"_"+Product.getAreaId()+"_"+res, String.valueOf(Product.getInventory()));
+				//每次更新销量后的缓存
+				redisUtil.redisSaveInventory("lastpi_"+Product.getCityId()+"_"+Product.getAreaId()+"_"+res, String.valueOf(Product.getInventory()));
 				logger.info("增加商品成功name=" + Product.getProductName());
 	        	jsonObject.put("msg", "200");
 	        	return jsonObject;

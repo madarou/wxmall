@@ -134,4 +134,12 @@ public interface IProductService {
 	 * 更新库存为num，同时将supply设为0
 	 */
 	int suppliedProduct(String string, int productId, int num);
+
+	/**
+	 * @param tableName
+	 * @param productid
+	 * @param saled
+	 * 增加saled个销量
+	 */
+	int updateSalesVolume(String tableName, String productid, int saled);
 }

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.makao.dao.IProductDao;
 import com.makao.entity.Product;
 import com.makao.entity.User;
+import com.mysql.jdbc.Statement;
 
 /**
  * @description: TODO
@@ -46,7 +47,7 @@ public class ProductDaoImpl implements IProductDao {
 				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
-		int res = 0;// 返回0表示成功，1表示失败
+		List<Integer> res = new ArrayList<Integer>();// 返回0表示失败，成功则返回id
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
@@ -56,7 +57,7 @@ public class ProductDaoImpl implements IProductDao {
 				public void execute(Connection connection) throws SQLException {
 					PreparedStatement ps = null;
 					try {
-						ps = connection.prepareStatement(sql);
+						ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 						ps.setString(1, product.getProductName());
 						ps.setString(2, product.getCatalog());
 						ps.setString(3, product.getLabel());
@@ -81,7 +82,13 @@ public class ProductDaoImpl implements IProductDao {
 						ps.setInt(22, product.getThrehold());
 						ps.setInt(23, product.getPrethrehold());
 						ps.setInt(24, product.getSupply());
-						ps.executeUpdate();
+						int row = ps.executeUpdate();
+						ResultSet rs = ps.getGeneratedKeys();  
+					     if ( rs.next() ) {  
+					    	 int key = rs.getInt(row);  
+					         logger.info("插入的product id:"+key);  
+					         res.add(key);
+					     }  
 					} finally {
 						doClose(ps);
 					}
@@ -92,12 +99,11 @@ public class ProductDaoImpl implements IProductDao {
 			if (null != tx)
 				tx.rollback();// 回滚
 			logger.error(e.getMessage(), e);
-			res = 1;
 		} finally {
 			if (null != session)
 				session.close();// 关闭回话
 		}
-		return res;
+		return (res.get(0)!=0)?res.get(0):0;
 	}
 
 	@Override
@@ -1208,6 +1214,44 @@ public class ProductDaoImpl implements IProductDao {
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `supply`=0,`inventory`="+num+" WHERE `id`=" + productId;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps.executeUpdate();
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+			res = 1;
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+
+	@Override
+	public int updateSalesVolume(String tableName, String productid, int saled) {
+		logger.info("更新销量，更新产品salesVolume(tableName-productId-saled): "+tableName+"-"+productid+"-"+saled);
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `salesVolume`=`salesVolume`+"+saled+" WHERE `id`=" + productid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败

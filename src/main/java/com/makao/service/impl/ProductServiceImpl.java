@@ -116,6 +116,11 @@ public class ProductServiceImpl implements IProductService {
 	public int suppliedProduct(String string, int productId, int num) {
 		return this.productDao.suppliedProduct(string, productId, num);
 	}
+	@Override
+	public int updateSalesVolume(String tableName, String productid, int saled) {
+		return this.productDao.updateSalesVolume(tableName, productid, saled);
+		
+	}
 	
 	
 //	@Override
