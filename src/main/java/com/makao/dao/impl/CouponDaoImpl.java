@@ -28,6 +28,7 @@ import com.makao.entity.History;
 import com.makao.entity.OrderOn;
 import com.makao.entity.Product;
 import com.makao.entity.User;
+import com.makao.utils.MakaoConstants;
 
 /**
  * @description: TODO
@@ -38,7 +39,6 @@ import com.makao.entity.User;
 @Transactional
 public class CouponDaoImpl implements ICouponDao {
 	private static final Logger logger = Logger.getLogger(CouponDaoImpl.class);
-	private static final int COUPON_EXPIRE_DAY = 7;
 	@Resource
 	private SessionFactory sessionFactory;
 	@Override
@@ -395,7 +395,7 @@ public class CouponDaoImpl implements ICouponDao {
 						ps.setInt(10, user.getId());
 						ps.setString(11, coupon.getType());
 						Date from = new Date(System.currentTimeMillis());
-						Date to = new Date(System.currentTimeMillis()+(24*60*60*1000*COUPON_EXPIRE_DAY));
+						Date to = new Date(System.currentTimeMillis()+(24*60*60*1000*MakaoConstants.COUPON_EXPIRE_DAY));
 						ps.setDate(12, from);
 						ps.setDate(13, to);
 						int res = ps.executeUpdate();

@@ -24,4 +24,6 @@ public class MakaoConstants {
 	public static final int RETURN_EXPIRE_TIME = -2;//从确认收货到不能申请退货的时间差，单位为分
 	public static final int WEIXIN_TOKEN_EXPIRE_TIME = 110;//微信的access_token和jsapi_ticket的在缓存中的有效时间，单位为分
 	public static final int INITIAL_POINT = 40;//用户第一次进来时的默认积分
+	public static final float POINT_PROPORTION = 0.1f;//订单金额化成积分的比例
+	public static final int COUPON_EXPIRE_DAY = 7;//代金券有效期天数
 }

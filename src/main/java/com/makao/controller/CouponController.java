@@ -184,7 +184,7 @@ public class CouponController {
     Object history(@PathVariable("cityid") int cityid,@PathVariable("userid") int userid) {
         JSONObject jsonObject = new JSONObject();
 		List<History> hs = this.couponService.queryHistory("Coupon_"+cityid,userid);
-		logger.info("查询城市id："+cityid+"的所有静态coupon完成");
+		logger.info("查询城市id："+cityid+" 下userid="+userid+"的所有兑换历史完成");
 		jsonObject.put("msg", "200");
 		jsonObject.put("history", hs);
 		return jsonObject;

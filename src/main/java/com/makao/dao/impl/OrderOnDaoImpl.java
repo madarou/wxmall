@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,7 +90,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						ps.setInt(21, orderOn.getCityId());
 						ps.setString(22, orderOn.getRefundStatus());
 						ps.setString(23, OrderState.getText(Integer.parseInt(orderOn.getStatus()))+"="+orderOn.getOrderTime());
-						ps.setInt(24, orderOn.getPoint());
+						DecimalFormat fnum = new  DecimalFormat("##0"); //保留整数
+						int point = Integer.valueOf(fnum.format(Float.valueOf(orderOn.getTotalPrice())*MakaoConstants.POINT_PROPORTION));
+						ps.setInt(24, point);
 						ps.setString(25, orderOn.getSender());
 						ps.setString(26, orderOn.getSenderPhone());
 						int row = ps.executeUpdate();

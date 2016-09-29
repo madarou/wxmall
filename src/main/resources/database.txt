@@ -361,3 +361,13 @@ cityId			int(11)			城市Id
 userId			int(11)			优惠券拥有者
 amount			varchar(10)		优惠券面值
 restrict		int(11)			使用限制			至少消费到xx元才能使用，在购物车时根据此限制加载可用券，如'消费满10元'
+
+PointLog_cityId(积分记录)
+列名				类型				注释				备注
+id				int(11)
+name			varchar(30)		记录名称			如'每日登陆''下单消费'
+point			int(11)			获得的积分
+getDate			date			获得积分的时间
+comment			varchar(100)	备注				便于不同获得积分的原因填写不同的备注
+userId			int(11)			对应用户
+cityId			int(11)

@@ -74,6 +74,7 @@ api															method				comment
 /couponOff/all/[cityId]/[userId]							GET					查询用户已使用或已过期的优惠券列表
 /couponOff/[cityId]/[couponId]								GET					查询用户已使用或已过期的某个优惠券
 
+/point/history/[cityId]/[userId]							GET					查询用户积分记录
 /address/new/?token=xxx										POST				新增地址
 	{
 		userId:,//用户id

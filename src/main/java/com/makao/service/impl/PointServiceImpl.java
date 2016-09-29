@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.makao.dao.IPointDao;
 import com.makao.entity.Point;
+import com.makao.entity.PointLog;
 import com.makao.service.IPointService;
 
 @Service
@@ -39,6 +40,15 @@ public class PointServiceImpl implements IPointService {
 	@Override
 	public List<Point> queryByName(String name) {
 		return this.pointDao.queryByName(name);
+	}
+	@Override
+	public int insertPointLog(PointLog pl) {
+		return this.pointDao.insertPointLog(pl);
+		
+	}
+	@Override
+	public List<PointLog> queryPointLog(String string, int userid) {
+		return this.pointDao.queryPointLog(string, userid);
 	}
 	
 //	@Override

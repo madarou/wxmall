@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.entity.History;
 import com.makao.entity.Point;
+import com.makao.entity.PointLog;
 import com.makao.service.IPointService;
 
 /**
@@ -103,5 +105,22 @@ public class PointController {
 		Points = this.pointService.queryAll();
 		logger.info("查询所有积分信息完成");
         return Points;
+    }
+	
+	/**
+	 * @param cityid
+	 * @param userid
+	 * @return
+	 * 查询用户的积分记录
+	 */
+	@RequestMapping(value = "/history/{cityid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    Object history(@PathVariable("cityid") int cityid,@PathVariable("userid") int userid) {
+        JSONObject jsonObject = new JSONObject();
+		List<PointLog> hs = this.pointService.queryPointLog("PointLog_"+cityid,userid);
+		logger.info("查询城市id："+cityid+" 下userid="+userid+"的积分记录完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("pls", hs);
+		return jsonObject;
     }
 }

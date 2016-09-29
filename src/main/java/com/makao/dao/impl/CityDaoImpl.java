@@ -290,6 +290,31 @@ public class CityDaoImpl implements ICityDao {
 							}
 						}
 					});
+			//为PointLog_cityId建表
+			String tableName8 = "PointLog_"+city.getId();
+			String sql8 = "CREATE TABLE IF NOT EXISTS `"
+					+ tableName8
+					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
+					+ "`name` varchar(30) NOT NULL,"
+					+ "`point` int(11),"
+					+ "`getDate` date,"
+					+ "`comment` varchar(100),"
+					+ "`cityId` int(11),"
+					+ "`userId` int(11),"
+					+ "PRIMARY KEY (`id`))";
+			session.doWork(
+					// 定义一个匿名类，实现了Work接口
+					new Work() {
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = null;
+							try {
+								ps = connection.prepareStatement(sql8);
+								ps.execute();
+							} finally {
+								doClose(ps);
+							}
+						}
+					});
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)

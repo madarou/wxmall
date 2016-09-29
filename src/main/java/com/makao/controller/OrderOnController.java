@@ -2,6 +2,7 @@ package com.makao.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import com.makao.entity.City;
 import com.makao.entity.CouponOn;
 import com.makao.entity.OrderOn;
 import com.makao.entity.OrderState;
+import com.makao.entity.PointLog;
 import com.makao.entity.Product;
 import com.makao.entity.SmallOrder;
 import com.makao.entity.Supervisor;
@@ -50,6 +52,7 @@ import com.makao.service.IAreaService;
 import com.makao.service.ICityService;
 import com.makao.service.ICouponOnService;
 import com.makao.service.IOrderOnService;
+import com.makao.service.IPointService;
 import com.makao.service.IProductService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
@@ -95,6 +98,8 @@ public class OrderOnController {
 	private ICouponOnService couponOnService;
 	@Resource
 	private IUserService userService;
+	@Resource
+	private IPointService pointService;
 	@Autowired
 	private RedisUtil redisUtil;
 	
@@ -678,9 +683,23 @@ public class OrderOnController {
 		    		//通知微信端，已经收到支付结果了，不要再发了
 		    		page = "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
 		    		out.write(page);
+		    		
 		    		//推送下单成功的模板消息
 		    		SendMSGThread snt = new SendMSGThread(openid,oo,1);
 					new Thread(snt, "send order created mb msg thread").start();
+					//下单马上送积分至少要在付钱成功之后
+		    		User u = this.userService.getById(oo.getUserId());
+		    		u.setPoint(u.getPoint()+oo.getPoint());
+		    		this.userService.update(u);
+		    		//写入积分记录
+		    		PointLog pl = new PointLog();
+		    		pl.setName("商城消费");
+		    		pl.setPoint(oo.getPoint());
+		    		pl.setGetDate(new Date(System.currentTimeMillis()));
+		    		pl.setComment("订单号:"+oo.getNumber());
+		    		pl.setCityId(oo.getCityId());
+		    		pl.setUserId(oo.getUserId());
+		    		this.pointService.insertPointLog(pl);
 		    	}
 		    }
 		}

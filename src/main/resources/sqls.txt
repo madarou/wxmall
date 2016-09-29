@@ -257,3 +257,16 @@ Exchange_cityId:
 						`from` date,
 						`to` date,
 						PRIMARY KEY (`id`))";
+						
+
+PointLog_cityId:
+"CREATE TABLE IF NOT EXISTS `"
+				+ tableName
+				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
+						`name` varchar(30) NOT NULL,
+						`point` int(11),
+						`getDate` date,
+						`comment` varchar(100),
+						`cityId` int(11),
+						`userId` int(11),
+						PRIMARY KEY (`id`))";

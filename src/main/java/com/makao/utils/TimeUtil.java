@@ -2,6 +2,7 @@ package com.makao.utils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,10 +45,14 @@ public class TimeUtil {
 	       Date dt2 = df.parse(t.toString());
 	       System.out.println(dt2);
 	       
-	       List<String> l = null;
-	       for(String s:l){
-	    	   System.out.println(s);
-	       }
+//	       List<String> l = null;
+//	       for(String s:l){
+//	    	   System.out.println(s);
+//	       }
+	       
+	       DecimalFormat fnum = new  DecimalFormat("##0"); //保留整数
+	       System.out.println(fnum.format(1.22f));
+	       System.out.println(fnum.format(Float.valueOf("9.00")*MakaoConstants.POINT_PROPORTION));
 	    }
 	
 	/**
