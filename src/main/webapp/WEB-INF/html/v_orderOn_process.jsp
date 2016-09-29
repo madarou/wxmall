@@ -243,19 +243,13 @@
      };    
      //弹出：确认按钮
      $(".printtrueBtn").click(function(){
-    	//LODOP=getLodop();  
- 		/* LODOP.PRINT_INIT("订单:"+orderId_toView);
- 		LODOP.SET_PRINT_PAGESIZE(3,"58mm","10mm","CreateCustomPage");
- 		LODOP.ADD_PRINT_TEXT(0,0,58,50,"打印页面部分内容"); */
  		if(orderId_toView==0){
  			alert("请重新选择要打印的订单");
  			return false;
  		}
  		CreatePrintPage(orderId_toView);   
- 		//LODOP.PRINT();	
        $(".pop_bg").fadeOut();
        orderId_toView=0;
-       //window.location.reload();
        });
      //弹出：取消或关闭按钮
      $(".printfalseBtn").click(function(){

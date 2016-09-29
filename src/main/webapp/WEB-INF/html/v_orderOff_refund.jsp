@@ -17,6 +17,7 @@
 <![endif]-->
 <script src="static/js/jquery.js"></script>
 <script src="static/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="static/js/LodopFuncs.js"></script>
 <script>
 	(function($){
 		$(window).load(function(){
@@ -111,13 +112,12 @@
      <script>
      $(document).ready(function(){
     	var orderId_toView = 0;
-    	
+    	 var LODOP; //打印控件
      //弹出文本性提示框
      $(".viewOrder").click(function(){
     	$("#productList").html('<tr><td colspan="3">购买商品信息</td></tr><tr><td>商品名称</td><td>单价</td><td>数量</td></tr>');
        $(".pop_bg").fadeIn();
        var clickedId = $(this).attr("id");
-       //orderId_toView = clickedId.charAt(clickedId.length-1);
        orderId_toView = clickedId.split("-")[1];
        $("#oname_phone").text($("#receiverName-"+orderId_toView).text()+"  "+$("#phoneNumber-"+orderId_toView).text());
        $("#onumber").text($("#viewPopTxt-"+orderId_toView).text());
@@ -139,13 +139,94 @@
        });
        		
        });
+     
+     function CreatePrintPage(orderid) {      
+         var hPos=10,//小票上边距  
+         pageWidth=570,//小票宽度  
+         rowHeight=15,//小票行距  
+         //获取控件对象  
+         LODOP=getLodop();   
+         //初始化   
+         LODOP.PRINT_INIT("订单"+orderid);  
+         //添加小票标题文本  
+         LODOP.ADD_PRINT_TEXT(hPos,65,pageWidth,rowHeight,"订单详情");  
+         //上边距往下移  
+         hPos+=rowHeight;  
+           
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"姓名:");  
+         LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,$("#receiverName-"+orderid).text());  
+         //hPos+=rowHeight; //电话不换行  
+         hPos+=rowHeight;
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"电话:");  
+         LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,$("#phoneNumber-"+orderid).text());  
+         hPos+=rowHeight;
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"地址:");  
+         LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,$("#address-"+orderid).text());  
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"下单时间:");  
+         LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#orderTime-"+orderid).text().substr(5));  
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"配送时段:");  
+         LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#receiveTime-"+orderid).text().substr(5)); 
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"订单编号:");  
+         LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#viewPopTxt-"+orderid).text());  
+ 
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_LINE(hPos,2, hPos, pageWidth,2, 1);  
+         hPos+=5;  
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"商品名称");  
+         LODOP.ADD_PRINT_TEXT(hPos,70,pageWidth,rowHeight,"单价");  
+         LODOP.ADD_PRINT_TEXT(hPos,110,pageWidth,rowHeight,"数量");  
+         LODOP.ADD_PRINT_TEXT(hPos,140,pageWidth,rowHeight,"小计");  
+         hPos+=rowHeight;  
+        
+         var productNames = $("#productNames-"+orderid).text();
+         var productList = productNames.split(",");
+         $.each(productList,function(index,item){
+      	   var pname = item.split("=")[0];
+      	   var pprice = item.split("=")[1];
+      	   var pnumber = item.split("=")[2];
+	       if(pname.length<=4){  
+	             LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,pname);  
+	         }else {  
+	             //商品名字过长,其他字段需要换行  
+	             LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,pname);  
+	             hPos+=rowHeight;  
+	       }
+	       LODOP.ADD_PRINT_TEXT(hPos,70,pageWidth,rowHeight,pprice);  
+           LODOP.ADD_PRINT_TEXT(hPos,115,pageWidth,rowHeight,pnumber);  
+           LODOP.ADD_PRINT_TEXT(hPos,140,pageWidth,rowHeight,pprice*pnumber);  
+           hPos+=rowHeight;  
+         });
+         LODOP.ADD_PRINT_LINE(hPos,2, hPos, pageWidth,2, 1);  
+         hPos+=5;  
+         //合计  
+         LODOP.ADD_PRINT_TEXT(hPos,90,pageWidth,rowHeight,"优惠券:￥"+$("#couponPrice-"+orderid).text()); 
+         hPos+=rowHeight; 
+         LODOP.ADD_PRINT_TEXT(hPos,95,pageWidth,rowHeight,"合计:"+$("#totalPrice-"+orderid).text());  
+           
+         //hPos+=rowHeight;  
+         //LODOP.ADD_PRINT_TEXT(hPos,2,pageWidth,rowHeight,(new Date()).toLocaleDateString()+" "+(new Date()).toLocaleTimeString())  
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"谢谢惠顾,欢迎下次光临!(社享网)");  
+         //初始化打印页的规格  
+         LODOP.SET_PRINT_PAGESIZE(3,pageWidth,30,"订单详情");  
+         LODOP.PRINT();
+     }
+           
      //弹出：确认按钮
-     $(".trueBtn").click(function(){
-       $(".pop_bg").fadeOut();
-       orderId_toView=0;
+     $(".printtrueBtn").click(function(){
+    	 if(orderId_toView==0){
+  			alert("请重新选择要打印的订单");
+  			return false;
+  		}
+  		CreatePrintPage(orderId_toView);   
+        $(".pop_bg").fadeOut();
+        orderId_toView=0;
        });
      //弹出：取消或关闭按钮
-     $(".falseBtn").click(function(){
+     $(".printfalseBtn").click(function(){
        $(".pop_bg").fadeOut();
        orderId_toView=0;
        });
@@ -172,16 +253,16 @@
           	<tr><td>商品名称</td><td>单价</td><td>数量</td></tr>
           </table>
           <!--以pop_cont_text分界-->
-	       <div class="pop_cont_text">
+	       <!-- <div class="pop_cont_text">
 	        <span class="item_name">备注：</span><input type="text" id="vendorcomment" class=" textbox_295" placeholder="如'用户电话联系取消退货'"/>
 	        <button class="linkStyle" id="subComment">提交</button>
-	       </div>
+	       </div> -->
        </div>
        
        <!--bottom:operate->button-->
        <div class="btm_btn">
-        <input type="button" value="确认并打印" class="input_btn trueBtn"/>
-        <input type="button" value="关闭" class="input_btn falseBtn"/>
+        <input type="button" value="确认并打印" class="input_btn printtrueBtn"/>
+        <input type="button" value="关闭" class="input_btn printfalseBtn"/>
        </div>
       </div>
      </section>
