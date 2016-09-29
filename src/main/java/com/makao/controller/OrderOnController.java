@@ -993,6 +993,7 @@ public class OrderOnController {
 	 * @return
 	 * 商户为订单添加备注
 	 */
+	
 	@RequestMapping(value = "/vcomment/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vcomment(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
@@ -1021,6 +1022,7 @@ public class OrderOnController {
 	 * @return
 	 * 排队中的订单状态被设置为待处理
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/vprocess/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vprocess(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
@@ -1054,9 +1056,10 @@ public class OrderOnController {
 	 * @return
 	 * 开始配送订单，即将其状态设为配送中
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/vdistribute/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object vdistribute(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+    Object vdistribute(@PathVariable("id") int id, @RequestBody JSONObject paramObject,@RequestParam(value="token", required=false) String token) {
 		int orderid = paramObject.getIntValue("orderid");
 		JSONObject jsonObject = new JSONObject();
 		Vendor vendor = this.vendorService.getById(id);
@@ -1087,9 +1090,10 @@ public class OrderOnController {
 	 * @return
 	 * 完成配送订单，即将其状态设为已配送
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/vfinish/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object vfinish(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+    Object vfinish(@PathVariable("id") int id, @RequestBody JSONObject paramObject,@RequestParam(value="token", required=false) String token) {
 		int orderid = paramObject.getIntValue("orderid");
 		JSONObject jsonObject = new JSONObject();
 		Vendor vendor = this.vendorService.getById(id);

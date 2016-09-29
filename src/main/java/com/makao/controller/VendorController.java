@@ -27,6 +27,8 @@ import com.makao.entity.Vendor;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
+import com.makao.utils.MakaoConstants;
+import com.makao.utils.RedisUtil;
 import com.makao.utils.TokenManager;
 import com.makao.utils.TokenUtils;
 import com.makao.weixin.utils.QRCodeUtil;
@@ -53,16 +55,27 @@ public class VendorController {
 		String userName = paramObject.getString("userName");
 		String password = paramObject.getString("password");
 		JSONObject jsonObject = new JSONObject();
-		//测试时用，不验证
-		jsonObject.put("msg", "登录成功");
-		// String tokenstring =
-		// TokenUtils.setToken("supervisor");使用TokenManage替代TokenUtils
-		TokenModel tm = tokenManager.createToken(1, "v");
+		if(userName==null||password==null||"".equals(userName)||"".equals(password))
+		{
+			jsonObject.put("msg", "201");
+			return jsonObject;
+		}
+		Vendor v = this.vendorService.queryVendorByName(userName);
+		if(v==null){
+			jsonObject.put("msg", "202");
+			return jsonObject;
+		}
+		boolean pass = EncryptUtils.passwordEncryptor.checkPassword(password, v.getPassword());
+		if(!pass){
+			jsonObject.put("msg", "203");
+			return jsonObject;
+		}
+		jsonObject.put("msg", "200");
+		TokenModel tm = tokenManager.createToken(v.getId(), "v");
+
 		String tokenstring = tm.getToken();
-		jsonObject.put("id", 1);
+		jsonObject.put("id", v.getId());
 		jsonObject.put("token", tokenstring);
-		// request.getServletContext().setAttribute(tokenstring,
-		// System.currentTimeMillis());
 		return jsonObject;
 	}
 	@AuthPassport
@@ -70,14 +83,24 @@ public class VendorController {
 	public ModelAndView index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
 	{
 		ModelAndView modelAndView = new ModelAndView();  
-		modelAndView.setViewName("v_index");  
+		 
 		if(token==null){
+			modelAndView.setViewName("v_login"); 
 			return modelAndView;
 		}
 		modelAndView.addObject("id", id);  	    
 	    TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
-	    //modelAndView.addObject("token", tm.getToken()); 
-	    modelAndView.addObject("token","dfsdfdfdfd");     
+	    if(tm==null){
+	    	if(MakaoConstants.DEBUG){
+	    		 modelAndView.addObject("token","dfsdfdfdfd");   
+	    	    modelAndView.setViewName("v_index");  
+	    		return modelAndView;
+	    	}
+	    	modelAndView.setViewName("v_login"); 
+	    	return modelAndView;
+	    }
+	    modelAndView.addObject("token", tm.getToken());  
+	    modelAndView.setViewName("v_index");  
 		return modelAndView;
 	}
 	
@@ -85,6 +108,7 @@ public class VendorController {
 	public String logout(@RequestParam(value="token", required=false) String token)
 	{	
 		//从缓存中清除token
+		tokenManager.deleteToken(token);
 		return "v_login";
 	}
 	@RequestMapping(value="",method = RequestMethod.GET)
@@ -129,7 +153,7 @@ public class VendorController {
 		if(supervisor!=null){
 			vendor.setIsLock("no");
 			vendor.setIsDelete("no");
-			vendor.setPassword(EncryptUtils.passwordEncryptor.encryptPassword("shygxx"));
+			vendor.setPassword(EncryptUtils.passwordEncryptor.encryptPassword(vendor.getPassword()));
 			int res = this.vendorService.insert(vendor);
 			if(res!=0){
 				String ticket = QRCodeUtil.generateQRCode(res);

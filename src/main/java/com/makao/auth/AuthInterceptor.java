@@ -17,6 +17,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.makao.controller.UserController;
 import com.makao.entity.TokenModel;
+import com.makao.utils.MakaoConstants;
 import com.makao.utils.TokenManager;
 import com.makao.utils.TokenUtils;
 
@@ -47,10 +48,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			HttpServletResponse response, Object handler) throws Exception {
 		String url = request.getRequestURI();// 获取到的是/product/1这类地址
 		String method = request.getMethod();
-		boolean DEBUG = false;
 
 		System.out.println("***********拦截器************");
-		if (DEBUG)
+		if (MakaoConstants.DEBUG)
 			return true;
 
 		if (handler.getClass().isAssignableFrom(HandlerMethod.class)) {// 判断该请求的路径对应的方法有没有AuthPassport标注，即有没有需要验证
@@ -66,21 +66,28 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 				if (token == null || "".equals(token.trim())) {
 					token = request.getHeader("token");
 					if (token == null || "".equals(token.trim())) {
+						if(MakaoConstants.DEBUG){
+							return true;
+						}
 						logger.info("*****" + url + " 的 " + method
 								+ " 方法需要验证token，但token不存在*****");
 						tokenFailResponse(response, "未登录");
 						return false;
 					}
 				}
+				System.out.println("2");
 				String type = "";// 请求是用户、区域管理还是超级管理
 				if (token.length() == 36) {
 					type = "u";
+					if(MakaoConstants.DEBUG)
+						return true;
 				} else if (token.length() > 36
 						&& "v".equals(token.substring(token.length() - 1))) {// vendor请求
 					type = "v";
 				} else {
 					type = "s";
-				}
+				}System.out.println("1");
+				
 				boolean isValid = false;
 				TokenModel tm = null;
 				switch (type) {
@@ -98,6 +105,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					logger.info("handle vendor auth");
 					tm = tokenManager.getToken(token);
 					isValid = tokenManager.checkToken(tm, token);
+					System.out.println("3");
 					if (!isValid) {
 						tokenFailResponse(response, "需要重新登录");
 					} else {// 如果token验证成功，将token对应的TokenModel存在request中，便于之后取

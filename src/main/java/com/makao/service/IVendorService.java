@@ -30,4 +30,6 @@ public interface IVendorService {
 	 */
 	List<Vendor> getByAreaId(int areaId);
 
+	Vendor queryVendorByName(String userName);
+
 }

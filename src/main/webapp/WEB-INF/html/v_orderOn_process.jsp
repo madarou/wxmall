@@ -421,7 +421,7 @@
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/orderOn/vdistribute/"+$("#loginUserId").val(),
+     	          url: "/orderOn/vdistribute/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"orderid":orderId_toHandle}),
      	          success: function(data){
@@ -438,7 +438,7 @@
     		 $.ajax({
           		  type: "POST",
         	          contentType: "application/json",
-        	          url: "/orderOn/vfinish/"+$("#loginUserId").val(),
+        	          url: "/orderOn/vfinish/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
         	          dataType: "json",
         	          data: JSON.stringify({"orderid":orderId_toHandle}),
         	          success: function(data){

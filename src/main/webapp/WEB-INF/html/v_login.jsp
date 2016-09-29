@@ -32,8 +32,20 @@ $(document).ready(function() {
           data: JSON.stringify({"userName":$("#userName").val(),"password":$("#password").val()}),
           dataType: "json",
           success: function(data){
-                  if(data.msg=="登录成功"){
+                  if(data.msg=="200"){
                 	  window.location="/vendor/index/"+data.id+"?token="+data.token;
+                  }
+                  else if(data.msg=="201"){
+                	  alert("账号密码不能为空");
+                  }
+                  else if(data.msg=="202"){
+                	  alert("账号或密码错误");
+                  }
+                  else if(data.msg=="203"){
+                	  alert("账号或密码错误");
+                  }
+                  else {
+                	  alert("登录失败");
                   }
           }
       });

@@ -26,4 +26,6 @@ public interface IVendorDao {
 	 * 根据areaId获取其下所有vendor
 	 */
 	public List<Vendor> getByAreaId(int areaId);
+
+	public Vendor queryVendorByName(String userName);
 }

@@ -44,6 +44,10 @@ public class VendorServiceImpl implements IVendorService {
 	public List<Vendor> getByAreaId(int areaId) {
 		return this.vendorDao.getByAreaId(areaId);
 	}
+	@Override
+	public Vendor queryVendorByName(String userName) {
+		return this.vendorDao.queryVendorByName(userName);
+	}
 	
 //	@Override
 //	public void testor() {

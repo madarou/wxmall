@@ -45,7 +45,7 @@ public class BasicTestSuite_Test2 {
 		String area = "{\"areaName\":\"张江\",\"cityName\":\"上海\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":1,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor = "http://localhost:8080/vendor/new/1";
-		String vendor = "{\"userName\":\"马靠\",\"areaId\":1,\"cityId\":1,\"cityName\":\"上海\",\"areaName\":\"张江\"}";
+		String vendor = "{\"userName\":\"马靠\",\"password\":\"admin\",\"areaId\":1,\"cityId\":1,\"cityName\":\"上海\",\"areaName\":\"张江\"}";
 		
 		String newcity2 = "http://localhost:8080/city/new/1";
 		String city2 = "{\"cityName\":\"北京\",\"avatarUrl\":\""+cityLogo+"\"}";
@@ -54,13 +54,13 @@ public class BasicTestSuite_Test2 {
 		String area2 = "{\"areaName\":\"海淀\",\"cityName\":\"北京\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor2 = "http://localhost:8080/vendor/new/1";
-		String vendor2 = "{\"userName\":\"老马\",\"areaId\":2,\"cityId\":2,\"cityName\":\"北京\",\"areaName\":\"海淀\"}";
+		String vendor2 = "{\"userName\":\"老马\",\"password\":\"admin\",\"areaId\":2,\"cityId\":2,\"cityName\":\"北京\",\"areaName\":\"海淀\"}";
 		
 		String newarea3 = "http://localhost:8080/area/new/1";
 		String area3 = "{\"areaName\":\"宣武\",\"cityName\":\"北京\",\"catalogs\":\"水果=0,食材=1,零食=2\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor3 = "http://localhost:8080/vendor/new/1";
-		String vendor3 = "{\"userName\":\"老王\",\"areaId\":3,\"cityId\":2,\"cityName\":\"北京\",\"areaName\":\"宣武\"}";
+		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"北京\",\"areaName\":\"宣武\"}";
 	
 		String newuser = "http://localhost:8080/user/new";
 		String user = "{\"userName\":\"马买家😯\",\"openid\":\"3c5d3acb-31b9-480d-944a-516e74390ed8\",\"avatarUrl\":\""+userHead+"\",\"areaId\":1,\"areaName\":\"张江\",\"cityId\":1,\"cityName\":\"上海\",\"point\":180,\"receiveName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海复旦大学\",\"addLabel\":\"家\",\"rank\":\"中级\"}";

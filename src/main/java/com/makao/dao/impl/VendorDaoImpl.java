@@ -170,5 +170,26 @@ public class VendorDaoImpl implements IVendorDao {
 		}
 		return res;
 	}
+	
+	@Override
+	public Vendor queryVendorByName(String name) {
+		Session session = null;
+		Transaction tx = null;
+		Vendor res = null;
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			res = (Vendor) session.createQuery("from Vendor v where v.userName=? and v.isDelete='no'").setString(0, name).uniqueResult();
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
 
 }
