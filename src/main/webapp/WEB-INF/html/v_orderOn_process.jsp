@@ -242,7 +242,7 @@
            
      };    
      //弹出：确认按钮
-     $(".trueBtn").click(function(){
+     $(".printtrueBtn").click(function(){
     	//LODOP=getLodop();  
  		/* LODOP.PRINT_INIT("订单:"+orderId_toView);
  		LODOP.SET_PRINT_PAGESIZE(3,"58mm","10mm","CreateCustomPage");
@@ -258,7 +258,7 @@
        //window.location.reload();
        });
      //弹出：取消或关闭按钮
-     $(".falseBtn").click(function(){
+     $(".printfalseBtn").click(function(){
        $(".pop_bg").fadeOut();
        orderId_toView=0;
        window.location.reload();
@@ -315,8 +315,8 @@
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
-        <input type="button" value="确认并打印" class="input_btn trueBtn"/>
-        <input type="button" value="关闭" class="input_btn falseBtn"/>
+        <input type="button" value="确认并打印" class="input_btn printtrueBtn"/>
+        <input type="button" value="关闭" class="input_btn printfalseBtn"/>
        </div>
       </div>
      </section>
