@@ -183,7 +183,7 @@ userId			int(11)			下单人id			对应User表里的Id
 areaId			int(11)			区域id			Area表里的Id，区域卖家登录时的查询条件
 cityId			int(11)			城市Id			只是为了方便可以从程序里的对象里直接取到该值来确定数据库表
 refundStatus	varchar(10)		退款状态			在on表里好像可以不要，暂时留着
-history			varchar(255)	订单历史状态		以'订单状态=时间,订单状态2=时间2'的形式存储
+history			varchar(400)	订单历史状态		以'订单状态=时间,订单状态2=时间2'的形式存储
 point			int(11)			下单赠送的积分
 sender			varchar(30)		配送员姓名
 senderPhone		varchar(12)		配送员电话
@@ -214,7 +214,7 @@ userId			int(11)			下单人id			对应User表里的Id
 areaId			int(11)			区域id			Area表里的Id，区域卖家登录时的查询条件
 cityId			int(11)			城市Id			只是为了方便可以从程序里的对象里直接取到该值来确定数据库
 refundStatus	varchar(10)		退款状态
-history			varchar(255)	订单历史状态		以'订单状态=时间,订单状态2=时间2'的形式存储
+history			varchar(400)	订单历史状态		以'订单状态=时间,订单状态2=时间2'的形式存储
 point			int(11)			下单赠送的积分
 sender			varchar(30)		配送员姓名
 senderPhone		varchar(12)		配送员电话
