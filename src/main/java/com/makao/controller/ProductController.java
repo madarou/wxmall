@@ -139,7 +139,7 @@ public class ProductController {
 	 * @return
 	 * 超级管理员补货
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/supply/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object supply(@RequestBody JSONObject paramObject) {
