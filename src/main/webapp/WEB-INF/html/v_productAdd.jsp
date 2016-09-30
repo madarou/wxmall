@@ -387,7 +387,7 @@
        </li>
 					<li><span class="item_name" style="width: 120px;">商品详情1：</span>
 						<img alt="详情1" id="uploadd1" src=""
-						style="height: 100px; width: 305px; cursor: pointer">
+						style="height: 170px; width: 305px; cursor: pointer">
 						<div id="fileDivd1">
 							<input id="fileToUploadd1" style="display: none" type="file"
 								name="upfiled1">
@@ -396,7 +396,7 @@
 					<li>
 						<span class="item_name" style="width: 120px;">商品详情2：</span>
 						<img alt="详情2" id="uploadd2" src=""
-						style="height: 100px; width: 305px; cursor: pointer">
+						style="height: 300px; width: 305px; cursor: pointer">
 						<div id="fileDivd2">
 							<input id="fileToUploadd2" style="display: none" type="file"
 								name="upfiled2">
