@@ -213,7 +213,7 @@
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/product/supplied/"+$("#loginUserId").val(),
+  	          url: "/product/supplied/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
   	          dataType: "json",
   	          data: JSON.stringify({"cityid":cityid,"areaid":areaid,"productid":orderId_toSupply,"num":num}),
   	          success: function(data){
