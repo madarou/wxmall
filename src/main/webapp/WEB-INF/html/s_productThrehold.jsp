@@ -152,7 +152,7 @@
 		        <td style="display:none" id="pcityid-${item.id}">${item.cityId}</td>
 		        <td style="display:none" id="pareaid-${item.id}">${item.areaId}</td>
          		<td style="display:none" id="pcatalog-${item.id}">${item.catalog}</td>
-         		<td style="display:none" id="pprethrehold-${item.id}">${item.threhold}</td>
+         		<td style="display:none" id="pprethrehold-${item.id}">${item.prethrehold}</td>
          	</tr>
 		</c:forEach> 
 		
@@ -199,7 +199,7 @@
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/product/supply/"+$("#loginUserId").val(),
+  	          url: "/product/supply/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
   	          dataType: "json",
   	          data: JSON.stringify({"cityid":cityid,"areaid":areaid,"productid":orderId_toCancel,"num":num}),
   	          success: function(data){
