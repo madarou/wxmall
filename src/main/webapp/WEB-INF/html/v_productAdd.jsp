@@ -265,6 +265,9 @@
 			 	var showWay = $('input:radio[name=proshowway]:checked').val();
 			 	var sequence = $.trim($("#prosequence").val());
 			 	var description = $.trim($("#prodescription").val());
+			 	var restrict = $.trim($("#prorestrict").val())
+			 	if(restrict=="")
+			 		restrict=0;
 			 	
 			 	var coverSUrl = $("#serverImgNames").val();
 			 	var coverBUrl = $("#serverImgNameb").val();
@@ -286,7 +289,8 @@
 		  	          dataType: "json",
 		  	          data: JSON.stringify({"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
 		  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
-		  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold,"prethrehold":prethrehold}),
+		  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold,"prethrehold":prethrehold,
+		  	        		"restrict":restrict}),
 		  	          success: function(data){
 		  	        	  if(data.msg=="200"){
 		  	        		  alert("商品添加成功");
@@ -355,6 +359,11 @@
 						<input type="text" id="prothrehold"
 						class="inventory_input textbox_295" placeholder="" value="0" /></li>
 					<li>
+		<li>
+        	<span class="item_name" style="width:120px;">每单限购：</span>
+        	<input type="text" id="prorestrict" class="textbox textbox_295 inventory_input" placeholder="设为'0'或不设置表示不限购"/>
+       </li>
+       <li>
         <span class="item_name" style="width:120px;">上架状态：</span>
         <label class="single_selection"><input type="radio" name="proisshow" value="yes" checked="checked"/>上架</label>
         <label class="single_selection"><input type="radio" name="proisshow" value="no"/>下架</label>

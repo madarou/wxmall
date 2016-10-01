@@ -423,6 +423,7 @@
 		        <td style="display:none" id="psalesvolume-${item.id}">${item.salesVolume}</td>
 		        <td style="display:none" id="pprethrehold-${item.id}">${item.prethrehold}</td>
 		         <td style="display:none" id="psupply-${item.id}">${item.supply}</td>
+		         <td style="display:none" id="prestrict-${item.id}">${item.restrict}</td>
          	</tr>
 		</c:forEach> 
 		
@@ -487,6 +488,7 @@ $(document).ready(function(){
     	var cityIdO = 0;
     	var threholdO = 0;
     	var prethreholdO =0;
+    	var restrictO = 0;
     	//弹出文本性提示框
      $(".editProduct").click(function(){
        $(".editproduct_pop_bg").fadeIn();
@@ -517,6 +519,8 @@ $(document).ready(function(){
        cityIdO = $.trim($("#pcityid-"+editHandle_Id).text());
        threholdO = $.trim($("#pthrehold-"+editHandle_Id).text());
        prethreholdO = $.trim($("#pprethrehold-"+editHandle_Id).text());
+       restrictO = $.trim($("#prestrict-"+editHandle_Id).text());
+
 
        $("#proname").val(productNameO);
        $("input[type=radio][value="+catalogO+"]").attr("checked",'checked');
@@ -532,6 +536,7 @@ $(document).ready(function(){
        $("#proprethrehold").val(prethreholdO);
        $("#prosequence").val(sequenceO);
        $("#prodescription").val(descriptionO);
+       $("#prorestrict").val(restrictO);
 
        $("#uploads").attr("src", "/static/upload/"+coverSUrlO);
        $("#serverImgNames").val(coverSUrlO);
@@ -564,6 +569,9 @@ $(document).ready(function(){
 		 	var showWay = $('input:radio[name=proshowway]:checked').val();
 		 	var sequence = $.trim($("#prosequence").val());
 		 	var description = $.trim($("#prodescription").val());
+		 	var restrict = $.trim($("#prorestrict").val());
+		 	if(restrict=="")
+		 		restrict=0;
 		 	
 		 	var coverSUrl = $("#serverImgNames").val();
 		 	var coverBUrl = $("#serverImgNameb").val();
@@ -582,7 +590,7 @@ $(document).ready(function(){
 		 			marketPrice==marketPriceO && inventory== inventoryO && sequence==sequenceO && label==labelO &&
 		 			catalog==catalogO && isShow==isShowO && description==descriptionO && coverSUrl==coverSUrlO
 		 			&& coverBUrl==coverBUrlO && subdetailUrl==subdetailUrlO && detailUrl==detailUrlO && threhold==threholdO 
-		 			&& prethrehold==prethreholdO){
+		 			&& prethrehold==prethreholdO && restrict == restrictO){
 		 		alert("并未做修改");
 		 		return false;
 		 	}
@@ -594,7 +602,8 @@ $(document).ready(function(){
      	          dataType: "json",
      	          data: JSON.stringify({"id":editHandle_Id,"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
 	  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
-	  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold,"prethrehold":prethrehold}),
+	  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold,"prethrehold":prethrehold,
+	  	        		"restrict":restrict}),
      	          success: function(data){
      	        	  if(data.msg=="200"){
      	        		  alert("商品修改成功");
@@ -667,6 +676,10 @@ $(document).ready(function(){
 		       <li>
 		        <span class="item_name" style="width:120px;">最低库存：</span>
 		        <input type="text" id="prothrehold" class="inventory_input textbox_295" placeholder="" value="0"/>
+		       </li>
+		       <li>
+		        	<span class="item_name" style="width:120px;">每单限购：</span>
+		        	<input type="text" id="prorestrict" class="textbox_295 inventory_input" placeholder="设为'0'或不设置表示不限购"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">上架状态：</span>

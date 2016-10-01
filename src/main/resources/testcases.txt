@@ -1,6 +1,0 @@
-1.清空数据库
-2.增加supervisor
-3.增加city
-4.增加area(会建对应的product表)
-5.增加vendor
-6.增加product

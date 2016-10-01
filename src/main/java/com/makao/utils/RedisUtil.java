@@ -146,7 +146,6 @@ public class RedisUtil {
     		ValueOperations<String, Object> ops = redisTemplate.opsForValue();  
             return (T) ops.get(key);
     	}catch(Exception e){
-    		logger.info("get value by get(0,-1)");
     		//logger.error(e.getMessage(),e);
     		return (T)redisTemplate.boundValueOps(key).get(0, -1);
     	}

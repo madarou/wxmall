@@ -149,6 +149,7 @@ cityId			int(11)			所属城市
 threhold		int(11)			库存最低限
 prethrehold		int(11)			预设库存
 supply			int(11)			补货量，如果为0就是未补货
+restrict		int(11)			一次购买的限购量	为0表示不限购
 												
 Cart(好像不用设计购物车表，因为没有提交成订单的购物车在用户退出页面重新进来或者切换area后会被清空，不用保存)
 

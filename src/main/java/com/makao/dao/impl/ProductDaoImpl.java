@@ -43,8 +43,8 @@ public class ProductDaoImpl implements IProductDao {
 				+ "` (`productName`,`catalog`,`label`,`standard`,`price`,`marketPrice`,`inventory`,`isShow`,"
 				+ "`showWay`,`sequence`,`description`,`origin`,`status`,"
 				+ "`salesVolume`,`likes`,`coverSUrl`,`coverBUrl`,`subdetailUrl`,`detailUrl`,`areaId`,`cityId`,`threhold`,"
-				+ "`prethrehold`,`supply`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`prethrehold`,`supply`,`restrict`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();// 返回0表示失败，成功则返回id
@@ -82,6 +82,7 @@ public class ProductDaoImpl implements IProductDao {
 						ps.setInt(22, product.getThrehold());
 						ps.setInt(23, product.getPrethrehold());
 						ps.setInt(24, product.getSupply());
+						ps.setInt(25, product.getRestrict());
 						int row = ps.executeUpdate();
 						ResultSet rs = ps.getGeneratedKeys();  
 					     if ( rs.next() ) {  
@@ -154,6 +155,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setThrehold(rs.getInt("threhold"));
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
+							p.setRestrict(rs.getInt("restrict"));
 							products.add(p);
 						}
 					}finally{
@@ -201,7 +203,8 @@ public class ProductDaoImpl implements IProductDao {
 																		+ "`cityId`="+product.getCityId()+","
 																		+ "`threhold`="+product.getThrehold()+","
 																		+ "`prethrehold`="+product.getPrethrehold()+","
-																		+ "`supply`="+product.getSupply()
+																		+ "`supply`="+product.getSupply()+","
+																		+ "`restrict`="+product.getRestrict()
 																				+ " WHERE `id`=" + product.getId();
 		Session session = null;
 		Transaction tx = null;
@@ -262,7 +265,7 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public List<Product> queryByCityAreaId(int cityId, int areaId) {
 		String tableName = "Product_"+cityId+"_"+areaId;
-		String sql = "SELECT * FROM "+tableName;
+		String sql = "SELECT * FROM "+tableName + " WHERE `isShow`='yes'";
 		Session session = null;
 		Transaction tx = null;
 		List<Product> res = new LinkedList<Product>();
@@ -304,6 +307,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setThrehold(rs.getInt("threhold"));
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
+							p.setRestrict(rs.getInt("restrict"));
 							res.add(p);
 						}
 					}finally{
@@ -623,6 +627,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setThrehold(rs.getInt("threhold"));
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
+							p.setRestrict(rs.getInt("restrict"));
 							res.add(p);
 						}
 					}finally{
@@ -1022,6 +1027,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setThrehold(rs.getInt("threhold"));
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
+							p.setRestrict(rs.getInt("restrict"));
 							res.add(p);
 						}
 					}finally{
@@ -1087,6 +1093,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setThrehold(rs.getInt("threhold"));
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
+							p.setRestrict(rs.getInt("restrict"));
 							res.add(p);
 						}
 					}finally{

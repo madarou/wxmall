@@ -30,6 +30,7 @@ public class Product {
 	private int threhold;//库存最低线
 	private int prethrehold;//预设库存量
 	private int supply;//本次供货量，如果为0表示未供货
+	private int restrict;//一次购买的限购量
 	public int getId() {
 		return id;
 	}
@@ -179,5 +180,11 @@ public class Product {
 	}
 	public void setSupply(int supply) {
 		this.supply = supply;
+	}
+	public int getRestrict() {
+		return restrict;
+	}
+	public void setRestrict(int restrict) {
+		this.restrict = restrict;
 	}
 }

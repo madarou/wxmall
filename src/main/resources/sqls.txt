@@ -29,6 +29,7 @@ Product_cityId_areaId:
 						`threhold` int(11),
 						`prethrehold` int(11),
 						`supply` int(11),
+						`restrict` int(11),
 						PRIMARY KEY (`id`))";
 						
 
