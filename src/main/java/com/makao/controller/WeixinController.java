@@ -144,7 +144,7 @@ public class WeixinController {
 								}
 							}
 							else{//否则是supervisor绑定
-								Supervisor s = supervisorService.getById(vendorid);
+								Supervisor s = supervisorService.getById(vendorid-10000);
 								if(s!=null){
 									s.setOpenid(fromUserName);
 									supervisorService.update(s);
@@ -173,7 +173,7 @@ public class WeixinController {
 								}
 							}
 							else{//否则是supervisor绑定
-								Supervisor s = supervisorService.getById(vendorid);
+								Supervisor s = supervisorService.getById(vendorid-10000);
 								if(s!=null){
 									s.setOpenid(fromUserName);
 									supervisorService.update(s);
