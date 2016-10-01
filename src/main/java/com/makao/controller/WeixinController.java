@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.makao.entity.Supervisor;
 import com.makao.entity.Vendor;
+import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.service.impl.VendorServiceImpl;
 import com.makao.weixin.po.Image;
@@ -42,6 +44,8 @@ public class WeixinController {
 	private static final Logger logger = Logger.getLogger(WeixinController.class);
 	@Resource
 	private IVendorService vendorService;
+	@Resource
+	private ISupervisorService supervisorService;
 
 	@RequestMapping(value="",method = RequestMethod.GET)
 	public void get(HttpServletRequest request,HttpServletResponse response) throws IOException
@@ -131,10 +135,21 @@ public class WeixinController {
 						if(eventKey.indexOf(MessageUtil.MESSAGE_VENDOR_SUBSCRIBE)>-1){
 							logger.info("subcribe add vendor openid: "+eventKey);
 							int vendorid = Integer.valueOf(eventKey.split("_")[1]);
-							//根据fromUserName openid去Vender表里查
-							Vendor v = vendorService.getById(vendorid);
-							v.setOpenid(fromUserName);
-							vendorService.update(v);
+							if(vendorid<10000){//小于10000的参数表示Vendor绑定
+								//根据fromUserName openid去Vender表里查
+								Vendor v = vendorService.getById(vendorid);
+								if(v!=null){
+									v.setOpenid(fromUserName);
+									vendorService.update(v);
+								}
+							}
+							else{//否则是supervisor绑定
+								Supervisor s = supervisorService.getById(vendorid);
+								if(s!=null){
+									s.setOpenid(fromUserName);
+									supervisorService.update(s);
+								}
+							}
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
 							logger.info("message created:  "+ message);
 						}
@@ -149,10 +164,21 @@ public class WeixinController {
 						if(isNumeric(eventKey)){
 							logger.info("scan add vendor openid: "+eventKey);
 							int vendorid = Integer.valueOf(eventKey);
-							//根据fromUserName openid去Vender表里查
-							Vendor v = vendorService.getById(vendorid);
-							v.setOpenid(fromUserName);
-							vendorService.update(v);
+							if(vendorid<10000){//小于10000的参数表示Vendor绑定
+								//根据fromUserName openid去Vender表里查
+								Vendor v = vendorService.getById(vendorid);
+								if(v!=null){
+									v.setOpenid(fromUserName);
+									vendorService.update(v);
+								}
+							}
+							else{//否则是supervisor绑定
+								Supervisor s = supervisorService.getById(vendorid);
+								if(s!=null){
+									s.setOpenid(fromUserName);
+									supervisorService.update(s);
+								}
+							}
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
 							logger.info("message created:  "+ message);
 						}else{

@@ -32,6 +32,7 @@ import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
 import com.makao.utils.TokenManager;
 import com.makao.utils.TokenUtils;
+import com.makao.weixin.utils.QRCodeUtil;
 
 /**
  * @description: TODO
@@ -168,12 +169,15 @@ public class SupervisorController {
 		Supervisor.setPassword(encryptedPassword);
 		int res = this.supervisorService.insert(Supervisor);
 		JSONObject jsonObject = new JSONObject();
-		if(res==0){
-			logger.info("增加supervisor成功id=" + Supervisor.getId());
+		if(res>0){
+			String ticket = QRCodeUtil.generateQRCode(res+10000);//二维码参数值只支持1-100000，为与vendor区分，加上10000
+			Supervisor.setTicket(ticket);
+			this.supervisorService.update(Supervisor);
+			logger.info("增加supervisor成功id=" + res);
         	jsonObject.put("msg", "增加supervisor成功");
 		}
 		else{
-			logger.info("增加supervisor失败id=" + Supervisor.getId());
+			logger.info("增加supervisor失败");
         	jsonObject.put("msg", "增加supervisor失败");
 		}
         return jsonObject;

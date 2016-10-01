@@ -93,7 +93,9 @@ userName		varchar(30)						唯一，同时用来做登录名
 password		varchar(30)
 avatarUrl 		varchar(50)		头像				暂时不用
 lastIp			varchar(30)
-lastTime		datetime		
+lastTime		datetime
+openid			varchar(4)		微信openid	
+ticket 			varchar(120)	二维码ticket		用于https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=TICKET获取绑定的二维码图片	
 
 City
 列名				类型				注释				备注

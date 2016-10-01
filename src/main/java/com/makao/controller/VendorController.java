@@ -266,11 +266,12 @@ public class VendorController {
 		List<Vendor> vendors = null;
 		if(supervisor!=null){
 			vendors = this.vendorService.queryAll();
-			logger.info("查询所有vendor信息完成");
+			modelAndView.addObject("ticket", supervisor.getTicket());
 		}
 		modelAndView.addObject("id", id);  
 		modelAndView.addObject("token", token);   
 	    modelAndView.addObject("vendors", vendors);  
+	    
 	    return modelAndView;
     }
 	

@@ -31,16 +31,15 @@ public class SupervisorDaoImpl implements ISupervisorDao {
 	public int insert(Supervisor supervisor) {
 		Session session = null;
 		Transaction tx = null;
-		int res = 0;// 返回0表示成功，1表示失败
+		int res = 0;// 返回0表示失败，成功返回插入的id
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
-			session.save(supervisor);// 保存用户
+			res = (int)session.save(supervisor);// 保存用户
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)
 				tx.rollback();// 回滚
-			res = 1;
 			logger.error(e.getMessage(), e);
 		} finally {
 			if (null != session)
@@ -72,8 +71,24 @@ public class SupervisorDaoImpl implements ISupervisorDao {
 
 	@Override
 	public int update(Supervisor supervisor) {
-		// TODO Auto-generated method stub
-		return 0;
+		Session session = null;
+		Transaction tx = null;
+		int res = 0;// 返回0表示成功，1表示失败
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.update(supervisor);// 保存用户
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			res = 1;
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
 	}
 
 	@Override

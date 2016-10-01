@@ -23,6 +23,8 @@ public class Supervisor implements Serializable {
 	private String avatarUrl;
 	private String lastIp;
 	private String lastTime;
+	private String openid;
+	private String ticket;
 	@Id
     @GeneratedValue
 	public int getId() {
@@ -65,5 +67,19 @@ public class Supervisor implements Serializable {
 	}
 	public void setLastTime(String lastTime) {
 		this.lastTime = lastTime;
+	}
+	@Column(length=40)
+	public String getOpenid() {
+		return openid;
+	}
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+	@Column(length=120)
+	public String getTicket() {
+		return ticket;
+	}
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
 	}
 }
