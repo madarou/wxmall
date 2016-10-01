@@ -141,17 +141,19 @@
        });
      
      function CreatePrintPage(orderid) {      
-         var hPos=10,//小票上边距  
+    	 var hPos=5, //小票上边距  
          pageWidth=570,//小票宽度  
          rowHeight=15,//小票行距  
          //获取控件对象  
          LODOP=getLodop();   
          //初始化   
          LODOP.PRINT_INIT("订单"+orderid);  
+         LODOP.SET_PRINT_STYLE("FontSize",12);
          //添加小票标题文本  
-         LODOP.ADD_PRINT_TEXT(hPos,65,pageWidth,rowHeight,"退货详情");  
+         LODOP.ADD_PRINT_TEXT(hPos,65,pageWidth,rowHeight,"退货订单"); 
          //上边距往下移  
-         hPos+=rowHeight;  
+         hPos+=rowHeight;  hPos+=5; 
+         LODOP.SET_PRINT_STYLE("FontSize",10);
            
          LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"姓名:");  
          LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,$("#receiverName-"+orderid).text());  
@@ -161,7 +163,20 @@
          LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,$("#phoneNumber-"+orderid).text());  
          hPos+=rowHeight;
          LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"地址:");  
-         LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,$("#address-"+orderid).text());  
+         var add = $("#address-"+orderid).text();
+         if(add!=null&&add.length<=12)
+         	LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,add);  
+         else if(add!=null&&add.length>12&&add.length<=14){
+        	hPos+=rowHeight;
+        	LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,add);
+         }
+         else{
+        	hPos+=rowHeight;
+         	LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,add.substr(0,14)); 
+         	hPos+=rowHeight;
+         	LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,add.substr(14)); 
+         }
+        	 
          hPos+=rowHeight;  
          LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"下单时间:");  
          LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#orderTime-"+orderid).text().substr(5));  
@@ -180,7 +195,7 @@
          LODOP.ADD_PRINT_TEXT(hPos,110,pageWidth,rowHeight,"数量");  
          LODOP.ADD_PRINT_TEXT(hPos,140,pageWidth,rowHeight,"小计");  
          hPos+=rowHeight;  
-        
+     
          var productNames = $("#productNames-"+orderid).text();
          var productList = productNames.split(",");
          $.each(productList,function(index,item){
@@ -204,14 +219,13 @@
          //合计  
          LODOP.ADD_PRINT_TEXT(hPos,90,pageWidth,rowHeight,"优惠券:￥"+$("#couponPrice-"+orderid).text()); 
          hPos+=rowHeight; 
-         LODOP.ADD_PRINT_TEXT(hPos,95,pageWidth,rowHeight,"合计:"+$("#totalPrice-"+orderid).text());  
-           
-         //hPos+=rowHeight;  
-         //LODOP.ADD_PRINT_TEXT(hPos,2,pageWidth,rowHeight,(new Date()).toLocaleDateString()+" "+(new Date()).toLocaleTimeString())  
-         hPos+=rowHeight;  
-         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"谢谢惠顾,欢迎下次光临!(社享网)");  
+         LODOP.ADD_PRINT_TEXT(hPos,95,pageWidth,rowHeight,"合计:"+$("#totalPrice-"+orderid).text());   
+         
+         hPos+=rowHeight; 
+         hPos+=rowHeight;   
+         LODOP.ADD_PRINT_LINE(hPos,2, hPos, pageWidth,2, 1);  
          //初始化打印页的规格  
-         LODOP.SET_PRINT_PAGESIZE(3,pageWidth,30,"退货详情");  
+         LODOP.SET_PRINT_PAGESIZE(3,pageWidth,30,"退货订单");  
          LODOP.PRINT();
      }
            
