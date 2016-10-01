@@ -171,7 +171,7 @@
      <section style="text-align:center">
         <img src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${ticket}"/><br/>
          <span class="item_name" style="width:120px;">立即绑定个人微信号接收订单!
-        扫描左侧二维码实现绑定微信号后，可接收订单信息</span>
+        扫描二维码实现绑定微信号后，可接收订单信息</span>
      </section><br/>
 
 

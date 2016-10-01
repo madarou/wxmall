@@ -549,7 +549,7 @@
     
      <section style="text-align:center">
         <img src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${ticket}"/><br/>
-         <span class="item_name" style="width:120px;">扫描左侧二维码实现绑定微信号，接收订单退货完成消息!</span>
+         <span class="item_name" style="width:120px;">扫描二维码实现绑定微信号，接收订单退货完成消息!</span>
      </section><br/>
  </div>
 </section>
