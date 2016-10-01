@@ -102,6 +102,7 @@ cityName		varchar(30)*
 avatarUrl		varchar(50)		城市头像			在切换城市页面的城市列表展示
 areas			varchar(255)	城市辖区area集合	以'area1id=area1名,area2id=area2名'存储，方便在确定
 												城市后直接展示
+down			varchar(255)	下线的area集合		以'area1id=area1名,area2id=area2名'存储，没有放到areas里是因为前端已经写好了，避免前端修改
 
 Area
 列名				类型				注释				备注

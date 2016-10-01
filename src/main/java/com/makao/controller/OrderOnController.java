@@ -1069,9 +1069,11 @@ public class OrderOnController {
 				//由于之前设计的order里只存了userid，没有openid，
 				//为了能给用户发送模板消息，这里要多一步获取其openid操作
 				User u = this.userService.getById(res.getUserId());
-				//推送马上配送的的模板消息
-	    		SendMSGThread snt = new SendMSGThread(u.getOpenid(),res,2);
-				new Thread(snt, "send sending order mb msg thread").start();
+				if(u!=null){
+					//推送马上配送的的模板消息
+		    		SendMSGThread snt = new SendMSGThread(u.getOpenid(),res,2);
+					new Thread(snt, "send sending order mb msg thread").start();
+				}
 				jsonObject.put("msg", "200");
 				return jsonObject;
 			}

@@ -23,6 +23,7 @@ public class City implements Serializable {
 	private String cityName;
 	private String avatarUrl;
 	private String areas;//以'area1id=area1名,area2id=area2名'存储，方便在确定城市后直接展示
+	private String down;//下线的area集合	以'area1id=area1名,area2id=area2名'存储，没有放到areas里是因为前端以及写好了，避免前端修改
 	//private List<Area> areas;
 	@Id
     @GeneratedValue
@@ -53,5 +54,12 @@ public class City implements Serializable {
 	}
 	public void setAreas(String areas) {
 		this.areas = areas;
+	}
+	@Column(length=255)
+	public String getDown() {
+		return down;
+	}
+	public void setDown(String down) {
+		this.down = down;
 	}
 }

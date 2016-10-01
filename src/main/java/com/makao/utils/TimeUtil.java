@@ -1,5 +1,6 @@
 package com.makao.utils;
 
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -51,8 +52,9 @@ public class TimeUtil {
 //	       }
 	       
 	       DecimalFormat fnum = new  DecimalFormat("##0"); //保留整数
+	       fnum.setRoundingMode(RoundingMode.HALF_UP);
 	       System.out.println(fnum.format(1.22f));
-	       System.out.println(fnum.format(Float.valueOf("9.00")*MakaoConstants.POINT_PROPORTION));
+	       System.out.println(fnum.format(Float.valueOf("9.50")*MakaoConstants.POINT_PROPORTION));
 	    }
 	
 	/**

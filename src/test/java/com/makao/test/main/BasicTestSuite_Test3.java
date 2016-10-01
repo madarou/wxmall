@@ -91,6 +91,19 @@ public class BasicTestSuite_Test3 {
 		result = HttpUtils.doPostStr(newvendor3,vendor3);
 		assertEquals("200",result.get("msg"));
 		
+//		上线所有区域
+		String openarea = "http://localhost:8080/area/sopen/1/?token=xxxxx";
+		String oarea1 = "{\"areaId\":1}";
+		String oarea2 = "{\"areaId\":2}";
+		String oarea3 = "{\"areaId\":3}";
+		result = HttpUtils.doPostStr(openarea,oarea1);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(openarea,oarea2);
+		assertEquals("200",result.get("msg"));
+		result = HttpUtils.doPostStr(openarea,oarea3);
+		assertEquals("200",result.get("msg"));
+//		上线所有区域
+		
 		result = HttpUtils.doPostStr(newprodcut11_1,product11_1);
 		assertEquals("200",result.get("msg"));
 		

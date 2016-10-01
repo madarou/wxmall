@@ -2,6 +2,7 @@ api															method				comment
 /city/all													GET					获取城市列表
 /area/change/[cityId]/[areaId]/[userId]						GET					切换当前区域(需要修改user表里的areaId,cityId,cityName和areaName,并且返回/product/all/[cityId]/[areaId]的内容)
 /product/all/[cityId]/[areaId]								GET					获取指定城市区域下的产品列表
+/banner/all/[areaId]										GET					获取areaId下所有banner
 /product/[productId]/[cityId]/[areaId]						GET					获取指定城市区下的某个产品
 /product/like/?token=xxx									POST				用户给商品点赞
 	{
@@ -9,7 +10,7 @@ api															method				comment
 		cityId:,//所属cityId
 		areaId://所属areaId
 	}
-/banner/all/[areaId]										GET					获取areaId下所有banner
+
 /user/[userId]												GET					获取用户信息
 
 /orderOn/neworder/?token=xxx								POST				下单(token设置在header中，跨域时header会有问题)(暂时不用/orderOn/new/ api，因为涉及了缓存和微信下单，那个只用于测试直接生成订单)

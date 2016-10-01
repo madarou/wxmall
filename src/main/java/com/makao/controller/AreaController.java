@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.Area;
 import com.makao.entity.Banner;
 import com.makao.entity.Catalog;
@@ -224,8 +225,6 @@ public class AreaController {
 		//设置用户切换后的city和area到user表中
 		User user = this.userService.getById(userId);
 		if(user!=null){
-			user.setCityId(cityId);
-			user.setAreaId(areaId);
 			String cityName = this.cityService.getById(cityId).getCityName();
 			String areaName = this.areaService.getById(areaId).getAreaName();
 			if(cityName==null || areaName==null || "".equals(cityName) || "".equals(areaName)){
@@ -235,6 +234,8 @@ public class AreaController {
 				jsonObject.put("banners", banners);
 				return jsonObject;
 			}
+			user.setCityId(cityId);
+			user.setAreaId(areaId);
 			user.setCityName(cityName);
 			user.setAreaName(areaName);
 			this.userService.update(user);
@@ -347,9 +348,11 @@ public class AreaController {
 	 * @return
 	 * 下线区域
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/sclose/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object sclose(@PathVariable("supervisorid") int superid,@RequestBody JSONObject paramObject) {
+    Object sclose(@PathVariable("supervisorid") int superid,@RequestBody JSONObject paramObject,
+    		@RequestParam(value="token", required=false) String token) {
 		Supervisor supervisor = this.supervisorService.getById(superid);
 		JSONObject jsonObject = new JSONObject();
 		if(supervisor!=null){
@@ -368,9 +371,17 @@ public class AreaController {
 	    return jsonObject;
     }
 	
+	/**
+	 * @param superid
+	 * @param paramObject
+	 * @param token
+	 * @return
+	 */
+	@AuthPassport
 	@RequestMapping(value = "/sopen/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
-    Object sopen(@PathVariable("supervisorid") int superid,@RequestBody JSONObject paramObject) {
+    Object sopen(@PathVariable("supervisorid") int superid,@RequestBody JSONObject paramObject,
+    		@RequestParam(value="token", required=false) String token) {
 		Supervisor supervisor = this.supervisorService.getById(superid);
 		JSONObject jsonObject = new JSONObject();
 		if(supervisor!=null){

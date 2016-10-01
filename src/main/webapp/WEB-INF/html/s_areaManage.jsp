@@ -400,7 +400,7 @@
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/area/sclose/"+$("#loginUserId").val(),
+     	          url: "/area/sclose/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"areaId":openHandle_Id}),
      	          success: function(data){
@@ -415,7 +415,7 @@
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/area/sopen/"+$("#loginUserId").val(),
+     	          url: "/area/sopen/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"areaId":openHandle_Id}),
      	          success: function(data){
@@ -637,5 +637,6 @@
  </div>
 </section>
 <input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${token}"></input>
 </body>
 </html>

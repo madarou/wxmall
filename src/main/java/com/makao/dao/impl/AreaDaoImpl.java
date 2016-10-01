@@ -52,10 +52,13 @@ public class AreaDaoImpl implements IAreaDao {
 			String areas = city.getAreas();
 			if(areas==null||"".equals(areas)){
 				city.setAreas(area.getId()+"="+area.getAreaName());
+				city.setDown(area.getId()+"="+area.getAreaName());
 			}
 			else{
 				city.setAreas(areas+","+area.getId()+"="+area.getAreaName());
+				city.setDown(areas+","+area.getId()+"="+area.getAreaName());
 			}
+			session.update(city);
 			String sql = "CREATE TABLE IF NOT EXISTS `"
 					+ tableName
 					+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,"
@@ -372,6 +375,16 @@ public class AreaDaoImpl implements IAreaDao {
 			Area area = (Area) session.get(Area.class, areaId);
 			area.setClosed("yes");
 			session.update(area);
+			//同时更新所属的city表里的down字段
+			City city = (City) session.get(City.class, area.getCityId());
+			String downs = city.getDown();
+			if(downs==null||"".equals(downs)){
+				city.setDown(area.getId()+"="+area.getAreaName());
+			}
+			else{
+				city.setDown(downs+","+area.getId()+"="+area.getAreaName());
+			}
+			session.update(city);
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)
@@ -396,6 +409,24 @@ public class AreaDaoImpl implements IAreaDao {
 			Area area = (Area) session.get(Area.class, areaId);
 			area.setClosed("no");
 			session.update(area);
+			//同时更新所属的city表里的down字段
+			City city = (City) session.get(City.class, area.getCityId());
+			String downs = city.getDown();
+			if(downs!=null||!"".equals(downs)){
+				String current_area = area.getId()+"="+area.getAreaName();
+				String[] ds=downs.split(",");
+				StringBuilder sb = new StringBuilder();
+				for(String s : ds){
+					if(current_area.equals(s))
+						continue;
+					sb.append(s+",");
+				}
+				if(sb.length()>0)
+					city.setDown(sb.substring(0,sb.length()-1));
+				else
+					city.setDown("");
+			}
+			session.update(city);
 			tx.commit();// 提交事务
 		} catch (HibernateException e) {
 			if (null != tx)

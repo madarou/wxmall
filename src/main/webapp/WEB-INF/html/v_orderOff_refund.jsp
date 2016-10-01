@@ -149,7 +149,7 @@
          //初始化   
          LODOP.PRINT_INIT("订单"+orderid);  
          //添加小票标题文本  
-         LODOP.ADD_PRINT_TEXT(hPos,65,pageWidth,rowHeight,"订单详情");  
+         LODOP.ADD_PRINT_TEXT(hPos,65,pageWidth,rowHeight,"退货详情");  
          //上边距往下移  
          hPos+=rowHeight;  
            
@@ -211,7 +211,7 @@
          hPos+=rowHeight;  
          LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"谢谢惠顾,欢迎下次光临!(社享网)");  
          //初始化打印页的规格  
-         LODOP.SET_PRINT_PAGESIZE(3,pageWidth,30,"订单详情");  
+         LODOP.SET_PRINT_PAGESIZE(3,pageWidth,30,"退货详情");  
          LODOP.PRINT();
      }
            

@@ -143,16 +143,7 @@
        		
        });
      
-     function CreatePrintPage(orderid) {  
-         /* var json = {"title":"XXXXX订单信息", "name":"张三", "phone": "138123456789", "orderTime": "2012-10-11 15:30:15",   
-         "orderNo": "20122157481315", "shop":"XX连锁", "total":25.10,"totalCount":6,  
-         "goodsList":[  
-         {"name":"菜心(无公害食品)", "price":5.00, "count":2, "total":10.08},   
-         {"name":"菜心(无公害食品)", "price":5.00, "count":2, "total":10.02},   
-         {"name":"旺菜", "price":4.50, "count":1, "total":4.50},  
-         {"name":"黄心番薯(有机食品)", "price":4.50, "count":1, "total":4.50}  
-         ]  
-         } */     
+     function CreatePrintPage(orderid) {      
          var hPos=10,//小票上边距  
          pageWidth=570,//小票宽度  
          rowHeight=15,//小票行距  
@@ -161,7 +152,7 @@
          //初始化   
          LODOP.PRINT_INIT("订单"+orderid);  
          //添加小票标题文本  
-         LODOP.ADD_PRINT_TEXT(hPos,65,pageWidth,rowHeight,"订单详情");  
+         LODOP.ADD_PRINT_TEXT(hPos,65,pageWidth,rowHeight,"社享网");  
          //上边距往下移  
          hPos+=rowHeight;  
            
@@ -237,7 +228,7 @@
          hPos+=rowHeight;  
          LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"谢谢惠顾,欢迎下次光临!(社享网)");  
          //初始化打印页的规格  
-         LODOP.SET_PRINT_PAGESIZE(3,pageWidth,30,"订单详情");  
+         LODOP.SET_PRINT_PAGESIZE(3,pageWidth,30,"社享网");  
          LODOP.PRINT();
            
      };    

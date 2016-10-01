@@ -208,6 +208,31 @@ public class CityController {
 			List<City> cities = null;
 			//则查询返回所有
 			cities = this.cityService.queryAll();
+			if(cities!=null){
+				for(City c : cities){
+					if(c.getDown()==null||"".equals(c.getDown()))
+						continue;
+					String[] downs = c.getDown().split(",");
+					String[] areas = c.getAreas().split(",");
+					StringBuilder sb = new StringBuilder();
+					for(String a : areas){
+						boolean found = false;
+						for(String down : downs){
+							if(down.equals(a)){
+								found = true;
+								break;
+							}
+						}
+						if(!found)
+							sb.append(a+",");
+					}
+					c.setDown("");
+					if(sb.length()==0)
+						c.setAreas("");
+					else
+						c.setAreas(sb.substring(0, sb.length()-1));
+				}
+			}
 			logger.info("查询所有city信息完成");
 			
 			jsonObject.put("msg", "200");
