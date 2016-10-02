@@ -134,7 +134,14 @@
          		<td id="pthrehold-${item.id}">${item.threhold}</td>
          		<td style="text-align:center">
 		           <button class="linkStyle editProduct" id="showPopTxt-${item.id}">查看</button>|
-		           <button class="linkStyle supplyProduct" id="supply-${item.id}">补货</button>
+		           <c:choose> 
+		  				<c:when test="${item.supply==0}">   
+		  					<button class="linkStyle supplyProduct" id="supply-${item.id}">补货</button>
+						</c:when> 
+						<c:otherwise>   
+							<button class="linkStyle" style="color: gray;cursor: default;">已补货</button>
+						</c:otherwise> 
+					</c:choose>
 		        </td>
          		<td style="display:none" id="psalesvolume-${item.id}">${item.salesVolume}</td>
 		        <td style="display:none" id="pshowway-${item.id}">${item.showWay}</td>
