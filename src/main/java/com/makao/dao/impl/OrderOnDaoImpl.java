@@ -1367,10 +1367,6 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public OrderOn confirmMoney(String cityid, String orderNumber) {
 		String tableName = "Order_"+cityid+"_on";
-		String history = ","+OrderState.QUEUE.getText()+"="+new Timestamp(System.currentTimeMillis());
-		String sql = "UPDATE `"
-				+ tableName
-				+ "` SET `status`='"+OrderState.QUEUE.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
 		String sql2 = "SELECT * FROM "+tableName+ " WHERE `number`='"+orderNumber+"'";
 		
 		Session session = null;
@@ -1383,14 +1379,30 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 			// 定义一个匿名类，实现了Work接口
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps0 = null;
 					PreparedStatement ps = null;
-					PreparedStatement ps2 = null;
+					int returncount = 0;
 					try {
-						ps = connection.prepareStatement(sql);
-						int returncount = ps.executeUpdate();
+						//先查询出订单，找到配送时间是不是立即配送
+						ps0 = connection.prepareStatement(sql2);
+						ResultSet rs = ps0.executeQuery();
+						if("立即配送".equals(rs.getString("receiveTime"))){
+							String history = ","+OrderState.PROCESS_WAITING.getText()+"="+new Timestamp(System.currentTimeMillis());
+							String sql = "UPDATE `"
+									+ tableName
+									+ "` SET `status`='"+OrderState.PROCESS_WAITING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
+							ps = connection.prepareStatement(sql);
+							returncount = ps.executeUpdate();
+						}
+						else{
+							String history = ","+OrderState.QUEUE.getText()+"="+new Timestamp(System.currentTimeMillis());
+							String sql = "UPDATE `"
+									+ tableName
+									+ "` SET `status`='"+OrderState.QUEUE.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
+							ps = connection.prepareStatement(sql);
+							returncount = ps.executeUpdate();
+						}
 						if(returncount!=0){//如果执行成功，则查询order对象并返回
-							ps2=connection.prepareStatement(sql2);
-							ResultSet rs = ps2.executeQuery();
 							while(rs.next()){
 								OrderOn p = new OrderOn();
 								p.setId(rs.getInt("id"));
@@ -1410,13 +1422,19 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 								p.setFreight(rs.getString("freight"));
 								p.setComment(rs.getString("comment"));
 								p.setVcomment(rs.getString("vcomment"));
-								p.setStatus(rs.getString("status"));
+								if("立即配送".equals(rs.getString("receiveTime"))){
+									p.setStatus(OrderState.PROCESS_WAITING.getCode()+"");
+									p.setHistory(rs.getString("history")+","+OrderState.PROCESS_WAITING.getText()+"="+new Timestamp(System.currentTimeMillis()));
+								}
+								else{
+									p.setStatus(OrderState.QUEUE.getCode()+"");
+									p.setHistory(rs.getString("history")+","+OrderState.QUEUE.getText()+"="+new Timestamp(System.currentTimeMillis()));
+								}
 								p.setCityarea(rs.getString("cityarea"));
 								p.setUserId(rs.getInt("userId"));
 								p.setAreaId(rs.getInt("areaId"));
 								p.setCityId(rs.getInt("cityId"));
 								p.setRefundStatus(rs.getString("refundStatus"));
-								p.setHistory(rs.getString("history"));
 								p.setPoint(rs.getInt("point"));
 								p.setSender(rs.getString("sender"));
 								p.setSenderPhone(rs.getString("senderPhone"));
@@ -1424,7 +1442,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							}
 						}
 					} finally {
-						doClose(ps);doClose(ps2);
+						doClose(ps);doClose(ps0);
 					}
 				}
 			});

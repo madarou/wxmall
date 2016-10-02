@@ -673,7 +673,7 @@ public class OrderOnController {
 		    String orderNumber = resultXML.get("out_trade_no");
 		    String cityid = resultXML.get("attach");
 		    if(orderNumber!=null && !"".equals(orderNumber)){
-		    	OrderOn oo = this.orderOnService.confirmMoney(cityid,orderNumber);//将订单的状态从未支付改为排队中
+		    	OrderOn oo = this.orderOnService.confirmMoney(cityid,orderNumber);//将订单的状态从未支付改为排队中，如果订单的配送时间是立即配送，则直接将状态改为待处理
 		    	if(oo!=null){
 		    		//将缓存中如果还存在的该订单删除
 		    		OrderOn orderOn = (OrderOn)redisUtil.redisQueryObject(orderNumber);
@@ -687,6 +687,17 @@ public class OrderOnController {
 		    		//推送下单成功的模板消息
 		    		SendMSGThread snt = new SendMSGThread(openid,oo,1);
 					new Thread(snt, "send order created mb msg thread").start();
+					//如果是立即配送，需要推送配送的消息给管理员
+					if("立即配送".equals(oo.getReceiveTime())){
+						List<Vendor> vs = this.vendorService.getByAreaId(oo.getAreaId());
+						for(Vendor v : vs){
+			        		String open_id = v.getOpenid();
+			        		if(open_id!=null&&!"".equals(open_id)){
+			        			SendMSGThread snt2 = new SendMSGThread(open_id,oo,4);
+			        			new Thread(snt2, "send order need distribute immediatelly mb msg thread").start();
+			        		}
+			        	}
+					}
 					//下单马上送积分至少要在付钱成功之后
 		    		User u = this.userService.getById(oo.getUserId());
 		    		u.setPoint(u.getPoint()+oo.getPoint());
@@ -700,6 +711,8 @@ public class OrderOnController {
 		    		pl.setCityId(oo.getCityId());
 		    		pl.setUserId(oo.getUserId());
 		    		this.pointService.insertPointLog(pl);
+		    		if(out!=null)
+		    			out.close();
 		    	}
 		    }
 		}

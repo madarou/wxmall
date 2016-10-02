@@ -185,7 +185,10 @@
          LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#orderTime-"+orderid).text().substr(5));  
          hPos+=rowHeight;  
          LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"配送时段:");  
-         LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#receiveTime-"+orderid).text().substr(5)); 
+         if($("#receiveTime-"+orderid).text()=="立即配送")
+        	 LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#receiveTime-"+orderid).text()); 
+         else
+         	 LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#receiveTime-"+orderid).text().substr(5)); 
          hPos+=rowHeight;  
          LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"订单编号:");  
          LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#viewPopTxt-"+orderid).text());  
