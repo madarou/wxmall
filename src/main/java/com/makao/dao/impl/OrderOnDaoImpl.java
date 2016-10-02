@@ -1386,6 +1386,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						//先查询出订单，找到配送时间是不是立即配送
 						ps0 = connection.prepareStatement(sql2);
 						ResultSet rs = ps0.executeQuery();
+						while(rs.next()){
 						if("立即配送".equals(rs.getString("receiveTime"))){
 							String history = ","+OrderState.PROCESS_WAITING.getText()+"="+new Timestamp(System.currentTimeMillis());
 							String sql = "UPDATE `"
@@ -1403,7 +1404,6 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							returncount = ps.executeUpdate();
 						}
 						if(returncount!=0){//如果执行成功，则查询order对象并返回
-							while(rs.next()){
 								OrderOn p = new OrderOn();
 								p.setId(rs.getInt("id"));
 								p.setNumber(rs.getString("number"));
