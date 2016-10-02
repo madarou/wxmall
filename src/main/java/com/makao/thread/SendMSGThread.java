@@ -66,11 +66,15 @@ public class SendMSGThread implements Runnable {
 			break;
 		case 4:
 			result = HttpUtil.doPostStr(requestUrl, orderPrepareMsg());
-			logger.info("send order finished mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
+			logger.info("send order prepare mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
 			break;
 		case 5:
 			result = HttpUtil.doPostStr(requestUrl, orderNeedRefundMsg());
 			logger.info("send order need refund mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
+			break;
+		case 6:
+			result = HttpUtil.doPostStr(requestUrl, orderNeedReturnMsg());
+			logger.info("send order need return mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
 			break;
 		default:
 			break;
@@ -291,6 +295,57 @@ public class SendMSGThread implements Runnable {
 		
 		temp = new JSONObject();
 		temp.put("value", "请及时登录后台系统和商户系统，完成退款！");
+		temp.put("color", "#173177");
+		data.put("remark", temp);
+		
+		
+		msg.put("data", data);
+		
+		return msg.toString();
+	}
+	
+	/**
+	 * @return
+	 * 用户发起退货时，vendor收到退货通知
+	 */
+	private String orderNeedReturnMsg(){
+		JSONObject msg = new JSONObject();
+		msg.put("touser", this.toUserOpenid);
+		msg.put("template_id", WeixinConstants.ORDER_RETURN_MBMSG);
+		msg.put("url", "www.baidu.com");
+		JSONObject data = new JSONObject();
+		JSONObject temp = new JSONObject();
+		temp.put("value", "您好，近期您有一笔需要退货的订单：");
+		temp.put("color", "#173177");
+		data.put("first", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", this.orderOff.getNumber());
+		temp.put("color", "#173177");
+		data.put("keyword1", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", this.orderOff.getReceiverName());
+		temp.put("color", "#173177");
+		data.put("keyword2", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", this.orderOff.getPhoneNumber());
+		temp.put("color", "#173177");
+		data.put("keyword3", temp);
+		
+		temp = new JSONObject();
+		StringBuilder sb = new StringBuilder();
+		String[] products = this.orderOff.getProductNames().split(",");
+		for(String s : products){
+			sb.append(s.split("=")[0]).append("*").append(s.split("=")[2]).append(",");
+		}
+		temp.put("value", sb.substring(0, sb.length()-1));
+		temp.put("color", "#173177");
+		data.put("keyword4", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", "请及时联系客户咨询退货原因，并登录后台系统完成退货！");
 		temp.put("color", "#173177");
 		data.put("remark", temp);
 		

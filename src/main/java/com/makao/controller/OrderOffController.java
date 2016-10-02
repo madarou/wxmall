@@ -183,10 +183,19 @@ public class OrderOffController {
     Object returnOrder(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid,
     		@RequestParam(value="token", required=false) String token) {
 		JSONObject jsonObject = new JSONObject();
-		int res = this.orderOffService.returnOrder(cityid, orderid);
-		if(res==0){
+		OrderOff res = this.orderOffService.returnOrder(cityid, orderid);
+		if(res!=null){
 			logger.info("发起退货申请成功，订单id=" + orderid + " 所属城市id:"+cityid);
         	jsonObject.put("msg", "200");
+        	// 通知vendor
+        	List<Vendor> vs = this.vendorService.getByAreaId(res.getAreaId());
+        	for(Vendor v : vs){
+        		String openid = v.getOpenid();
+        		if(openid!=null&&!"".equals(openid)){
+        			SendMSGThread snt = new SendMSGThread(openid,res,6);
+        			new Thread(snt, "send order created mb msg thread").start();
+        		}
+        	}
 		}
 		else{
 			logger.info("发起退货申请失败，订单id=" + orderid + " 所属城市id:"+cityid);

@@ -48,7 +48,9 @@ public class WeixinConstants {
 	//订单配送时间要到时，提前推送的准备订单的模板消息给配送员
 	public static final String ORDER_PREPARE_MBMSG = "Npb82DM2akmPgnTRKu8OBr8UX35KF6a5cFzlR8vXTLU";
 	//订单退货完成或付款后取消后，推送给超级管理员退款的模板消息
-	public static final String ORDER_REFUND_MBMSG = "fwKTSlN1WhVK0XKVO6f6rFwXqpft5-TnlTORohWdAe8";
+	public static final String ORDER_REFUND_MBMSG = "CQVylLWcOeOWVnK8EAngsdgVp6tMabfUqQ5iTYAMAqc";
+	//用户申请退货后，通知vendor有人要退货的模板消息
+	public static final String ORDER_RETURN_MBMSG = "pTAeze_zz3l8mhsazBuXskxo0n6H6PZsor_tSr3PWDQ";
 	//生成带参数的二维码
 	public static final String QR_CODE_CREATE_URL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=ACCESS_TOKEN";
 	

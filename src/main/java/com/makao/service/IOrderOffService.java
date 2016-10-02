@@ -51,7 +51,7 @@ public interface IOrderOffService {
 
 	OrderOff queryByOrderId(String tableName, int orderid);
 	//发起退货申请
-	int returnOrder(int cityid, int orderid);
+	OrderOff returnOrder(int cityid, int orderid);
 
 	/**
 	 * @param cityId

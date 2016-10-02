@@ -84,7 +84,7 @@ public class OrderOffServiceImpl implements IOrderOffService {
 		return this.orderOffDao.queryByOrderId(tableName, orderid);
 	}
 	@Override
-	public int returnOrder(int cityid, int orderid) {
+	public OrderOff returnOrder(int cityid, int orderid) {
 		return this.orderOffDao.returnOrder(cityid,orderid);
 	}
 	@Override

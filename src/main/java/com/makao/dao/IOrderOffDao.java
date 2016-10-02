@@ -43,7 +43,7 @@ public interface IOrderOffDao {
 	//已收货订单查询
 	public List<OrderOff> queryConfirmGetByAreaId(String tableName, int areaId);
 	//发起退货申请
-	public int returnOrder(int cityid, int orderid);
+	public OrderOff returnOrder(int cityid, int orderid);
 
 	/**
 	 * @param cityId

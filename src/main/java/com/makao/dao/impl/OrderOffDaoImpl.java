@@ -832,15 +832,16 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	}
 	
 	@Override
-	public int returnOrder(int cityid, int orderid) {
+	public OrderOff returnOrder(int cityid, int orderid) {
 		String tableName = "Order_"+cityid+"_off";
 		String history = ","+OrderState.RETURN_APPLYING.getText()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `finalStatus`='"+OrderState.RETURN_APPLYING.getCode()+"',`refundStatus`='无',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+		String sql2 = "SELECT * FROM "+tableName+ " WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
-		int res = 0;// 返回0表示成功，1表示失败
+		List<OrderOff> res = new ArrayList<OrderOff>();
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
@@ -848,12 +849,51 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 			// 定义一个匿名类，实现了Work接口
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
-					PreparedStatement ps = null;
+					PreparedStatement ps = null;PreparedStatement ps2 = null;
 					try {
 						ps = connection.prepareStatement(sql);
-						ps.executeUpdate();
+						int returncount = ps.executeUpdate();
+						if(returncount!=0){//如果执行成功，则查询order对象并返回
+							ps2=connection.prepareStatement(sql2);
+							ResultSet rs = ps2.executeQuery();
+							while(rs.next()){
+								OrderOff p = new OrderOff();
+								p.setId(rs.getInt("id"));
+								p.setNumber(rs.getString("number"));
+								p.setProductIds(rs.getString("productIds"));
+								p.setProductNames(rs.getString("productNames"));
+								p.setOrderTime(rs.getTimestamp("orderTime"));
+								p.setReceiverName(rs.getString("receiverName"));
+								p.setPhoneNumber(rs.getString("phoneNumber"));
+								p.setAddress(rs.getString("address"));
+								p.setPayType(rs.getString("payType"));
+								p.setReceiveType(rs.getString("receiveType"));
+								p.setReceiveTime(rs.getString("receiveTime"));
+								p.setCouponId(rs.getInt("couponId"));
+								p.setCouponPrice(rs.getString("couponPrice"));
+								p.setTotalPrice(rs.getString("totalPrice"));
+								p.setFreight(rs.getString("freight"));
+								p.setComment(rs.getString("comment"));
+								p.setVcomment(rs.getString("vcomment"));
+								p.setFinalStatus(rs.getString("finalStatus"));
+								p.setCityarea(rs.getString("cityarea"));
+								p.setFinalTime(rs.getTimestamp("finalTime"));
+								p.setUserId(rs.getInt("userId"));
+								p.setAreaId(rs.getInt("areaId"));
+								p.setCityId(rs.getInt("cityId"));
+								p.setRefundStatus(rs.getString("refundStatus"));
+								p.setHistory(rs.getString("history"));
+								p.setPoint(rs.getInt("point"));
+								p.setSender(rs.getString("sender"));
+								p.setSenderPhone(rs.getString("senderPhone"));
+								p.setPcomments(rs.getString("pcomments"));
+								p.setCommented(rs.getInt("commented"));
+								p.setInventBack(rs.getInt("inventBack"));
+								res.add(p);
+							}
+						}
 					} finally {
-						doClose(ps);
+						doClose(ps);doClose(ps2);
 					}
 				}
 			});
@@ -862,12 +902,11 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 			if (null != tx)
 				tx.rollback();// 回滚
 			logger.error(e.getMessage(), e);
-			res = 1;
 		} finally {
 			if (null != session)
 				session.close();// 关闭回话
 		}
-		return res;
+		return (res.size()>0 ? res.get(0) : null);
 	}
 	
 	@Override
