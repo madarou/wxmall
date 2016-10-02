@@ -33,6 +33,7 @@ import com.makao.service.IOrderOffService;
 import com.makao.service.IProductService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
+import com.makao.thread.SendMSGThread;
 import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
 
@@ -298,8 +299,17 @@ public class OrderOffController {
 		JSONObject jsonObject = new JSONObject();
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){
-			int res = this.orderOffService.finishReturnOrder(vendor.getCityId(),orderid);
-			if(res==0){
+			OrderOff res = this.orderOffService.finishReturnOrder(vendor.getCityId(),orderid);
+			if(res!=null){
+				//给超级管理员推送完成退货的消息
+				List<Supervisor> ss = this.supervisorService.queryAll();
+				for(Supervisor s : ss){
+					String openid = s.getOpenid();
+					if(openid!=null&&!"".equals(openid)){
+						SendMSGThread snt = new SendMSGThread(openid,res,5);
+						new Thread(snt, "send order need refund mb msg thread").start();
+					}
+				}
 				jsonObject.put("msg", "200");
 				return jsonObject;
 			}

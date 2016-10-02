@@ -45,7 +45,7 @@ public interface IOrderOffService {
 
 	List<OrderOff> queryAllCanceledAndReturned(String string);
 
-	int finishReturnOrder(int cityId, int orderid);
+	OrderOff finishReturnOrder(int cityId, int orderid);
 
 	List<OrderOff> queryByUserId(String tableName, int userid);
 

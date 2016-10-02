@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import net.sf.json.JSONObject;
 
+import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 import com.makao.weixin.utils.AccessTokenUtil;
 import com.makao.weixin.utils.HttpUtil;
@@ -21,6 +22,7 @@ public class SendMSGThread implements Runnable {
 	private String fromUserName;
 	private String toUserOpenid;
 	private OrderOn order;
+	private OrderOff orderOff;
 	private int msgType;//1为下单支付成功时的消息，2为开始配送时的提示消息，3为配送完成时的提示消息
 
 	public SendMSGThread(String fromUserName, String toUserOpenid, OrderOn order, int msgType){
@@ -34,6 +36,13 @@ public class SendMSGThread implements Runnable {
 		this.fromUserName = WeixinConstants.MSG_FROM_USERNAME;
 		this.toUserOpenid = toUserOpenid;
 		this.order = order;
+		this.msgType = msgType;
+	}
+	
+	public SendMSGThread(String toUserOpenid, OrderOff order, int msgType){
+		this.fromUserName = WeixinConstants.MSG_FROM_USERNAME;
+		this.toUserOpenid = toUserOpenid;
+		this.orderOff = order;
 		this.msgType = msgType;
 	}
 	
@@ -58,6 +67,10 @@ public class SendMSGThread implements Runnable {
 		case 4:
 			result = HttpUtil.doPostStr(requestUrl, orderPrepareMsg());
 			logger.info("send order finished mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
+			break;
+		case 5:
+			result = HttpUtil.doPostStr(requestUrl, orderNeedRefundMsg());
+			logger.info("send order need refund mb msg to "+toUserOpenid+", result: "+result.getString("errmsg"));
 			break;
 		default:
 			break;
@@ -232,6 +245,52 @@ public class SendMSGThread implements Runnable {
 		
 		temp = new JSONObject();
 		temp.put("value", "请及时登录后台系统，准备订单！");
+		temp.put("color", "#173177");
+		data.put("remark", temp);
+		
+		
+		msg.put("data", data);
+		
+		return msg.toString();
+	}
+	
+	/**
+	 * @return
+	 * 退货或付钱后取消的订单需要退款，通知超级管理员
+	 */
+	private String orderNeedRefundMsg(){
+		JSONObject msg = new JSONObject();
+		msg.put("touser", this.toUserOpenid);
+		msg.put("template_id", WeixinConstants.ORDER_REFUND_MBMSG);
+		msg.put("url", "www.baidu.com");
+		JSONObject data = new JSONObject();
+		JSONObject temp = new JSONObject();
+		temp.put("value", "您好，近期您有一笔需要退款的订单：");
+		temp.put("color", "#173177");
+		data.put("first", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", this.orderOff.getTotalPrice());
+		temp.put("color", "#173177");
+		data.put("keyword1", temp);
+		
+		temp = new JSONObject();
+		StringBuilder sb = new StringBuilder();
+		String[] products = this.orderOff.getProductNames().split(",");
+		for(String s : products){
+			sb.append(s.split("=")[0]).append("*").append(s.split("=")[2]).append(",");
+		}
+		temp.put("value", sb.substring(0, sb.length()-1));
+		temp.put("color", "#173177");
+		data.put("keyword2", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", this.orderOff.getNumber());
+		temp.put("color", "#173177");
+		data.put("keyword3", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", "请及时登录后台系统和商户系统，完成退款！");
 		temp.put("color", "#173177");
 		data.put("remark", temp);
 		
