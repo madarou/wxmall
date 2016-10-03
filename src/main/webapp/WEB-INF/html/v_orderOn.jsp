@@ -50,7 +50,7 @@
 
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
- <h2><a href="#">社享网</a></h2>
+ <h2 style="height: 35px;"><iframe name="myframe" src="/vendor/index/title/${id}/?token=${token}" frameborder="0" scrolling="no" width="100%" height="100%" onload="document.all['myframe'].style.height=myframe.document.body.scrollHeight"></iframe></h2>
  <ul>
   <li>
    <dl>

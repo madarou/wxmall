@@ -55,7 +55,7 @@
 
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
- <h2><a href="#">超级社区</a></h2>
+  <h2>社享网</h2>
  <ul>
   <li>
    <dl>

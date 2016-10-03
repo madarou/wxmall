@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>区域后台管理系统</title>
+<title>超级管理员系统</title>
 <meta name="author" content="DeathGhost" />
 <link rel="stylesheet" type="text/css" href="static/css/style.css" />
 <style>
@@ -59,7 +59,7 @@
 
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
- <h2><a href="#">超级社区</a></h2>
+  <h2>社享网</h2>
  <ul>
   <li>
    <dl>

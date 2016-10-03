@@ -104,6 +104,25 @@ public class VendorController {
 		return modelAndView;
 	}
 	
+	
+	@RequestMapping(value="/index/title/{id:\\d+}",method = RequestMethod.GET)
+	public ModelAndView title(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
+	{
+		ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_title");  
+		if(token==null){
+			return modelAndView;
+		}
+	   Vendor v = this.vendorService.getById(id);
+	   if(v!=null){
+		   modelAndView.addObject("areaName", v.getCityName()+v.getAreaName());
+	   }
+	   else{
+		   modelAndView.addObject("areaName", "社享网");
+	   }
+		return modelAndView;
+	}
+	
 	@RequestMapping(value="/logout", method = RequestMethod.GET)
 	public String logout(@RequestParam(value="token", required=false) String token)
 	{	
