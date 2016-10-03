@@ -104,4 +104,11 @@ public interface IOrderOffDao {
 	 * 将已收货一定时间后的订单状态改为已完成
 	 */
 	public List<OrderOff> terminateOrders(int cityid);
+
+	/**
+	 * @param string
+	 * @return
+	 * 查询待退款的订单的number
+	 */
+	public int queryNeedRefundNumber(String string);
 }

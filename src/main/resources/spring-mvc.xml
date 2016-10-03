@@ -61,6 +61,8 @@
 	<mvc:resources mapping="/loginLog/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/hasNew/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/hasNew/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query_confirm/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query_confirm/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/v_query_cancel/static/**" location="/WEB-INF/static/" />

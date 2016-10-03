@@ -642,6 +642,35 @@ public class OrderOffController {
 	 * @param id
 	 * @param token
 	 * @return
+	 * 查询待退款的订单的number
+	 */
+	@RequestMapping(value = "/hasNew/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView hasNew(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("s_header");  
+		if(token==null){
+			return modelAndView;
+		}
+		Supervisor supervisor = this.supervisorService.getById(id);
+		List<City> cites = this.cityService.queryAll();
+		int n = 0;
+		if(supervisor!=null){
+			for(City c : cites){
+				int m = this.orderOffService.queryNeedRefundNumber("Order_"+c.getId()+"_off");
+				n=n+m;
+			}
+		}
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    modelAndView.addObject("onumber", n);   
+		return modelAndView;
+    }
+	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
 	 * 查询所有已取消(卖家取消)的和已退货的订单，在退款订单里显示，因为这些是需要退款的，增加了分页
 	 */
 	@RequestMapping(value = "/s_query_refund/{id:\\d+}/{showPage:\\d+}", method = RequestMethod.GET)

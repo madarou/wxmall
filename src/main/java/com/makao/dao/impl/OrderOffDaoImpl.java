@@ -1313,6 +1313,51 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		}
 		return res;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOffDao#queryNeedRefundNumber(java.lang.String)
+	 * 查询待退款的订单的number
+	 */
+	@Override
+	public int queryNeedRefundNumber(String tableName) {
+		String sql = "SELECT count(id) as count FROM "+ tableName + " WHERE `refundStatus`='待退款' Order By `receiveTime`";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new LinkedList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						rs.next();
+						res.add(rs.getInt("count"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		if(res.size()==0)
+			return 0;
+		else{
+			return res.get(0);
+		}
+	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {

@@ -120,6 +120,10 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	public List<OrderOff> terminateOrders(int cityid) {
 		return this.orderOffDao.terminateOrders(cityid);
 	}
+	@Override
+	public int queryNeedRefundNumber(String string) {
+		return this.orderOffDao.queryNeedRefundNumber(string);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -2085,7 +2085,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						rs2.next();
 						res.add(rs2.getInt("count"));
 					}finally{
-						doClose(ps);
+						doClose(ps);doClose(ps2);
 					}
 					
 				}

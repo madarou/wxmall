@@ -10,11 +10,11 @@
 <header>
  <h1><img src="static/images/admin_logo.png"/></h1>
  <ul class="rt_nav">
-  <li><a href="/orderOn/v_query_process/${id}/1?token=${token}" target="_top" class="website_icon" id="ordermanage">订单管理</a></li>
-  <li><a href="/user/v_usermanage/${id}/1?token=${token}" target="_top" class="admin_icon">会员管理</a></li>
-  <li><a href="/product/v_manage/${id}/1?token=${token}" target="_top" class="product_icon">商品管理</a></li>
-  <li><a href="/vendor/v_bindwx/${id}?token=${token}" target="_top" class="set_icon">绑定微信</a></li>
-  <li><a href="/vendor/logout/?token=${token}" target="_top" class="quit_icon">安全退出</a></li>
+  <li><a href="/orderOff/s_query_refund/${id}/1?token=${token}" target="_top" class="website_icon" id="ordermanage">订单管理</a></li>
+  <li><a href="/user/s_queryall/${id}/1?token=${token}" target="_top" class="admin_icon">会员管理</a></li>
+  <li><a href="/product/s_products/${id}/1?token=${token}" target="_top" class="product_icon">商品管理</a></li>
+  <li><a href="/vendor/s_queryall/${id}?token=${token}" target="_top" class="set_icon">账号设置</a></li>
+  <li><a href="/supervisor/logout?token=${token}" target="_top" class="quit_icon">安全退出</a></li>
  </ul>
  </header>
  <input type="hidden" value="${onumber}" id="number"></input>

@@ -112,4 +112,11 @@ public interface IOrderOffService {
 	 */
 	List<OrderOff> terminateOrders(int cityid);
 
+	/**
+	 * @param string
+	 * @return
+	 * 查询待退款的订单的number
+	 */
+	int queryNeedRefundNumber(String string);
+
 }

@@ -43,17 +43,7 @@
 </script>
 </head>
 <body>
-<!--header-->
-<header>
- <h1><img src="static/images/admin_logo.png"/></h1>
- <ul class="rt_nav">
-  <li><a href="/orderOn/s_queryall/${id}/1?token=${token}" class="website_icon">订单管理</a></li>
-  <li><a href="/user/s_queryall/${id}/1?token=${token}" class="admin_icon">会员管理</a></li>
-  <li><a href="/product/s_products/${id}/1?token=${token}" class="product_icon">商品管理</a></li>
-  <li><a href="/vendor/s_queryall/${id}?token=${token}" class="set_icon">账号设置</a></li>
-  <li><a href="/supervisor/logout?token=${token}" class="quit_icon">安全退出</a></li>
- </ul>
-</header>
+<iframe name="mframe" src="/orderOff/hasNew/${id}/?token=${token}" frameborder="0" scrolling="no" width="100%" height="70px" onload="document.all['mframe'].style.height=mframe.document.body.scrollHeight"></iframe>
 
 <!--aside nav-->
 <aside class="lt_aside_nav content mCustomScrollbar">
