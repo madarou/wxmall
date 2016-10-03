@@ -45,7 +45,7 @@
  <ul class="rt_nav">
   <li><a href="/orderOn/s_queryall/${id}/1?token=${token}" class="website_icon">订单管理</a></li>
   <li><a href="/user/s_queryall/${id}/1?token=${token}" class="admin_icon">会员管理</a></li>
-  <li><a href="/product/s_products/${id}/1?token=${token}" class="admin_icon">商品管理</a></li>
+  <li><a href="/product/s_products/${id}/1?token=${token}" class="product_icon">商品管理</a></li>
   <li><a href="/vendor/s_queryall/${id}?token=${token}" class="set_icon">账号设置</a></li>
   <li><a href="/supervisor/logout?token=${token}" class="quit_icon">安全退出</a></li>
  </ul>

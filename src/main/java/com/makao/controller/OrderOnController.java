@@ -1322,6 +1322,27 @@ public class OrderOnController {
 		return modelAndView;
     }
 	
+	@RequestMapping(value = "/hasNew/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody
+    ModelAndView hasNew(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("v_header");  
+		if(token==null){
+			return modelAndView;
+		}
+		Vendor vendor = this.vendorService.getById(id);
+		List<OrderOn> orders = null;
+		if(vendor!=null)
+			orders = this.orderOnService.queryProcessByAreaId("Order_"+vendor.getCityId()+"_on",vendor.getAreaId());
+	    modelAndView.addObject("id", id);  
+	    modelAndView.addObject("token", token); 
+	    if(orders!=null)
+	    	modelAndView.addObject("onumber", orders.size());   
+	    else
+	    	modelAndView.addObject("onumber", 0);   
+		return modelAndView;
+    }
+	
 	/**
 	 * @param id
 	 * @param token
