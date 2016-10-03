@@ -1322,6 +1322,12 @@ public class OrderOnController {
 		return modelAndView;
     }
 	
+	/**
+	 * @param id
+	 * @param token
+	 * @return
+	 * 获取待处理和待退货的订单的数量
+	 */
 	@RequestMapping(value = "/hasNew/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     ModelAndView hasNew(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
@@ -1331,15 +1337,12 @@ public class OrderOnController {
 			return modelAndView;
 		}
 		Vendor vendor = this.vendorService.getById(id);
-		List<OrderOn> orders = null;
+		int n = 0;
 		if(vendor!=null)
-			orders = this.orderOnService.queryProcessByAreaId("Order_"+vendor.getCityId()+"_on",vendor.getAreaId());
+			n = this.orderOnService.queryProcessAndReturnByAreaId(vendor.getCityId(),vendor.getAreaId());
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
-	    if(orders!=null)
-	    	modelAndView.addObject("onumber", orders.size());   
-	    else
-	    	modelAndView.addObject("onumber", 0);   
+	    modelAndView.addObject("onumber", n);   
 		return modelAndView;
     }
 	

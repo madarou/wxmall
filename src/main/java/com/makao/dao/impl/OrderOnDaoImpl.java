@@ -2054,6 +2054,61 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 		return res.size()>0 ? res.get(0) : null;
 	}
 	
+
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOnDao#queryProcessAndReturnByAreaId(int, int)
+	 * 获取待处理和待退货的订单的数量
+	 */
+	@Override
+	public int queryProcessAndReturnByAreaId(int cityId, int areaId) {
+		String tableName1 = "Order_"+cityId+"_on";
+		String tableName2 = "Order_"+cityId+"_off";
+		String sql = "SELECT count(id) as count FROM "+ tableName1 + " WHERE `areaId`="+areaId+" AND `status`='"+OrderState.PROCESS_WAITING.getCode()+"' Order By `receiveTime`";
+		String sql2 = "SELECT count(id) as count FROM "+ tableName2 + " WHERE `areaId`="+areaId+" AND `finalStatus`='"+OrderState.RETURN_APPLYING.getCode()+"' Order By `receiveTime`";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new LinkedList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;PreparedStatement ps2 = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						rs.next();
+						res.add(rs.getInt("count"));
+						ps2 = connection.prepareStatement(sql2);
+						ResultSet rs2 = ps2.executeQuery();
+						rs2.next();
+						res.add(rs2.getInt("count"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		if(res.size()==0)
+			return 0;
+		else if(res.size()==1){
+			return res.get(0);
+		}
+		else
+			return res.get(0)+res.get(1);
+	}
+	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
 			try {

@@ -132,4 +132,12 @@ public interface IOrderOnDao {
 	 * 用户取消订单
 	 */
 	public OrderOn userCancelOrder(int cityid, int orderid);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 获取待处理和待退货的订单的数量
+	 */
+	public int queryProcessAndReturnByAreaId(int cityId, int areaId);
 }

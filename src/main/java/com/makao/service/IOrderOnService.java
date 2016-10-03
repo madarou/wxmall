@@ -132,4 +132,12 @@ public interface IOrderOnService {
 	 */
 	OrderOn userCancelOrder(int cityid, int orderid);
 
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 获取待处理和待退货的订单的数量
+	 */
+	int queryProcessAndReturnByAreaId(int cityId, int areaId);
+
 }
