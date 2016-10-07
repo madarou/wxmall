@@ -10,7 +10,6 @@
 <meta charset="utf-8"/>
 <title>区域后台管理系统</title>
 <meta name="author" content="DeathGhost" />
-<meta http-equiv="refresh" content="180">
 <link rel="stylesheet" type="text/css" href="static/css/style.css" />
 <!--[if lt IE 9]>
 <script src="static/js/html5.js"></script>

@@ -146,7 +146,7 @@
 				 $.ajax({
 		    		  type: "POST",
 		  	          contentType: "application/json",
-		  	          url: "/vendor/update",
+		  	          url: "/vendor/update"+"/?token="+$("#loginToken").val(),
 		  	          dataType: "json",
 		  	          data: JSON.stringify({"id":vendorId_toEdit,"userName":newVendorName,"password":newVendorPwd}),
 		  	          success: function(data){
@@ -162,7 +162,7 @@
 				 $.ajax({
 		    		  type: "POST",
 		  	          contentType: "application/json",
-		  	          url: "/vendor/update",
+		  	          url: "/vendor/update"+"/?token="+$("#loginToken").val(),
 		  	          dataType: "json",
 		  	          data: JSON.stringify({"id":vendorId_toEdit,"userName":newVendorName,"password":""}),
 		  	          success: function(data){
@@ -246,7 +246,7 @@
         	$.ajax({
     		  type: "DELETE",
   	          contentType: "application/json",
-  	          url: "/vendor/"+vendorId_toDel,
+  	          url: "/vendor/"+vendorId_toDel+"/?token="+$("#loginToken").val(),
   	          dataType: "json",
   	          success: function(data){
   	        	  //var cities = JSON.stringify(data.cities);
@@ -375,8 +375,8 @@
     	 $.ajax({
 	          type: "POST",
 	          contentType: "application/json",
-	          url: "/vendor/new/"+$("#loginUserId").val(),
-	          data: JSON.stringify({"userName":vendorname,"cityId":cityId,"areaId":areaId,"cityName":cityname,"areaName":areaname}),
+	          url: "/vendor/new/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
+	          data: JSON.stringify({"userName":vendorname,"password":password,"cityId":cityId,"areaId":areaId,"cityName":cityname,"areaName":areaname}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
@@ -451,13 +451,13 @@
      //弹出：确认按钮
      $("#confirmUnbind").click(function(){
     	 if(vendorId_toUnbind==0){
-    		 alert("请重新选择要删除的账户");
+    		 alert("请重新选择要解除的账户");
     		 return false;
     	 }
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/vendor/unbind/"+$("#loginUserId").val(),
+  	          url: "/vendor/unbind/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
   	          data: JSON.stringify({"vendorId":vendorId_toUnbind}),
 	          dataType: "json",
   	          success: function(data){
@@ -544,5 +544,6 @@
  </div>
 </section>
 <input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${token}"></input>
 </body>
 </html>
