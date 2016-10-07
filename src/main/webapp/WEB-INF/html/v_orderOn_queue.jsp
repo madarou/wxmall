@@ -210,7 +210,7 @@
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/orderOn/vcancel/"+$("#loginUserId").val(),
+  	          url: "/orderOn/vcancel/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
   	          dataType: "json",
   	          data: JSON.stringify({"orderid":orderId_toCancel,"vcomment":$.trim($("#vcomment").val())}),
   	          success: function(data){
@@ -219,7 +219,9 @@
   	        		  alert("订单取消成功");
   	        		  window.location.reload();//刷新页面
   	        		  orderId_toCancel=0;
-  	        	  }
+  	        	  }else if(data.msg=="401"){
+  	        	     alert("需要重新登录");
+  	        	}
   	          }
     	 	});
        $(".del_pop_bg").fadeOut();
@@ -285,7 +287,7 @@
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/orderOn/vprocess/"+$("#loginUserId").val(),
+  	          url: "/orderOn/vprocess/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
   	          dataType: "json",
   	          data: JSON.stringify({"orderid":orderId_toProcess}),
   	          success: function(data){
@@ -294,7 +296,9 @@
   	        		  alert("订单进入待处理列表");
   	        		  window.location.reload();//刷新页面
   	        		  orderId_toProcess=0;
-  	        	  }
+  	        	  }else if(data.msg=="401"){
+  	        	     alert("需要重新登录");
+  	        	}
   	          }
     	 	});
        $(".process_pop_bg").fadeOut();

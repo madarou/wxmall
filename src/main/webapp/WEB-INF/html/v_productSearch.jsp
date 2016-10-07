@@ -196,7 +196,7 @@
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/product/vnotshow/"+$("#loginUserId").val(),
+     	          url: "/product/vnotshow/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"productId":showHandle_Id}),
      	          success: function(data){
@@ -204,7 +204,9 @@
      	        	  if(data.msg=="200"){
      	        		  alert("下架成功");
      	        		  window.location.reload();
-     	        	  }
+     	        	  }else if(data.msg=="401"){
+     	        	     alert("需要重新登录");
+     	        	 }
      	          }
        	 	}); 
     	 }
@@ -212,7 +214,7 @@
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/product/vshow/"+$("#loginUserId").val(),
+     	          url: "/product/vshow/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"productId":showHandle_Id}),
      	          success: function(data){
@@ -220,7 +222,9 @@
      	        	  if(data.msg=="200"){
      	        		  alert("上架成功");
      	        		  window.location.reload();
-     	        	  }
+     	        	  }else if(data.msg=="401"){
+     	        	     alert("需要重新登录");
+     	        	 }
      	          }
        	 	}); 
     	 }
@@ -500,7 +504,7 @@ $(document).ready(function(){
     		$.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/product/vedit/"+$("#loginUserId").val(),
+     	          url: "/product/vedit/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"id":editHandle_Id,"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
 	  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
@@ -509,7 +513,9 @@ $(document).ready(function(){
      	        	  if(data.msg=="200"){
      	        		  alert("商品修改成功");
      	        		  window.location.reload();
-     	        	  }
+     	        	  }else if(data.msg=="401"){
+     	        	     alert("需要重新登录");
+     	        	 }
      	          }
        	 	});     	
        $(".editproduct_pop_bg").fadeOut();
@@ -590,7 +596,7 @@ $(document).ready(function(){
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">缩略图：</span>
-		        <span><img alt="(400 x 400)" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
+		        <span><img alt="(240 x 240)" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
 		        <span><img alt="(480 x 240)" id="uploadb" src="" style="height:100px;width:200px;cursor:pointer"/></span>
 				<div id="fileDivs">
 				     <input id="fileToUploads" style="display: none" type="file" name="upfiles">
@@ -672,7 +678,7 @@ $(document).ready(function(){
                      $("#serverImgNames").val(data.imgName);
                      $("#uploads").attr("src", "/static/upload/"+data.imgName);
                      var imgSrc = $("#uploads").attr("src");
-                     var require = {wid:400,hei:400};
+                     var require = {wid:240,hei:240};
                      checkImageSize(imgSrc,function(w,h){
                  		if(w!=require.wid || h!=require.hei){
                  			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");

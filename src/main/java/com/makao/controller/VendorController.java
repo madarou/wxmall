@@ -144,6 +144,7 @@ public class VendorController {
 		return Vendor;
 	}
 	
+	@AuthPassport
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id) {
@@ -164,6 +165,7 @@ public class VendorController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"userName":"马靠","areaId":1,"cityId":1,"cityArea":"上海张江"}' 'http://localhost:8080/wxmall/vendor/new'
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/new/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@PathVariable("id") int id, @RequestBody Vendor vendor) {
@@ -191,10 +193,10 @@ public class VendorController {
 		jsonObject.put("msg", "201");
         return jsonObject;
     }
-	
+	@AuthPassport
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
     public @ResponseBody
-    Object update(@RequestBody JSONObject paramObject) {
+    Object update(@RequestBody JSONObject paramObject,@RequestParam(value = "token", required = false) String token) {
 		int id = paramObject.getIntValue("id");
 		String vendorname = paramObject.getString("userName");
 		String password = paramObject.getString("password");
@@ -226,6 +228,7 @@ public class VendorController {
 	 * @return
 	 * 解绑微信号
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/unbind/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object unbind(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {

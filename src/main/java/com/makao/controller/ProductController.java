@@ -139,7 +139,7 @@ public class ProductController {
 	 * @return
 	 * 超级管理员补货
 	 */
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/supply/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object supply(@RequestBody JSONObject paramObject) {
@@ -206,6 +206,7 @@ public class ProductController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"number":"海南千禧小番茄","catalog":"水果","price":"12.00","standard":"一份足2斤","marketPrice":"30.00","inventory":12,"sequence":3,"status":"库存紧张","origin":"海南","salesVolume":7637,"likes":3972,"areaId":1,"cityId":1}' 'http://localhost:8080/wxmall/product/new'
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/vnew/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@PathVariable("vendorid") int vendorid,@RequestBody Product Product) {
@@ -240,6 +241,7 @@ public class ProductController {
 	 * @return
 	 * 修改商品信息
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/vedit/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vedit(@PathVariable("vendorid") int vendorid,@RequestBody Product Product) {
@@ -263,7 +265,7 @@ public class ProductController {
 		jsonObject.put("msg", "201");
         return jsonObject;
     }
-	
+	@AuthPassport
 	@RequestMapping(value = "/sedit/{superid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object sedit(@PathVariable("superid") int superid,@RequestBody Product Product) {
@@ -291,6 +293,7 @@ public class ProductController {
 	 * @return
 	 * 下架产品
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/vnotshow/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vnotshow(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
@@ -321,6 +324,7 @@ public class ProductController {
 	 * @return
 	 * 上架产品
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/vshow/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vshow(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
@@ -345,7 +349,7 @@ public class ProductController {
         return jsonObject;
     }
 
-	
+	@AuthPassport
 	@RequestMapping(value = "/snew/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object addBySupervisor(@PathVariable("supervisorid") int superid,@RequestBody Product product) {
@@ -716,6 +720,8 @@ public class ProductController {
 			//这里假设放一些东西进去
 			logger.info("搜索商品库信息完成(keyword):"+keyword);
 		    modelAndView.addObject("products", ps);    
+		    modelAndView.addObject("id", id);
+		    modelAndView.addObject("token", token);
 		    
 			return modelAndView;
 		}

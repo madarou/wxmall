@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.City;
 import com.makao.entity.Supervisor;
 import com.makao.service.ICityService;
@@ -70,6 +71,7 @@ public class CityController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"cityName":"上海"}' 'http://localhost:8080/wxmall/city/new'
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/new/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@PathVariable("id") int superid, @RequestBody City city) {

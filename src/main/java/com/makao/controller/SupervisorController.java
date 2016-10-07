@@ -30,6 +30,7 @@ import com.makao.service.ICityService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IVendorService;
 import com.makao.utils.EncryptUtils;
+import com.makao.utils.MakaoConstants;
 import com.makao.utils.TokenManager;
 import com.makao.utils.TokenUtils;
 import com.makao.weixin.utils.QRCodeUtil;
@@ -116,8 +117,17 @@ public class SupervisorController {
 		}
 	    modelAndView.addObject("id", id);  	    
 	    TokenModel tm = (TokenModel) request.getAttribute("tokenmodel");
-	    //modelAndView.addObject("token", tm.getToken()); 
-	    modelAndView.addObject("token","dfsdfdfdfd");     
+	    if(tm==null){
+	    	if(MakaoConstants.DEBUG){
+	    		 modelAndView.addObject("token","dfsdfdfdfd");   
+	    	    modelAndView.setViewName("s_index");  
+	    		return modelAndView;
+	    	}
+	    	modelAndView.setViewName("s_login"); 
+	    	return modelAndView;
+	    }
+	    modelAndView.addObject("token", tm.getToken());  
+	    modelAndView.setViewName("s_index");  
 		return modelAndView;
 	}
 	

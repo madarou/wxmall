@@ -300,7 +300,7 @@
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/orderOff/vcancel/"+$("#loginUserId").val(),
+  	          url: "/orderOff/vcancel/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
   	          dataType: "json",
   	          data: JSON.stringify({"orderid":orderId_toCancel,"vcomment":$.trim($("#vcomment").val())}),
   	          success: function(data){
@@ -309,6 +309,11 @@
   	        		  alert("订单取消成功");
   	        		  window.location.reload();//刷新页面
   	        		  orderId_toCancel=0;
+  	        	  }else if(data.msg=="401"){
+  	        	     alert("需要重新登录");
+  	        	  }else{
+  	        		  alert("取消订单失败");
+  	        		  window.location.reload();//刷新页面
   	        	  }
   	          }
     	 	});
@@ -375,7 +380,7 @@
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/orderOff/vrefund/"+$("#loginUserId").val(),
+     	          url: "/orderOff/vrefund/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"orderid":orderId_toHandle}),
      	          success: function(data){
@@ -384,7 +389,9 @@
      	        		  alert("订单开始退货");
      	        		  window.location.reload();//刷新页面
      	        		  orderId_toCancel=0;
-     	        	  }
+     	        	  }else if(data.msg=="401"){
+     	        	     alert("需要重新登录");
+     	        	 }
      	          }
        	 	});
     	 }
@@ -392,7 +399,7 @@
     		 $.ajax({
           		  type: "POST",
         	          contentType: "application/json",
-        	          url: "/orderOff/vfinish/"+$("#loginUserId").val(),
+        	          url: "/orderOff/vfinish/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
         	          dataType: "json",
         	          data: JSON.stringify({"orderid":orderId_toHandle}),
         	          success: function(data){
@@ -401,6 +408,8 @@
         	        		  alert("订单退货完成");
         	        		  window.location.reload();//刷新页面
         	        		  orderId_toCancel=0;
+        	        	  }else if(data.msg=="401"){
+        	        		     alert("需要重新登录");
         	        	  }
         	          }
           	 	});

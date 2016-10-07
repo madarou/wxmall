@@ -235,7 +235,7 @@
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/orderOn/vcancel/"+$("#loginUserId").val(),
+  	          url: "/orderOn/vcancel/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
   	          dataType: "json",
   	          data: JSON.stringify({"orderid":orderId_toCancel,"vcomment":$.trim($("#vcomment").val())}),
   	          success: function(data){
@@ -244,6 +244,11 @@
   	        		  alert("订单取消成功");
   	        		  window.location.reload();//刷新页面
   	        		  orderId_toCancel=0;
+  	        	  }else if(data.msg=="401"){
+  	        	     alert("需要重新登录");
+  	        	  }else{
+  	        		  alert("取消订单失败");
+  	        		  window.location.reload();//刷新页面
   	        	  }
   	          }
     	 	});

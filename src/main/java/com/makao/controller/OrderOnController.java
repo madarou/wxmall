@@ -978,6 +978,7 @@ public class OrderOnController {
 	 * @return
 	 * 订单被取消，填写备注
 	 */
+	@AuthPassport
 	@RequestMapping(value = "/vcancel/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vcancel(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
@@ -1006,7 +1007,7 @@ public class OrderOnController {
 	 * @return
 	 * 商户为订单添加备注
 	 */
-	
+	@AuthPassport
 	@RequestMapping(value = "/vcomment/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vcomment(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {

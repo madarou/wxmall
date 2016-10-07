@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.makao.auth.AuthPassport;
 import com.makao.entity.Banner;
 import com.makao.entity.Vendor;
 import com.makao.service.IBannerService;
@@ -188,7 +189,7 @@ public class BannerController {
 		jsonObject.put("msg", "201");
         return jsonObject;
 	}
-	
+	@AuthPassport
 	@RequestMapping(value = "/vedit/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vedit(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {

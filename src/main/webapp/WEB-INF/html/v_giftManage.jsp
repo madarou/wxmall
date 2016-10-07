@@ -141,7 +141,9 @@
 	  	        		  //alert("删除区域管理员账号成功");
 	  	        		  showTips("增加礼品成功");
 	  	        		  window.location="/gift/v_giftmanage/"+loginUserId+"?token="+$("#token").val();
-	  	        	  }
+	  	        	  }else if(data.msg=="401"){
+	  	        	     alert("需要重新登录");
+	  	        	}
 	  	          }
 	    	 	});
        $(".pop_bg").fadeOut();

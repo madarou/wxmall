@@ -275,7 +275,7 @@
 			 	$.ajax({
 		    		  type: "POST",
 		  	          contentType: "application/json",
-		  	          url: "/product/vnew/"+loginUserId,
+		  	          url: "/product/vnew/"+loginUserId+"/?token="+$("#loginToken").val(),
 		  	          dataType: "json",
 		  	          data: JSON.stringify({"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
 		  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
@@ -288,7 +288,9 @@
 		  	        	  }
 		  	        	  else if(data.msg=="201"){
 		  	        		  alert("商品添加失败");
-		  	        	  }
+		  	        	  }else if(data.msg=="401"){
+		  	        	     alert("需要重新登录");
+		  	        	}
 		  	          }
 		    	 	});
 			 });
@@ -373,7 +375,7 @@
        </li>
        <li>
         <span class="item_name" style="width:120px;">缩略图：</span>
-        <span><img alt="(400 x 400)" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
+        <span><img alt="(240 x 240)" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
         <span><img alt="(480 X 240)" id="uploadb" src="" style="height:100px;width:200px;cursor:pointer"/></span>
 		<div id="fileDivs">
 		     <input id="fileToUploads" style="display: none" type="file" name="upfiles">
@@ -448,7 +450,7 @@
                      $("#serverImgNames").val(data.imgName);
                      $("#uploads").attr("src", "/static/upload/"+data.imgName);
                      var imgSrc = $("#uploads").attr("src");
-                     var require = {wid:400,hei:400};
+                     var require = {wid:240,hei:240};
                      checkImageSize(imgSrc,function(w,h){
                  		if(w!=require.wid || h!=require.hei){
                  			alert("图片尺寸不符合! 请上传"+require.wid+"x"+require.hei+"尺寸的图片");
@@ -618,5 +620,6 @@
    </script>
    <!-- 添加详情2图 -->
 <input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${token}"></input>
 </body>
 </html>

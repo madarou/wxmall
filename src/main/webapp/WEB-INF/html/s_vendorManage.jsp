@@ -155,6 +155,9 @@
 		  	        		  alert("修改管理员账号成功");
 		  	        		  window.location.reload();
 		  	        	  }
+		  	        	  else if(data.msg=="401"){
+		  	        		alert("需要重新登录");
+		  	        	  }
 		  	          }
 		    	 	});
 			 }
@@ -170,6 +173,8 @@
 		  	        	  if(data.msg=="200"){
 		  	        		  alert("修改区域管理员账号成功");
 		  	        		  window.location.reload();
+		  	        	  }else if(data.msg=="401"){
+		  	        		alert("需要重新登录");
 		  	        	  }
 		  	          }
 		    	 	});
@@ -254,7 +259,9 @@
   	        		  alert("删除区域管理员账号成功");
   	        		  window.location.reload();
   	        		  vendorId_toDel=0;
-  	        	  }
+  	        	  }else if(data.msg=="401"){
+  	        	     alert("需要重新登录");
+  	        	}
   	          }
     	 	});
        $(".del_pop_bg").fadeOut();
@@ -382,6 +389,8 @@
 	                  if(data.msg=="200"){
 	                	  alert("增加区域管理员账号成功");
 	                	  window.location.reload();
+	                  }else if(data.msg=="401"){
+	                	     alert("需要重新登录");
 	                  }
 	                  else{
 	                	  alert("增加区域管理员账号失败");
@@ -465,7 +474,9 @@
   	        		  alert("解绑成功");
   	        		  window.location.reload();
   	        		vendorId_toUnbind=0;
-  	        	  }
+  	        	  }else if(data.msg=="401"){
+  	        	     alert("需要重新登录");
+  	        	}
   	          }
     	 	});
        $(".unbind_pop_bg").fadeOut();

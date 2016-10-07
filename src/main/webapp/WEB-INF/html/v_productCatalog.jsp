@@ -117,7 +117,7 @@
        $.ajax({
  		  type: "POST",
 	          contentType: "application/json",
-	          url: "/area/vnewcatalog/"+$("#loginUserId").val(),
+	          url: "/area/vnewcatalog/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
 	          dataType: "json",
 	          data: JSON.stringify({"name":catname,"sequence":catsequence}),
 	          success: function(data){
@@ -127,6 +127,8 @@
 	        	  }
 	        	  else if(data.msg=="202"){
 	        		  alert("分类名称不能重复");
+	        	  }else if(data.msg=="401"){
+	        		     alert("需要重新登录");
 	        	  }
 	          }
  	 	});
@@ -196,7 +198,7 @@
 	         $.ajax({
 	    		  type: "POST",
 	   	          contentType: "application/json",
-	   	          url: "/area/veditcatalog/"+$("#loginUserId").val(),
+	   	          url: "/area/veditcatalog/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
 	   	          dataType: "json",
 	   	          data: JSON.stringify({"oldname":nameOld,"newname":nameNew,"sequence":sequenceNew}),
 	   	          success: function(data){
@@ -206,7 +208,9 @@
 	   	        	  }
 	   	        	  else if(data.msg=="202"){
 	   	        		  alert("分类名称不能重复");
-	   	        	  }
+	   	        	  }else if(data.msg=="401"){
+	   	        	     alert("需要重新登录");
+	   	        	}
 	   	          }
 	    	 	});
 	    	 $(".editcat_pop_bg").fadeOut();
@@ -273,7 +277,7 @@
 	       $.ajax({
 	    		  type: "POST",
 	   	          contentType: "application/json",
-	   	          url: "/area/vdeletecatalog/"+$("#loginUserId").val(),
+	   	          url: "/area/vdeletecatalog/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
 	   	          dataType: "json",
 	   	          data: JSON.stringify({"name":catName_toDel}),
 	   	          success: function(data){
@@ -284,7 +288,9 @@
 	   	        	  else if(data.msg=="201"){
 	   	        		  alert("分类删除失败");
 	   	        		  window.location.reload();
-	   	        	  }
+	   	        	  }else if(data.msg=="401"){
+	   	        	     alert("需要重新登录");
+	   	        	}
 	   	          }
 	    	 	});
 	       $(".del_pop_bg").fadeOut();

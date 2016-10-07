@@ -195,7 +195,7 @@
 	        	$.ajax({
 	    		  type: "POST",
 	  	          contentType: "application/json",
-	  	          url: "/orderOff/srefund/"+$("#loginUserId").val(),
+	  	          url: "/orderOff/srefund/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
 	  	          dataType: "json",
 	  	          data: JSON.stringify({"orderid":orderId,"cityid":cityid}),
 	  	          success: function(data){
@@ -205,7 +205,9 @@
 	  	        	  }
 	  	        	  else if(data.msg=="201"){
 	  	        		  alert("操作失败");
-	  	        	  }
+	  	        	  }else if(data.msg=="401"){
+	  	        	     alert("需要重新登录");
+	  	        		}
 	  	          }
 	    	 	});
 			 $(".del_pop_bg").fadeOut();
@@ -296,5 +298,6 @@
  </div>
 </section>
 <input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${token}"></input>
 </body>
 </html>

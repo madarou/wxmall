@@ -147,7 +147,7 @@
 			 $.ajax({
 		          type: "POST",
 		          contentType: "application/json",
-		          url: "/coupon/new/"+$("#loginUserId").val(),
+		          url: "/coupon/new/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
 		          data: JSON.stringify({"name":name,"type":type,"cityId":cityId,"cityName":cityName,"amount":amount,"point":point,"restrict":restrict,
 		        	  					"comment":comment,"isShow":isshow,"coverSUrl":coverSUrl,"coverBUrl":coverBUrl}),
 		          dataType: "json",
@@ -155,6 +155,8 @@
 		                  if(data.msg=="200"){
 		                	  alert("增加优惠券成功");
 		                	  window.location.reload();
+		                  }else if(data.msg=="401"){
+		                	  alert("需要重新登录");
 		                  }
 		                  else{
 		                	  alert("增加优惠券失败");
@@ -276,7 +278,7 @@
          $.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/coupon/delete/"+$("#loginUserId").val(),
+  	          url: "/coupon/delete/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
   	          dataType: "json",
   	          data:JSON.stringify({"couponId":id_toDel,"cityId":cityId}),
   	          success: function(data){
@@ -289,6 +291,8 @@
   	        		  alert("删除优惠券失败");
   	        		  window.location.reload();
   	        		  id_toDel=0;
+  	        	  }else if(data.msg=="401"){
+  	        		  alert("需要重新登录");
   	        	  }
   	          }
     	 	});
@@ -344,7 +348,7 @@
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/coupon/sdown/"+$("#loginUserId").val(),
+     	          url: "/coupon/sdown/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"couponId":upHandle_Id,"cityId":cityid}),
      	          success: function(data){
@@ -355,6 +359,8 @@
      	        	  else if(data.msg=="201"){
     	        		  alert("下线失败");
     	        		  window.location.reload();
+    	        	  }else if(data.msg=="401"){
+    	        		  alert("需要重新登录");
     	        	  }
      	          }
        	 	}); 
@@ -363,7 +369,7 @@
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/coupon/sup/"+$("#loginUserId").val(),
+     	          url: "/coupon/sup/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"couponId":upHandle_Id,"cityId":cityid}),
      	          success: function(data){
@@ -374,6 +380,8 @@
      	        	  else if(data.msg=="201"){
      	        		  alert("上线失败");
      	        		  window.location.reload();
+     	        	  }else if(data.msg=="401"){
+     	        		  alert("需要重新登录");
      	        	  }
      	          }
        	 	}); 
@@ -489,7 +497,7 @@
     		$.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/coupon/sedit/"+$("#loginUserId").val(),
+     	          url: "/coupon/sedit/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"couponId":editHandle_Id,"name":name,"amount":amount,"point":point,"restrict":restrict,"isShow":isshow,
 	  	        		"comment":comment,"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"cityId":cityIdO}),
@@ -501,6 +509,8 @@
      	        	  else if(data.msg=="201"){
     	        		  alert("商品修改失败");
     	        		  window.location.reload();
+    	        	  }else if(data.msg=="401"){
+    	        			alert("需要重新登录");
     	        	  }
      	          }
        	 	});   	
@@ -848,5 +858,6 @@ $('#cfileDivd2').on('change',function() {
 });
 </script>
 <input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${token}"></input>
 </body>
 </html>

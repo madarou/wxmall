@@ -134,7 +134,7 @@
 				 $.ajax({
 		    		  type: "POST",
 		  	          contentType: "application/json",
-		  	          url: "/user/update/"+$("#loginUserId").val(),
+		  	          url: "/user/update/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
 		  	          dataType: "json",
 		  	          data: JSON.stringify({"id":userId_toEdit,"userName":$("#editname").val(),"phoneNumber":$("#editphone").val(),
 		  	        	"point":$("#editpoint").val(),"address":$("#editaddress").val(),"rank":$("#editrank").val()}),
@@ -146,7 +146,9 @@
 		  	        	  else if(data.msg=="201"){
 		  	        		  alert("修改会员信息失败");
 		  	        		  window.location.reload();
-		  	        	  }
+		  	        	  }else if(data.msg=="401"){
+		  	        	     alert("需要重新登录");
+		  	        	}
 		  	          }
 		    	 	});
 			 }
@@ -247,5 +249,6 @@
  </div>
 </section>
 <input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${token}"></input>
 </body>
 </html>

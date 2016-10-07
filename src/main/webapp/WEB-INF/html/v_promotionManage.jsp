@@ -133,7 +133,7 @@
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/banner/vedit/"+$("#loginUserId").val(),
+     	          url: "/banner/vedit/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"bannerId":bHandle_Id,"productUrl":productUrlN,"imgUrl":imgUrlN}),
      	          success: function(data){
@@ -144,6 +144,8 @@
      	        	  else if(data.msg=="201"){
     	        		  alert("编辑失败");
     	        		  window.location.reload();
+    	        	  }else if(data.msg=="401"){
+    	        		     alert("需要重新登录");
     	        	  }
      	          }
        	 	}); 
@@ -393,5 +395,6 @@
       <!-- 上架下架提示框 -->
       
 <input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${token}"></input>
 </body>
 </html>

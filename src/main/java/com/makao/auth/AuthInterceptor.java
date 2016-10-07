@@ -50,6 +50,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		String method = request.getMethod();
 
 		System.out.println("***********拦截器************");
+		
 		if (MakaoConstants.DEBUG)
 			return true;
 
@@ -71,7 +72,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 						}
 						logger.info("*****" + url + " 的 " + method
 								+ " 方法需要验证token，但token不存在*****");
-						tokenFailResponse(response, "未登录");
+						tokenFailResponse(response, "{\"msg\":401}");
 						return false;
 					}
 				}
@@ -96,7 +97,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					tm = tokenManager.getUserToken(token);
 					isValid = tokenManager.checkUserToken(tm, token);
 					if (!isValid) {
-						tokenFailResponse(response, "需要重新登录");
+						tokenFailResponse(response, "{\"msg\":401}");
 					} else {// 如果token验证成功，将token对应的TokenModel存在request中，便于之后取
 						request.setAttribute("tokenmodel", tm);
 					}
@@ -107,7 +108,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					isValid = tokenManager.checkToken(tm, token);
 					System.out.println("3");
 					if (!isValid) {
-						tokenFailResponse(response, "需要重新登录");
+						tokenFailResponse(response, "{\"msg\":401}");
 					} else {// 如果token验证成功，将token对应的TokenModel存在request中，便于之后取
 						request.setAttribute("tokenmodel", tm);
 					}
@@ -117,13 +118,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					tm = tokenManager.getToken(token);
 					isValid = tokenManager.checkToken(tm, token);
 					if (!isValid) {
-						tokenFailResponse(response, "需要重新登录");
+						tokenFailResponse(response, "{\"msg\":401}");
 					} else {// 如果token验证成功，将token对应的TokenModel存在request中，便于之后取
 						request.setAttribute("tokenmodel", tm);
 					}
 					return isValid;
 				default:
-					tokenFailResponse(response, "没有登录，需要重新登录");
+					tokenFailResponse(response,"{\"msg\":401}");
 					return false;
 				}
 			}
@@ -159,7 +160,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 	private void tokenFailResponse(HttpServletResponse response, String msg)
 			throws IOException {
 		response.reset();
-		response.setHeader("content-type", "text/html;charset=UTF-8");
+		response.setHeader("content-type", "application/json;charset=utf-8");
 		response.setCharacterEncoding("UTF-8");
 		// 注意out的什么不能在preHandler中return为true经过的路径上，否则会报错:
 		// java.lang.IllegalStateException: getWriter() has already been called

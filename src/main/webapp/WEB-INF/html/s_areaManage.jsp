@@ -126,13 +126,15 @@
     	 $.ajax({
 	          type: "POST",
 	          contentType: "application/json",
-	          url: "/city/new/"+$("#loginUserId").val(),
+	          url: "/city/new/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
 	          data: JSON.stringify({"cityName":cityname,"avatarUrl":imgname}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
 	                	  alert("增加城市成功");
 	                	  window.location.reload();
+	                  }else if(data.msg=="401"){
+	                	  alert("需要重新登录");
 	                  }
 	                  else{
 	                	  alert("增加城市失败");
@@ -300,13 +302,15 @@
     	 $.ajax({
 	          type: "POST",
 	          contentType: "application/json",
-	          url: "/area/new/"+$("#loginUserId").val(),
+	          url: "/area/new/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
 	          data: JSON.stringify({"areaName":areaname,"cityName":cityname,"cityId":cityId,"longitude":longitude,"latitude":latitude,"phoneNumber":phoneNumber}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
 	                	  alert("增加区域成功");
 	                	  window.location.reload();
+	                  }else if(data.msg=="401"){
+	                	  alert("需要重新登录");
 	                  }
 	                  else{
 	                	  alert("增加区域失败");
@@ -397,6 +401,10 @@
      	        	  if(data.msg=="200"){
      	        		  alert("下线成功");
      	        		  window.location.reload();
+     	        	  }else if(data.msg=="401"){
+     	        		  alert("需要重新登录");
+     	        	  }else{
+     	        		  alert("下线失败");
      	        	  }
      	          }
        	 	}); 
@@ -412,6 +420,11 @@
      	        	  if(data.msg=="200"){
      	        		  alert("上线成功");
      	        		  window.location.reload();
+     	        	  }else if(data.msg=="401"){
+     	        		  alert("需要重新登录");
+     	        	  }
+     	        	  else{
+     	        		  alert("上线失败");
      	        	  }
      	          }
        	 	}); 
@@ -499,13 +512,15 @@
     	 $.ajax({
 	          type: "POST",
 	          contentType: "application/json",
-	          url: "/area/edit/"+$("#loginUserId").val(),
+	          url: "/area/edit/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
 	          data: JSON.stringify({"areaId":edit_areaId,"areaName":areaname,"longitude":longitude,"latitude":latitude,"phoneNumber":phoneNumber}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
 	                	  alert("修改区域成功");
 	                	  window.location.reload();
+	                  }else if(data.msg=="401"){
+	                	  alert("需要重新登录");
 	                  }
 	                  else{
 	                	  alert("修改区域失败");
