@@ -343,6 +343,11 @@ public class AreaDaoImpl implements IAreaDao {
 			tx = session.beginTransaction();// 事务开始
 			String[] catalogStr = area.getCatalogs().split(",");
 			for(String s : catalogStr){
+				String catname =s.split("=")[0].trim();
+				Banner existedB = (Banner) session.createQuery("from Banner b where b.catalogName=? and b.areaId=?")
+						.setString(0, catname).setInteger(1, area.getId()).uniqueResult();
+				if(existedB!=null)
+					continue;
 				Banner b = new Banner();
 				b.setCatalogName(s.split("=")[0].trim());
 				b.setStatus("未配置");

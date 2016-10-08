@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 import net.sf.json.JSONObject;
 
+import com.makao.utils.MakaoConstants;
 import com.makao.weixin.po.AccessToken;
 import com.makao.weixin.po.menu.Button;
 import com.makao.weixin.po.menu.ClickButton;
@@ -21,7 +22,7 @@ import com.makao.weixin.utils.WeixinConstants;
 public class MenuCreator {
 	/**
 	 * @return
-	 * 创建一个菜单，
+	 * 创建一个菜单的Demo
 	 * 里面包含三个一级菜单clickButton, viewButton和compoundButton
 	 * 其中compoundButton还是包含两个子菜单
 	 * @throws UnsupportedEncodingException 
@@ -61,6 +62,49 @@ public class MenuCreator {
 	}
 	
 	/**
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * 创建社享网菜单
+	 * 包含两个viewButton和一个compoundButton
+	 */
+	public static Menu initSheXiangMenu() throws UnsupportedEncodingException{
+		Menu menu = new Menu();
+		//进入商城
+		ViewButton mallButton = new ViewButton();
+		mallButton.setName("进入商城");
+		mallButton.setType("view");
+		String login_url = MakaoConstants.SERVER_DOMAIN+"/user/snsapi_userinfo";
+		String url = WeixinConstants.AUTH_URL.replace("APPID", WeixinConstants.APPID).
+				replace("REDIRECT_URI", login_url).
+				replace("SCOPE","snsapi_userinfo");
+		mallButton.setUrl(url);
+		//互动社区
+		ViewButton orderButton = new ViewButton();
+		orderButton.setName("互动社区");
+		orderButton.setType("view");
+		orderButton.setUrl("http://buluo.qq.com/mobile/barindex.html?_bid=128&_wv=1027&bid=345437");//注意必须加http，否则会报40055错误
+		//市场调查
+		ViewButton marketButton = new ViewButton();
+		marketButton.setName("市场调查");
+		marketButton.setType("view");
+		marketButton.setUrl("http://form.mikecrm.com/MHeyst");//注意必须加http，否则会报40055错误
+		//产品征集
+		ViewButton productButton = new ViewButton();
+		productButton.setName("产品征集");
+		productButton.setType("view");
+		productButton.setUrl("http://form.mikecrm.com/oCqqTk");
+		
+		//创建一个一级菜单，来包含scancodePushButton和locationSelectButton
+		//注意，如果是包含子菜单的一级菜单，就不用设置Type
+		Button compoundButton = new Button();
+		compoundButton.setName("社享服务");
+		compoundButton.setSub_button(new Button[]{marketButton,productButton});
+		
+		menu.setButton(new Button[]{mallButton,orderButton,compoundButton});
+		return menu;
+	}
+	
+	/**
 	 * @param token
 	 * @param menu
 	 * @return
@@ -84,7 +128,7 @@ public class MenuCreator {
 		System.out.println(token.getToken());
 		System.out.println(token.getExpiresIn());
 		//测试创建菜单功能
-		int result = createMenu(token.getToken(), JSONObject.fromObject(initMenu()).toString());
+		int result = createMenu(token.getToken(), JSONObject.fromObject(initSheXiangMenu()).toString());
 		if(result==0){
 			System.out.println("创建菜单成功");
 		}else{
