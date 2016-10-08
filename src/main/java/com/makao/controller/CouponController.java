@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -110,17 +111,25 @@ public class CouponController {
 		Supervisor supervisor = this.supervisorService.getById(id);
 		JSONObject jsonObject = new JSONObject();
 		if(supervisor!=null){
-			int res = this.couponService.insert(Coupon);
-			if(res==0){
-				logger.info("增加优惠券成功面值=" + Coupon.getName());
-	        	jsonObject.put("msg", "200");
-	        	return jsonObject;
+			String[] cities = Coupon.getCityName().split("-_-");
+			for(String c : cities){
+				int cid = Integer.valueOf(c.split("#_#")[0]);
+				String cname = c.split("#_#")[1];
+				Coupon cc = new Coupon();
+				BeanUtils.copyProperties(Coupon, cc);
+				cc.setCityId(cid);cc.setCityName(cname);
+				int res = this.couponService.insert(cc);
+				if(res==0){
+					logger.info("在城市 "+cname+" 增加优惠券成功，面值=" + Coupon.getName());
+				}
+				else{
+					logger.info("在城市 "+cname+" 增加优惠券失败，面值=" + Coupon.getName());
+		        	jsonObject.put("msg", "201");
+		        	return jsonObject;
+				}
 			}
-			else{
-				logger.info("增加优惠券成功失败id=" + Coupon.getName());
-	        	jsonObject.put("msg", "201");
-	        	return jsonObject;
-			}
+			jsonObject.put("msg", "200");
+			return jsonObject;
 		}
 		jsonObject.put("msg", "201");
         return jsonObject;

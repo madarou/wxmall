@@ -287,7 +287,7 @@
          	</tr>
 		</c:forEach> 
        </table>
-      <aside class="paging">
+     <!--  <aside class="paging">
        <a>第一页</a>
        <a>1</a>
        <a>2</a>
@@ -295,7 +295,7 @@
        <a>…</a>
        <a>1004</a>
        <a>最后一页</a>
-      </aside>
+      </aside> -->
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>

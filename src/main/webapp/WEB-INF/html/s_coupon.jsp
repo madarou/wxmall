@@ -105,8 +105,8 @@
      $(document).ready(function(){
 		 //弹出文本性提示框
 		 $(".popAdd").click(function(){
-			 $("#ccity").empty();
-	    	 $("#ccity").get(0).options.add(new Option("选择城市","选择城市"));
+			 //$("#ccity").empty();
+	    	 //$("#ccity").get(0).options.add(new Option("选择城市","选择城市"));
 	    	 $.ajax({
 	    		 type: "GET",
 		          contentType: "application/json",
@@ -116,7 +116,9 @@
 		        	  var cities = JSON.stringify(data.cities);
 		        	  if(data.msg=="200"){
 		        		  $.each(data.cities,function(i, val){
-		        			  $("#ccity").get(0).options.add(new Option(val.cityName,val.id));
+		        			  //$("#ccity").get(0).options.add(new Option(val.cityName,val.id));
+		        			  $("#cityspan").append(val.cityName+'<input class="citycheck" style="margin-right:10px" type="checkbox" title="'+val.cityName+'" value="'+val.id+'"/>'
+								);
 		        		  });
 		        	  }
 		          }
@@ -125,12 +127,25 @@
 			 });
 		 //弹出：确认按钮
 		 $("#saveBtn").click(function(){
-			 var cityId = $("#ccity").val();//这种方式获取的是value
+			 /* var cityId = $("#ccity").val();//这种方式获取的是value
 	    	 if(cityId=="选择城市"){
 	    		 alert("请选择所属城市");
 	    		 return false;
+	    	 } */
+			 //获取复选框选中的城市
+			 var citys = $("#cityspan").children(".citycheck");
+	    	 var cityName ="";//使用cityid-cityid的拼接作为cityName字段
+	    	 $.each(citys,function(i, val){
+	    		 if($(val).is(':checked')) {
+	    			 cityName = cityName + $(val).val()+"#_#"+$(val).attr("title")+"-_-";
+	    		 }
+	    	 });
+	    	 if(cityName==""){
+	    		 alert("请选择生效城市");
+	    		 return false;
 	    	 }
-	    	 var cityName = $("#ccity").find("option:selected").text();
+	    	 cityName=cityName.substr(0,cityName.length-3);
+	    	 //var cityName = $("#ccity").find("option:selected").text();
 			 var name = $.trim($("#cname").val());
 			 var type = $.trim($("#ctype").val());
 			 var amount = $.trim($("#camount").val());
@@ -148,7 +163,7 @@
 		          type: "POST",
 		          contentType: "application/json",
 		          url: "/coupon/new/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
-		          data: JSON.stringify({"name":name,"type":type,"cityId":cityId,"cityName":cityName,"amount":amount,"point":point,"restrict":restrict,
+		          data: JSON.stringify({"name":name,"type":type,"cityId":0,"cityName":cityName,"amount":amount,"point":point,"restrict":restrict,
 		        	  					"comment":comment,"isShow":isshow,"coverSUrl":coverSUrl,"coverBUrl":coverBUrl}),
 		          dataType: "json",
 		          success: function(data){
@@ -197,7 +212,7 @@
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">类型：</span>
-		        <input type="text" id="ctype" class=" textbox_295" style="bcolor:grey" disabled="disabled" value="代金券兑换"/>
+		        <input type="text" id="ctype" class=" textbox_295" style="background-color:rgba(0,0,0,0.1)" disabled="disabled" value="代金券兑换"/>
 		       </li>
 		        <li>
 		        <span class="item_name" style="width:120px;">面值(￥)：</span>
@@ -216,9 +231,8 @@
 		        <input type="text" id="ccomment" class=" textbox_295 length_input_50" placeholder="如'新用户欢迎礼券'"/>
 		       </li>
 		       <li>
-		        <span class="item_name" style="width:120px;">生效城市：</span>
-		        <select class="select" id="ccity">  
-				</select>
+		       <!--  <span class="item_name" style="width:120px;">生效城市：</span> -->
+				<div><div class="item_name" style="width:120px;float:left">生效城市：</div><div id="cityspan" style="float:left;margin-left: 4px;min-height: 26px;width:295px;border:1px #139667 solid;padding:5px; vertical-align:middle;"></div></div>
 		       </li>
 		        <li>
 		        <span class="item_name" style="width:120px;">是否上线：</span>

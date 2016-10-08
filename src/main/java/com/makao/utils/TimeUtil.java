@@ -12,8 +12,10 @@ import java.util.List;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 
 import com.makao.dao.impl.OrderOnDaoImpl;
+import com.makao.entity.Coupon;
 import com.makao.entity.OrderState;
 
 /**
@@ -55,6 +57,12 @@ public class TimeUtil {
 	       fnum.setRoundingMode(RoundingMode.HALF_UP);
 	       System.out.println(fnum.format(1.22f));
 	       System.out.println(fnum.format(Float.valueOf("9.50")*MakaoConstants.POINT_PROPORTION));
+	       
+	       Coupon c1 = new Coupon();
+	       c1.setName("mingzi");
+	       Coupon c2 = new Coupon();
+	       BeanUtils.copyProperties(c1, c2);
+	       System.out.println(c2.getName());
 	    }
 	
 	/**
