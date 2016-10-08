@@ -508,11 +508,93 @@
      </section>
      <!-- 删除分类弹出框 -->
      
+     <!-- 修改密码 -->
+     <script>
+     $(document).ready(function(){
+     //弹出文本性提示框
+     $("#changePwd").click(function(){
+       $(".chpwd_pop_bg").fadeIn();
+       });
+     //弹出：确认按钮
+     $("#comfirmPwd").click(function(){
+    	 var oldpwd = $.trim($("#oldpwd").val());
+    	 var newpwd = $.trim($("#newpwd").val());
+    	 if(newpwd.length==0){
+    		 alert("密码不能为空");
+    		 return false;
+    	 }
+    	 if(oldpwd==newpwd){
+    		 alert("两次密码相同");
+    		 return false;
+    	 }
+         	$.ajax({
+    		  type: "POST",
+  	          contentType: "application/json",
+  	          url: "/supervisor/changepwd/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
+  	          data: JSON.stringify({"oldPwd":oldpwd,"newPwd":newpwd}),
+	          dataType: "json",
+  	          success: function(data){
+  	        	  if(data.msg=="200"){
+  	        		  alert("密码修改成功");
+  	        		  window.location.reload();
+  	        	  }else if(data.msg=="401"){
+  	        	     alert("需要重新登录");
+  	        	}else if(data.msg=="203"){
+  	        	     alert("原密码错误");
+  	        	}else{
+  	        	     alert("修改失败");
+  	        	}
+  	          }
+    	 	}); 
+       $(".chpwd_pop_bg").fadeOut();
+       $("#newpwd").val("");
+       $("#oldpwd").val(""); 
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelPwd").click(function(){
+       $(".chpwd_pop_bg").fadeOut();
+       $("#newpwd").val("");
+       $("#oldpwd").val("");
+       });
+     });
+     </script>
+     <section class="chpwd_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>修改密码</h3>
+       <!--content-->
+       <div class="small_pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          <section>
+		      <ul class="ulColumn2">
+		       <li>
+		        <span class="item_name">原密码:</span>
+		        <input type="password" id="oldpwd" class="length_input_20 textbox_225" placeholder=""/>
+		       </li>
+		       <li>
+		        <span class="item_name">新密码:</span>
+		        <input type="password" id="newpwd" class="length_input_20 textbox_225" placeholder=""/>
+		       </li>
+		      </ul>
+		    </section>
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="comfirmPwd" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelPwd" class="input_btn falseBtn"/>
+         </div>
+        </div>
+        </div>
+     </section>
+     <!-- 修改密码 -->
      
      <section style="text-align:right">
       <div class="btm_btn">
         <input type="button" value="添加账号" id="addVendor" class="input_btn trueBtn"/>
+        <input type="button" value="修改密码" id="changePwd" class="input_btn trueBtn"/>
        </div>
+       
      </section><br/>
 
      <section>

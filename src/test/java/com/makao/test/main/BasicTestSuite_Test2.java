@@ -36,7 +36,11 @@ public class BasicTestSuite_Test2 {
 		
 		JSONObject result = null;
 		String newsupervisor = "http://localhost:8080/supervisor/new";
-		String supervisor = "{\"userName\":\"darou\",\"password\":\"test\"}";
+		String supervisor = "{\"userName\":\"sxadmin\",\"password\":\"1234abcd\"}";
+		String supervisor2 = "{\"userName\":\"sxsuper\",\"password\":\"1234abcd\"}";
+		String supervisor3 = "{\"userName\":\"sxgovernor\",\"password\":\"1234abcd\"}";
+		String supervisor4 = "{\"userName\":\"sxrobot\",\"password\":\"1234abcd\"}";
+		String supervisor5= "{\"userName\":\"sxassistant\",\"password\":\"1234abcd\"}";
 		
 		String newcity = "http://localhost:8080/city/new/1";
 		String city = "{\"cityName\":\"上海\",\"avatarUrl\":\""+cityLogo+"\"}";
@@ -99,6 +103,13 @@ public class BasicTestSuite_Test2 {
 		
 		result = HttpUtils.doPostStr(newsupervisor,supervisor);
 		assertEquals("增加supervisor成功",result.get("msg"));
+		result = HttpUtils.doPostStr(newsupervisor,supervisor2);
+		assertEquals("增加supervisor成功",result.get("msg"));
+		result = HttpUtils.doPostStr(newsupervisor,supervisor3);
+		assertEquals("增加supervisor成功",result.get("msg"));
+		result = HttpUtils.doPostStr(newsupervisor,supervisor4);
+		assertEquals("增加supervisor成功",result.get("msg"));
+		result = HttpUtils.doPostStr(newsupervisor,supervisor5);
 		result = HttpUtils.doPostStr(newcity,city);
 		assertEquals("200",result.get("msg"));
 		result = HttpUtils.doPostStr(newarea,area);

@@ -209,6 +209,37 @@ public class SupervisorController {
         return jsonObject;
     }
 	
+	@AuthPassport
+	@RequestMapping(value="/changepwd/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object changePwd(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {
+		String oldpwd = paramObject.getString("oldPwd");
+		String newpwd = paramObject.getString("newPwd");
+		System.out.println("passwords: "+ oldpwd+" "+newpwd);
+		Supervisor s = this.supervisorService.getById(id);
+		JSONObject jsonObject = new JSONObject();
+		if(s==null){
+			jsonObject.put("msg", "201");
+			return jsonObject;
+		}
+		boolean pass = EncryptUtils.passwordEncryptor.checkPassword(oldpwd, s.getPassword());
+		if(!pass){
+			jsonObject.put("msg", "203");
+			return jsonObject;
+		}
+		s.setPassword(EncryptUtils.passwordEncryptor.encryptPassword(newpwd));
+		int res = this.supervisorService.update(s);
+		if(res==0){
+			logger.info("supervisor:"+s.getUserName()+" 密码修改成功");
+        	jsonObject.put("msg", "200");
+		}
+		else{
+			logger.info("supervisor:"+s.getUserName()+" 密码修改失败");
+        	jsonObject.put("msg", "201");
+		}
+        return jsonObject;
+    }
+	
 	/**
 	 * @param name
 	 * @return
