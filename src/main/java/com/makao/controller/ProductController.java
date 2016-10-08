@@ -250,8 +250,25 @@ public class ProductController {
 		if(vendor!=null){
 			Product.setAreaId(vendor.getAreaId());
 			Product.setCityId(vendor.getCityId());
+			//如果inventory字段值不为0，说明有修改inventory，注意此时的inventory值是增加或减少的量，不是最终设置的数量
+			int intv = Product.getInventory();
+			String key = "pi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+Product.getId();
+			if(intv!=0){//从缓存中取出现有的库存
+				Object o = redisUtil.redisQueryObject(key);
+				if(o==null){//缓存里面如果没有，从数据库里读
+					int inv = this.productService.getInventory(vendor.getCityId(), vendor.getAreaId(), Product.getId()+"");
+					redisUtil.redisSaveInventory("pi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+Product.getId(), String.valueOf(inv));
+					//每次更新销量后的缓存
+					redisUtil.redisSaveInventory("lastpi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+Product.getId(), String.valueOf(inv));
+				}
+				int actualInv = Integer.valueOf(redisUtil.redisQueryObject(key))+intv;
+				Product.setInventory(actualInv);
+			}
 			int res = this.productService.update(Product);
 			if(res==0){
+				//数据库中修改成功后，再更新缓存中的库存
+				redisUtil.addInventoryTx(key, intv);
+				redisUtil.addInventoryTx("last"+key, intv);
 				logger.info("修改商品成功name=" + Product.getProductName());
 	        	jsonObject.put("msg", "200");
 	        	return jsonObject;

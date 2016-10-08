@@ -624,7 +624,7 @@ $(document).ready(function(){
 		 	var standard = $.trim($("#prostandard").val());
 		 	var price = $.trim($("#proprice").val());
 		 	var marketPrice = $.trim($("#promarketprice").val());
-		 	var inventory = $.trim($("#proinventory").val());//分库里必须有库存值，没有则为0
+		 	var inventory = $.trim($("#proinventorychange").val());//注意这里传到后台的是增加或减少的库存数量
 		 	var threhold = $.trim($("#prothrehold").val());
 		 	var prethrehold = $.trim($("#proprethrehold").val());
 		 	var isShow = $('input:radio[name=proisshow]:checked').val();
@@ -634,7 +634,11 @@ $(document).ready(function(){
 		 	var restrict = $.trim($("#prorestrict").val());
 		 	if(restrict=="")
 		 		restrict=0;
-		 	
+		 	if(inventory!=0){
+		 		var addorcut = $("#inventoryAction").children('option:selected').val();
+		 		if(addorcut=="减少")
+		 			inventory=0-inventory;
+		 	}
 		 	var coverSUrl = $("#serverImgNames").val();
 		 	var coverBUrl = $("#serverImgNameb").val();
 		 	var subdetailUrl = $("#serverImgNamed1").val();
@@ -649,10 +653,10 @@ $(document).ready(function(){
 		 		return false;
 		 	}
 		 	if(productName == productNameO && origin==originO && standard==standardO && price==priceO && showWay==showWayO &&
-		 			marketPrice==marketPriceO && inventory== inventoryO && sequence==sequenceO && label==labelO &&
+		 			marketPrice==marketPriceO && sequence==sequenceO && label==labelO &&
 		 			catalog==catalogO && isShow==isShowO && description==descriptionO && coverSUrl==coverSUrlO
 		 			&& coverBUrl==coverBUrlO && subdetailUrl==subdetailUrlO && detailUrl==detailUrlO && threhold==threholdO 
-		 			&& prethrehold==prethreholdO && restrict == restrictO){
+		 			&& prethrehold==prethreholdO && restrict == restrictO && inventory==0){
 		 		alert("并未做修改");
 		 		return false;
 		 	}
@@ -735,7 +739,12 @@ $(document).ready(function(){
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">当前库存：</span>
-		        <input type="text" id="proinventory" class="inventory_input textbox_295" placeholder="" value="0"/>
+		        	<input type="text" id="proinventory" class="inventory_input textbox_50" disabled="disabled" placeholder="" value="0"/>
+		        	<select class="select" id="inventoryAction">  
+		        		<option value="增加">增加</option>
+		        		<option value="减少">减少</option>
+				    </select>
+				 	<input type="text" id="proinventorychange" class="inventory_input textbox_189" placeholder="" value="0"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">最低库存：</span>
