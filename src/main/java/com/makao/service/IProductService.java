@@ -142,4 +142,12 @@ public interface IProductService {
 	 * 增加saled个销量
 	 */
 	int updateSalesVolume(String tableName, String productid, int saled);
+
+	/**
+	 * @param tableName
+	 * @param prodcutId
+	 * @return
+	 * 区域管理员删除商品
+	 */
+	int deleteProduct(String tableName, int prodcutId);
 }

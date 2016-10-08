@@ -136,4 +136,12 @@ public interface IProductDao {
 	 */
 	public int updateSalesVolume(String tableName, String productid,
 			int saled);
+
+	/**
+	 * @param tableName
+	 * @param prodcutId
+	 * @return
+	 * 区域管理员删除商品
+	 */
+	public int deleteProduct(String tableName, int prodcutId);
 }

@@ -348,6 +348,40 @@ public class ProductController {
 		jsonObject.put("msg", "201");
         return jsonObject;
     }
+	
+	@AuthPassport
+	@RequestMapping(value = "/vdelete/{vendorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vdelete(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
+		Vendor vendor = this.vendorService.getById(vendorid);
+		int prodcutId = paramObject.getInteger("productId");
+		JSONObject jsonObject = new JSONObject();
+		if(vendor!=null){
+			String tableName = "Product_"+vendor.getCityId()+"_"+vendor.getAreaId();
+			int res = this.productService.deleteProduct(tableName,prodcutId);
+			if(res==0){
+				String inventoryKey = "pi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+prodcutId;
+				String lastInventKey = "lastpi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+prodcutId;
+				Object object = redisUtil.redisQueryObject(inventoryKey);
+				if(object!=null){
+					redisUtil.redisDeleteKey(inventoryKey);
+					Object object2 = redisUtil.redisQueryObject(lastInventKey);
+					if(object2!=null)
+						redisUtil.redisDeleteKey(lastInventKey);
+				}
+				logger.info("商品删除成功id=" + prodcutId);
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("商品删除失败id=" + prodcutId);
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+    }
 
 	@AuthPassport
 	@RequestMapping(value = "/snew/{supervisorid:\\d+}", method = RequestMethod.POST)

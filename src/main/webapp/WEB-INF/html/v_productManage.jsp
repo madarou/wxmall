@@ -334,6 +334,71 @@
      </section>
       <!-- 上架下架提示框 -->
 	
+	 <!-- 删除提示框 -->
+      <script>
+     $(document).ready(function(){
+    	var showHandle_Id = 0;//商品id
+     //弹出文本性提示框
+     $(".delProduct").click(function(){
+       $(".del_product_pop_bg").fadeIn();
+       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
+       var clickedId = $(this).attr("id");
+       showHandle_Id = clickedId.split("-")[1];
+       });
+     //弹出：确认按钮
+     $("#confirmDelP").click(function(){
+    	 if(showHandle_Id==0){
+    		 alert("请重新选择商品");
+    		 return false;
+    	 }
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/product/vdelete/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"productId":showHandle_Id}),
+     	          success: function(data){
+     	        	  //var cities = JSON.stringify(data.cities);
+     	        	  if(data.msg=="200"){
+     	        		  alert("商品删除成功");
+     	        		  window.location.reload();
+     	        	  }else if(data.msg=="401"){
+     	        	     alert("需要重新登录");
+     	        	 }
+     	          }
+       	 	}); 
+        	
+       $(".del_product_pop_bg").fadeOut();
+       showHandle_Id=0;
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelDelP").click(function(){
+       $(".del_product_pop_bg").fadeOut();
+       showHandle_Id=0;
+       });
+     });
+     </script>
+     <section class="del_product_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>温馨提示</h3>
+       <!--content-->
+       <div class="small_pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          确认要删除商品吗?
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="confirmDelP" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelDelP" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
+      <!-- 删除提示框 -->
+      
+      
      <!-- 搜索 -->
       <script>
      $(document).ready(function(){
@@ -397,6 +462,7 @@
 						</c:otherwise> 
 					</c:choose>|
 		           <button class="linkStyle copyProduct" id="copy-${item.id}" style="position: relative;">复制链接</button>
+		           |<button class="linkStyle delProduct" id="delPro-${item.id}">删除</button>
 		            <c:if test="${item.supply>0}">
 		            	|<button class="linkStyle supplyProduct" id="supply-${item.id}" style="position: relative;">补货(${item.supply})</button>
 					</c:if>
