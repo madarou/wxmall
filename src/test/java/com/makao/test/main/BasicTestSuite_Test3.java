@@ -46,19 +46,19 @@ public class BasicTestSuite_Test3 {
 		String vendor = "{\"userName\":\"马靠\",\"password\":\"admin\",\"areaId\":1,\"cityId\":1,\"cityName\":\"上海\",\"areaName\":\"张江\"}";
 		
 		String newcity2 = "http://localhost:8080/city/new/1";
-		String city2 = "{\"cityName\":\"北京\",\"avatarUrl\":\""+cityLogo+"\"}";
+		String city2 = "{\"cityName\":\"江苏\",\"avatarUrl\":\""+cityLogo+"\"}";
 		
 		String newarea2 = "http://localhost:8080/area/new/1";
-		String area2 = "{\"areaName\":\"海淀\",\"cityName\":\"北京\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
+		String area2 = "{\"areaName\":\"常州恐龙园\",\"cityName\":\"江苏\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor2 = "http://localhost:8080/vendor/new/1";
-		String vendor2 = "{\"userName\":\"老马\",\"password\":\"admin\",\"areaId\":2,\"cityId\":2,\"cityName\":\"北京\",\"areaName\":\"海淀\"}";
+		String vendor2 = "{\"userName\":\"老马\",\"password\":\"admin\",\"areaId\":2,\"cityId\":2,\"cityName\":\"江苏\",\"areaName\":\"常州恐龙园\"}";
 		
 		String newarea3 = "http://localhost:8080/area/new/1";
-		String area3 = "{\"areaName\":\"宣武\",\"cityName\":\"北京\",\"catalogs\":\"水果=0,食材=1,零食=2\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
+		String area3 = "{\"areaName\":\"昆山工业园\",\"cityName\":\"江苏\",\"catalogs\":\"水果=0,食材=1,零食=2\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor3 = "http://localhost:8080/vendor/new/1";
-		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"北京\",\"areaName\":\"宣武\"}";
+		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"江苏\",\"areaName\":\"昆山工业园\"}";
 	
 		String newprodcut11_1 = "http://localhost:8080/product/vnew/1";
 		String product11_1 = "{\"productName\":\"水晶葡萄\",\"catalog\":\"水果\",\"label\":\"无标签\",\"price\":\"12.99\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"inventory\":12,\"sequence\":1,\"status\":\"0\",\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":0,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
@@ -70,9 +70,9 @@ public class BasicTestSuite_Test3 {
 		String product22_1 = "{\"productName\":\"水晶葡萄\",\"catalog\":\"水果\",\"label\":\"无标签\",\"price\":\"12.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"inventory\":12,\"sequence\":1,\"status\":\"2\",\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":0,\"likes\":3972,\"areaId\":2,\"cityId\":2,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
 		
 		String newcoupon = "http://localhost:8080/coupon/new/1";
-		String coupon = "{\"name\":\"10元代金券\",\"amount\":\"10\",\"point\":20,\"restrict\":10,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
+		String coupon = "{\"name\":\"10元代金券\",\"amount\":\"10\",\"point\":20,\"restrict\":10,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":0,\"cityName\":\"1#_#上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
 		String newcoupon2 = "http://localhost:8080/coupon/new/1";
-		String coupon2 = "{\"name\":\"12元代金券\",\"amount\":\"12\",\"point\":20,\"restrict\":15,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"老用户回馈礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
+		String coupon2 = "{\"name\":\"12元代金券\",\"amount\":\"12\",\"point\":20,\"restrict\":15,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":0,\"cityName\":\"1#_#上海\",\"comment\":\"老用户回馈礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
 		
 		result = HttpUtils.doPostStr(newsupervisor,supervisor);
 		assertEquals("增加supervisor成功",result.get("msg"));

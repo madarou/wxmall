@@ -25,6 +25,21 @@ $(document).ready(function() {
   createCode();
   //测试提交，对接程序删除即可
   $(".submit_btn").click(function(){
+	  var userName = $.trim($("#userName").val());
+	  var password = $.trim($("#password").val());
+	  if(userName.length==0||password.length==0){
+		  alert("账号和密码不能为空");
+		  return false;
+	  }
+	  var checkCode = $.trim($("#J_codetext").val());
+	  	 if(checkCode.length==0){
+	  		 alert("请输入验证码");
+	  		 return false;
+	  	 }
+	  	 if(validate()==false){
+	  		alert("验证码错误");
+	  		 return false;
+	  	 }
 	  $.ajax({
           type: "POST",
           contentType: "application/json",
@@ -70,14 +85,14 @@ $(document).ready(function() {
     <input type="text" id="J_codetext" placeholder="验证码" maxlength="4" class="login_txtbx">
     <canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>
   </div>
-  <input type="button" value="验证码核验" class="ver_btn" onClick="validate();">
+  <input type="button" value="刷新验证码" class="ver_btn" onClick="validate();">
  </dd>
  <dd>
   <input type="button" value="立即登陆" class="submit_btn"/>
  </dd>
  <dd>
   <p>© 社享网 版权所有</p>
-  <p>021-34938353</p>
+  <p>18817912915</p>
  </dd>
 </dl>
 </body>
