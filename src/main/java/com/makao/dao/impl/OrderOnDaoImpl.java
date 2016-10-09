@@ -771,6 +771,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						ps = connection.prepareStatement(sql1);
 						ResultSet rs = ps.executeQuery();
 						while(rs.next()){
+							if(!"5".equals(rs.getString("status")))//如果当前的状态不是5，不能继续操作
+								return;
 							OrderOn p = new OrderOn();
 							p.setId(rs.getInt("id"));
 							p.setNumber(rs.getString("number"));
@@ -806,6 +808,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 					}
 				}
 			});
+			if(oo.size()==0){
+				return 1;
+			}
 			if(oo.size()>0){//从OrderOn里查到了，写入off表里
 				session.doWork(
 						// 定义一个匿名类，实现了Work接口
