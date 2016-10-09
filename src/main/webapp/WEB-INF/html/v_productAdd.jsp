@@ -263,9 +263,8 @@
 			 	var coverBUrl = $("#serverImgNameb").val();
 			 	var subdetailUrl = $("#serverImgNamed1").val();
 			 	var detailUrl = $("#serverImgNamed2").val();
-			 	
-			 	if(productName == "" || origin=="" || standard=="" || price=="" || marketPrice=="" || inventory== "" || sequence==""){
-			 		alert("产品名称、原产地、规格、价格、库存、市场价以及排序不能为空");
+			 	if(productName == "" || origin=="" || catalog=="" || catalog==undefined || standard=="" || price=="" || marketPrice=="" || inventory== "" || sequence==""){
+			 		alert("产品名称、原产地、分类、规格、价格、库存、市场价以及排序不能为空");
 			 		return false;
 			 	}
 			 	if(coverSUrl == "" || coverBUrl == "" || detailUrl==""){
@@ -405,7 +404,7 @@
 					</li>
 		<li>
         <span class="item_name" style="width:120px;"></span>
-        <input type="button" id="prosave" value="保存" class="link_btn"/>
+        <input type="button" id="prosave" value="保存" class="link_btn" style="margin-left: 125px;"/>
        </li>
       </ul>
      </section>
