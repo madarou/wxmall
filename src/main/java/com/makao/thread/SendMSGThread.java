@@ -111,14 +111,12 @@ public class SendMSGThread implements Runnable {
 		data.put("orderProductName", temp);
 		
 		temp = new JSONObject();
-		//temp.put("value", order.getAddress()+","+order.getReceiverName()+","+order.getPhoneNumber());
-		temp.put("value", "元");
+		temp.put("value", order.getAddress()+","+order.getReceiverName()+","+order.getPhoneNumber());
 		temp.put("color", "#173177");
 		data.put("orderAddress", temp);
 		
 		temp = new JSONObject();
-		//temp.put("value", order.getNumber());
-		temp.put("value", "元");
+		temp.put("value", order.getNumber());
 		temp.put("color", "#173177");
 		data.put("orderName", temp);
 		

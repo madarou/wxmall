@@ -50,13 +50,14 @@ public class AreaDaoImpl implements IAreaDao {
 			//同时更新所属的city表里的areas字段
 			City city = (City) session.get(City.class, area.getCityId());
 			String areas = city.getAreas();
+			String downs = city.getDown();
 			if(areas==null||"".equals(areas)){
 				city.setAreas(area.getId()+"="+area.getAreaName());
 				city.setDown(area.getId()+"="+area.getAreaName());
 			}
 			else{
 				city.setAreas(areas+","+area.getId()+"="+area.getAreaName());
-				city.setDown(areas+","+area.getId()+"="+area.getAreaName());
+				city.setDown(downs+","+area.getId()+"="+area.getAreaName());
 			}
 			session.update(city);
 			String sql = "CREATE TABLE IF NOT EXISTS `"

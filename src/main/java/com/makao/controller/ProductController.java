@@ -463,9 +463,18 @@ public class ProductController {
 		JSONObject jsonObject = new JSONObject();
 		//则根据关键字查询
 		products = this.productService.queryByCityAreaId(cityId,areaId);
+		Area a = this.areaService.getById(areaId);
+		List<String> catalog = new ArrayList<String>();
+		if(a!=null){
+			String[] catalogs = a.getCatalogs().split(",");
+			for(String c : catalogs){
+				catalog.add(c);
+			}
+		}
 		logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有商品信息完成");
 		jsonObject.put("msg", "200");
 		jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
+		jsonObject.put("catalog", catalog);
 		return jsonObject;
     }
 	
