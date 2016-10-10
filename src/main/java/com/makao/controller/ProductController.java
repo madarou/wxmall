@@ -468,7 +468,7 @@ public class ProductController {
 		if(a!=null){
 			String[] catalogs = a.getCatalogs().split(",");
 			for(String c : catalogs){
-				catalog.add(c);
+				catalog.add(c.split("=")[0]);
 			}
 		}
 		logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有商品信息完成");
