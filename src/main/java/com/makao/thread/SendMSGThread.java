@@ -97,7 +97,8 @@ public class SendMSGThread implements Runnable {
 		data.put("first", temp);
 		logger.info("order: "+order.getNumber());
 		temp = new JSONObject();
-		temp.put("value", order.getTotalPrice()+"元");
+		//temp.put("value", order.getTotalPrice()+"元");
+		temp.put("value", "元");
 		temp.put("color", "#173177");
 		data.put("keyword1", temp);
 		
@@ -107,17 +108,20 @@ public class SendMSGThread implements Runnable {
 		for(String s : products){
 			sb.append(s.split("=")[0]).append("*").append(s.split("=")[2]).append(",");
 		}
-		temp.put("value", sb.substring(0, sb.length()-1));
+		//temp.put("value", sb.substring(0, sb.length()-1));
+		temp.put("value", "元");
 		temp.put("color", "#173177");
 		data.put("keyword2", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", order.getAddress()+","+order.getReceiverName()+","+order.getPhoneNumber());
+		//temp.put("value", order.getAddress()+","+order.getReceiverName()+","+order.getPhoneNumber());
+		temp.put("value", "元");
 		temp.put("color", "#173177");
 		data.put("keyword3", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", order.getNumber());
+		//temp.put("value", order.getNumber());
+		temp.put("value", "元");
 		temp.put("color", "#173177");
 		data.put("keyword4", temp);
 		
