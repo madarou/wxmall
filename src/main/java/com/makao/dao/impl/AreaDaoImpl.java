@@ -299,8 +299,14 @@ public class AreaDaoImpl implements IAreaDao {
 					sb.append(s+",");
 				}
 			}
-			String catalogs = sb.toString();
-			area.setCatalogs(catalogs.substring(0, catalogs.length()-1));
+			if(sb.length()==0)
+			{
+				area.setCatalogs("");
+			}
+			else{
+				String catalogs = sb.toString();
+				area.setCatalogs(catalogs.substring(0, catalogs.length()-1));
+			}
 			session.update(area);
 			session.createQuery("delete from Banner as b where b.catalogName=? and b.areaId=?").setString(0,catalogName).setInteger(1, area.getId()).executeUpdate();
 			session.doWork(
