@@ -465,7 +465,7 @@ public class ProductController {
 		products = this.productService.queryByCityAreaId(cityId,areaId);
 		Area a = this.areaService.getById(areaId);
 		List<String> catalog = new ArrayList<String>();
-		if(a!=null){
+		if(a!=null&&a.getCatalogs()!=null&&!"".equals(a.getCatalogs())){
 			String[] catalogs = a.getCatalogs().split(",");
 			for(String c : catalogs){
 				catalog.add(c.split("=")[0]);

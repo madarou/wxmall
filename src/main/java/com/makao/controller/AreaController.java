@@ -242,19 +242,19 @@ public class AreaController {
 			user.setCityName(cityName);
 			user.setAreaName(areaName);
 			this.userService.update(user);
-			products = this.productService.queryByCityAreaId(cityId,areaId);
-			logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有商品信息完成");
+			//products = this.productService.queryByCityAreaId(cityId,areaId);
+			//logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有商品信息完成");
 			
-			banners = this.bannerService.queryByAreaId(areaId);
-			logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有Banner信息完成");
+			//banners = this.bannerService.queryByAreaId(areaId);
+			//logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有Banner信息完成");
 			jsonObject.put("msg", "200");
 		}
 		else{
 			jsonObject.put("msg", "201");
 			logger.info("未查到用户id="+userId+" 的用户");
 		}
-		jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
-		jsonObject.put("banners", banners);
+		//jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
+		//jsonObject.put("banners", banners);
 		return jsonObject;
     }
 

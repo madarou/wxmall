@@ -1,6 +1,7 @@
 package com.makao.controller;
 
 import java.io.File;
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import com.makao.entity.Coupon;
 import com.makao.entity.CouponOn;
 import com.makao.entity.History;
 import com.makao.entity.OrderOn;
+import com.makao.entity.PointLog;
 import com.makao.entity.Supervisor;
 import com.makao.entity.User;
 import com.makao.entity.Vendor;
@@ -36,6 +38,7 @@ import com.makao.service.ICityService;
 import com.makao.service.ICouponService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
+import com.makao.utils.MakaoConstants;
 import com.makao.utils.OrderNumberUtils;
 
 /**
@@ -192,7 +195,7 @@ public class CouponController {
     public @ResponseBody
     Object history(@PathVariable("cityid") int cityid,@PathVariable("userid") int userid) {
         JSONObject jsonObject = new JSONObject();
-		List<History> hs = this.couponService.queryHistory("Coupon_"+cityid,userid);
+		List<History> hs = this.couponService.queryHistory("Exchange_"+cityid,userid);
 		logger.info("查询城市id："+cityid+" 下userid="+userid+"的所有兑换历史完成");
 		jsonObject.put("msg", "200");
 		jsonObject.put("history", hs);

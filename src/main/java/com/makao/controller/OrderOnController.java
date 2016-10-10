@@ -704,7 +704,7 @@ public class OrderOnController {
 		    		this.userService.update(u);
 		    		//写入积分记录
 		    		PointLog pl = new PointLog();
-		    		pl.setName("商城消费");
+		    		pl.setName("消费积分");
 		    		pl.setPoint(oo.getPoint());
 		    		pl.setGetDate(new Date(System.currentTimeMillis()));
 		    		pl.setComment("订单号:"+oo.getNumber());

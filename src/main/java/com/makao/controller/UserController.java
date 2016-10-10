@@ -3,6 +3,7 @@ package com.makao.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +30,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.auth.AuthPassport;
 import com.makao.entity.Area;
+import com.makao.entity.PointLog;
 import com.makao.entity.Supervisor;
 import com.makao.entity.TokenModel;
 import com.makao.entity.User;
 import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
+import com.makao.service.IPointService;
 import com.makao.service.ISupervisorService;
 import com.makao.service.IUserService;
 import com.makao.service.IVendorService;
@@ -58,6 +61,8 @@ public class UserController {
 	private IAreaService areaService;
 	@Resource
 	private ISupervisorService supervisorService;
+	@Resource
+	private IPointService pointService;
 	
 //	@Autowired
 //	private StringRedisTemplate redisTemplate;
@@ -188,6 +193,8 @@ public class UserController {
 							+ "<script src=\"/static/bundle.js\"></script>"
 						+ "</body>"
 					+ "</html>";
+			out.write(page);
+			out.flush();out.close();
 		}
 		else{//如果系统的数据库里没有该用户记录，则要发送snsapi_userinfo请求获取用户的基本信息
 			String get_userinfo_url = WeixinConstants.AUTH_USERINFO_URL.replace("ACCESS_TOKEN", access_token).
@@ -213,31 +220,6 @@ public class UserController {
 				int u_id = this.userService.insert(u);
 				TokenModel tm = tokenManager.createUserToken(u_id, openid);
 				String token = tm.getToken();
-//				page = "<!DOCTYPE html>"
-//						+ "<html>"
-//							+ "<head>"
-//								+ "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\" />"
-//								+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
-//								+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\">"
-//								+ "<meta name=\"format-detection\" content=\"telephone=no\" />"
-//								+ "<title>Fruit</title>"
-//								+ "<link rel=\"stylesheet\" href=\"/css/index.css\" />"
-//								+ "<link rel=\"stylesheet\" href=\"/css/font-awesome.min.css\" />"
-//							+ "</head>"
-//							+ "<body>"
-//								+ "<div class=\"page\" id=\"root\">"
-//								+ "</div>"
-//								+ "<script>"
-//									+ "window.cityid="+MakaoConstants.DEFAULT_CITY_ID+";"
-//									+ "window.cityname='"+MakaoConstants.DEFAULT_CITY_NAME+"';"
-//									+ "window.areaid="+MakaoConstants.DEFAULT_AREA_ID+";"
-//									+ "window.areaname='"+MakaoConstants.DEFAULT_AREA_NAME+"';"
-//									+ "window.catalogs='"+catalogs+"';"
-//									+ "window.token='"+token+"';"
-//								+ "</script>"
-//								+ "<script src=\"/static/bundle.js\"></script>"
-//							+ "</body>"
-//						+ "</html>";
 				page = "<!DOCTYPE html>"
 						+ "<html>"
 							+ "<head>"
@@ -272,10 +254,18 @@ public class UserController {
 								+ "<script src=\"/static/bundle.js\"></script>"
 							+ "</body>"
 						+ "</html>";
+				out.write(page);
+				out.flush();out.close();
+				//写入积分记录
+	    		PointLog pl = new PointLog();
+	    		pl.setName("首次登录");
+	    		pl.setPoint(MakaoConstants.INITIAL_POINT);
+	    		pl.setGetDate(new Date(System.currentTimeMillis()));
+	    		pl.setCityId(MakaoConstants.DEFAULT_CITY_ID);
+	    		pl.setUserId(u_id);
+	    		this.pointService.insertPointLog(pl);
 			}
 		}
-		out.write(page);
-		out.flush();out.close();
 	}
 	@RequestMapping(value="/login",method = RequestMethod.GET)
 	public void login(@RequestParam(value="openid",required = false) String openid, HttpServletRequest request,HttpServletResponse response) throws IOException{
