@@ -95,12 +95,10 @@ public class SendMSGThread implements Runnable {
 		temp.put("value", "您的社享网订单已付款成功，请等待发货！");
 		temp.put("color", "#173177");
 		data.put("first", temp);
-		logger.info("order: "+order.getNumber());
 		temp = new JSONObject();
-		//temp.put("value", order.getTotalPrice()+"元");
-		temp.put("value", "元");
+		temp.put("value", order.getTotalPrice()+"元");
 		temp.put("color", "#173177");
-		data.put("keyword1", temp);
+		data.put("orderProductPrice", temp);
 		
 		temp = new JSONObject();
 		StringBuilder sb = new StringBuilder();
@@ -108,22 +106,21 @@ public class SendMSGThread implements Runnable {
 		for(String s : products){
 			sb.append(s.split("=")[0]).append("*").append(s.split("=")[2]).append(",");
 		}
-		//temp.put("value", sb.substring(0, sb.length()-1));
-		temp.put("value", "元");
+		temp.put("value", sb.substring(0, sb.length()-1));
 		temp.put("color", "#173177");
-		data.put("keyword2", temp);
+		data.put("orderProductName", temp);
 		
 		temp = new JSONObject();
 		//temp.put("value", order.getAddress()+","+order.getReceiverName()+","+order.getPhoneNumber());
 		temp.put("value", "元");
 		temp.put("color", "#173177");
-		data.put("keyword3", temp);
+		data.put("orderAddress", temp);
 		
 		temp = new JSONObject();
 		//temp.put("value", order.getNumber());
 		temp.put("value", "元");
 		temp.put("color", "#173177");
-		data.put("keyword4", temp);
+		data.put("orderName", temp);
 		
 		temp = new JSONObject();
 		temp.put("value", "我们会按时为您配送，祝您购物愉快!");

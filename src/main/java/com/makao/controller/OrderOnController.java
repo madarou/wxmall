@@ -686,7 +686,6 @@ public class OrderOnController {
 		    		
 		    		//推送下单成功的模板消息
 		    		SendMSGThread snt = new SendMSGThread(openid,oo,1);
-		    		logger.info("oo order: "+oo.getNumber());
 					new Thread(snt, "send order created mb msg thread").start();
 					//如果是立即配送，需要推送配送的消息给管理员
 					if("立即配送".equals(oo.getReceiveTime())){
