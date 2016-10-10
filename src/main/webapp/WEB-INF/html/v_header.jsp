@@ -18,11 +18,17 @@
  </ul>
  </header>
  <input type="hidden" value="${onumber}" id="number"></input>
+ <audio id="chatAudio">
+ 	<!-- <source src="notify.ogg" type="audio/ogg"> 
+ 	<source src="notify.mp3" type="audio/mpeg"> -->
+ 	<source src="http://data3.huiyi8.com/2015/dqd/07/31/4.wav" type="audio/wav"> 
+ </audio>
  <script>
  	if(document.getElementById("number").value>0){
  		var target = document.getElementById("ordermanage");
  		target.style.cssText="color:red;font-size:13px";
  		target.className="change";
+ 		document.getElementById("chatAudio").play(); 
  	}
 	function myrefresh()
 	{

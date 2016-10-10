@@ -95,7 +95,7 @@ public class SendMSGThread implements Runnable {
 		temp.put("value", "您的社享网订单已付款成功，请等待发货！");
 		temp.put("color", "#173177");
 		data.put("first", temp);
-		
+		logger.info("order: "+order.getNumber());
 		temp = new JSONObject();
 		temp.put("value", order.getTotalPrice()+"元");
 		temp.put("color", "#173177");

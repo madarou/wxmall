@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>超级管理员系统</title>
+<meta name="author" content="DeathGhost" />
+<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+<!--[if lt IE 9]>
+<script src="static/js/html5.js"></script>
+<![endif]-->
+<script src="../static/js/jquery.js"></script>
+<script>
+$(function(){  
+    $('<audio id="chatAudio"><source src="http://data3.huiyi8.com/2015/dqd/07/31/4.wav" type="audio/ogg"> </audio>').appendTo('body');//载入声音文件 
+ 
+    $("#trig").click(function(){ 
+         //$('#chatAudio')[0].play(); //播放声音 
+    	 document.getElementById("chatAudio").play(); 
+    }); 
+}); 
+</script>
+<body>
+<button id="trig">试听</button>  //打击按钮发声  
+</body>
+</html>
