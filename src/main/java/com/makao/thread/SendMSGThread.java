@@ -92,37 +92,37 @@ public class SendMSGThread implements Runnable {
 		msg.put("url", "www.baidu.com");
 		JSONObject data = new JSONObject();
 		JSONObject temp = new JSONObject();
-		temp.put("value", "恭喜你购买成功！");
+		temp.put("value", "您的社享网订单已付款成功，请等待发货！");
 		temp.put("color", "#173177");
 		data.put("first", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", order.getCityarea());
+		temp.put("value", order.getTotalPrice()+"元");
 		temp.put("color", "#173177");
 		data.put("keyword1", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", order.getPayType());
+		StringBuilder sb = new StringBuilder();
+		String[] products = this.order.getProductNames().split(",");
+		for(String s : products){
+			sb.append(s.split("=")[0]).append("*").append(s.split("=")[2]).append(",");
+		}
+		temp.put("value", sb.substring(0, sb.length()-1));
 		temp.put("color", "#173177");
 		data.put("keyword2", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", order.getTotalPrice()+"元");
+		temp.put("value", order.getAddress()+","+order.getReceiverName()+","+order.getPhoneNumber());
 		temp.put("color", "#173177");
 		data.put("keyword3", temp);
 		
 		temp = new JSONObject();
-		temp.put("value", order.getPoint());
+		temp.put("value", order.getNumber());
 		temp.put("color", "#173177");
 		data.put("keyword4", temp);
 		
 		temp = new JSONObject();
-		temp.put("value",this.order.getOrderTime().toString());
-		temp.put("color", "#173177");
-		data.put("keyword5", temp);
-		
-		temp = new JSONObject();
-		temp.put("value", "我们会按时为您配送，感谢您的光临！");
+		temp.put("value", "我们会按时为您配送，祝您购物愉快!");
 		temp.put("color", "#173177");
 		data.put("remark", temp);
 		
@@ -192,7 +192,7 @@ public class SendMSGThread implements Runnable {
 		msg.put("url", "www.baidu.com");
 		JSONObject data = new JSONObject();
 		JSONObject temp = new JSONObject();
-		temp.put("value", "尊敬的用户您好，您的订单已完成。");
+		temp.put("value", "您好，您的商品已经配送成功！");
 		temp.put("color", "#173177");
 		data.put("first", temp);
 		
@@ -202,10 +202,25 @@ public class SendMSGThread implements Runnable {
 		data.put("keyword1", temp);
 		
 		temp = new JSONObject();
+		StringBuilder sb = new StringBuilder();
+		String[] products = this.order.getProductNames().split(",");
+		for(String s : products){
+			sb.append(s.split("=")[0]).append("*").append(s.split("=")[2]).append(",");
+		}
+		temp.put("value", sb.substring(0, sb.length()-1));
+		temp.put("color", "#173177");
+		data.put("keyword2", temp);
+		
+		temp = new JSONObject();
+		temp.put("value", this.order.getTotalPrice()+"元");
+		temp.put("color", "#173177");
+		data.put("keyword3", temp);
+		
+		temp = new JSONObject();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 		temp.put("value", df.format(new Date()));
 		temp.put("color", "#173177");
-		data.put("keyword2", temp);
+		data.put("keyword4", temp);
 		
 		temp = new JSONObject();
 		temp.put("value", "如有任何疑问，请拨打："+order.getSenderPhone());

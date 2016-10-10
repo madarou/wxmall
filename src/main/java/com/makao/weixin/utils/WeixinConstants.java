@@ -40,11 +40,11 @@ public class WeixinConstants {
 	//模板消息发送地址
 	public static final String MUBAN_MSG_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
 	//支付成功后推送的模板消息id
-	public static final String ORDER_CREATED_MBMSG = "Zpbhr-8MfZwo9IRByujQnjYapcPFpn0MoqgrgYwNsHM";
+	public static final String ORDER_CREATED_MBMSG = "D6jB60OkkbNENosVy3Nv5PqPvJP9Q0tW1ArQdCbVcMU";
 	//开始配送订单时的模板消息id
 	public static final String ORDER_SENDING_MBMSG = "N39-YCQJJh_oZSdvisN8NCNGeTaOc3dbfR14fBxeQrw";
 	//订单完成时的模板消息id
-	public static final String ORDER_FINISHED_MBMSG = "3_1SehxgLVb8WYFtlwoIIUofBf0GD1fECzZCqSwZ3Lo";
+	public static final String ORDER_FINISHED_MBMSG = "C9PI6SI7-YrGWYO9MQabU5PEgh5OBrX-wJlWJLuwU_Q";
 	//订单配送时间要到时，提前推送的准备订单的模板消息给配送员
 	public static final String ORDER_PREPARE_MBMSG = "Npb82DM2akmPgnTRKu8OBr8UX35KF6a5cFzlR8vXTLU";
 	//订单退货完成或付款后取消后，推送给超级管理员退款的模板消息
