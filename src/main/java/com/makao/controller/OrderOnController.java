@@ -718,7 +718,7 @@ public class OrderOnController {
 		    		for(int i=0; i<pids.length; i++){
 		    			List<Object> rt = redisUtil.addSalesVolumeTx(
 		    					"sv_" + oo.getCityId() + "_" + oo.getAreaId()
-		    							+ "_" + pids[i], Integer.valueOf(pnums[i].split(",")[2]));
+		    							+ "_" + pids[i], Integer.valueOf(pnums[i].split("=")[2]));
 		    		}
 		    		if(out!=null)
 		    			out.close();
