@@ -358,6 +358,7 @@ public class CouponDaoImpl implements ICouponDao {
 	public int exchangeCoupon(Coupon coupon, User user) {
 		String tableName = "Coupon_"+coupon.getCityId()+"_on";
 		String tableName2 = "Exchange_"+coupon.getCityId();
+		String tableName3 = "PointLog_"+coupon.getCityId();
 		String sql1 = "INSERT INTO `"
 				+ tableName
 				+ "` (`name`,`amount`,`coverSUrl`,`coverBUrl`,`point`,`restrict`,`comment`,`cityName`,"
@@ -368,6 +369,10 @@ public class CouponDaoImpl implements ICouponDao {
 				+ "` (`name`,`amount`,`point`,`restrict`,"
 				+ "`cityId`,`userId`,`from`,`to`)"
 				+ " VALUES (?,?,?,?,?,?,?,?)";
+		String sql3 = "INSERT INTO `"
+				+ tableName3
+				+ "` (`name`,`point`,`getDate`,`comment`,`cityId`,`userId`)"
+				+ " VALUES (?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -380,7 +385,7 @@ public class CouponDaoImpl implements ICouponDao {
 			// 定义一个匿名类，实现了Work接口
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
-					PreparedStatement ps = null;PreparedStatement ps2 =null;
+					PreparedStatement ps = null;PreparedStatement ps2 =null;PreparedStatement ps3 =null;
 					try {
 						ps = connection.prepareStatement(sql1);
 						ps.setString(1, coupon.getName());
@@ -399,8 +404,7 @@ public class CouponDaoImpl implements ICouponDao {
 						ps.setDate(12, from);
 						ps.setDate(13, to);
 						int res = ps.executeUpdate();
-						
-						//插入兑换历史
+						//插入兑换历史和积分记录
 						if(res>0){
 							ps2 = connection.prepareStatement(sql2);
 							ps2.setString(1, coupon.getName());
@@ -412,9 +416,18 @@ public class CouponDaoImpl implements ICouponDao {
 							ps2.setDate(7, from);
 							ps2.setDate(8, to);
 							ps2.executeUpdate();
+							
+							ps3 = connection.prepareStatement(sql3);
+							ps3.setString(1, coupon.getName()+"兑换");
+							ps3.setInt(2, 0-coupon.getPoint());
+							ps3.setDate(3, new Date(System.currentTimeMillis()));
+							ps3.setString(4, "");
+							ps3.setInt(5, coupon.getCityId());
+							ps3.setInt(6, user.getId());
+							ps3.executeUpdate();
 						}
 					} finally {
-						doClose(ps);doClose(ps2);
+						doClose(ps);doClose(ps2);doClose(ps3);
 					}
 				}
 			});
