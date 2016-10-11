@@ -434,7 +434,7 @@ public class CouponDaoImpl implements ICouponDao {
 
 	@Override
 	public List<History> queryHistory(String tableName, int userid) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `userId`="+userid+" Order By `from` DESC";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `userId`="+userid+" Order By `id` DESC";
 		Session session = null;
 		Transaction tx = null;
 		List<History> res = new LinkedList<History>();

@@ -144,10 +144,10 @@ public class BasicTestSuite_Test3 {
 //		assertEquals("200",result.get("msg"));
 
 		//假装生成一个已经过期的优惠券
-		String newcouponoff = "http://localhost:8080/couponOff/new";
-		String couponoff = "{\"name\":\"10元代金券\",\"amount\":\"20\",\"point\":20,\"restrict\":10,\"type\":\"代金券兑换\",\"userId\":1,\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
-		result = HttpUtils.doPostStr(newcouponoff,couponoff);
-		assertEquals("200",result.get("msg"));
+//		String newcouponoff = "http://localhost:8080/couponOff/new";
+//		String couponoff = "{\"name\":\"10元代金券\",\"amount\":\"20\",\"point\":20,\"restrict\":10,\"type\":\"代金券兑换\",\"userId\":1,\"cityId\":1,\"cityName\":\"上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
+//		result = HttpUtils.doPostStr(newcouponoff,couponoff);
+//		assertEquals("200",result.get("msg"));
 		
 	}
 	
