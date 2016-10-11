@@ -131,7 +131,7 @@ public class PointDaoImpl implements IPointDao {
 	
 	@Override
 	public List<PointLog> queryPointLog(String tableName, int userid) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `userId`="+userid+" Order By `getDate` DESC";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `userId`="+userid+" Order By `id` DESC";
 		Session session = null;
 		Transaction tx = null;
 		List<PointLog> res = new LinkedList<PointLog>();

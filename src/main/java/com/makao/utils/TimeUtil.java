@@ -63,6 +63,9 @@ public class TimeUtil {
 	       Coupon c2 = new Coupon();
 	       BeanUtils.copyProperties(c1, c2);
 	       System.out.println(c2.getName());
+	       
+	       Date to = new Date(System.currentTimeMillis()+(24L*60L*60L*1000L*MakaoConstants.COUPON_EXPIRE_DAY));//必须写成long型，否则会溢出
+	       System.out.println(to);
 	    }
 	
 	/**

@@ -395,7 +395,7 @@ public class CouponDaoImpl implements ICouponDao {
 						ps.setInt(10, user.getId());
 						ps.setString(11, coupon.getType());
 						Date from = new Date(System.currentTimeMillis());
-						Date to = new Date(System.currentTimeMillis()+(24*60*60*1000*MakaoConstants.COUPON_EXPIRE_DAY));
+						Date to = new Date(System.currentTimeMillis()+(24L*60L*60L*1000L*MakaoConstants.COUPON_EXPIRE_DAY));//必须写成long型，否则会溢出
 						ps.setDate(12, from);
 						ps.setDate(13, to);
 						int res = ps.executeUpdate();
