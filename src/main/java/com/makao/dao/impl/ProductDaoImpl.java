@@ -70,7 +70,11 @@ public class ProductDaoImpl implements IProductDao {
 						ps.setInt(10, product.getSequence());
 						ps.setString(11, product.getDescription());
 						ps.setString(12, product.getOrigin());
-						ps.setString(13, product.getStatus());
+						ps.setString(13, "2");
+						if(product.getInventory()<=product.getThrehold())
+							ps.setString(13, "1");
+						if(product.getInventory()<=0)
+							ps.setString(13, "0");
 						ps.setInt(14, product.getSalesVolume());
 						ps.setInt(15, product.getLikes());
 						ps.setString(16, product.getCoverSUrl());
@@ -939,10 +943,8 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public int updateInventory(String tableName, String productid,
 			String inventN) {
+		String sql1 = "SELECT `threhold` FROM "+tableName+ " WHERE `id`=" + Integer.valueOf(productid);
 		logger.info("更新产品inventory(tableName-productId-inventory): "+tableName+"-"+productid+"-"+inventN);
-		String sql = "UPDATE `"
-				+ tableName
-				+ "` SET `inventory`="+Integer.valueOf(inventN)+" WHERE `id`=" + Integer.valueOf(productid);
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -953,12 +955,32 @@ public class ProductDaoImpl implements IProductDao {
 			// 定义一个匿名类，实现了Work接口
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
-					PreparedStatement ps = null;
+					PreparedStatement ps = null;PreparedStatement ps1 = null;
+					String sql = "UPDATE `"
+							+ tableName
+							+ "` SET `inventory`="+Integer.valueOf(inventN)+", `status`='2'"+" WHERE `id`=" + Integer.valueOf(productid);
 					try {
+						ps1 = connection.prepareStatement(sql1);
+						ResultSet rs = ps1.executeQuery();
+						int pthrehold = 0;
+						int pinvent = Integer.valueOf(inventN);
+						while(rs.next()){
+							pthrehold = rs.getInt("threhold");
+						}
+						//先查询出产品的最低库存，如果当前的inventN小于等于了最低库存，设置status状态为1
+						if(pinvent<=pthrehold)
+							sql = "UPDATE `"
+									+ tableName
+									+ "` SET `inventory`="+Integer.valueOf(inventN)+", `status`='1'"+" WHERE `id`=" + Integer.valueOf(productid);
+						//如果当前inventN小于等于0，直接设置status为0
+						if(pinvent<=0)
+							sql = "UPDATE `"
+									+ tableName
+									+ "` SET `inventory`="+Integer.valueOf(inventN)+", `status`='0'"+" WHERE `id`=" + Integer.valueOf(productid);
 						ps = connection.prepareStatement(sql);
 						ps.executeUpdate();
 					} finally {
-						doClose(ps);
+						doClose(ps);doClose(ps1);
 					}
 				}
 			});
@@ -1216,10 +1238,8 @@ public class ProductDaoImpl implements IProductDao {
 
 	@Override
 	public int suppliedProduct(String tableName, int productId, int num) {
+		String sql1 = "SELECT `threhold` FROM "+tableName+ " WHERE `id`=" + productId;
 		logger.info("完成补货，更新产品inventory(tableName-productId-inventory): "+tableName+"-"+productId+"-"+num);
-		String sql = "UPDATE `"
-				+ tableName
-				+ "` SET `supply`=0,`inventory`="+num+" WHERE `id`=" + productId;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -1230,12 +1250,31 @@ public class ProductDaoImpl implements IProductDao {
 			// 定义一个匿名类，实现了Work接口
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
-					PreparedStatement ps = null;
+					PreparedStatement ps = null;PreparedStatement ps1 = null;
+					String sql = "UPDATE `"
+							+ tableName
+							+ "` SET `supply`=0, `inventory`="+num+", `status`='2'"+" WHERE `id`=" + productId;
 					try {
+						ps1 = connection.prepareStatement(sql1);
+						ResultSet rs = ps1.executeQuery();
+						int pthrehold = 0;
+						while(rs.next()){
+							pthrehold = rs.getInt("threhold");
+						}
+						//先查询出产品的最低库存，如果当前的inventN小于等于了最低库存，设置status状态为1
+						if(num<=pthrehold)
+							sql = "UPDATE `"
+									+ tableName
+									+ "` SET `supply`=0, `inventory`="+num+", `status`='1'"+" WHERE `id`=" + productId;
+						//如果当前inventN小于等于0，直接设置status为0
+						if(num<=0)
+							sql = "UPDATE `"
+									+ tableName
+									+ "` SET `supply`=0, `inventory`="+num+", `status`='0'"+" WHERE `id`=" + productId;
 						ps = connection.prepareStatement(sql);
 						ps.executeUpdate();
 					} finally {
-						doClose(ps);
+						doClose(ps);doClose(ps1);
 					}
 				}
 			});

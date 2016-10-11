@@ -138,7 +138,7 @@ coverSUrl		varchar(50)		封面小图地址		小图也用于购物车里展示，
 coverBUrl		varchar(50)		封面大图地址		大图封面也用于商品详细页面顶部展示，所以不管哪种展示，必须有大图
 inventory		int(11)			库存量
 sequence		int(11)			排序顺序			整形值，越大在商品列表里越靠前
-status			varchar(30)		货源状态			值可为空、'库存紧张'、'暂时缺货'
+status			varchar(30)		货源状态			值可为空,空表示货源正常,'库存紧张(1)'、'已售罄(0)',前端要求所以存为数字表示
 description		varchar(100)	商品简述			详细页面，有的商品在名称下一行有简介,如'顺滑口感，齿颊留香'
 origin			varchar(30)		原产地			
 salesVolume		int(11)			销量			

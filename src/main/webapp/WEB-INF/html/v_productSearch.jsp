@@ -172,6 +172,79 @@
       </div>
      </section>
      <!--结束：弹出框效果-->
+     <!-- 补货 -->
+   <script>
+     $(document).ready(function(){
+    	var orderId_toSupply = 0;//要取消的订单
+     //弹出文本性提示框
+     $(".supplyProduct").click(function(){
+       $(".supply_pop_bg").fadeIn();
+       var clickedId = $(this).attr("id");
+       orderId_toSupply = clickedId.split("-")[1];
+
+       });
+     //弹出：确认按钮
+     $("#confirmCancel").click(function(){
+    	 if(orderId_toSupply==0){
+    		 alert("请重新选择要补货的商品");
+    		 return false;
+    	 }
+    	 var cityid = $("#pcityid-"+orderId_toSupply).text();
+    	 var areaid = $("#pareaid-"+orderId_toSupply).text();
+    	 if(cityid.length==0 || areaid.length==0){
+    		 alert("请重新选择要补货的商品");
+    		 return false;
+    	 }
+		 var num = $("#psupply-"+orderId_toSupply).text();
+		 if(num==null||num.length==0){
+    		 alert("请重新选择要补货的商品");
+    		 return false;
+    	 }
+        	$.ajax({
+    		  type: "POST",
+  	          contentType: "application/json",
+  	          url: "/product/supplied/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
+  	          dataType: "json",
+  	          data: JSON.stringify({"cityid":cityid,"areaid":areaid,"productid":orderId_toSupply,"num":num}),
+  	          success: function(data){
+  	        	  if(data.msg=="200"){
+  	        		  alert("商品补货完成");
+  	        		  window.location.reload();//刷新页面
+  	        		orderId_toSupply=0;
+  	        	  }else if(data.msg=="401"){
+  	        	     alert("需要重新登录");
+  	        	}
+  	          }
+    	 	});
+       $(".supply_pop_bg").fadeOut();
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelCancel").click(function(){
+       $(".supply_pop_bg").fadeOut();
+       orderId_toSupply=0;
+       });
+     });
+     </script>
+			<section class="supply_pop_bg">
+				<div class="pop_cont">
+					<!--title-->
+					<h3>温馨提示</h3>
+					<!--content-->
+					<div class="small_pop_cont_input">
+						<!--以pop_cont_text分界-->
+						<div class="pop_cont_text">确认完成补货吗？(请确认商品数量无误后操作)
+						</div>
+						<!--bottom:operate->button-->
+						<div class="btm_btn">
+							<input type="button" value="确认" id="confirmCancel"
+								class="input_btn trueBtn" /> <input type="button" value="关闭"
+								id="cancelCancel" class="input_btn falseBtn" />
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- 补货框 --> 
+			
      
      <!-- 上架下架提示框 -->
       <script>
@@ -261,6 +334,71 @@
      </section>
       <!-- 上架下架提示框 -->
 	
+	 <!-- 删除提示框 -->
+      <script>
+     $(document).ready(function(){
+    	var showHandle_Id = 0;//商品id
+     //弹出文本性提示框
+     $(".delProduct").click(function(){
+       $(".del_product_pop_bg").fadeIn();
+       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
+       var clickedId = $(this).attr("id");
+       showHandle_Id = clickedId.split("-")[1];
+       });
+     //弹出：确认按钮
+     $("#confirmDelP").click(function(){
+    	 if(showHandle_Id==0){
+    		 alert("请重新选择商品");
+    		 return false;
+    	 }
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/product/vdelete/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"productId":showHandle_Id}),
+     	          success: function(data){
+     	        	  //var cities = JSON.stringify(data.cities);
+     	        	  if(data.msg=="200"){
+     	        		  alert("商品删除成功");
+     	        		  window.location.reload();
+     	        	  }else if(data.msg=="401"){
+     	        	     alert("需要重新登录");
+     	        	 }
+     	          }
+       	 	}); 
+        	
+       $(".del_product_pop_bg").fadeOut();
+       showHandle_Id=0;
+       });
+     //弹出：取消或关闭按钮
+     $("#cancelDelP").click(function(){
+       $(".del_product_pop_bg").fadeOut();
+       showHandle_Id=0;
+       });
+     });
+     </script>
+     <section class="del_product_pop_bg">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>温馨提示</h3>
+       <!--content-->
+       <div class="small_pop_cont_input">
+       <!--以pop_cont_text分界-->
+         <div class="pop_cont_text">
+          确认要删除商品吗?
+         </div>
+         <!--bottom:operate->button-->
+         <div class="btm_btn">
+          <input type="button" value="确认" id="confirmDelP" class="input_btn trueBtn"/>
+          <input type="button" value="取消" id="cancelDelP" class="input_btn falseBtn"/>
+         </div>
+        </div>
+       </div>
+     </section>
+      <!-- 删除提示框 -->
+      
+      
      <!-- 搜索 -->
       <script>
      $(document).ready(function(){
@@ -271,19 +409,6 @@
 			 return false;
 		 }
 		 var cat = $("#catalogp").val();
-    		 /* $.ajax({
-       		  type: "POST",
-     	          contentType: "application/json",
-     	          url: "/product/search/"+$("#loginUserId").val(),
-     	          dataType: "json",
-     	          data: JSON.stringify({"keyword":content,"catalog":cat}),
-     	          success: function(data){
-     	        	  //var cities = JSON.stringify(data.cities);
-     	        	  if(data.msg=="200"){
-     	   	 
-     	        	  }
-     	          }
-       	 	});  */
        	 window.location="/product/search/"+$("#loginUserId").val()+"?token="+$("#loginToken").val()+"&keyword="+content+"&catalog="+cat;
        });
      });
@@ -307,18 +432,25 @@
         <th>商品名称</th>
         <th>商品分类</th>
         <th>出售价</th>
-        <th>库存</th>
-        <th>销量</th>
+        <th>当前库存</th>
+        <th>最低库存</th>
         <th>操作</th>
        </tr>
        <c:forEach var="item" items="${products}" varStatus="status">
-         	<tr>
+       		<c:choose> 
+		  		<c:when test="${item.inventory>item.threhold}">   
+		  			<tr>
+				</c:when> 
+				<c:otherwise>   
+					<tr style="color:red">
+				</c:otherwise> 
+			</c:choose>
          		<td><img id="pcoversurl-${item.id}" style="width:50px;height:50px" alt="缩略图" src="/static/upload/${item.coverSUrl}"></td>
          		<td id="pproductname-${item.id}">${item.productName}</td>
          		<td id="pcatalog-${item.id}">${item.catalog}</td>
          		<td id="pprice-${item.id}">${item.price}</td>
          		<td id="pinventory-${item.id}">${item.inventory}</td>
-         		<td id="psalesvolume-${item.id}">${item.salesVolume}</td>
+         		<td id="pthrehold-${item.id}">${item.threhold}</td>
          		<td style="text-align:center">
 		           <button class="linkStyle editProduct" id="showPopTxt-${item.id}">编辑</button>|
 		           <c:choose> 
@@ -330,6 +462,10 @@
 						</c:otherwise> 
 					</c:choose>|
 		           <button class="linkStyle copyProduct" id="copy-${item.id}" style="position: relative;">复制链接</button>
+		           |<button class="linkStyle delProduct" id="delPro-${item.id}">删除</button>
+		            <c:if test="${item.supply>0}">
+		            	|<button class="linkStyle supplyProduct" id="supply-${item.id}" style="position: relative;">补货(${item.supply})</button>
+					</c:if>
 		        </td>
 		        <td style="display:none" id="pshowway-${item.id}">${item.showWay}</td>
 		        <td style="display:none" id="pstandard-${item.id}">${item.standard}</td>
@@ -346,6 +482,10 @@
 		        <td style="display:none" id="pshowstatus-${item.id}">${item.isShow}</td>
 		        <td style="display:none" id="pcityid-${item.id}">${item.cityId}</td>
 		        <td style="display:none" id="pareaid-${item.id}">${item.areaId}</td>
+		        <td style="display:none" id="psalesvolume-${item.id}">${item.salesVolume}</td>
+		        <td style="display:none" id="pprethrehold-${item.id}">${item.prethrehold}</td>
+		         <td style="display:none" id="psupply-${item.id}">${item.supply}</td>
+		         <td style="display:none" id="prestrict-${item.id}">${item.restrict}</td>
          	</tr>
 		</c:forEach> 
 		
@@ -408,6 +548,9 @@ $(document).ready(function(){
     	var isShowO = "";
     	var areaIdO = 0;
     	var cityIdO = 0;
+    	var threholdO = 0;
+    	var prethreholdO =0;
+    	var restrictO = 0;
     	//弹出文本性提示框
      $(".editProduct").click(function(){
        $(".editproduct_pop_bg").fadeIn();
@@ -419,6 +562,8 @@ $(document).ready(function(){
        originO = $.trim($("#porigin-"+editHandle_Id).text());
        catalogO = $.trim($("#pcatalog-"+editHandle_Id).text());
        labelO = $.trim($("#plabel-"+editHandle_Id).text());
+       if(labelO.length==0||labelO=="")
+    	   labelO="无标签";
        standardO = $.trim($("#pstandard-"+editHandle_Id).text());
        marketPriceO = $.trim($("#pmarketprice-"+editHandle_Id).text());
        priceO = $.trim($("#pprice-"+editHandle_Id).text());
@@ -436,6 +581,10 @@ $(document).ready(function(){
        isShowO = $.trim($("#pshowstatus-"+editHandle_Id).text());
        areaIdO = $.trim($("#pareaid-"+editHandle_Id).text());
        cityIdO = $.trim($("#pcityid-"+editHandle_Id).text());
+       threholdO = $.trim($("#pthrehold-"+editHandle_Id).text());
+       prethreholdO = $.trim($("#pprethrehold-"+editHandle_Id).text());
+       restrictO = $.trim($("#prestrict-"+editHandle_Id).text());
+
 
        $("#proname").val(productNameO);
        $("input[type=radio][value="+catalogO+"]").attr("checked",'checked');
@@ -447,8 +596,11 @@ $(document).ready(function(){
        $("#promarketprice").val(marketPriceO);
        $("#proprice").val(priceO);
        $("#proinventory").val(inventoryO);
+       $("#prothrehold").val(threholdO);
+       $("#proprethrehold").val(prethreholdO);
        $("#prosequence").val(sequenceO);
        $("#prodescription").val(descriptionO);
+       $("#prorestrict").val(restrictO);
 
        $("#uploads").attr("src", "/static/upload/"+coverSUrlO);
        $("#serverImgNames").val(coverSUrlO);
@@ -474,12 +626,23 @@ $(document).ready(function(){
 		 	var standard = $.trim($("#prostandard").val());
 		 	var price = $.trim($("#proprice").val());
 		 	var marketPrice = $.trim($("#promarketprice").val());
-		 	var inventory = $.trim($("#proinventory").val());//分库里必须有库存值，没有则为0
+		 	var inventory = $.trim($("#proinventorychange").val());//注意这里传到后台的是增加或减少的库存数量
+		 	var threhold = $.trim($("#prothrehold").val());
+		 	var prethrehold = $.trim($("#proprethrehold").val());
 		 	var isShow = $('input:radio[name=proisshow]:checked').val();
 		 	var showWay = $('input:radio[name=proshowway]:checked').val();
 		 	var sequence = $.trim($("#prosequence").val());
 		 	var description = $.trim($("#prodescription").val());
-		 	
+		 	var restrict = $.trim($("#prorestrict").val());
+		 	if(restrict=="")
+		 		restrict=0;
+		 	if(label=="无标签")
+		 		label="";
+		 	if(inventory!=0){
+		 		var addorcut = $("#inventoryAction").children('option:selected').val();
+		 		if(addorcut=="减少")
+		 			inventory=0-inventory;
+		 	}
 		 	var coverSUrl = $("#serverImgNames").val();
 		 	var coverBUrl = $("#serverImgNameb").val();
 		 	var subdetailUrl = $("#serverImgNamed1").val();
@@ -494,9 +657,10 @@ $(document).ready(function(){
 		 		return false;
 		 	}
 		 	if(productName == productNameO && origin==originO && standard==standardO && price==priceO && showWay==showWayO &&
-		 			marketPrice==marketPriceO && inventory== inventoryO && sequence==sequenceO && label==labelO &&
+		 			marketPrice==marketPriceO && sequence==sequenceO && label==labelO &&
 		 			catalog==catalogO && isShow==isShowO && description==descriptionO && coverSUrl==coverSUrlO
-		 			&& coverBUrl==coverBUrlO && subdetailUrl==subdetailUrlO && detailUrl==detailUrlO){
+		 			&& coverBUrl==coverBUrlO && subdetailUrl==subdetailUrlO && detailUrl==detailUrlO && threhold==threholdO 
+		 			&& prethrehold==prethreholdO && restrict == restrictO && inventory==0){
 		 		alert("并未做修改");
 		 		return false;
 		 	}
@@ -508,7 +672,8 @@ $(document).ready(function(){
      	          dataType: "json",
      	          data: JSON.stringify({"id":editHandle_Id,"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
 	  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
-	  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl}),
+	  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold,"prethrehold":prethrehold,
+	  	        		"restrict":restrict}),
      	          success: function(data){
      	        	  if(data.msg=="200"){
      	        		  alert("商品修改成功");
@@ -573,8 +738,25 @@ $(document).ready(function(){
 		        <input type="text" id="promarketprice" class="price_input textbox_295" placeholder=""/>
 		       </li>
 		       <li>
-		        <span class="item_name" style="width:120px;">库存：</span>
-		        <input type="text" id="proinventory" class="inventory_input textbox_295" placeholder="" value="0"/>
+		        <span class="item_name" style="width:120px;">预设库存：</span>
+		        <input type="text" id="proprethrehold" class="inventory_input textbox_295" placeholder="" value="0"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">当前库存：</span>
+		        	<input type="text" id="proinventory" class="inventory_input textbox_50" disabled="disabled" placeholder="" value="0"/>
+		        	<select class="select" id="inventoryAction">  
+		        		<option value="增加">增加</option>
+		        		<option value="减少">减少</option>
+				    </select>
+				 	<input type="text" id="proinventorychange" class="inventory_input textbox_189" placeholder="" value="0"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">最低库存：</span>
+		        <input type="text" id="prothrehold" class="inventory_input textbox_295" placeholder="" value="0"/>
+		       </li>
+		       <li>
+		        	<span class="item_name" style="width:120px;">每单限购：</span>
+		        	<input type="text" id="prorestrict" class="textbox_295 inventory_input" placeholder="设为'0'或不设置表示不限购"/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">上架状态：</span>
@@ -609,7 +791,7 @@ $(document).ready(function(){
 		       </li>
 							<li><span class="item_name" style="width: 120px;">商品详情1：</span>
 								<img alt="详情1" id="uploadd1" src=""
-								style="height: 100px; width: 305px; cursor: pointer">
+								style="height: 170px; width: 305px; cursor: pointer">
 								<div id="fileDivd1">
 									<input id="fileToUploadd1" style="display: none" type="file"
 										name="upfiled1">
@@ -618,7 +800,7 @@ $(document).ready(function(){
 							<li>
 								<span class="item_name" style="width: 120px;">商品详情2：</span>
 								<img alt="详情2" id="uploadd2" src=""
-								style="height: 100px; width: 305px; cursor: pointer">
+								style="height: 300px; width: 305px; cursor: pointer">
 								<div id="fileDivd2">
 									<input id="fileToUploadd2" style="display: none" type="file"
 										name="upfiled2">

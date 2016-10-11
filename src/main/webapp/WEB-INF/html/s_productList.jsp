@@ -380,7 +380,7 @@
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">缩略图：</span>
-		        <span><img alt="(240 x 240" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
+		        <span><img alt="(240 x 240)" id="uploads" src="" style="height:100px;width:100px;cursor:pointer"/></span>
 		        <span><img alt="(480 x 240)" id="uploadb" src="" style="height:100px;width:200px;cursor:pointer"/></span>
 				<div id="fileDivs">
 				     <input id="fileToUploads" style="display: none" type="file" name="upfiles">

@@ -258,6 +258,8 @@
 			 	var restrict = $.trim($("#prorestrict").val())
 			 	if(restrict=="")
 			 		restrict=0;
+			 	if(label=="无标签")
+			 		label="";
 			 	
 			 	var coverSUrl = $("#serverImgNames").val();
 			 	var coverBUrl = $("#serverImgNameb").val();

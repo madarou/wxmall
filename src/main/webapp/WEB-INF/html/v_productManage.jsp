@@ -562,6 +562,8 @@ $(document).ready(function(){
        originO = $.trim($("#porigin-"+editHandle_Id).text());
        catalogO = $.trim($("#pcatalog-"+editHandle_Id).text());
        labelO = $.trim($("#plabel-"+editHandle_Id).text());
+       if(labelO.length==0||labelO=="")
+    	   labelO="无标签";
        standardO = $.trim($("#pstandard-"+editHandle_Id).text());
        marketPriceO = $.trim($("#pmarketprice-"+editHandle_Id).text());
        priceO = $.trim($("#pprice-"+editHandle_Id).text());
@@ -634,6 +636,8 @@ $(document).ready(function(){
 		 	var restrict = $.trim($("#prorestrict").val());
 		 	if(restrict=="")
 		 		restrict=0;
+		 	if(label=="无标签")
+		 		label="";
 		 	if(inventory!=0){
 		 		var addorcut = $("#inventoryAction").children('option:selected').val();
 		 		if(addorcut=="减少")

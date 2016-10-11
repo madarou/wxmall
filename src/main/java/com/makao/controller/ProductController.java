@@ -264,6 +264,12 @@ public class ProductController {
 				int actualInv = Integer.valueOf(redisUtil.redisQueryObject(key))+intv;
 				Product.setInventory(actualInv);
 			}
+			Product.setStatus("2");
+			//如果现在库存大于现在最低库存
+			if(Product.getInventory()<=Product.getThrehold())
+				Product.setStatus("1");
+			if(Product.getInventory()<=0)
+				Product.setStatus("0");
 			int res = this.productService.update(Product);
 			if(res==0){
 				//数据库中修改成功后，再更新缓存中的库存
