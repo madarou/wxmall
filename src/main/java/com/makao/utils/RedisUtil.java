@@ -262,10 +262,7 @@ public class RedisUtil {
 				  operations.opsForValue().increment(key, 0-productNum);
 				  //				    logger.info("decreasing inventory to: "+ inventory);
 				  rt = operations.exec();
-				  logger.info("exec cut inventory "+key+" by "+productNum+" rt: " + rt);
 				  if(rt!=null){
-					  //int inventory = (int) rt.get(0);
-					  logger.info("exec success rt: " + rt.get(0));
 					  break;
 				  }
 			  }
@@ -317,9 +314,28 @@ public class RedisUtil {
 				  //必须用increment的才能在exec()方法得到之后的inventory值，使用set(key,value)方法没有返回，
 				  operations.opsForValue().increment(key, productNum);
 				  rt = operations.exec();
-				  logger.info("exec add inventory "+key+" by "+productNum+" rt: " + rt);
 				  if(rt!=null){
-					  logger.info("exec success rt: " + rt.get(0));
+					  break;
+				  }
+			  }
+		    return rt;
+		  }
+		});
+		return txResults;
+	}
+    
+    public List<Object> addSalesVolumeTx(String key, int productNum){
+		//execute a transaction
+		List<Object> txResults = redisTemplate.execute(new SessionCallback<List<Object>>() {
+		  public List<Object> execute(RedisOperations operations) throws DataAccessException {
+			  List<Object> rt = null;
+			  while(true){
+				  operations.watch(key);
+				  operations.multi();
+				  //必须用increment的才能在exec()方法得到之后的inventory值，使用set(key,value)方法没有返回，
+				  operations.opsForValue().increment(key, productNum);
+				  rt = operations.exec();
+				  if(rt!=null){
 					  break;
 				  }
 			  }

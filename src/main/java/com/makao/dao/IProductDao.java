@@ -1,6 +1,7 @@
 package com.makao.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.makao.entity.Product;
 
@@ -77,9 +78,9 @@ public interface IProductDao {
 	 * @param areaId
 	 * @param id
 	 * @return
-	 * 从Product_cityId_areaId中获取产品id的库存
+	 * 从Product_cityId_areaId中获取产品id的库存和销量
 	 */
-	public int getInventory(int cityId, int areaId, String id);
+	public String getInventoryAndSV(int cityId, int areaId, String id);
 
 	public int updateInventory(String tableName, String productid,
 			String inventN);
@@ -132,7 +133,7 @@ public interface IProductDao {
 	 * @param productid
 	 * @param saled
 	 * @return
-	 * 增加saled个销量
+	 * 销量修改为saled
 	 */
 	public int updateSalesVolume(String tableName, String productid,
 			int saled);

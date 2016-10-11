@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -800,12 +802,12 @@ public class ProductDaoImpl implements IProductDao {
 	 * 从Product_cityId_areaId中获取产品id的库存
 	 */
 	@Override
-	public int getInventory(int cityId, int areaId, String id) {
+	public String getInventoryAndSV(int cityId, int areaId, String id) {
 		String tableName = "Product_"+cityId+"_"+areaId;
-		String sql = "SELECT `inventory` FROM "+tableName+ " WHERE `id`="+id;
+		String sql = "SELECT `inventory`,`salesVolume` FROM "+tableName+ " WHERE `id`="+id;
 		Session session = null;
 		Transaction tx = null;
-		List<Integer> res = new ArrayList<Integer>();
+		List<String> res = new ArrayList<String>();
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始
@@ -818,7 +820,7 @@ public class ProductDaoImpl implements IProductDao {
 						ps = connection.prepareStatement(sql);
 						ResultSet rs = ps.executeQuery();
 						rs.next();
-						res.add(rs.getInt("inventory"));
+						res.add(rs.getInt("inventory")+"_"+rs.getInt("salesVolume"));
 					}finally{
 						doClose(ps);
 					}
@@ -835,7 +837,7 @@ public class ProductDaoImpl implements IProductDao {
 			if (null != session)
 				session.close();// 关闭回话
 		}
-		return  (res.size()>0 ? res.get(0) : 0);
+		return  (res.size()>0 ? res.get(0) : null);
 	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
@@ -1308,7 +1310,7 @@ public class ProductDaoImpl implements IProductDao {
 					PreparedStatement ps = null;
 					String sql = "UPDATE `"
 							+ tableName
-							+ "` SET `salesVolume`=`salesVolume`+"+saled+" WHERE `id`=" + productid;
+							+ "` SET `salesVolume`="+saled+" WHERE `id`=" + productid;
 //					if(saled>0)
 //						sql = "UPDATE `"
 //							+ tableName

@@ -222,8 +222,8 @@ public class AreaController {
 	@RequestMapping(value = "/change/{cityid:\\d+}/{areaid:\\d+}/{userid:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     Object change(@PathVariable("cityid") int cityId,@PathVariable("areaid") int areaId,@PathVariable("userid") int userId) {
-		List<Product> products = null;
-		List<Banner> banners = null;
+		//List<Product> products = null;
+		//List<Banner> banners = null;
 		JSONObject jsonObject = new JSONObject();
 		//设置用户切换后的city和area到user表中
 		User user = this.userService.getById(userId);
@@ -233,8 +233,8 @@ public class AreaController {
 			if(cityName==null || areaName==null || "".equals(cityName) || "".equals(areaName)){
 				jsonObject.put("msg", "202");
 				logger.info("未查到对应的city 或 arae. cityId="+cityId+" areaId="+areaId);
-				jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
-				jsonObject.put("banners", banners);
+				//jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
+				//jsonObject.put("banners", banners);
 				return jsonObject;
 			}
 			user.setCityId(cityId);

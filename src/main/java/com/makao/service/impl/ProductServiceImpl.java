@@ -1,6 +1,7 @@
 package com.makao.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -87,8 +88,8 @@ public class ProductServiceImpl implements IProductService {
 		return this.productDao.like(tableName, productId);
 	}
 	@Override
-	public int getInventory(int cityId, int areaId, String id) {
-		return this.productDao.getInventory(cityId, areaId, id);
+	public String getInventoryAndSV(int cityId, int areaId, String id) {
+		return this.productDao.getInventoryAndSV(cityId, areaId, id);
 	}
 	@Override
 	public int updateInventory(String tableName, String productid,

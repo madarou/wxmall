@@ -1,6 +1,7 @@
 package com.makao.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.makao.entity.Product;
 
@@ -79,9 +80,9 @@ public interface IProductService {
 	 * @param areaId
 	 * @param id
 	 * @return
-	 * 从表Product_cityId_areaId中获取id为id的产品的库存
+	 * 从表Product_cityId_areaId中获取id为id的产品的库存和销量
 	 */
-	int getInventory(int cityId, int areaId, String id);
+	String getInventoryAndSV(int cityId, int areaId, String id);
 
 	/**
 	 * @param tableName
@@ -139,7 +140,7 @@ public interface IProductService {
 	 * @param tableName
 	 * @param productid
 	 * @param saled
-	 * 增加saled个销量
+	 * 销量修改为saled
 	 */
 	int updateSalesVolume(String tableName, String productid, int saled);
 
@@ -150,4 +151,5 @@ public interface IProductService {
 	 * 区域管理员删除商品
 	 */
 	int deleteProduct(String tableName, int prodcutId);
+
 }

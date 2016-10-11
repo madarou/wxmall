@@ -286,10 +286,11 @@ public class OrderOnController {
 		for(String id: ids){
 			Object object = redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim());
 			if(object==null){//缓存里面如果没有，从数据库里读
-				int inv = this.productService.getInventory(cityId, areaId, id);
-				redisUtil.redisSaveInventory("pi_"+cityId+"_"+areaId+"_"+id.trim(), String.valueOf(inv));
-				//每次更新销量后的缓存
-				redisUtil.redisSaveInventory("lastpi_"+cityId+"_"+areaId+"_"+id.trim(), String.valueOf(inv));
+				String inv_sv = this.productService.getInventoryAndSV(cityId, areaId, id);
+				if(inv_sv!=null){
+					redisUtil.redisSaveInventory("pi_"+cityId+"_"+areaId+"_"+id.trim(), inv_sv.split("_")[0]);
+					redisUtil.redisSaveInventory("sv_"+cityId+"_"+areaId+"_"+id.trim(), inv_sv.split("_")[1]);
+				}
 			}
 			int inventory = Integer.valueOf(redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim()));
 			if(inventory<=0){
@@ -711,6 +712,14 @@ public class OrderOnController {
 		    		pl.setCityId(oo.getCityId());
 		    		pl.setUserId(oo.getUserId());
 		    		this.pointService.insertPointLog(pl);
+		    		//钱付了才将销量加上去
+		    		String[] pnums = oo.getProductNames().split(",");
+		    		String[] pids = oo.getProductIds().split(",");
+		    		for(int i=0; i<pids.length; i++){
+		    			List<Object> rt = redisUtil.addSalesVolumeTx(
+		    					"sv_" + oo.getCityId() + "_" + oo.getAreaId()
+		    							+ "_" + pids[i], Integer.valueOf(pnums[i].split(",")[2]));
+		    		}
 		    		if(out!=null)
 		    			out.close();
 		    	}

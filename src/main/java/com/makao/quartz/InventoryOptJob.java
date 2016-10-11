@@ -58,6 +58,7 @@ public class InventoryOptJob {
 						String productNum = names[i].split("=")[2];
 						AddInventoryThread ait = new AddInventoryThread(productKey, Integer.valueOf(productNum), redisUtil);
 						new Thread(ait, "add inventory thread").start();
+						//没付钱的订单没有修改销量，所以这里不用将销量减少
 					}
 				}
 			}
@@ -71,6 +72,7 @@ public class InventoryOptJob {
 						String productNum = names[i].split("=")[2];
 						AddInventoryThread ait = new AddInventoryThread(productKey, Integer.valueOf(productNum), redisUtil);
 						new Thread(ait, "add inventory thread").start();
+						//已取消或退货后的订单的销量也没有回减
 					}
 				}
 			}
@@ -87,16 +89,10 @@ public class InventoryOptJob {
 							int res = this.productService.updateInventory(tableName, productid, inventN);
 						//}
 						//更新销量
-						String lastInventN = redisUtil.redisQueryObject("last"+key);
-						if(lastInventN!=null&&!"".equals(lastInventN)){
-							int saled = Integer.valueOf(lastInventN)-Integer.valueOf(inventN);
-							if(saled!=0){//不一定上次的库存大于这次，因为如果取消订单或退货后，现在的库存反而大
-								redisUtil.redisSaveInventory("last"+key, inventN);
-								int res2 = this.productService.updateSalesVolume(tableName, productid, saled);
-							}
-						}
-						else{//没有lastpi值的话，现在的库存重新写入
-							redisUtil.redisSaveInventory("last"+key, inventN);
+						String svKey = "sv"+key.substring(2);
+						String sv = redisUtil.redisQueryObject(svKey);
+						if(sv!=null&&!"".equals(sv)){
+								int res2 = this.productService.updateSalesVolume(tableName, productid, Integer.valueOf(sv));
 						}
 					}
 				}

@@ -177,9 +177,11 @@ public class ProductController {
 		//先从缓存中获取到该商品的库存
 		Object object = redisUtil.redisQueryObject(k);
 		if(object==null){//缓存里面如果没有，从数据库里读
-			int inv = this.productService.getInventory(cityId, areaId, productId+"");
-			redisUtil.redisSaveInventory(k, String.valueOf(inv));
-		}
+			String inv_sv = this.productService.getInventoryAndSV(cityId, areaId, productId+"");
+			if(inv_sv!=null){
+				redisUtil.redisSaveInventory(k, inv_sv.split("_")[0]);
+				redisUtil.redisSaveInventory("sv_"+cityId+"_"+areaId+"_"+productId, inv_sv.split("_")[1]);
+			}		}
 		//加入缓存中
 		List<Object> rt = redisUtil.addInventoryTx(
 				k, num);
@@ -219,8 +221,7 @@ public class ProductController {
 			if(res!=0){
 				//将商品库存放入缓存
 				redisUtil.redisSaveInventory("pi_"+Product.getCityId()+"_"+Product.getAreaId()+"_"+res, String.valueOf(Product.getInventory()));
-				//每次更新销量后的缓存
-				redisUtil.redisSaveInventory("lastpi_"+Product.getCityId()+"_"+Product.getAreaId()+"_"+res, String.valueOf(Product.getInventory()));
+				redisUtil.redisSaveInventory("sv_"+Product.getCityId()+"_"+Product.getAreaId()+"_"+res, String.valueOf(Product.getSalesVolume()));
 				logger.info("增加商品成功name=" + Product.getProductName());
 	        	jsonObject.put("msg", "200");
 	        	return jsonObject;
@@ -256,10 +257,11 @@ public class ProductController {
 			if(intv!=0){//从缓存中取出现有的库存
 				Object o = redisUtil.redisQueryObject(key);
 				if(o==null){//缓存里面如果没有，从数据库里读
-					int inv = this.productService.getInventory(vendor.getCityId(), vendor.getAreaId(), Product.getId()+"");
-					redisUtil.redisSaveInventory("pi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+Product.getId(), String.valueOf(inv));
-					//每次更新销量后的缓存
-					redisUtil.redisSaveInventory("lastpi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+Product.getId(), String.valueOf(inv));
+					String inv_sv = this.productService.getInventoryAndSV(vendor.getCityId(), vendor.getAreaId(), Product.getId()+"");
+					if(inv_sv!=null){
+						redisUtil.redisSaveInventory("pi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+Product.getId(), inv_sv.split("_")[0]);
+						redisUtil.redisSaveInventory("sv_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+Product.getId(), inv_sv.split("_")[1]);
+					}
 				}
 				int actualInv = Integer.valueOf(redisUtil.redisQueryObject(key))+intv;
 				Product.setInventory(actualInv);
@@ -273,8 +275,9 @@ public class ProductController {
 			int res = this.productService.update(Product);
 			if(res==0){
 				//数据库中修改成功后，再更新缓存中的库存
-				redisUtil.addInventoryTx(key, intv);
-				redisUtil.addInventoryTx("last"+key, intv);
+				if(intv!=0){
+					redisUtil.addInventoryTx(key, intv);
+				}
 				logger.info("修改商品成功name=" + Product.getProductName());
 	        	jsonObject.put("msg", "200");
 	        	return jsonObject;
@@ -384,13 +387,13 @@ public class ProductController {
 			int res = this.productService.deleteProduct(tableName,prodcutId);
 			if(res==0){
 				String inventoryKey = "pi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+prodcutId;
-				String lastInventKey = "lastpi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+prodcutId;
+				String salesVolumeKey = "sv_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+prodcutId;
 				Object object = redisUtil.redisQueryObject(inventoryKey);
 				if(object!=null){
 					redisUtil.redisDeleteKey(inventoryKey);
-					Object object2 = redisUtil.redisQueryObject(lastInventKey);
+					Object object2 = redisUtil.redisQueryObject(salesVolumeKey);
 					if(object2!=null)
-						redisUtil.redisDeleteKey(lastInventKey);
+						redisUtil.redisDeleteKey(salesVolumeKey);
 				}
 				logger.info("商品删除成功id=" + prodcutId);
 	        	jsonObject.put("msg", "200");
