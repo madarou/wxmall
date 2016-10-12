@@ -139,5 +139,5 @@ public interface IOrderOnDao {
 	 * @return
 	 * 获取待处理和待退货的订单的数量
 	 */
-	public int queryProcessAndReturnByAreaId(int cityId, int areaId);
+	public String queryProcessAndReturnByAreaId(int cityId, int areaId);
 }

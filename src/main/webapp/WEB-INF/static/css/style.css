@@ -90,7 +90,8 @@ header .rt_nav li .website_icon:before{content:"I";}
 header .rt_nav li .admin_icon:before{content:"U";}
 header .rt_nav li .set_icon:before{content:"S";}
 header .rt_nav li .quit_icon:before{content:"Q";}
-header .rt_nav li .product_icon:before{content:"x";}
+header .rt_nav li .product_icon:before{content:"n";}
+header .rt_nav li .return_icon:before{content:"x";}
 /*aside nav*/
 .lt_aside_nav{width:210px;height:100%;position:absolute;top:70px;left:0;background:#fcfcfc;}
 .lt_aside_nav h2{text-align:center;border-bottom:1px #b6b6b6 solid;margin:0;height:45px;line-height:45px;background:#efefef;}

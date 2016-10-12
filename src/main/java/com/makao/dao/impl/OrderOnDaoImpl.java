@@ -2065,7 +2065,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	 * 获取待处理和待退货的订单的数量
 	 */
 	@Override
-	public int queryProcessAndReturnByAreaId(int cityId, int areaId) {
+	public String queryProcessAndReturnByAreaId(int cityId, int areaId) {
 		String tableName1 = "Order_"+cityId+"_on";
 		String tableName2 = "Order_"+cityId+"_off";
 		String sql = "SELECT count(id) as count FROM "+ tableName1 + " WHERE `areaId`="+areaId+" AND `status`='"+OrderState.PROCESS_WAITING.getCode()+"' Order By `receiveTime`";
@@ -2105,13 +2105,10 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 			if (null != session)
 				session.close();// 关闭回话
 		}
-		if(res.size()==0)
-			return 0;
-		else if(res.size()==1){
-			return res.get(0);
-		}
+		if(res.size()<=1)
+			return "0_0";
 		else
-			return res.get(0)+res.get(1);
+			return res.get(0)+"_"+res.get(1);
 	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {

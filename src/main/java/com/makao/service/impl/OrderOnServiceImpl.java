@@ -125,7 +125,7 @@ public class OrderOnServiceImpl implements IOrderOnService {
 		return this.orderOnDao.userCancelOrder(cityid, orderid);
 	}
 	@Override
-	public int queryProcessAndReturnByAreaId(int cityId, int areaId) {
+	public String queryProcessAndReturnByAreaId(int cityId, int areaId) {
 		return this.orderOnDao.queryProcessAndReturnByAreaId(cityId, areaId);
 	}
 	

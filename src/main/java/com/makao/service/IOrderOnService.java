@@ -138,6 +138,6 @@ public interface IOrderOnService {
 	 * @return
 	 * 获取待处理和待退货的订单的数量
 	 */
-	int queryProcessAndReturnByAreaId(int cityId, int areaId);
+	String queryProcessAndReturnByAreaId(int cityId, int areaId);
 
 }

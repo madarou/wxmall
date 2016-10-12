@@ -1347,13 +1347,31 @@ public class OrderOnController {
 			return modelAndView;
 		}
 		Vendor vendor = this.vendorService.getById(id);
-		int n = 0;
+		String n = "0_0";
 		if(vendor!=null)
 			n = this.orderOnService.queryProcessAndReturnByAreaId(vendor.getCityId(),vendor.getAreaId());
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
-	    modelAndView.addObject("onumber", n);   
+	    modelAndView.addObject("onumber", n.split("_")[0]);  
+	    modelAndView.addObject("onumber2", n.split("_")[1]);
 		return modelAndView;
+    }
+	
+	@RequestMapping(value = "/hasNew/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object hasNew2(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    JSONObject json = new JSONObject();
+		if(token==null){
+			json.put("onumber", 0);
+			return json;
+		}
+		Vendor vendor = this.vendorService.getById(id);
+		String n = "0_0";
+		if(vendor!=null)
+			n = this.orderOnService.queryProcessAndReturnByAreaId(vendor.getCityId(),vendor.getAreaId());
+		json.put("onumber", n.split("_")[0]);
+		json.put("onumber2", n.split("_")[1]);
+		return json;
     }
 	
 	/**

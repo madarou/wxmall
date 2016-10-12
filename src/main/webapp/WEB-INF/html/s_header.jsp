@@ -18,16 +18,42 @@
  </ul>
  </header>
  <input type="hidden" value="${onumber}" id="number"></input>
+ <input type="hidden" value="${id}" id="loginid"></input>
+ <input type="hidden" value="${token}" id="token"></input>
+  <audio id="chatAudio">
+ 	<!-- <source src="notify.ogg" type="audio/ogg"> 
+ 	<source src="notify.mp3" type="audio/mpeg"> -->
+ 	<source src="http://data3.huiyi8.com/2015/dqd/07/31/4.wav" type="audio/wav"> 
+ </audio>
+  <script src="static/js/jquery.js"></script>
  <script>
  	if(document.getElementById("number").value>0){
  		var target = document.getElementById("ordermanage");
  		target.style.cssText="color:red;font-size:13px";
  		target.className="change";
  	}
-	function myrefresh()
-	{
-	       window.location.reload();
+ 	function refresh(){
+		$.ajax({
+   		 	  type: "POST",
+	          contentType: "application/json",
+	          url: "/orderOff/hasNew/"+$("#loginid").val()+"/?token="+$("#token").val(),
+	          dataType: "json",
+	          data: "{}",
+	          success: function(data){
+	        	  if(data.onumber>0){
+	        		  var target = document.getElementById("ordermanage");
+	        	 	  target.style.cssText="color:red;font-size:13px";
+	        	 	  target.className="change";
+	        	 	  document.getElementById("chatAudio").play(); 
+	        	  }
+	        	  else if(data.onumber<=0){
+	        		  var target = document.getElementById("ordermanage");
+	        	 	  target.style.cssText="color:white;font-size:12px";
+	        	 	  target.className="website_icon";
+	        	  }
+	          }
+   	 	});
 	}
-	setTimeout('myrefresh()',90000); //指定xx秒刷新一次
+	setInterval(refresh,90000);
 	</script>
  </body>

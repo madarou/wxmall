@@ -670,6 +670,27 @@ public class OrderOffController {
 		return modelAndView;
     }
 	
+	@RequestMapping(value = "/hasNew/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object hasNew2(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	    JSONObject json = new JSONObject();
+		if(token==null){
+			json.put("onumber", 0);
+			return json;
+		}
+		Supervisor supervisor = this.supervisorService.getById(id);
+		List<City> cites = this.cityService.queryAll();
+		int n = 0;
+		if(supervisor!=null){
+			for(City c : cites){
+				int m = this.orderOffService.queryNeedRefundNumber("Order_"+c.getId()+"_off");
+				n=n+m;
+			}
+		}
+		json.put("onumber", n);
+		return json;
+    }
+	
 	/**
 	 * @param id
 	 * @param token
