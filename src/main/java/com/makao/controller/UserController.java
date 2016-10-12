@@ -147,7 +147,7 @@ public class UserController {
 							+ "<link rel=\"stylesheet\" href=\"/css/font-awesome.min.css\" />"
 						    + "<link rel=\"stylesheet\" href=\"/css/iconfont.css\" />"
 							+ "<style>"
-								+".flash{background-color:gray;width:100%;height:100%;z-index:999;background:<!-- url(\"./img/flash.png\") --> no-repeat center bottom !important;"
+								+".flash{background-color:gray;width:100%;height:100%;z-index:99999;background:<!-- url(\"./img/flash.png\") --> no-repeat center bottom !important;"
 								+"background-size:100% !important}"
 								+"#jump{position:absolute;right:10%;top:5%;"
 								+"width:4.2rem;height:2.4rem;border-radius:5rem;background:#6DBFD5;text-align:center;line-height:2.4rem;color:#fff;-webkit-user-select:none;}"		
