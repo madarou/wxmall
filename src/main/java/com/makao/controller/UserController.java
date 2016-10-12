@@ -116,6 +116,11 @@ public class UserController {
 		String get_token_url = WeixinConstants.AUTH_TOKEN_URL.replace("APPID", WeixinConstants.APPID)
 				.replace("SECRET", WeixinConstants.APPSECRET).replace("CODE", code);
 		net.sf.json.JSONObject jsonObject = HttpUtil.doGetObject(get_token_url);
+		if(jsonObject.getString("access_token")==null || "".equals(jsonObject.getString("access_token"))){
+			page = "没有获得您的授权，无法浏览商城";
+			out.write(page);
+			return;
+		}
 		String access_token = jsonObject.getString("access_token");
 		logger.info("weixin auth access_token: "+access_token);
 		String openid = jsonObject.getString("openid");
@@ -187,7 +192,7 @@ public class UserController {
 							+ "</script>"
 							+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
 							+ "<script src=\"//cdn.bootcss.com/react/0.14.8/react.js\"></script>"
-						    + "<script src=\"/js/lib/react-dom.js\"></script>"
+						    + "<script src=\"//cdn.bootcss.com/react/0.14.8/react-dom.js\"></script>"
 						    + "<script src=\"/js/lib/promise.js\"></script>"
 							+ "<script src=\"/static/bundle.js\"></script>"
 						+ "</body>"
@@ -271,7 +276,7 @@ public class UserController {
 								+ "</script>"
 								+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
 								+ "<script src=\"//cdn.bootcss.com/react/0.14.8/react.js\"></script>"
-							    + "<script src=\"/js/lib/react-dom.js\"></script>"
+							    + "<script src=\"//cdn.bootcss.com/react/0.14.8/react-dom.js\"></script>"
 							    + "<script src=\"/js/lib/promise.js\"></script>"
 								+ "<script src=\"/static/bundle.js\"></script>"
 							+ "</body>"
