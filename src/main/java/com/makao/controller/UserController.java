@@ -129,36 +129,11 @@ public class UserController {
 			int areaid = user.getAreaId();
 			String cityname = user.getCityName();
 			String areaname = user.getAreaName();
-			Area area = this.areaService.getById(areaid);
-			String catalogs = area.getCatalogs();
+			//Area area = this.areaService.getById(areaid);
+			//String catalogs = area.getCatalogs();
 			int useid = user.getId();
 			TokenModel tm = tokenManager.createUserToken(useid, openid);
 			String token = tm.getToken();
-//			page = "<!DOCTYPE html>"
-//					+ "<html>"
-//						+ "<head>"
-//							+ "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\" />"
-//							+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
-//							+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\">"
-//							+ "<meta name=\"format-detection\" content=\"telephone=no\" />"
-//							+ "<title>Fruit</title>"
-//							+ "<link rel=\"stylesheet\" href=\"/css/index.css\" />"
-//							+ "<link rel=\"stylesheet\" href=\"/css/font-awesome.min.css\" />"
-//						+ "</head>"
-//						+ "<body>"
-//							+ "<div class=\"page\" id=\"root\">"
-//							+ "</div>"
-//							+ "<script>"
-//								+ "window.cityid="+cityid+";"
-//								+ "window.cityname='"+cityname+"';"
-//								+ "window.areaid="+areaid+";"
-//								+ "window.areaname='"+areaname+"';"
-//								+ "window.catalogs='"+catalogs+"';"
-//								+ "window.token='"+token+"';"
-//							+ "</script>"
-//							+ "<script src=\"/static/bundle.js\"></script>"
-//						+ "</body>"
-//					+ "</html>";
 			page = "<!DOCTYPE html>"
 					+ "<html>"
 						+ "<head>"
@@ -171,8 +146,15 @@ public class UserController {
 							+ "<link rel=\"stylesheet\" href=\"/css/animate.css\" />"
 							+ "<link rel=\"stylesheet\" href=\"/css/font-awesome.min.css\" />"
 						    + "<link rel=\"stylesheet\" href=\"/css/iconfont.css\" />"
+							+ "<style>"
+								+".flash{background-color:gray;width:100%;height:100%;z-index:999;background:<!-- url(\"./img/flash.png\") --> no-repeat center bottom !important;"
+								+"background-size:100% !important}"
+								+"#jump{position:absolute;right:10%;top:5%;"
+								+"width:4.2rem;height:2.4rem;border-radius:5rem;background:#6DBFD5;text-align:center;line-height:2.4rem;color:#fff;-webkit-user-select:none;}"		
+							+"</style>"
 						+ "</head>"
 						+ "<body>"
+							+"<div class=\"flash\" id=\"flash\">开场动画<input id=\"jump\" type=\"button\" value=\"跳过(2s)\" onclick=\"disp();\"/></div>"
 							+ "<div class=\"page\" id=\"root\">"
 							+ "</div>"
 							+ "<script>"
@@ -183,8 +165,25 @@ public class UserController {
 								+ "var cityname='"+cityname+"';"
 								+ "var areaid="+areaid+";"
 								+ "var areaname='"+areaname+"';"
-								+ "window.catalogs='"+catalogs+"';"
 								+ "var token='"+token+"';"
+								
+								+"var count=2;"
+								+"function showTime(count) {"
+									+"console.log(count);"
+									+"document.getElementById(\"jump\").value=\"跳过(\"+count+\"s)\";"
+									+"if (count >= 0) {"
+										+"count -= 1;"
+										+"setTimeout(function () {"
+											+"showTime(count);"
+										+"}, 1000);"
+									+"}" 
+								+"}"
+								+"showTime(count);"
+								+"function disp(){"
+									+"var box=document.getElementById(\"flash\");"
+									+"box.style.display=\"none\";" 
+								+"}"
+								+"setTimeout(\"disp()\",3000);"
 							+ "</script>"
 							+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
 							+ "<script src=\"/js/lib/react.js\"></script>"
@@ -215,8 +214,8 @@ public class UserController {
 				u.setAreaId(MakaoConstants.DEFAULT_AREA_ID);
 				u.setCityName(MakaoConstants.DEFAULT_CITY_NAME);
 				u.setAreaName(MakaoConstants.DEFAULT_AREA_NAME);
-				Area area = this.areaService.getById(MakaoConstants.DEFAULT_AREA_ID);
-				String catalogs = area.getCatalogs();
+				//Area area = this.areaService.getById(MakaoConstants.DEFAULT_AREA_ID);
+				//String catalogs = area.getCatalogs();
 				int u_id = this.userService.insert(u);
 				TokenModel tm = tokenManager.createUserToken(u_id, openid);
 				String token = tm.getToken();
@@ -244,7 +243,6 @@ public class UserController {
 									+ "var cityname='"+MakaoConstants.DEFAULT_CITY_NAME+"';"
 									+ "var areaid="+MakaoConstants.DEFAULT_AREA_ID+";"
 									+ "var areaname='"+MakaoConstants.DEFAULT_AREA_NAME+"';"
-									+ "window.catalogs='"+catalogs+"';"
 									+ "var token='"+token+"';"
 								+ "</script>"
 								+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
