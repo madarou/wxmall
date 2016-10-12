@@ -186,7 +186,7 @@ public class UserController {
 								+"setTimeout(\"disp()\",4200);"
 							+ "</script>"
 							+"<script src=\"http://res.wx.qq.com/open/js/jweixin-1.0.0.js\"></script>"
-							+ "<script src=\"/js/lib/react.js\"></script>"
+							+ "<script src=\"//cdn.bootcss.com/react/0.14.8/react.js\"></script>"
 						    + "<script src=\"/js/lib/react-dom.js\"></script>"
 						    + "<script src=\"/js/lib/promise.js\"></script>"
 							+ "<script src=\"/static/bundle.js\"></script>"
