@@ -153,6 +153,9 @@ public class WeixinController {
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
 							logger.info("message created:  "+ message);
 						}
+						else{
+							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
+						}
 					}
 					else{
 						message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
