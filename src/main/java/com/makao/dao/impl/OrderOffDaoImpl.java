@@ -355,7 +355,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int refundOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_off";
-		String history = ","+OrderState.RETURNING.getText()+"="+new Timestamp(System.currentTimeMillis());
+		String history = ","+OrderState.RETURNING.getCode()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `finalStatus`='"+OrderState.RETURNING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
@@ -394,7 +394,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public OrderOff finishReturnOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_off";
-		String history = ","+OrderState.RETURNED.getText()+"="+new Timestamp(System.currentTimeMillis());
+		String history = ","+OrderState.RETURNED.getCode()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `finalStatus`='"+OrderState.RETURNED.getCode()+"',`refundStatus`='待退款',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
@@ -472,7 +472,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int finishRefundOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_off";
-		String history = ","+OrderState.REFUNDED.getText()+"="+new Timestamp(System.currentTimeMillis());
+		String history = ","+OrderState.REFUNDED.getCode()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `refundStatus`='已退款',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
@@ -511,7 +511,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public int cancelRefundOrder(int cityId, int orderid, String vcomment) {
 		String tableName = "Order_"+cityId+"_off";
-		String history = ","+OrderState.RETURN_CANCELED.getText()+"="+new Timestamp(System.currentTimeMillis());
+		String history = ","+OrderState.RETURN_CANCELED.getCode()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `finalStatus`='"+OrderState.RETURN_CANCELED.getCode()+"',`refundStatus`='无需退款',`vcomment`='"+vcomment+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
@@ -834,7 +834,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	@Override
 	public OrderOff returnOrder(int cityid, int orderid) {
 		String tableName = "Order_"+cityid+"_off";
-		String history = ","+OrderState.RETURN_APPLYING.getText()+"="+new Timestamp(System.currentTimeMillis());
+		String history = ","+OrderState.RETURN_APPLYING.getCode()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `finalStatus`='"+OrderState.RETURN_APPLYING.getCode()+"',`refundStatus`='无',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
@@ -1285,7 +1285,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 								p.setCommented(rs.getInt("commented"));
 								p.setInventBack(rs.getInt("inventBack"));
 								res.add(p);
-								String history = ","+OrderState.TERMINALED.getText()+"="+new Timestamp(System.currentTimeMillis());
+								String history = ","+OrderState.TERMINALED.getCode()+"="+new Timestamp(System.currentTimeMillis());
 								String sql2 = "UPDATE `"
 										+ tableName
 										+ "` SET `finalStatus`='"+OrderState.TERMINALED.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+rs.getInt("id");

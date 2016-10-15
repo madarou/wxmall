@@ -512,7 +512,7 @@ $(document).ready(function(){
 		copy: function(){
 			var clickedId = $(this).attr("id");
 		    copyHandle_Id = clickedId.split("-")[1];
-		    return "/product/"+copyHandle_Id+"/"+$("#loginCityId").val()+"/"+$("#loginAreaId").val();
+		    return "/fruit/"+copyHandle_Id+"?cityId="+$("#loginCityId").val()+"&areaId="+$("#loginAreaId").val();
 		},
 		afterCopy: function(){
 			if(copyHandle_Id!=0){

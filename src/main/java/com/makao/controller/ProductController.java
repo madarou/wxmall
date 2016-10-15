@@ -480,10 +480,12 @@ public class ProductController {
 				catalog.add(c.split("=")[0]);
 			}
 		}
+		List<Banner> banners = this.bannerService.queryByAreaId(areaId);
 		logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有商品信息完成");
 		jsonObject.put("msg", "200");
 		jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
 		jsonObject.put("catalog", catalog);
+		jsonObject.put("banners", banners);
 		return jsonObject;
     }
 	

@@ -80,7 +80,7 @@ public class CommentController {
 		else{
 			logger.info( Comment.getUserName()+" 增加评论成功失败cityid,areaid,commentid=" + Comment.getCityId()
 					+" "+Comment.getAreaId()+" "+Comment.getProductId());
-        	jsonObject.put("msg", "增加评论失败");
+        	jsonObject.put("msg", "201");
 		}
         return jsonObject;
     }

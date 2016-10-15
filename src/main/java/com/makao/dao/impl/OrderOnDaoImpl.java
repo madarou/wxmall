@@ -546,7 +546,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(21, orderOn.getAreaId());
 									ps.setInt(22, orderOn.getCityId());
 									ps.setString(23, "待退款");
-									ps.setString(24,orderOn.getHistory()+","+OrderState.CANCELED.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									ps.setString(24,orderOn.getHistory()+","+OrderState.CANCELED.getCode()+"="+new Timestamp(System.currentTimeMillis()));
 									ps.setInt(25, orderOn.getPoint());
 									ps.setString(26, orderOn.getSender());
 									ps.setString(27, orderOn.getSenderPhone());
@@ -593,7 +593,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public OrderOn distributeOrder(int cityId, int orderid) {
 		String tableName = "Order_"+cityId+"_on";
-		String history = ","+OrderState.DISTRIBUTING.getText()+"="+new Timestamp(System.currentTimeMillis());
+		String history = ","+OrderState.DISTRIBUTING.getCode()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `status`='"+OrderState.DISTRIBUTING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
@@ -670,7 +670,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 //		String sql = "UPDATE `"
 //				+ tableName
 //				+ "` SET `status`='已配送' WHERE `id`="+orderid;
-		String history = ","+OrderState.DISTRIBUTED.getText()+"="+new Timestamp(System.currentTimeMillis());
+		String history = ","+OrderState.DISTRIBUTED.getCode()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `status`='"+OrderState.DISTRIBUTED.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
@@ -843,7 +843,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps.setInt(21, orderOn.getAreaId());
 									ps.setInt(22, orderOn.getCityId());
 									ps.setString(23, "无需退款");//正常完成的订单，退款状态为无
-									ps.setString(24, orderOn.getHistory()+","+OrderState.RECEIVED.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									ps.setString(24, orderOn.getHistory()+","+OrderState.RECEIVED.getCode()+"="+new Timestamp(System.currentTimeMillis()));
 									ps.setInt(25, orderOn.getPoint());
 									ps.setString(26, orderOn.getSender());
 									ps.setString(27, orderOn.getSenderPhone());
@@ -1393,7 +1393,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 						ResultSet rs = ps0.executeQuery();
 						while(rs.next()){
 						if("立即配送".equals(rs.getString("receiveTime"))){
-							String history = ","+OrderState.PROCESS_WAITING.getText()+"="+new Timestamp(System.currentTimeMillis());
+							String history = ","+OrderState.PROCESS_WAITING.getCode()+"="+new Timestamp(System.currentTimeMillis());
 							String sql = "UPDATE `"
 									+ tableName
 									+ "` SET `status`='"+OrderState.PROCESS_WAITING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
@@ -1401,7 +1401,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							returncount = ps.executeUpdate();
 						}
 						else{
-							String history = ","+OrderState.QUEUE.getText()+"="+new Timestamp(System.currentTimeMillis());
+							String history = ","+OrderState.QUEUE.getCode()+"="+new Timestamp(System.currentTimeMillis());
 							String sql = "UPDATE `"
 									+ tableName
 									+ "` SET `status`='"+OrderState.QUEUE.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `number`='"+orderNumber+"'";
@@ -1429,11 +1429,11 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 								p.setVcomment(rs.getString("vcomment"));
 								if("立即配送".equals(rs.getString("receiveTime"))){
 									p.setStatus(OrderState.PROCESS_WAITING.getCode()+"");
-									p.setHistory(rs.getString("history")+","+OrderState.PROCESS_WAITING.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									p.setHistory(rs.getString("history")+","+OrderState.PROCESS_WAITING.getCode()+"="+new Timestamp(System.currentTimeMillis()));
 								}
 								else{
 									p.setStatus(OrderState.QUEUE.getCode()+"");
-									p.setHistory(rs.getString("history")+","+OrderState.QUEUE.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									p.setHistory(rs.getString("history")+","+OrderState.QUEUE.getCode()+"="+new Timestamp(System.currentTimeMillis()));
 								}
 								p.setCityarea(rs.getString("cityarea"));
 								p.setUserId(rs.getInt("userId"));
@@ -1520,7 +1520,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 	@Override
 	public OrderOn processOrder(int cityId, String orderid) {
 		String tableName = "Order_"+cityId+"_on";
-		String history = ","+OrderState.PROCESS_WAITING.getText()+"="+new Timestamp(System.currentTimeMillis());
+		String history = ","+OrderState.PROCESS_WAITING.getCode()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
 				+ "` SET `status`='"+OrderState.PROCESS_WAITING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
@@ -1621,7 +1621,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							logger.info("city_area_id:"+cityid+"_"+rs.getInt("areaId")+"_"+rs.getInt("id")+"; receiveTime:"+receiveTime+"; min_diff: "+min_diff);
 							if(min_diff<=MakaoConstants.PRETIME){
 								int o_id = rs.getInt("id");
-								String history = ","+OrderState.PROCESS_WAITING.getText()+"="+new Timestamp(System.currentTimeMillis());
+								String history = ","+OrderState.PROCESS_WAITING.getCode()+"="+new Timestamp(System.currentTimeMillis());
 								String sql2 = "UPDATE `"
 										+ tableName
 										+ "` SET `status`='"+OrderState.PROCESS_WAITING.getCode()+"',`history`=concat(`history`,'"+history+"') WHERE `id`="+o_id;
@@ -1720,7 +1720,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							String hist = rs.getString("history");
 							String ditributed_time = "";
 							for(String str:hist.split(",")){
-								if(str.indexOf(OrderState.DISTRIBUTED.getText())>-1){//取出'已配送=xxxx:xx:xx'的时间
+								if(str.indexOf(OrderState.DISTRIBUTED.getCode())>-1){//取出'已配送=xxxx:xx:xx'的时间
 									ditributed_time=str.split("=")[1];
 								}
 							}
@@ -1782,7 +1782,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 									ps2.setInt(21, rs.getInt("areaId"));
 									ps2.setInt(22, rs.getInt("cityId"));
 									ps2.setString(23, "无需退款");//正常完成的订单，退款状态为无
-									ps2.setString(24, rs.getString("history")+","+OrderState.RECEIVED.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									ps2.setString(24, rs.getString("history")+","+OrderState.RECEIVED.getCode()+"="+new Timestamp(System.currentTimeMillis()));
 									ps2.setInt(25, rs.getInt("point"));
 									ps2.setString(26,rs.getString("sender"));
 									ps2.setString(27, rs.getString("senderPhone"));
@@ -2027,7 +2027,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 										ps2.setString(23, "无需退款");
 									else
 										ps2.setString(23, "待退款");
-									ps2.setString(24, rs.getString("history")+","+OrderState.CANCELED.getText()+"="+new Timestamp(System.currentTimeMillis()));
+									ps2.setString(24, rs.getString("history")+","+OrderState.CANCELED.getCode()+"="+new Timestamp(System.currentTimeMillis()));
 									ps2.setInt(25, rs.getInt("point"));
 									ps2.setString(26,rs.getString("sender"));
 									ps2.setString(27, rs.getString("senderPhone"));
