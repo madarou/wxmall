@@ -80,7 +80,16 @@ public class MessageUtil {
 	 * 用户关注时的自动回复
 	 */
 	public static String onSubscriptionAutoReply(){
-		return "欢迎关注社享网!";
+		//return "欢迎关注社享网!";
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("更省钱(低于京东价!)").append("\n");
+		buffer.append("更省时(定时送达快至半小时)").append("\n");
+		buffer.append("更省力(最安全免费配送到家)").append("\n");
+		buffer.append("更省心(48小时无理由上门退货保障)").append("\n\n");
+		buffer.append("首次登录即送500积分！").append("\n\n");
+		buffer.append("注意：只有已开通服务的社区住户才可享受哦!").append("\n\n");
+		buffer.append("<a href=\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdfbe4a14b5c766b5&redirect_uri=http%3a%2f%2fm1.shequvip.com%2fuser%2fsnsapi_userinfo&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect\">【点此开始选购】</a>");
+		return buffer.toString();
 	}
 	
 	/**
