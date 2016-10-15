@@ -323,10 +323,11 @@
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品标签：</span>
-        <label class="single_selection"><input type="radio" name="prolabel" value="无标签" checked="checked"/>无标签</label>
-        <label class="single_selection"><input type="radio" name="prolabel" value="绿色食品"/>绿色食品</label>
-        <label class="single_selection"><input type="radio" name="prolabel" value="小产区"/>小产区</label>
-        <label class="single_selection"><input type="radio" name="prolabel" value="新人福利"/>新人福利</label>
+        <label class="single_selection"><input type="radio" name="prolabel" value="" checked="checked"/>无标签</label>
+        <label class="single_selection"><input type="radio" name="prolabel" value="1"/>整件购买</label>
+        <label class="single_selection"><input type="radio" name="prolabel" value="2"/>绿色有机</label>
+        <label class="single_selection"><input type="radio" name="prolabel" value="3"/>新鲜上架</label>
+        <label class="single_selection"><input type="radio" name="prolabel" value="4"/>热销商品</label>
        </li>
        <li>
         <span class="item_name" style="width:120px;">商品规格：</span>
