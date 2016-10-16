@@ -61,13 +61,13 @@ public class BasicTestSuite_Test3 {
 		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"江苏\",\"areaName\":\"昆山工业园\"}";
 	
 		String newprodcut11_1 = "http://localhost:8080/product/vnew/1";
-		String product11_1 = "{\"productName\":\"水晶葡萄普通葡萄普通葡萄普big通葡萄\",\"catalog\":\"水果\",\"price\":\"12.99\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"inventory\":12,\"threhold\":9,\"sequence\":1,\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":0,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
+		String product11_1 = "{\"productName\":\"水晶葡萄普通葡萄普通葡萄普big通葡萄\",\"catalog\":\"水果\",\"price\":\"12.99\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"label\":\"2\",\"inventory\":12,\"threhold\":9,\"sequence\":1,\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":0,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
 	
 		String newprodcut11_2 = "http://localhost:8080/product/vnew/1";
-		String product11_2 = "{\"productName\":\"普通葡萄普通葡萄普通葡萄普big通葡萄\",\"catalog\":\"水果\",\"price\":\"10.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"13.00\",\"inventory\":12,\"threhold\":9,\"sequence\":2,\"origin\":\"海南\",\"isShow\":\"yes\",\"showWay\":\"b\",\"salesVolume\":0,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
+		String product11_2 = "{\"productName\":\"普通葡萄普通葡萄普通葡萄普big通葡萄\",\"catalog\":\"水果\",\"price\":\"10.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"13.00\",\"label\":\"3\",\"inventory\":12,\"threhold\":9,\"sequence\":2,\"origin\":\"海南\",\"isShow\":\"yes\",\"showWay\":\"b\",\"salesVolume\":0,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
 	
 		String newprodcut22_1 = "http://localhost:8080/product/vnew/2";
-		String product22_1 = "{\"productName\":\"水晶葡萄普通葡萄普通葡萄普big通葡萄\",\"catalog\":\"水果\",\"price\":\"12.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"inventory\":0,\"threhold\":9,\"sequence\":1,\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":0,\"likes\":3972,\"areaId\":2,\"cityId\":2,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
+		String product22_1 = "{\"productName\":\"水晶葡萄普通葡萄普通葡萄普big通葡萄\",\"catalog\":\"水果\",\"price\":\"12.00\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"label\":\"4\",\"inventory\":0,\"threhold\":9,\"sequence\":1,\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":0,\"likes\":3972,\"areaId\":2,\"cityId\":2,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
 		
 		String newcoupon = "http://localhost:8080/coupon/new/1";
 		String coupon = "{\"name\":\"10元代金券\",\"amount\":\"10\",\"point\":20,\"restrict\":10,\"isShow\":\"yes\",\"type\":\"代金券兑换\",\"cityId\":0,\"cityName\":\"1#_#上海\",\"comment\":\"新用户欢迎礼券\",\"coverSUrl\":\""+couponSCover+"\",\"coverBUrl\":\""+couponBCover+"\"}";
