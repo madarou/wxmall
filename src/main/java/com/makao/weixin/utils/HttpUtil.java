@@ -1,5 +1,6 @@
 package com.makao.weixin.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -10,10 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.dom4j.Document;
@@ -197,4 +203,25 @@ public class HttpUtil {
 	    inputStream = null;
 	    return map;
 	}
+	
+	public static void postFile(String url, File file) throws ClientProtocolException, IOException {  
+        HttpClient httpclient = new DefaultHttpClient();  
+        HttpPost post = new HttpPost(url);  
+        FileBody fileBody = new FileBody(file);  
+        StringBody stringBody = new StringBody("文件的描述");  
+        MultipartEntity entity = new MultipartEntity();  
+        entity.addPart("file", fileBody);  
+        entity.addPart("desc", stringBody);  
+        post.setEntity(entity);  
+        HttpResponse response = httpclient.execute(post);  
+        if(HttpStatus.SC_OK==response.getStatusLine().getStatusCode()){    
+              
+            HttpEntity entitys = response.getEntity();  
+            if (entity != null) {  
+                System.out.println(entity.getContentLength());  
+                System.out.println(EntityUtils.toString(entitys));  
+            }  
+        }  
+        httpclient.getConnectionManager().shutdown();  
+    }    
 }
