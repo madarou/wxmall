@@ -52,13 +52,13 @@ public class BasicTestSuite_Test3 {
 		String area2 = "{\"areaName\":\"莱蒙城\",\"cityName\":\"常州\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor2 = "http://localhost:8080/vendor/new/1";
-		String vendor2 = "{\"userName\":\"老马\",\"password\":\"admin\",\"areaId\":2,\"cityId\":2,\"cityName\":\"常州\",\"areaName\":\"常州恐龙园\"}";
+		String vendor2 = "{\"userName\":\"老马\",\"password\":\"admin\",\"areaId\":2,\"cityId\":2,\"cityName\":\"常州\",\"areaName\":\"莱蒙城\"}";
 		
 		String newarea3 = "http://localhost:8080/area/new/1";
 		String area3 = "{\"areaName\":\"恐龙园\",\"cityName\":\"常州\",\"catalogs\":\"水果=0,食材=1,零食=2\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor3 = "http://localhost:8080/vendor/new/1";
-		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"常州\",\"areaName\":\"昆山工业园\"}";
+		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"常州\",\"areaName\":\"恐龙园\"}";
 	
 		String newprodcut11_1 = "http://localhost:8080/product/vnew/1";
 		String product11_1 = "{\"productName\":\"水晶葡萄普通葡萄普通葡萄普big通葡萄\",\"catalog\":\"水果\",\"price\":\"12.99\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"label\":\"2\",\"inventory\":12,\"threhold\":9,\"sequence\":1,\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":0,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";

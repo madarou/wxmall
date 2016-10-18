@@ -25,7 +25,7 @@ public class MakaoConstants {
 											//下单时间与当前时间的分钟差，小于该时间则开始删除，单位为分，为负值，注意其绝对值必须大于ORDER_EXPIRE
 	public static final int RETURN_EXPIRE_TIME = -2;//从确认收货到不能申请退货的时间差，单位为分(48小时)
 	public static final int WEIXIN_TOKEN_EXPIRE_TIME = 110;//微信的access_token和jsapi_ticket的在缓存中的有效时间，单位为分
-	public static final int INITIAL_POINT = 40;//用户第一次进来时的默认积分
+	public static final int INITIAL_POINT = 500;//用户第一次进来时的默认积分
 	public static final float POINT_PROPORTION = 1.0f;//订单金额化成积分的比例(一比一四舍五入)
 	public static final long COUPON_EXPIRE_DAY = 30L;//代金券有效期天数(30天)
 }
