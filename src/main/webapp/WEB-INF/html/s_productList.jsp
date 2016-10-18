@@ -633,5 +633,6 @@
 <!-- 添加详情2图 -->
 </section>
 <input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${id}"></input>
 </body>
 </html>
