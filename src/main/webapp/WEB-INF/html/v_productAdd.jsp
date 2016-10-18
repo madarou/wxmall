@@ -163,16 +163,10 @@
      </section>
      <!-- 是否要复制弹出框 -->
 
-<section class="rt_wrap content mCustomScrollbar">
- <div class="rt_content">
-     <section>
-        <!-- <h3 style="text-align:right;">欢迎您，某某管理员</h3> -->
-        <hr/>
-     </section>
-     
-     <!--弹出框效果-->
+<!--弹出框效果-->
      <script>
      $(document).ready(function(){
+    	 var reps = $("#tb").children('tr');
      //弹出文本性提示框
      $("#proRepository").click(function(){
        $(".repository_pop_bg").fadeIn();
@@ -180,7 +174,27 @@
      //弹出：取消或关闭按钮
      $("#closeRep").click(function(){
        $(".repository_pop_bg").fadeOut();
+       $.each(reps,function(i, item){
+    	   $(item).css('display','');
+		});
        });
+     $("#searchRep").click(function(){
+    	var content = $.trim($('#searchname').val());
+    	if(content.length==0){
+    		$.each(reps,function(i, item){
+    	    	   $(item).css('display','');
+    		});
+    		return false;
+    	}
+    	
+    	$("#tb").children('tr').css('display','none');
+    	$.each(reps,function(i, item){
+    		var n = $($(item).children('td')[1]).html();
+    		if(n.indexOf(content)>-1){
+    			$(item).css('display','');
+    		}
+    	});
+     });
      });
      </script>
      <section class="repository_pop_bg">
@@ -190,6 +204,7 @@
        <!--content-->
        <div class="pop_cont_input">
           <table class="table">
+          <thead>
 	       <tr>
 	        <th>缩略图</th>
 	        <th>商品名称</th>
@@ -198,6 +213,8 @@
 	        <th>规格</th>
 	        <th>操作</th>
 	       </tr>
+	       </thead>
+	       <tbody id="tb">
 	       <c:forEach var="item" items="${products}" varStatus="status">
 	         	<tr>
 	         		<td><img id="copyCoverSUrl-${item.id}" style="width:50px;height:50px" alt="缩略图" src="/static/upload/${item.coverSUrl}"></td>
@@ -215,11 +232,13 @@
 			        <td id="copyDetailUrl-${item.id}" style="display:none">${item.detailUrl}</td>
 	         	</tr>
 			</c:forEach> 
+			</tbody>
 	      </table>
        </div>
        <!--以pop_cont_text分界-->
        <div class="pop_cont_text">
-        注意：其中分类、序号、库存不会被复制请自行完善。
+        注意：分类、序号、库存不会被复制请自行完善。<input type="text" id="searchname" class="textbox_105" placeholder="商品名称"/>
+	    <button class="linkStyle" id="searchRep">搜索</button>
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
@@ -228,6 +247,13 @@
       </div>
      </section>
      <!--结束：弹出框效果-->
+     
+<section class="rt_wrap content mCustomScrollbar">
+ <div class="rt_content">
+     <section>
+        <!-- <h3 style="text-align:right;">欢迎您，某某管理员</h3> -->
+        <hr/>
+     </section>
           
      <!-- 去商品库下载 -->
      <section style="text-align:right">

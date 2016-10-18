@@ -306,6 +306,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setOrigin(rs.getString("origin"));
 							p.setSalesVolume(rs.getInt("salesVolume"));
 							p.setLikes(rs.getInt("likes"));
+							p.setSubdetailUrl(rs.getString("subdetailUrl"));
 							p.setDetailUrl(rs.getString("detailUrl"));
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
@@ -378,6 +379,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setOrigin(rs.getString("origin"));
 							p.setSalesVolume(rs.getInt("salesVolume"));
 							p.setLikes(rs.getInt("likes"));
+							p.setSubdetailUrl(rs.getString("subdetailUrl"));
 							p.setDetailUrl(rs.getString("detailUrl"));
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
@@ -626,6 +628,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setOrigin(rs.getString("origin"));
 							p.setSalesVolume(rs.getInt("salesVolume"));
 							p.setLikes(rs.getInt("likes"));
+							p.setSubdetailUrl(rs.getString("subdetailUrl"));
 							p.setDetailUrl(rs.getString("detailUrl"));
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
@@ -735,6 +738,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setOrigin(rs.getString("origin"));
 							p.setSalesVolume(rs.getInt("salesVolume"));
 							p.setLikes(rs.getInt("likes"));
+							p.setSubdetailUrl(rs.getString("subdetailUrl"));
 							p.setDetailUrl(rs.getString("detailUrl"));
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
@@ -1044,6 +1048,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setOrigin(rs.getString("origin"));
 							p.setSalesVolume(rs.getInt("salesVolume"));
 							p.setLikes(rs.getInt("likes"));
+							p.setSubdetailUrl(rs.getString("subdetailUrl"));
 							p.setDetailUrl(rs.getString("detailUrl"));
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
@@ -1110,6 +1115,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setOrigin(rs.getString("origin"));
 							p.setSalesVolume(rs.getInt("salesVolume"));
 							p.setLikes(rs.getInt("likes"));
+							p.setSubdetailUrl(rs.getString("subdetailUrl"));
 							p.setDetailUrl(rs.getString("detailUrl"));
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
@@ -1176,6 +1182,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setOrigin(rs.getString("origin"));
 							p.setSalesVolume(rs.getInt("salesVolume"));
 							p.setLikes(rs.getInt("likes"));
+							p.setSubdetailUrl(rs.getString("subdetailUrl"));
 							p.setDetailUrl(rs.getString("detailUrl"));
 							p.setIsShow(rs.getString("isShow"));
 							p.setAreaId(rs.getInt("areaId"));
