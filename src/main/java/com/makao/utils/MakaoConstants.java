@@ -11,6 +11,7 @@ public class MakaoConstants {
 	public static final String SERVER_DOMAIN = "http://m1.shequvip.com";//最后部署上线的服务器的域名，用于设置微信回调页面
 	public static final String CDN_DOMAIN="http://sx-1252349799.cosgz.myqcloud.com";//
 	
+	
 	public static final long ORDER_EXPIRE = 10;//下单等待支付的时间限制，单位为分(10)
 	public static final String DEFAULT_CITY_NAME="常州";
 	public static final String DEFAULT_AREA_NAME="莱蒙城";
