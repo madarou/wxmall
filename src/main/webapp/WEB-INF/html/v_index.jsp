@@ -5,6 +5,7 @@
 <head>
 <meta charset="utf-8"/>
 <title>区域后台管理系统</title>
+<link rel="shortcut icon" href="/static/images/icon/favicon.ico" type="image/x-icon" />
 <meta name="author" content="DeathGhost" />
 <link rel="stylesheet" type="text/css" href="static/css/style.css" />
 <!--[if lt IE 9]>
