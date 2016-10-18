@@ -19,8 +19,8 @@ public class BasicTestSuite_Test3 {
 
 	@Test
 	public void test() throws InterruptedException {
+		String changZhou_city = "changzhou_xxxx.jpg";
 		String cityLogo = "10000002343_标准城市logo.jpg";
-		String userHead = "1003234393232034_head.jpg";
 		String productSCover = "1000000879418434_正方形标准商品图.jpg";
 		String productBCover = "1000000493029796_长方形标准商品图.jpg";
 		String productDetail2 = "1000001532212560_标准商品详情.jpg";
@@ -46,19 +46,19 @@ public class BasicTestSuite_Test3 {
 		String vendor = "{\"userName\":\"马靠\",\"password\":\"admin\",\"areaId\":1,\"cityId\":1,\"cityName\":\"上海\",\"areaName\":\"张江\"}";
 		
 		String newcity2 = "http://localhost:8080/city/new/1";
-		String city2 = "{\"cityName\":\"江苏\",\"avatarUrl\":\""+cityLogo+"\"}";
+		String city2 = "{\"cityName\":\"常州\",\"avatarUrl\":\""+changZhou_city+"\"}";
 		
 		String newarea2 = "http://localhost:8080/area/new/1";
-		String area2 = "{\"areaName\":\"常州恐龙园\",\"cityName\":\"江苏\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
+		String area2 = "{\"areaName\":\"莱蒙城\",\"cityName\":\"常州\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor2 = "http://localhost:8080/vendor/new/1";
-		String vendor2 = "{\"userName\":\"老马\",\"password\":\"admin\",\"areaId\":2,\"cityId\":2,\"cityName\":\"江苏\",\"areaName\":\"常州恐龙园\"}";
+		String vendor2 = "{\"userName\":\"老马\",\"password\":\"admin\",\"areaId\":2,\"cityId\":2,\"cityName\":\"常州\",\"areaName\":\"常州恐龙园\"}";
 		
 		String newarea3 = "http://localhost:8080/area/new/1";
-		String area3 = "{\"areaName\":\"昆山工业园\",\"cityName\":\"江苏\",\"catalogs\":\"水果=0,食材=1,零食=2\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
+		String area3 = "{\"areaName\":\"恐龙园\",\"cityName\":\"常州\",\"catalogs\":\"水果=0,食材=1,零食=2\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor3 = "http://localhost:8080/vendor/new/1";
-		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"江苏\",\"areaName\":\"昆山工业园\"}";
+		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"常州\",\"areaName\":\"昆山工业园\"}";
 	
 		String newprodcut11_1 = "http://localhost:8080/product/vnew/1";
 		String product11_1 = "{\"productName\":\"水晶葡萄普通葡萄普通葡萄普big通葡萄\",\"catalog\":\"水果\",\"price\":\"12.99\",\"standard\":\"一份足2斤\",\"marketPrice\":\"15.00\",\"label\":\"2\",\"inventory\":12,\"threhold\":9,\"sequence\":1,\"origin\":\"智利\",\"isShow\":\"yes\",\"showWay\":\"s\",\"salesVolume\":0,\"likes\":3972,\"areaId\":1,\"cityId\":1,\"coverSUrl\":\""+productSCover+"\",\"coverBUrl\":\""+productBCover+"\",\"detailUrl\":\""+productDetail2+"\"}";
@@ -121,8 +121,8 @@ public class BasicTestSuite_Test3 {
 		
 		result = HttpUtils.doPostStr(newprodcut11_2,product11_2);
 		assertEquals("200",result.get("msg"));
-		result = HttpUtils.doPostStr(newprodcut22_1,product22_1);
-		assertEquals("200",result.get("msg"));
+		//result = HttpUtils.doPostStr(newprodcut22_1,product22_1);
+		//assertEquals("200",result.get("msg"));
 		
 		//**********新增优惠券***********
 		result = HttpUtils.doPostStr(newcoupon,coupon);

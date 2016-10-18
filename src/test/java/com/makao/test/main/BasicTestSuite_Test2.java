@@ -25,6 +25,7 @@ public class BasicTestSuite_Test2 {
 
 	@Test
 	public void test() throws InterruptedException {
+		String changZhou_city = "changzhou_xxxx.jpg";
 		String cityLogo = "10000002343_标准城市logo.jpg";
 		String userHead = "1003234393232034_head.jpg";
 		String productSCover = "1000000879418434_正方形标准商品图.jpg";
@@ -52,19 +53,19 @@ public class BasicTestSuite_Test2 {
 		String vendor = "{\"userName\":\"马靠\",\"password\":\"admin\",\"areaId\":1,\"cityId\":1,\"cityName\":\"上海\",\"areaName\":\"张江\"}";
 		
 		String newcity2 = "http://localhost:8080/city/new/1";
-		String city2 = "{\"cityName\":\"江苏\",\"avatarUrl\":\""+cityLogo+"\"}";
+		String city2 = "{\"cityName\":\"常州\",\"avatarUrl\":\""+changZhou_city+"\"}";
 		
 		String newarea2 = "http://localhost:8080/area/new/1";
-		String area2 = "{\"areaName\":\"常州恐龙园\",\"cityName\":\"江苏\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
+		String area2 = "{\"areaName\":\"莱蒙城\",\"cityName\":\"常州\",\"catalogs\":\"水果=0,食材=1,零食=2,省钱=3\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor2 = "http://localhost:8080/vendor/new/1";
-		String vendor2 = "{\"userName\":\"老马\",\"password\":\"admin\",\"areaId\":2,\"cityId\":2,\"cityName\":\"江苏\",\"areaName\":\"常州恐龙园\"}";
+		String vendor2 = "{\"userName\":\"老马\",\"password\":\"admin\",\"areaId\":2,\"cityId\":2,\"cityName\":\"常州\",\"areaName\":\"上海恐龙园\"}";
 		
 		String newarea3 = "http://localhost:8080/area/new/1";
-		String area3 = "{\"areaName\":\"昆山工业园\",\"cityName\":\"江苏\",\"catalogs\":\"水果=0,食材=1,零食=2\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
+		String area3 = "{\"areaName\":\"恐龙园\",\"cityName\":\"常州\",\"catalogs\":\"水果=0,食材=1,零食=2\",\"cityId\":2,\"phoneNumber\":\"13937263847\"}";
 		
 		String newvendor3 = "http://localhost:8080/vendor/new/1";
-		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"江苏\",\"areaName\":\"昆山工业园\"}";
+		String vendor3 = "{\"userName\":\"老王\",\"password\":\"admin\",\"areaId\":3,\"cityId\":2,\"cityName\":\"常州\",\"areaName\":\"昆山工业园\"}";
 	
 		String newuser = "http://localhost:8080/user/new";
 		String user = "{\"userName\":\"马买家😯\",\"openid\":\"3c5d3acb-31b9-480d-944a-516e74390ed8\",\"avatarUrl\":\""+userHead+"\",\"areaId\":1,\"areaName\":\"张江\",\"cityId\":1,\"cityName\":\"上海\",\"point\":180,\"receiveName\":\"郭德纲\",\"phoneNumber\":\"176382937287\",\"address\":\"上海复旦大学\",\"addLabel\":\"家\",\"rank\":\"中级\"}";
