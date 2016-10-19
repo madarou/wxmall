@@ -254,7 +254,7 @@ public class ProductController {
 			//如果inventory字段值不为0，说明有修改inventory，注意此时的inventory值是增加或减少的量，不是最终设置的数量
 			int intv = Product.getInventory();
 			String key = "pi_"+vendor.getCityId()+"_"+vendor.getAreaId()+"_"+Product.getId();
-			if(intv!=0){//从缓存中取出现有的库存
+			//if(intv!=0){//从缓存中取出现有的库存
 				Object o = redisUtil.redisQueryObject(key);
 				if(o==null){//缓存里面如果没有，从数据库里读
 					String inv_sv = this.productService.getInventoryAndSV(vendor.getCityId(), vendor.getAreaId(), Product.getId()+"");
@@ -265,7 +265,7 @@ public class ProductController {
 				}
 				int actualInv = Integer.valueOf(redisUtil.redisQueryObject(key))+intv;
 				Product.setInventory(actualInv);
-			}
+			//}
 			Product.setStatus("2");
 			//如果现在库存大于现在最低库存
 			if(Product.getInventory()<=Product.getThrehold())

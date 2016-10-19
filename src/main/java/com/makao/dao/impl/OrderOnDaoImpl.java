@@ -1720,8 +1720,9 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 							String hist = rs.getString("history");
 							String ditributed_time = "";
 							for(String str:hist.split(",")){
-								if(str.indexOf(OrderState.DISTRIBUTED.getCode())>-1){//取出'已配送=xxxx:xx:xx'的时间
+								if(str.indexOf(OrderState.DISTRIBUTED.getCode()+"=")==0){//取出'已配送=xxxx:xx:xx'的时间
 									ditributed_time=str.split("=")[1];
+									break;
 								}
 							}
 							if(!"".equals(ditributed_time)){

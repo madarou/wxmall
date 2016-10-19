@@ -849,14 +849,19 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 			// 定义一个匿名类，实现了Work接口
 			new Work() {
 				public void execute(Connection connection) throws SQLException {
-					PreparedStatement ps = null;PreparedStatement ps2 = null;
+					PreparedStatement ps = null;
+					PreparedStatement ps0 = null;
 					try {
+						ps0=connection.prepareStatement(sql2);
 						ps = connection.prepareStatement(sql);
-						int returncount = ps.executeUpdate();
-						if(returncount!=0){//如果执行成功，则查询order对象并返回
-							ps2=connection.prepareStatement(sql2);
-							ResultSet rs = ps2.executeQuery();
-							while(rs.next()){
+						ResultSet rs = ps0.executeQuery();
+						while(rs.next()){
+							String currentState = rs.getString("finalStatus");
+							if(!"6".equals(currentState)){//当前不是已收货状态，不能退货
+								return;
+							}
+							int returncount = ps.executeUpdate();
+							if(returncount!=0){//如果执行成功，则查询order对象并返回
 								OrderOff p = new OrderOff();
 								p.setId(rs.getInt("id"));
 								p.setNumber(rs.getString("number"));
@@ -875,7 +880,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 								p.setFreight(rs.getString("freight"));
 								p.setComment(rs.getString("comment"));
 								p.setVcomment(rs.getString("vcomment"));
-								p.setFinalStatus(rs.getString("finalStatus"));
+								p.setFinalStatus(OrderState.RETURN_APPLYING.getCode()+"");
 								p.setCityarea(rs.getString("cityarea"));
 								p.setFinalTime(rs.getTimestamp("finalTime"));
 								p.setUserId(rs.getInt("userId"));
@@ -891,12 +896,15 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 								p.setInventBack(rs.getInt("inventBack"));
 								res.add(p);
 							}
-						}
+						}			
 					} finally {
-						doClose(ps);doClose(ps2);
+						doClose(ps);doClose(ps0);
 					}
 				}
 			});
+			if(res.size()==0){
+				return null;
+			}
 			tx.commit(); // 使用 Hibernate事务处理边界
 		} catch (HibernateException e) {
 			if (null != tx)
