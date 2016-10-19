@@ -46,12 +46,13 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队订单</a></dd>
+    <dd><a href="/orderOn/v_query_queue/${id}?token=${token}">排队中订单</a></dd>
     <dd><a href="/orderOn/v_query_process/${id}?token=${token}">待处理订单</a></dd>
     <dd><a href="/orderOn/v_query_distributed/${id}?token=${token}">已配送订单</a></dd>
     <dd><a href="/orderOff/v_query_confirm/${id}?token=${token}" class="active">已收货订单</a></dd>
     <dd><a href="/orderOff/v_query_refund/${id}?token=${token}">待退货订单</a></dd>
-    <dd><a href="/orderOff/v_query_cancel/${id}?token=${token}">已取消订单</a></dd>
+    <dd><a href="/orderOff/v_query_teminaled/${id}/1?token=${token}">已完成订单</a></dd>
+    <dd><a href="/orderOff/v_query_cancel/${id}/1?token=${token}">已取消/已退货</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>

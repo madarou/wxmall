@@ -119,4 +119,22 @@ public interface IOrderOffService {
 	 */
 	int queryNeedRefundNumber(String string);
 
+	/**
+	 * @param string
+	 * @param areaId
+	 * @return
+	 * 已完成的订单，即状态为13，已收货且已过了退货期的订单
+	 */
+	List<OrderOff> queryTerminaledByAreaId(String string, int areaId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 状态13的订单数
+	 */
+	int getTermialedRecordCount(int cityId, int areaId);
+
+	OrderOff queryByNumber(String string, String number);
+
 }

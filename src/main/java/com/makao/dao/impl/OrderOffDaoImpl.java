@@ -1366,6 +1366,192 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 			return res.get(0);
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see com.makao.dao.IOrderOffDao#queryTerminaledByAreaId(java.lang.String, int)
+	 * 已完成的订单，即状态为13，已收货且已过了退货期的订单
+	 */
+	@Override
+	public List<OrderOff> queryTerminaledByAreaId(String tableName, int areaId) {
+		String sql = "SELECT * FROM "+ tableName + " WHERE `areaId`="+areaId+" AND `finalStatus`='"+OrderState.TERMINALED.getCode()+"' Order By `finalTime`";
+		Session session = null;
+		Transaction tx = null;
+		List<OrderOff> res = new LinkedList<OrderOff>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							OrderOff p = new OrderOff();
+							p.setId(rs.getInt("id"));
+							p.setNumber(rs.getString("number"));
+							p.setProductIds(rs.getString("productIds"));
+							p.setProductNames(rs.getString("productNames"));
+							p.setOrderTime(rs.getTimestamp("orderTime"));
+							p.setReceiverName(rs.getString("receiverName"));
+							p.setPhoneNumber(rs.getString("phoneNumber"));
+							p.setAddress(rs.getString("address"));
+							p.setPayType(rs.getString("payType"));
+							p.setReceiveType(rs.getString("receiveType"));
+							p.setReceiveTime(rs.getString("receiveTime"));
+							p.setCouponId(rs.getInt("couponId"));
+							p.setCouponPrice(rs.getString("couponPrice"));
+							p.setTotalPrice(rs.getString("totalPrice"));
+							p.setFreight(rs.getString("freight"));
+							p.setComment(rs.getString("comment"));
+							p.setVcomment(rs.getString("vcomment"));
+							p.setFinalStatus(rs.getString("finalStatus"));
+							p.setCityarea(rs.getString("cityarea"));
+							p.setFinalTime(rs.getTimestamp("finalTime"));
+							p.setUserId(rs.getInt("userId"));
+							p.setAreaId(rs.getInt("areaId"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res;
+	}
+	
+	@Override
+	public int getTermialedRecordCount(int cityId, int areaId) {
+		String tableName = "Order_"+cityId+"_off";
+		String sql = "SELECT count(id) as count FROM "+tableName+ " WHERE `areaId`="+areaId+" AND `finalStatus`='"+OrderState.TERMINALED.getCode()+"'";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new ArrayList<Integer>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			//res = session.createQuery("from User").list();
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						rs.next();
+						res.add(rs.getInt("count"));
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return  (res.size()>0 ? res.get(0) : 0);
+	}
+
+	@Override
+	public OrderOff queryByNumber(String tableName, String number) {
+		String sql = "SELECT * FROM "+ tableName + " WHERE `number`='"+number+"'";
+		Session session = null;
+		Transaction tx = null;
+		List<OrderOff> res = new LinkedList<OrderOff>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							OrderOff p = new OrderOff();
+							p.setId(rs.getInt("id"));
+							p.setNumber(rs.getString("number"));
+							p.setProductIds(rs.getString("productIds"));
+							p.setProductNames(rs.getString("productNames"));
+							p.setOrderTime(rs.getTimestamp("orderTime"));
+							p.setReceiverName(rs.getString("receiverName"));
+							p.setPhoneNumber(rs.getString("phoneNumber"));
+							p.setAddress(rs.getString("address"));
+							p.setPayType(rs.getString("payType"));
+							p.setReceiveType(rs.getString("receiveType"));
+							p.setReceiveTime(rs.getString("receiveTime"));
+							p.setCouponId(rs.getInt("couponId"));
+							p.setCouponPrice(rs.getString("couponPrice"));
+							p.setTotalPrice(rs.getString("totalPrice"));
+							p.setFreight(rs.getString("freight"));
+							p.setComment(rs.getString("comment"));
+							p.setVcomment(rs.getString("vcomment"));
+							p.setFinalStatus(rs.getString("finalStatus"));
+							p.setCityarea(rs.getString("cityarea"));
+							p.setFinalTime(rs.getTimestamp("finalTime"));
+							p.setUserId(rs.getInt("userId"));
+							p.setAreaId(rs.getInt("areaId"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setRefundStatus(rs.getString("refundStatus"));
+							p.setHistory(rs.getString("history"));
+							p.setPoint(rs.getInt("point"));
+							p.setSender(rs.getString("sender"));
+							p.setSenderPhone(rs.getString("senderPhone"));
+							p.setPcomments(rs.getString("pcomments"));
+							p.setCommented(rs.getInt("commented"));
+							p.setInventBack(rs.getInt("inventBack"));
+							res.add(p);
+						}
+					}finally{
+						doClose(ps);
+					}
+					
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res.size()>0?res.get(0):null;
+	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {

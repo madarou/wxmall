@@ -41,18 +41,6 @@
 </script>
 </head>
 <body>
-<!--header-->
-<%-- <header>
- <h1><img src="static/images/admin_logo.png"/></h1>
- <ul class="rt_nav">
-  <li><a href="/orderOn/v_query_process/${id}/1?token=${token}" class="website_icon">订单管理</a></li>
-  <li><a href="/user/v_usermanage/${id}/1?token=${token}" class="admin_icon">会员管理</a></li>
-  <li><a href="/product/v_manage/${id}/1?token=${token}" class="product_icon">商品管理</a></li>
-  <li><a href="/vendor/v_bindwx/${id}?token=${token}" class="set_icon">绑定微信</a></li>
-  <li><a href="/vendor/logout/?token=${token}" class="quit_icon">安全退出</a></li>
- </ul>
- 
- </header> --%>
 <iframe name="mframe" src="/orderOn/hasNew/${id}/?token=${token}" frameborder="0" scrolling="no" width="100%" height="70px" onload="document.all['mframe'].style.height=mframe.document.body.scrollHeight"></iframe>
  
 <!--aside nav-->
@@ -62,12 +50,12 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/v_query_queue/${id}/1?token=${token}" class="active">排队中订单</a></dd>
+    <dd><a href="/orderOn/v_query_queue/${id}/1?token=${token}">排队中订单</a></dd>
     <dd><a href="/orderOn/v_query_process/${id}/1?token=${token}">待处理订单</a></dd>
     <dd><a href="/orderOn/v_query_distributed/${id}/1?token=${token}">已配送订单</a></dd>
     <dd><a href="/orderOff/v_query_confirm/${id}/1?token=${token}">已收货订单</a></dd>
     <dd><a href="/orderOff/v_query_refund/${id}/1?token=${token}">待退货订单</a></dd>
-    <dd><a href="/orderOff/v_query_teminaled/${id}/1?token=${token}">已完成订单</a></dd>
+    <dd><a href="/orderOff/v_query_teminaled/${id}/1?token=${token}" class="active">已完成订单</a></dd>
     <dd><a href="/orderOff/v_query_cancel/${id}/1?token=${token}">已取消/已退货</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
@@ -120,6 +108,7 @@
     	$("#productList").html('<tr><td colspan="3">购买商品信息</td></tr><tr><td>商品名称</td><td>单价</td><td>数量</td></tr>');
        $(".pop_bg").fadeIn();
        var clickedId = $(this).attr("id");
+       //orderId_toView = clickedId.charAt(clickedId.length-1);
        orderId_toView = clickedId.split("-")[1];
        $("#oname_phone").text($("#receiverName-"+orderId_toView).text()+"  "+$("#phoneNumber-"+orderId_toView).text());
        $("#onumber").text($("#viewPopTxt-"+orderId_toView).text());
@@ -159,6 +148,42 @@
        <h3>订单详情</h3>
        <!--content-->
        <div class="pop_cont_input">
+         <!--  <table class="table">
+              <tr>
+                <td>订单编号</td>
+                <td>2016283737282892</td>
+                <td>下单时间</td>
+                <td>2016-04-12</td>
+              </tr>
+              <tr>
+                <td>地址</td>
+                <td>开心公寓xxx号</td>
+                <td>收货人</td>
+                <td>郭德纲</td>
+              </tr>
+              <tr>
+                <td>联系电话</td>
+                <td>18763645373</td>
+                <td>送货方式</td>
+                <td>送货上门</td>
+              </tr>
+              <tr>
+                <td>支付方式</td>
+                <td>微信支付</td>
+                <td>是否付款</td>
+                <td>已付款</td>
+              </tr>
+              <tr>
+                <td>优惠券抵扣</td>
+                <td>￥13.00</td>
+                <td>备注</td>
+                <td>尽快送达</td>
+              </tr>
+              <tr>
+                <td>总价</td>
+                <td colspan="3">￥36.00</td>
+              </tr>
+          </table> -->
           <table class="table">
           	<tr><td colspan="3">订单详情</td></tr>
           	<tr><td>联系方式</td><td colspan="2" id="oname_phone"></td></tr>
@@ -173,14 +198,14 @@
           	<tr><td colspan="3">购买商品信息</td></tr>
           	<tr><td>商品名称</td><td>单价</td><td>数量</td></tr>
           </table>
-          <!--以pop_cont_text分界-->
+           <!--以pop_cont_text分界-->
 	       <div class="pop_cont_text">
-	        <span class="item_name">备注：</span>配送时间范围内，排队订单会进入待处理订单列表等待处理
+	        	<span class="item_name">备注：</span>用户对已收货的订单发起退货申请后，订单将进入待退货订单列表
 	       </div>
        </div>
+      
        <!--bottom:operate->button-->
        <div class="btm_btn">
-       <!--  <input type="button" value="确认并打印" class="input_btn trueBtn"/> -->
         <input type="button" value="关闭" class="input_btn falseBtn"/>
        </div>
       </div>
@@ -200,8 +225,8 @@
        $(".del_pop_bg").fadeIn();
        //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
        var clickedId = $(this).attr("id");
-       orderId_toCancel = clickedId.split("-")[1];
-
+       //orderId_toCancel = clickedId.charAt(clickedId.length-1);
+	   orderId_toCancel = clickedId.split("-")[1];
        });
      //弹出：确认按钮
      $("#confirmCancel").click(function(){
@@ -223,7 +248,10 @@
   	        		  orderId_toCancel=0;
   	        	  }else if(data.msg=="401"){
   	        	     alert("需要重新登录");
-  	        	}
+  	        	  }else{
+  	        		  alert("取消订单失败");
+  	        		  window.location.reload();//刷新页面
+  	        	  }
   	          }
     	 	});
        $(".del_pop_bg").fadeOut();
@@ -241,7 +269,7 @@
 					<!--title-->
 					<h3>温馨提示</h3>
 					<!--content-->
-					<div class="small_pop_cont_input">
+					<div class="pop_cont_input">
 						<!--以pop_cont_text分界-->
 						<div class="pop_cont_text">确认要取消该订单吗?
 						</div>
@@ -249,7 +277,7 @@
 						      <ul class="ulColumn2">
 						       <li>
 						        <span class="item_name">备注：</span>
-						        <input type="text" id="vcomment" class="textbox_225" placeholder="如'用户电话联系取消'"/>
+						        <input type="text" id="vcomment" class="textbox textbox_295" placeholder="如'用户电话联系取消'"/>
 						       </li>
 						       <li>
 						      </ul>
@@ -264,77 +292,10 @@
 				</div>
 			</section>
 			<!-- 取消订单 --> 
-			
-			     <script>
-     $(document).ready(function(){
-    	 var showTips = function(content){
-  			$("#tips").text(content);
-  			$(".loading_area").fadeIn();
-              $(".loading_area").fadeOut(1500);
-  		}
-    	var orderId_toCancel = 0;//要取消的订单
-     //弹出文本性提示框
-     $(".processOrder").click(function(){
-       $(".process_pop_bg").fadeIn();
-       //alert($(this).attr("id"));可以获取到当前被点击的按钮的id
-       var clickedId = $(this).attr("id");
-       orderId_toProcess = clickedId.split("-")[1];
-       });
-     //弹出：确认按钮
-     $("#confirmProcess").click(function(){
-    	 if(orderId_toProcess==0){
-    		 alert("请重新选择要取消的订单");
-    		 return false;
-    	 }
-        	$.ajax({
-    		  type: "POST",
-  	          contentType: "application/json",
-  	          url: "/orderOn/vprocess/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
-  	          dataType: "json",
-  	          data: JSON.stringify({"orderid":orderId_toProcess}),
-  	          success: function(data){
-  	        	  if(data.msg=="200"){
-  	        		  //alert("删除区域管理员账号成功");
-  	        		  alert("订单进入待处理列表");
-  	        		  window.location.reload();//刷新页面
-  	        		  orderId_toProcess=0;
-  	        	  }else if(data.msg=="401"){
-  	        	     alert("需要重新登录");
-  	        	}
-  	          }
-    	 	});
-       $(".process_pop_bg").fadeOut();
-       });
-     //弹出：取消或关闭按钮
-     $("#cancelProcess").click(function(){
-       $(".process_pop_bg").fadeOut();
-       orderId_toProcess=0;
-       });
-     });
-     </script>
-			<!-- 立即处理订单 -->
-			<section class="process_pop_bg">
-				<div class="pop_cont">
-					<!--title-->
-					<h3>温馨提示</h3>
-					<!--content-->
-					<div class="small_pop_cont_input">
-						<!--以pop_cont_text分界-->
-						<div class="pop_cont_text">确认要立即处理该订单吗?</div>
-						<!--bottom:operate->button-->
-						<div class="btm_btn">
-							<input type="button" value="确认" id="confirmProcess"
-								class="input_btn trueBtn" /> <input type="button" value="关闭"
-								id="cancelProcess" class="input_btn falseBtn" />
-						</div>
-					</div>
-				</div>
-			</section>
-			<!-- 立即处理订单 -->
-
-			<section>
+	     
+     <section>
       <div class="page_title">
-       <b>用户下单且已支付，但尚未到达配送时间的订单：</b><a class="fr top_rt_btn" href="/orderOn/v_query_queue/${id}?token=${token}">刷新</a>
+       <b>用户确认收货且经过了一定时间后，进入终止状态的订单，此时的订单不能被申请退货：</b><a class="fr top_rt_btn" href="/orderOff/v_query_confirm/${id}?token=${token}">刷新</a>
       </div>
       <table class="table">
        <tr>
@@ -344,12 +305,11 @@
         <th>收货人</th>
         <th>联系电话</th>
         <th>下单时间</th>
-        <th>配送时段</th>
+        <th>完成时间</th>
         <th>订单状态</th>
-        <th>操作</th>
        </tr>
        	<c:forEach var="item" items="${orders}" varStatus="status">
-       		<c:set var="index" value="${item.status}" ></c:set>   
+       		<c:set var="index" value="${item.finalStatus}" ></c:set>
          	<tr>
          		<td><button class="linkStyle viewOrder" id="viewPopTxt-${item.id}">${item.number}</button></td>
          		<td id="totalPrice-${item.id}">￥${item.totalPrice}</td>
@@ -357,23 +317,21 @@
          		<td id="receiverName-${item.id}">${item.receiverName}</td>
          		<td id="phoneNumber-${item.id}">${item.phoneNumber}</td>
          		<td id="orderTime-${item.id}">${item.orderTime}</td>
-         		<td id="receiveTime-${item.id}">${item.receiveTime}</td>
-		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${item.id}">
-		        		${pageScope.orderStates[pageScope.index]}
-		        	</button></td>
-		        <td><button class="linkStyle processOrder" id="processPopTxt-${item.id}">立即处理</button></td>
+         		<td>${item.finalTime}</td>
+		        <td><button class="linkStyle" id="cancelPopTxt-${item.id}" style="cursor:default;color:grey">${pageScope.orderStates[pageScope.index]}</button></td>
 		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
 		        <td id="address-${item.id}" style="display:none">${item.address}</td>
 		         <td id="comment-${item.id}" style="display:none">${item.comment}</td>
+		         <td id="receiveTime-${item.id}" style="display:none">${item.receiveTime}</td>
          	</tr>
 		</c:forEach> 
       </table>
       <aside class="paging">
-       <a href="/orderOn/v_query_queue/${id}/1?token=${token}">第一页</a>
+       <a href="/orderOff/v_query_teminaled/${id}/1?token=${token}">第一页</a>
        <c:forEach var="item" begin="1" end="${pageCount}">
-		   <a href="/orderOn/v_query_queue/${id}/${item}?token=${token}">${item}</a>
+		   <a href="/orderOff/v_query_teminaled/${id}/${item}?token=${token}">${item}</a>
 	   </c:forEach>
-       <a href="/orderOn/v_query_queue/${id}/${pageCount}?token=${token}">最后一页</a>
+       <a href="/orderOff/v_query_teminaled/${id}/${pageCount}?token=${token}">最后一页</a>
       </aside>
      </section>
 	</div>

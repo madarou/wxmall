@@ -140,4 +140,6 @@ public interface IOrderOnService {
 	 */
 	String queryProcessAndReturnByAreaId(int cityId, int areaId);
 
+	OrderOn queryByNumber(String string, String number);
+
 }

@@ -128,6 +128,10 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public String queryProcessAndReturnByAreaId(int cityId, int areaId) {
 		return this.orderOnDao.queryProcessAndReturnByAreaId(cityId, areaId);
 	}
+	@Override
+	public OrderOn queryByNumber(String string, String number) {
+		return this.orderOnDao.queryByNumber(string, number);
+	}
 	
 //	@Override
 //	public void testor() {

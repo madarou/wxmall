@@ -2,6 +2,7 @@ package com.makao.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -37,8 +38,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.makao.auth.AuthPassport;
 import com.makao.entity.Area;
+import com.makao.entity.Catalog;
 import com.makao.entity.City;
 import com.makao.entity.CouponOn;
+import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
 import com.makao.entity.OrderState;
 import com.makao.entity.PointLog;
@@ -51,6 +54,7 @@ import com.makao.entity.Vendor;
 import com.makao.service.IAreaService;
 import com.makao.service.ICityService;
 import com.makao.service.ICouponOnService;
+import com.makao.service.IOrderOffService;
 import com.makao.service.IOrderOnService;
 import com.makao.service.IPointService;
 import com.makao.service.IProductService;
@@ -84,6 +88,8 @@ public class OrderOnController {
 	private static final Logger logger = Logger.getLogger(OrderOnController.class);
 	@Resource
 	private IOrderOnService orderOnService;
+	@Resource
+	private IOrderOffService orderOffService;
 	@Resource
 	private ICityService cityService;
 	@Resource
@@ -1462,6 +1468,41 @@ public class OrderOnController {
 	    modelAndView.addObject("pageCount", pageCount);   
 		return modelAndView;
     }
+	
+	@RequestMapping(value = "/search/{id:\\d+}", method = RequestMethod.GET)
+	  public @ResponseBody
+	  ModelAndView search(@PathVariable("id") int id,
+				@RequestParam(value = "token", required = false) String token,
+				@RequestParam(value="number", required=false) String number) throws UnsupportedEncodingException {
+			number = new String(number.getBytes("iso8859-1"),"utf-8");
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("v_order_search");
+			if (token == null) {
+				return modelAndView;
+			}
+			modelAndView.addObject("id", id);
+			modelAndView.addObject("token", token);
+			Vendor vendor = this.vendorService.getById(id);
+			OrderOn orderOn = null;
+			OrderOff orderOff = null;
+			if(vendor!=null){
+				orderOn = this.orderOnService.queryByNumber("Order_"+vendor.getAreaId()+"_on", number);
+				if(orderOn!=null){
+					modelAndView.addObject("orderOn", orderOn);
+					modelAndView.addObject("orderOff", null);
+					return modelAndView;
+				}
+				orderOff = this.orderOffService.queryByNumber("Order_"+vendor.getAreaId()+"_off", number);
+				if(orderOff!=null){
+					modelAndView.addObject("orderOff", orderOff);
+					modelAndView.addObject("orderOn", null);
+					return modelAndView;
+				}
+			}
+			modelAndView.addObject("orderOn", null);
+			modelAndView.addObject("orderOff", null);
+			return modelAndView;
+		}
 	
 	/**
 	 * @param orderOn

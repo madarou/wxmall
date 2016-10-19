@@ -51,12 +51,13 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/v_query_queue/${id}/1?token=${token}">排队订单</a></dd>
+    <dd><a href="/orderOn/v_query_queue/${id}/1?token=${token}">排队中订单</a></dd>
     <dd><a href="/orderOn/v_query_process/${id}/1?token=${token}" class="active">待处理订单</a></dd>
     <dd><a href="/orderOn/v_query_distributed/${id}/1?token=${token}">已配送订单</a></dd>
     <dd><a href="/orderOff/v_query_confirm/${id}/1?token=${token}">已收货订单</a></dd>
     <dd><a href="/orderOff/v_query_refund/${id}/1?token=${token}">待退货订单</a></dd>
-    <dd><a href="/orderOff/v_query_cancel/${id}/1?token=${token}">已取消订单</a></dd>
+    <dd><a href="/orderOff/v_query_teminaled/${id}/1?token=${token}">已完成订单</a></dd>
+    <dd><a href="/orderOff/v_query_cancel/${id}/1?token=${token}">已取消/已退货</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
     <!-- <dd><a href="#">绑定微信号</a></dd> -->
    </dl>
@@ -475,8 +476,7 @@
         	          data: JSON.stringify({"orderid":orderId_toHandle}),
         	          success: function(data){
         	        	  if(data.msg=="200"){
-        	        		  //alert("删除区域管理员账号成功");
-        	        		  alert("订单完成");
+        	        		  alert("订单配送完成");
         	        		  window.location.reload();//刷新页面
         	        		  orderId_toCancel=0;
         	        	  }else if(data.msg=="401"){
@@ -518,7 +518,7 @@
 	     
      <section>
       <div class="page_title">
-       <a class="fr top_rt_btn" href="/orderOn/v_query_process/${id}?token=${token}">刷新</a>
+       <b>到达配送时间需要立即配送以及正在配送中的订单：</b><a class="fr top_rt_btn" href="/orderOn/v_query_process/${id}?token=${token}">刷新</a>
       </div>
       <table class="table">
        <tr>

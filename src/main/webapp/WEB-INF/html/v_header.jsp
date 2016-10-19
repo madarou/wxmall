@@ -10,7 +10,11 @@
 <body style="text-align:center">
 <header>
  <h1><img src="static/images/admin_logo.png"/></h1>
- <ul class="rt_nav">
+  <ul class="rt_nav">
+  <li style="margin-top:10px">
+  	<input type="text" style="padding:0 6px;border: 1px #139667 solid;line-height: 30px;font-size: 12px;vertical-align: middle" class="length_input_20" placeholder="订单号" id="orderid"/>
+  	<input type="button" id="search" value="搜索" class="" style="display: inline-block;height: 32px;line-height: 30px;border: 1px #19a97b solid;border-radius: 2px;background: #f8f8f8;color: #19a97b;vertical-align: middle;cursor: pointer;"/>
+  </li>
   <li><a href="/orderOn/v_query_process/${id}/1?token=${token}" target="_top" class="website_icon" id="ordermanage">待处理订单</a></li>
   <li><a href="/orderOff/v_query_refund/${id}/1?token=${token}" target="_top" class="return_icon" id="orderreturn">待退货订单</a></li>
   <li><a href="/product/v_manage/${id}/1?token=${token}" target="_top" class="product_icon">商品管理</a></li>
@@ -77,5 +81,15 @@
    	 	});
 	}
 	setInterval(refresh,90000);
+	
+	//搜索订单
+	$('#search').click(function(){
+		var ordernumber = $.trim($('#orderid').val());
+		if(ordernumber.length==0){
+			alert("请输入完整订单号");
+			return false;
+		}
+		window.parent.location="/orderOn/search/"+$("#loginid").val()+"?token="+$("#token").val()+"&number="+ordernumber;
+	});
 	</script>
  </body>

@@ -140,4 +140,6 @@ public interface IOrderOnDao {
 	 * 获取待处理和待退货的订单的数量
 	 */
 	public String queryProcessAndReturnByAreaId(int cityId, int areaId);
+
+	public OrderOn queryByNumber(String string, String number);
 }

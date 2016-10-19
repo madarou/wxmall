@@ -124,6 +124,18 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	public int queryNeedRefundNumber(String string) {
 		return this.orderOffDao.queryNeedRefundNumber(string);
 	}
+	@Override
+	public List<OrderOff> queryTerminaledByAreaId(String string, int areaId) {
+		return this.orderOffDao.queryTerminaledByAreaId(string, areaId);
+	}
+	@Override
+	public int getTermialedRecordCount(int cityId, int areaId) {
+		return this.orderOffDao.getTermialedRecordCount(cityId, areaId);
+	}
+	@Override
+	public OrderOff queryByNumber(String string, String number) {
+		return this.orderOffDao.queryByNumber(string, number);
+	}
 	
 //	@Override
 //	public void testor() {

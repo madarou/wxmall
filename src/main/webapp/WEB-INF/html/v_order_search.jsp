@@ -55,7 +55,7 @@
     <dd><a href="/orderOn/v_query_process/${id}/1?token=${token}">待处理订单</a></dd>
     <dd><a href="/orderOn/v_query_distributed/${id}/1?token=${token}">已配送订单</a></dd>
     <dd><a href="/orderOff/v_query_confirm/${id}/1?token=${token}">已收货订单</a></dd>
-    <dd><a href="/orderOff/v_query_refund/${id}/1?token=${token}" class="active">待退货订单</a></dd>
+    <dd><a href="/orderOff/v_query_refund/${id}/1?token=${token}">待退货订单</a></dd>
     <dd><a href="/orderOff/v_query_teminaled/${id}/1?token=${token}">已完成订单</a></dd>
     <dd><a href="/orderOff/v_query_cancel/${id}/1?token=${token}">已取消/已退货</a></dd>
     <!-- <dd><a href="#">未支付订单</a></dd> -->
@@ -95,20 +95,22 @@
 <section class="rt_wrap content mCustomScrollbar">
  <div class="rt_content">
      <section>
-       <!--  <h3 style="text-align:right;">欢迎您，某某管理员</h3> -->
+        <!-- <h3 style="text-align:right;">欢迎您，某某管理员</h3> -->
         <hr/>
      </section>
 
      <!--弹出订单详细框效果-->
      <script>
      $(document).ready(function(){
-    	var orderId_toView = 0;
     	 var LODOP; //打印控件
+    	var orderId_toView = 0;
+    	
      //弹出文本性提示框
      $(".viewOrder").click(function(){
     	$("#productList").html('<tr><td colspan="3">购买商品信息</td></tr><tr><td>商品名称</td><td>单价</td><td>数量</td></tr>');
        $(".pop_bg").fadeIn();
        var clickedId = $(this).attr("id");
+       //orderId_toView = clickedId.charAt(clickedId.length-1);
        orderId_toView = clickedId.split("-")[1];
        $("#oname_phone").text($("#receiverName-"+orderId_toView).text()+"  "+$("#phoneNumber-"+orderId_toView).text());
        $("#onumber").text($("#viewPopTxt-"+orderId_toView).text());
@@ -117,6 +119,7 @@
        $("#ototalPrice").text($("#totalPrice-"+orderId_toView).text());
        $("#ocouponPrice").text($("#couponPrice-"+orderId_toView).text());
        $("#ocomment").text($("#comment-"+orderId_toView).text());
+       $("#vendorcomment").val($("#vcomment-"+orderId_toView).text());
        
      //商品详细列表
   	   var table= $("#productList");
@@ -132,7 +135,7 @@
        });
      
      function CreatePrintPage(orderid) {      
-    	 var hPos=5, //小票上边距  
+         var hPos=5, //小票上边距  
          pageWidth=570,//小票宽度  
          rowHeight=15,//小票行距  
          //获取控件对象  
@@ -141,7 +144,7 @@
          LODOP.PRINT_INIT("订单"+orderid);  
          LODOP.SET_PRINT_STYLE("FontSize",12);
          //添加小票标题文本  
-         LODOP.ADD_PRINT_TEXT(hPos,65,pageWidth,rowHeight,"退货订单"); 
+         LODOP.ADD_PRINT_TEXT(hPos,65,pageWidth,rowHeight,"社享网"); 
          //上边距往下移  
          hPos+=rowHeight;  hPos+=5; 
          LODOP.SET_PRINT_STYLE("FontSize",10);
@@ -213,31 +216,98 @@
          //合计  
          LODOP.ADD_PRINT_TEXT(hPos,90,pageWidth,rowHeight,"优惠券:￥"+$("#couponPrice-"+orderid).text()); 
          hPos+=rowHeight; 
-         LODOP.ADD_PRINT_TEXT(hPos,95,pageWidth,rowHeight,"合计:"+$("#totalPrice-"+orderid).text());   
+         LODOP.ADD_PRINT_TEXT(hPos,95,pageWidth,rowHeight,"合计:"+$("#totalPrice-"+orderid).text());  
+           
+         //hPos+=rowHeight;  
+         //LODOP.ADD_PRINT_TEXT(hPos,2,pageWidth,rowHeight,(new Date()).toLocaleDateString()+" "+(new Date()).toLocaleTimeString())  
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_TEXT(hPos,15,pageWidth,rowHeight,"谢谢惠顾,欢迎下次光临!");  
          
+         //回执
+         hPos+=rowHeight; 
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_LINE(hPos,2, hPos, pageWidth,2, 1);  
+         hPos+=5;  
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"姓名:");  
+         LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,$("#receiverName-"+orderid).text());  
+         //hPos+=rowHeight; //电话不换行  
+         hPos+=rowHeight;
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"电话:");  
+         LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,$("#phoneNumber-"+orderid).text());  
+         hPos+=rowHeight;
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"地址:");  
+         var add = $("#address-"+orderid).text();
+         if(add!=null&&add.length<=12)
+         	LODOP.ADD_PRINT_TEXT(hPos,30,pageWidth,rowHeight,add);  
+         else if(add!=null&&add.length>12&&add.length<=14){
+        	hPos+=rowHeight;
+        	LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,add);
+         }
+         else{
+        	hPos+=rowHeight;
+         	LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,add.substr(0,14)); 
+         	hPos+=rowHeight;
+         	LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,add.substr(14)); 
+         }
+        	 
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"下单时间:");  
+         LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#orderTime-"+orderid).text().substr(5));  
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"配送时段:");  
+         LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#receiveTime-"+orderid).text().substr(5)); 
+         hPos+=rowHeight;  
+         LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,"订单编号:");  
+         LODOP.ADD_PRINT_TEXT(hPos,60,pageWidth,rowHeight,$("#viewPopTxt-"+orderid).text());  
          hPos+=rowHeight; 
          hPos+=rowHeight;   
          LODOP.ADD_PRINT_LINE(hPos,2, hPos, pageWidth,2, 1);  
          //初始化打印页的规格  
-         LODOP.SET_PRINT_PAGESIZE(3,pageWidth,30,"退货订单");  
+         LODOP.SET_PRINT_PAGESIZE(3,pageWidth,30,"社享网");  
          LODOP.PRINT();
-     }
            
+     };    
      //弹出：确认按钮
      $(".printtrueBtn").click(function(){
-    	 if(orderId_toView==0){
-  			alert("请重新选择要打印的订单");
-  			return false;
-  		}
-  		CreatePrintPage(orderId_toView);   
-        $(".pop_bg").fadeOut();
-        orderId_toView=0;
+ 		if(orderId_toView==0){
+ 			alert("请重新选择要打印的订单");
+ 			return false;
+ 		}
+ 		CreatePrintPage(orderId_toView);   
+       $(".pop_bg").fadeOut();
+       orderId_toView=0;
        });
      //弹出：取消或关闭按钮
      $(".printfalseBtn").click(function(){
        $(".pop_bg").fadeOut();
        orderId_toView=0;
+       window.location.reload();
        });
+     
+	     //添加商户备注
+	     $("#subComment").click(function(){
+			 var vcontent = $.trim($("#vendorcomment").val());
+			 if(vcontent.length>0){
+				 $.ajax({
+		    		  type: "POST",
+		  	          contentType: "application/json",
+		  	          url: "/orderOn/vcomment/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
+		  	          dataType: "json",
+		  	          data: JSON.stringify({"orderid":orderId_toView,"vcomment":vcontent}),
+		  	          success: function(data){
+		  	        	  if(data.msg=="200"){
+		  	        		  alert("备注添加成功");
+		  	        	  }else if(data.msg=="401"){
+		  	        	     alert("需要重新登录");
+		  	        	}
+		  	          }
+		    	 	});
+			 }
+			 else{
+				 alert("请输入备注内容");
+			 }
+		 });
      });
      </script>
      <section class="pop_bg">
@@ -261,12 +331,11 @@
           	<tr><td>商品名称</td><td>单价</td><td>数量</td></tr>
           </table>
           <!--以pop_cont_text分界-->
-	       <!-- <div class="pop_cont_text">
-	        <span class="item_name">备注：</span><input type="text" id="vendorcomment" class=" textbox_295" placeholder="如'用户电话联系取消退货'"/>
+	       <div class="pop_cont_text">
+	        <span class="item_name">备注：</span><input type="text" id="vendorcomment" class="textbox_295" placeholder="如'用户临时改变收货地址'"/>
 	        <button class="linkStyle" id="subComment">提交</button>
-	       </div> -->
+	       </div>
        </div>
-       
        <!--bottom:operate->button-->
        <div class="btm_btn">
         <input type="button" value="确认并打印" class="input_btn printtrueBtn"/>
@@ -302,7 +371,7 @@
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
-  	          url: "/orderOff/vcancel/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
+  	          url: "/orderOn/vcancel/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
   	          dataType: "json",
   	          data: JSON.stringify({"orderid":orderId_toCancel,"vcomment":$.trim($("#vcomment").val())}),
   	          success: function(data){
@@ -313,13 +382,14 @@
   	        		  orderId_toCancel=0;
   	        	  }else if(data.msg=="401"){
   	        	     alert("需要重新登录");
-  	        	  }else{
-  	        		  alert("取消订单失败");
-  	        		  window.location.reload();//刷新页面
+  	        	  }
+  	        	  else{
+  	        		 alert("订单取消失败，请重试");
+ 	        		  window.location.reload();//刷新页面
+ 	        		 orderId_toCancel=0;
   	        	  }
   	          }
     	 	});
-       $(".del_pop_bg").fadeOut();
        });
      //弹出：取消或关闭按钮
      $("#cancelCancel").click(function(){
@@ -378,17 +448,17 @@
     		 alert("请重新选择要操作的订单");
     		 return false;
     	 }
-    	 if(handleType=="refund"){//如果是配送
+    	 if(handleType=="distribute"){//如果是配送
     		 $.ajax({
        		  type: "POST",
      	          contentType: "application/json",
-     	          url: "/orderOff/vrefund/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
+     	          url: "/orderOn/vdistribute/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
      	          dataType: "json",
      	          data: JSON.stringify({"orderid":orderId_toHandle}),
      	          success: function(data){
      	        	  if(data.msg=="200"){
      	        		  //alert("删除区域管理员账号成功");
-     	        		  alert("订单开始退货");
+     	        		  alert("订单开始配送");
      	        		  window.location.reload();//刷新页面
      	        		  orderId_toCancel=0;
      	        	  }else if(data.msg=="401"){
@@ -401,13 +471,12 @@
     		 $.ajax({
           		  type: "POST",
         	          contentType: "application/json",
-        	          url: "/orderOff/vfinish/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
+        	          url: "/orderOn/vfinish/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
         	          dataType: "json",
         	          data: JSON.stringify({"orderid":orderId_toHandle}),
         	          success: function(data){
         	        	  if(data.msg=="200"){
-        	        		  //alert("删除区域管理员账号成功");
-        	        		  alert("订单退货完成");
+        	        		  alert("订单配送完成");
         	        		  window.location.reload();//刷新页面
         	        		  orderId_toCancel=0;
         	        	  }else if(data.msg=="401"){
@@ -449,7 +518,7 @@
 	     
      <section>
       <div class="page_title">
-       <b>用户发起申请退货以及退货受理中的订单：</b><a class="fr top_rt_btn" href="/orderOff/v_query_refund/${id}?token=${token}">刷新</a>
+       <b>在所有状态列表中搜索到的订单：</b>
       </div>
       <table class="table">
        <tr>
@@ -458,44 +527,77 @@
         <th>卡券抵扣</th>
         <th>收货人</th>
         <th>联系电话</th>
-       <!--  <th>下单时间</th> -->
+        <th>下单时间</th>
         <th>配送时段</th>
         <th>接单操作</th>
         <th>订单状态</th>
        </tr>
-       	<c:forEach var="item" items="${orders}" varStatus="status">
-       		<c:set var="index" value="${item.finalStatus}" ></c:set>
+       <c:if test="${orderOn!=null}">
+       		<c:set var="index" value="${orderOn.status}" ></c:set>
          	<tr>
-         		<td><button class="linkStyle viewOrder" id="viewPopTxt-${item.id}">${item.number}</button></td>
-         		<td id="totalPrice-${item.id}">￥${item.totalPrice}</td>
-         		<td id="couponPrice-${item.id}">${item.couponPrice}</td>
-         		<td id="receiverName-${item.id}">${item.receiverName}</td>
-         		<td id="phoneNumber-${item.id}">${item.phoneNumber}</td>
-         		<td id="orderTime-${item.id}" style="display:none">${item.orderTime}</td>
-         		<td id="receiveTime-${item.id}">${item.receiveTime}</td>
+         		<td><button class="linkStyle viewOrder" id="viewPopTxt-${orderOn.id}">${orderOn.number}</button></td>
+         		<td id="totalPrice-${orderOn.id}">￥${orderOn.totalPrice}</td>
+         		<td id="couponPrice-${orderOn.id}">${orderOn.couponPrice}</td>
+         		<td id="receiverName-${orderOn.id}">${orderOn.receiverName}</td>
+         		<td id="phoneNumber-${orderOn.id}">${orderOn.phoneNumber}</td>
+         		<td id="orderTime-${orderOn.id}">${orderOn.orderTime}</td>
+         		<td id="receiveTime-${orderOn.id}">${orderOn.receiveTime}</td>
          		<td>
-         			<c:if test="${item.finalStatus=='8'}">
-         				<button class="linkStyle handleOrder" id="refund-${item.id}">退货</button>|
+         			<%-- <c:if test="${item.status=='3'}">
+         				<button class="linkStyle handleOrder" id="distribute-${item.id}">配送</button>|
          				<button class="linkStyle" id="finishPopTxt-${item.id}" style="color:grey;cursor:default">完成</button>
          			</c:if>
-         			<c:if test="${item.finalStatus=='9'}">
-         				<button class="linkStyle" id="distributePopTxt-${item.id}" style="color:grey;cursor:default">退货</button>|
+         			<c:if test="${item.status=='4'}">
+         				<button class="linkStyle" id="distributePopTxt-${item.id}" style="color:grey;cursor:default">配送</button>|
          				<button class="linkStyle handleOrder" id="finish-${item.id}">完成</button>
-         			</c:if>
+         			</c:if> --%>
          		</td>
-		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${item.id}">${pageScope.orderStates[pageScope.index]}</button></td>
-		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
-		        <td id="address-${item.id}" style="display:none">${item.address}</td>
-		         <td id="comment-${item.id}" style="display:none">${item.comment}</td>
+		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${orderOn.id}">
+					${pageScope.orderStates[pageScope.index]}
+				</button></td>
+		        <td id="productNames-${orderOn.id}" style="display:none">${orderOn.productNames}</td>
+		        <td id="address-${orderOn.id}" style="display:none">${orderOn.address}</td>
+		         <td id="comment-${orderOn.id}" style="display:none">${orderOn.comment}</td>
+		         <td id="vcomment-${orderOn.id}" style="display:none">${orderOn.vcomment}</td>
          	</tr>
-		</c:forEach> 
+		</c:if>
+		
+		<c:if test="${orderOff!=null}">
+       		<c:set var="index" value="${orderOff.finalStatus}" ></c:set>
+         	<tr>
+         		<td><button class="linkStyle viewOrder" id="viewPopTxt-${orderOff.id}">${orderOff.number}</button></td>
+         		<td id="totalPrice-${orderOff.id}">￥${orderOff.totalPrice}</td>
+         		<td id="couponPrice-${orderOff.id}">${orderOff.couponPrice}</td>
+         		<td id="receiverName-${orderOff.id}">${orderOff.receiverName}</td>
+         		<td id="phoneNumber-${orderOff.id}">${orderOff.phoneNumber}</td>
+         		<td id="orderTime-${orderOff.id}">${orderOff.orderTime}</td>
+         		<td id="receiveTime-${orderOff.id}">${orderOff.receiveTime}</td>
+         		<td>
+         			<%-- <c:if test="${item.status=='3'}">
+         				<button class="linkStyle handleOrder" id="distribute-${item.id}">配送</button>|
+         				<button class="linkStyle" id="finishPopTxt-${item.id}" style="color:grey;cursor:default">完成</button>
+         			</c:if>
+         			<c:if test="${item.status=='4'}">
+         				<button class="linkStyle" id="distributePopTxt-${item.id}" style="color:grey;cursor:default">配送</button>|
+         				<button class="linkStyle handleOrder" id="finish-${item.id}">完成</button>
+         			</c:if> --%>
+         		</td>
+		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${orderOff.id}">
+					${pageScope.orderStates[pageScope.index]}
+				</button></td>
+		        <td id="productNames-${orderOff.id}" style="display:none">${orderOff.productNames}</td>
+		        <td id="address-${orderOff.id}" style="display:none">${orderOff.address}</td>
+		         <td id="comment-${orderOff.id}" style="display:none">${orderOff.comment}</td>
+		         <td id="vcomment-${orderOff.id}" style="display:none">${orderOff.vcomment}</td>
+         	</tr>
+		</c:if>
       </table>
       <aside class="paging">
-       <a href="/orderOff/v_query_refund/${id}/1?token=${token}">第一页</a>
+       <a href="/orderOn/v_query_process/${id}/1?token=${token}">第一页</a>
        <c:forEach var="item" begin="1" end="${pageCount}">
-		   <a href="/orderOff/v_query_refund/${id}/${item}?token=${token}">${item}</a>
+		   <a href="/orderOn/v_query_process/${id}/${item}?token=${token}">${item}</a>
 	   </c:forEach>
-       <a href="/orderOff/v_query_refund/${id}/${pageCount}?token=${token}">最后一页</a>
+       <a href="/orderOn/v_query_process/${id}/${pageCount}?token=${token}">最后一页</a>
       </aside>
      </section>
 	</div>

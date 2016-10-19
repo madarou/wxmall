@@ -111,4 +111,22 @@ public interface IOrderOffDao {
 	 * 查询待退款的订单的number
 	 */
 	public int queryNeedRefundNumber(String string);
+
+	/**
+	 * @param string
+	 * @param areaId
+	 * @return
+	 * 已完成的订单，即状态为13，已收货且已过了退货期的订单
+	 */
+	public List<OrderOff> queryTerminaledByAreaId(String string, int areaId);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @return
+	 * 状态为13的记录数
+	 */
+	public int getTermialedRecordCount(int cityId, int areaId);
+
+	public OrderOff queryByNumber(String string, String number);
 }
