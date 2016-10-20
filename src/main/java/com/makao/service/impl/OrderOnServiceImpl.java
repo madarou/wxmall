@@ -132,6 +132,10 @@ public class OrderOnServiceImpl implements IOrderOnService {
 	public OrderOn queryByNumber(String string, String number) {
 		return this.orderOnDao.queryByNumber(string, number);
 	}
+	@Override
+	public int vcommentOrderByNumber(int cityId, String number, String vcomment) {
+		return this.orderOnDao.vcommentOrderByNumber(cityId, number, vcomment);
+	}
 	
 //	@Override
 //	public void testor() {

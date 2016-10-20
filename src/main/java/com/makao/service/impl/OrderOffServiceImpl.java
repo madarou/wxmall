@@ -136,6 +136,10 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	public OrderOff queryByNumber(String string, String number) {
 		return this.orderOffDao.queryByNumber(string, number);
 	}
+	@Override
+	public int vcommentOrderByNumber(int cityId, String number, String vcomment) {
+		return this.orderOffDao.vcommentOrderByNumber(cityId, number, vcomment);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -129,4 +129,6 @@ public interface IOrderOffDao {
 	public int getTermialedRecordCount(int cityId, int areaId);
 
 	public OrderOff queryByNumber(String string, String number);
+
+	public int vcommentOrderByNumber(int cityId, String number, String vcomment);
 }

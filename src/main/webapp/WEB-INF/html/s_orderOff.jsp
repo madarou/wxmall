@@ -177,7 +177,7 @@
      
     <section>
       <div class="page_title">
-       <a class="fr top_rt_btn" href="/orderOff/s_queryall/${id}?token=${token}">刷新</a>
+        <b>所有区域下已收货、已取消、退货申请中、退货中、已退货、已取消退货、已退款、已完成的订单：</b><a class="fr top_rt_btn" href="/orderOff/s_queryall/${id}?token=${token}">刷新</a>
       </div>
       <table class="table">
        <tr>

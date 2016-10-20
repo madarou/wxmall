@@ -137,4 +137,6 @@ public interface IOrderOffService {
 
 	OrderOff queryByNumber(String string, String number);
 
+	int vcommentOrderByNumber(int cityId, String number, String vcomment);
+
 }

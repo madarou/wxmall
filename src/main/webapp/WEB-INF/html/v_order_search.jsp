@@ -285,16 +285,17 @@
        window.location.reload();
        });
      
-	     //添加商户备注
+	     //添加商户备注，由于搜索页面可能出现从on到off致使id发生变化的情况，所以此处统一使用number
 	     $("#subComment").click(function(){
 			 var vcontent = $.trim($("#vendorcomment").val());
-			 if(vcontent.length>0){
+			 var orderNumber = $('#viewPopTxt-'+orderId_toView).html();
+			 if(vcontent.length>0 && orderNumber.length>0){
 				 $.ajax({
 		    		  type: "POST",
 		  	          contentType: "application/json",
-		  	          url: "/orderOn/vcomment/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
+		  	          url: "/orderOn/vcomment2/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
 		  	          dataType: "json",
-		  	          data: JSON.stringify({"orderid":orderId_toView,"vcomment":vcontent}),
+		  	          data: JSON.stringify({"number":orderNumber,"vcomment":vcontent}),
 		  	          success: function(data){
 		  	        	  if(data.msg=="200"){
 		  	        		  alert("备注添加成功");

@@ -142,4 +142,6 @@ public interface IOrderOnDao {
 	public String queryProcessAndReturnByAreaId(int cityId, int areaId);
 
 	public OrderOn queryByNumber(String string, String number);
+
+	public int vcommentOrderByNumber(int cityId, String number, String vcomment);
 }

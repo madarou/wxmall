@@ -142,4 +142,6 @@ public interface IOrderOnService {
 
 	OrderOn queryByNumber(String string, String number);
 
+	int vcommentOrderByNumber(int cityId, String number, String vcomment);
+
 }

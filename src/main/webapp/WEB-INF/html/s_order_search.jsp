@@ -20,6 +20,7 @@
 <script>
 	(function($){
 		$(window).load(function(){
+			
 			$("a[rel='load-content']").click(function(e){
 				e.preventDefault();
 				var url=$(this).attr("href");
@@ -49,9 +50,9 @@
   <li>
    <dl>
     <dt>订单信息</dt>
-    <dd><a href="/orderOn/s_queryall/${id}/1?token=${token}" class="active">所有未完成订单</a></dd>
+    <dd><a href="/orderOn/s_queryall/${id}/1?token=${token}">所有未完成订单</a></dd>
     <dd><a href="/orderOff/s_queryall/${id}/1?token=${token}">所有已完成订单</a></dd>
-    <dd><a href="/orderOff/s_query_refund/${id}/1?token=${token}">退款订单</a></dd>
+    <dd><a href="/orderOff/s_query_refund/${id}/1?token=${token}" class="active">退款订单</a></dd>
    </dl>
   </li>
    <li>
@@ -90,15 +91,14 @@
   </li>
  </ul>
 </aside>
-
 <section class="rt_wrap content mCustomScrollbar">
  <div class="rt_content">
      <section>
-        <!-- <h3 style="text-align:right;">欢迎您，某某管理员</h3> -->
+       <!--  <h3 style="text-align:right;">欢迎您，某某管理员</h3> -->
         <hr/>
      </section>
 
-      <!--弹出框效果-->
+	<!--订单详情弹出框效果-->
      <script>
      $(document).ready(function(){
     	var orderId_toView = 0;
@@ -169,15 +169,81 @@
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
-            <input type="button" value="关闭" class="input_btn falseBtn"/>
+       <!--  <input type="button" value="确认并打印" class="input_btn trueBtn"/> -->
+        <input type="button" value="关闭" class="input_btn falseBtn"/>
        </div>
       </div>
      </section>
+     <!--结束：订单详情弹出框效果-->
+     
+     <!--弹出框效果-->
+     <script>
+     $(document).ready(function(){
+    	 var orderId = 0;
+		 //弹出文本性提示框
+		 $(".editOrder").click(function(){
+			 $(".del_pop_bg").fadeIn();
+			 var clickedId = $(this).attr("id");
+		     orderId = clickedId.split("-")[1];
+			 });
+		 //弹出：确认按钮
+		 $("#confirmEdit").click(function(){
+			 if(orderId==0){
+	    		 alert("请重新选择要操作的订单");
+	    		 return false;
+	    	 }
+			 var cityid = $("#cityId-"+orderId).text();
+	        	$.ajax({
+	    		  type: "POST",
+	  	          contentType: "application/json",
+	  	          url: "/orderOff/srefund/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
+	  	          dataType: "json",
+	  	          data: JSON.stringify({"orderid":orderId,"cityid":cityid}),
+	  	          success: function(data){
+	  	        	  if(data.msg=="200"){
+	  	        		  alert("操作成功");
+	  	        		  window.location.reload();//刷新页面
+	  	        	  }
+	  	        	  else if(data.msg=="201"){
+	  	        		  alert("操作失败");
+	  	        	  }else if(data.msg=="401"){
+	  	        	     alert("需要重新登录");
+	  	        		}
+	  	          }
+	    	 	});
+			 $(".del_pop_bg").fadeOut();
+			 orderId=0;
+			 });
+		 //弹出：取消或关闭按钮
+		 $("#cancelEdit").click(function(){
+			 $(".del_pop_bg").fadeOut();
+			 orderId=0;
+			 });
+		 });
+     </script>
+     <section class="del_pop_bg">
+				<div class="pop_cont">
+					<!--title-->
+					<h3>温馨提示</h3>
+					<!--content-->
+					<div class="small_pop_cont_input">
+						<!--以pop_cont_text分界-->
+						<div class="pop_cont_text">请确认已经通过微信支付后台进行退款再点此操作
+						</div>
+						<!--bottom:operate->button-->
+						<div class="btm_btn">
+							<input type="button" value="确认" id="confirmEdit"
+								class="input_btn trueBtn" /> <input type="button" value="关闭"
+								id="cancelEdit" class="input_btn falseBtn" />
+						</div>
+					</div>
+				</div>
+			</section>
      <!--结束：弹出框效果-->
 
      <section>
       <div class="page_title">
-       <b>所有区域下排队中、待处理、配送中、已配送的订单：</b><a class="fr top_rt_btn" href="/orderOn/s_queryall/${id}?token=${token}">刷新</a>
+       <b>所有区域所有状态下搜索到的订单：</b>
       </div>
       <table class="table">
        <tr>
@@ -188,37 +254,72 @@
         <th>联系电话</th>
         <th>下单时间</th>
         <th>配送时段</th>
-        <th>所属区域</th>
+        <th>操作</th>
+        <th>退款状态</th>
         <th>订单状态</th>
        </tr>
-       	<c:forEach var="item" items="${ordersOn}" varStatus="status">
-       		<c:set var="index" value="${item.status}" ></c:set>  
+       	<c:if test="${orderOn!=null}">
+       	<c:set var="index" value="${orderOn.status}" ></c:set>   
          	<tr>
-         		<td><button class="linkStyle viewOrder" id="viewPopTxt-${item.id}">${item.number}</button></td>
-         		<td id="totalPrice-${item.id}">￥${item.totalPrice}</td>
-         		<td id="couponPrice-${item.id}">${item.couponPrice}</td>
-         		<td id="receiverName-${item.id}">${item.receiverName}</td>
-         		<td id="phoneNumber-${item.id}">${item.phoneNumber}</td>
-         		<td id="orderTime-${item.id}">${item.orderTime}</td>
-         		<td id="receiveTime-${item.id}">${item.receiveTime}</td>
-         		<td id="cityara-${item.id}">${item.cityarea}</td>
-		        <td id="status-${item.id}">${pageScope.orderStates[pageScope.index]}</td>
-		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
-		        <td id="address-${item.id}" style="display:none">${item.address}</td>
-		        <td id="comment-${item.id}" style="display:none">${item.comment}</td>
+         		<td><button class="linkStyle viewOrder" id="viewPopTxt-${orderOn.id}">${orderOn.number}</button></td>
+         		<td id="totalPrice-${orderOn.id}">￥${orderOn.totalPrice}</td>
+         		<td id="couponPrice-${orderOn.id}">${orderOn.couponPrice}</td>
+         		<td id="receiverName-${orderOn.id}">${orderOn.receiverName}</td>
+         		<td id="phoneNumber-${orderOn.id}">${orderOn.phoneNumber}</td>
+         		<td id="orderTime-${orderOn.id}">${orderOn.orderTime}</td>
+         		<td id="receiveTime-${orderOn.id}">${orderOn.receiveTime}</td>
+         		<td style="text-align:center">
+		            <%-- <c:choose> 
+		  				<c:when test="${orderOn.refundStatus=='待退款'}">   
+		  					<button class="linkStyle editOrder" id="showPopTxt-${orderOn.id}">立即处理</button>
+						</c:when> 
+						<c:otherwise>   
+							<button class="linkStyle" id="show-${orderOn.id}" style="color:grey;cursor:default">处理完成</button>
+						</c:otherwise> 
+					</c:choose> --%>无
+		        </td>
+		        <%-- <td>${orderOn.refundStatus}</td> --%><td>无</td>
+		        <td>${pageScope.orderStates[pageScope.index]}</td>
+		        <td id="cityId-${orderOn.id}" style="display:none">${orderOn.cityId}</td>
+		         <td id="productNames-${orderOn.id}" style="display:none">${orderOn.productNames}</td>
+		        <td id="address-${orderOn.id}" style="display:none">${orderOn.address}</td>
+		         <td id="comment-${orderOn.id}" style="display:none">${orderOn.comment}</td>
          	</tr>
-		</c:forEach> 
+		</c:if> 
+       	<c:if test="${orderOff!=null}">
+       	<c:set var="index" value="${orderOff.finalStatus}" ></c:set>   
+         	<tr>
+         		<td><button class="linkStyle viewOrder" id="viewPopTxt-${orderOff.id}">${orderOff.number}</button></td>
+         		<td id="totalPrice-${orderOff.id}">￥${orderOff.totalPrice}</td>
+         		<td id="couponPrice-${orderOff.id}">${orderOff.couponPrice}</td>
+         		<td id="receiverName-${orderOff.id}">${orderOff.receiverName}</td>
+         		<td id="phoneNumber-${orderOff.id}">${orderOff.phoneNumber}</td>
+         		<td id="orderTime-${orderOff.id}">${orderOff.orderTime}</td>
+         		<td id="receiveTime-${orderOff.id}">${orderOff.receiveTime}</td>
+         		<td style="text-align:center">
+		            <c:choose> 
+		  				<c:when test="${orderOff.refundStatus=='待退款'}">   
+		  					<button class="linkStyle editOrder" id="showPopTxt-${orderOff.id}">立即处理</button>
+						</c:when> 
+						<c:otherwise>   
+							<button class="linkStyle" id="show-${orderOff.id}" style="color:grey;cursor:default">无</button>
+						</c:otherwise> 
+					</c:choose>
+		        </td>
+		        <td>${orderOff.refundStatus}</td>
+		        <td>${pageScope.orderStates[pageScope.index]}</td>
+		        <td id="cityId-${orderOff.id}" style="display:none">${orderOff.cityId}</td>
+		         <td id="productNames-${orderOff.id}" style="display:none">${orderOff.productNames}</td>
+		        <td id="address-${orderOff.id}" style="display:none">${orderOff.address}</td>
+		         <td id="comment-${orderOff.id}" style="display:none">${orderOff.comment}</td>
+         	</tr>
+		</c:if> 
       </table>
-      <aside class="paging">
-       <a href="/orderOn/s_queryall/${id}/1?token=${token}">第一页</a>
-       <c:forEach var="item" begin="1" end="${pageCount}">
-		   <a href="/orderOn/s_queryall/${id}/${item}?token=${token}">${item}</a>
-	   </c:forEach>
-       <a href="/orderOn/s_queryall/${id}/${pageCount}?token=${token}">最后一页</a>
-      </aside>
      </section>
-    <!--结束：以下内容则可删除，仅为素材引用参考-->
+     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${token}"></input>
 </body>
 </html>

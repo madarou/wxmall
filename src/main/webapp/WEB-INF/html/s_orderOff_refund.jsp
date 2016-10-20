@@ -243,7 +243,7 @@
 
      <section>
       <div class="page_title">
-       <a class="fr top_rt_btn" href="/orderOff/s_query_refund/${id}?token=${token}">刷新</a>
+       <b>所有区域下已取消或已退货后，需要退款操作的订单：</b><a class="fr top_rt_btn" href="/orderOff/s_query_refund/${id}?token=${token}">刷新</a>
       </div>
       <table class="table">
        <tr>

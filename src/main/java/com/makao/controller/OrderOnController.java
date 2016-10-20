@@ -1047,6 +1047,41 @@ public class OrderOnController {
 	
 	/**
 	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 商户为订单添加备注，订单号作为参数
+	 */
+	@AuthPassport
+	@RequestMapping(value = "/vcomment2/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object vcomment2(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		String number = paramObject.getString("number");
+		String vcomment = paramObject.getString("vcomment");
+		JSONObject jsonObject = new JSONObject();
+		Vendor vendor = this.vendorService.getById(id);
+		if(vendor!=null){
+			int res = this.orderOnService.vcommentOrderByNumber(vendor.getCityId(),number,vcomment);
+			if(res!=0){
+				jsonObject.put("msg", "200");
+				return jsonObject;
+			}
+			else{
+				//尝试去orderOff里加
+				int res2 = this.orderOffService.vcommentOrderByNumber(vendor.getCityId(),number,vcomment);
+				if(res2!=0){
+					jsonObject.put("msg", "200");
+					return jsonObject;
+				}
+				jsonObject.put("msg", "201");
+				return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+		return jsonObject;
+    }
+	
+	/**
+	 * @param id
 	 * @param orderid
 	 * @return
 	 * 排队中的订单状态被设置为待处理
@@ -1486,17 +1521,55 @@ public class OrderOnController {
 			OrderOn orderOn = null;
 			OrderOff orderOff = null;
 			if(vendor!=null){
-				orderOn = this.orderOnService.queryByNumber("Order_"+vendor.getAreaId()+"_on", number);
+				orderOn = this.orderOnService.queryByNumber("Order_"+vendor.getCityId()+"_on", number);
 				if(orderOn!=null){
 					modelAndView.addObject("orderOn", orderOn);
 					modelAndView.addObject("orderOff", null);
 					return modelAndView;
 				}
-				orderOff = this.orderOffService.queryByNumber("Order_"+vendor.getAreaId()+"_off", number);
+				orderOff = this.orderOffService.queryByNumber("Order_"+vendor.getCityId()+"_off", number);
 				if(orderOff!=null){
 					modelAndView.addObject("orderOff", orderOff);
 					modelAndView.addObject("orderOn", null);
 					return modelAndView;
+				}
+			}
+			modelAndView.addObject("orderOn", null);
+			modelAndView.addObject("orderOff", null);
+			return modelAndView;
+		}
+	
+	@RequestMapping(value = "/searchall/{id:\\d+}", method = RequestMethod.GET)
+	  public @ResponseBody
+	  ModelAndView searchall(@PathVariable("id") int id,
+				@RequestParam(value = "token", required = false) String token,
+				@RequestParam(value="number", required=false) String number) throws UnsupportedEncodingException {
+			number = new String(number.getBytes("iso8859-1"),"utf-8");
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("s_order_search");
+			if (token == null) {
+				return modelAndView;
+			}
+			modelAndView.addObject("id", id);
+			modelAndView.addObject("token", token);
+			Supervisor s = this.supervisorService.getById(id);
+			List<City> cites = this.cityService.queryAll();
+			OrderOn orderOn = null;
+			OrderOff orderOff = null;
+			if(s!=null){
+				for(City c : cites){
+					orderOn = this.orderOnService.queryByNumber("Order_"+c.getId()+"_on", number);
+					if(orderOn!=null){
+						modelAndView.addObject("orderOn", orderOn);
+						modelAndView.addObject("orderOff", null);
+						return modelAndView;
+					}
+					orderOff = this.orderOffService.queryByNumber("Order_"+c.getId()+"_off", number);	
+					if(orderOff!=null){
+						modelAndView.addObject("orderOff", orderOff);
+						modelAndView.addObject("orderOn", null);
+						return modelAndView;
+					}
 				}
 			}
 			modelAndView.addObject("orderOn", null);

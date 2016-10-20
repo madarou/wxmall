@@ -1552,6 +1552,45 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		}
 		return res.size()>0?res.get(0):null;
 	}
+
+	@Override
+	public int vcommentOrderByNumber(int cityId, String number, String vcomment) {
+		String tableName = "Order_"+cityId+"_off";
+		String vComment = vcomment;
+		String sql = "UPDATE `"
+				+ tableName
+				+ "` SET `vcomment`='"+vComment+"' WHERE `number`='"+number+"'";
+		Session session = null;
+		Transaction tx = null;
+		List<Integer> res = new ArrayList<Integer>();
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.doWork(
+			// 定义一个匿名类，实现了Work接口
+			new Work() {
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;
+					try {
+						ps = connection.prepareStatement(sql);
+					    int count = ps.executeUpdate();
+						res.add(count);
+					} finally {
+						doClose(ps);
+					}
+				}
+			});
+			tx.commit(); // 使用 Hibernate事务处理边界
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res.size()>0?res.get(0):0;
+	}
 	
 	protected void doClose(PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
@@ -1592,5 +1631,6 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 			}
 		}
 	}
+
 
 }
