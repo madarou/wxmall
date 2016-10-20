@@ -612,7 +612,7 @@
         <th>联系电话</th>
         <th>下单时间</th>
         <th>配送时段</th>
-        <th>接单操作</th>
+        <th>操作</th>
         <th>订单状态</th>
        </tr>
        <c:if test="${orderOn!=null}">
