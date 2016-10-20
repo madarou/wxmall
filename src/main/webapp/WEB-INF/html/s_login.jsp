@@ -67,6 +67,52 @@ $(document).ready(function() {
 	          }
 	      });
 	  });
+  	
+  $('#J_codetext').bind('keypress',function(event){
+      if(event.keyCode == "13")    
+      {
+    	var userName = $.trim($("#userName").val());
+  	  	var password = $.trim($("#password").val());
+  	  	if(userName.length==0||password.length==0){
+  		  alert("账号和密码不能为空");
+  		  return false;
+  	  	}
+  	  	 var checkCode = $.trim($("#J_codetext").val());
+  	  	 if(checkCode.length==0){
+  	  		 alert("请输入验证码");
+  	  		 return false;
+  	  	 }
+  	  	 if(validate()==false){
+  	  		alert("验证码错误");
+  	  		 return false;
+  	  	 }
+  	  /* location.href="index.html"; */
+  		  $.ajax({
+  	          type: "POST",
+  	          contentType: "application/json",
+  	          url: "/supervisor/login",
+  	          data: JSON.stringify({"userName":$("#userName").val(),"password":$("#password").val()}),
+  	          dataType: "json",
+  	          success: function(data){
+  	                  if(data.msg=="200"){
+  	                	  window.location="/supervisor/index/"+data.id+"?token="+data.token;
+  	                  }
+  	                  else if(data.msg=="201"){
+  	                	  alert("账号密码不能为空");
+  	                  }
+  	                  else if(data.msg=="202"){
+  	                	  alert("账号或密码错误");
+  	                  }
+  	                  else if(data.msg=="203"){
+  	                	  alert("账号或密码错误");
+  	                  }
+  	                  else {
+  	                	  alert("登录失败");
+  	                  }
+  	          }
+  	      });
+      }
+  });
 });
 </script>
 </head>
