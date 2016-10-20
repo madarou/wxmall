@@ -608,7 +608,8 @@ $(document).ready(function(){
        $("#serverImgNames").val(coverSUrlO);
        $("#uploadb").attr("src", "/static/upload/"+coverBUrlO);
        $("#serverImgNameb").val(coverBUrlO);
-       if(subdetailUrlO!=""){
+
+       if(subdetailUrlO!=null && subdetailUrlO!=undefined && subdetailUrlO!="" && subdetailUrlO.length>0){
     	   $("#uploadd1").attr("src", "/static/upload/"+subdetailUrlO);
     	   $("#serverImgNamed1").val(subdetailUrlO);
        }
@@ -690,8 +691,42 @@ $(document).ready(function(){
        });
      //弹出：取消或关闭按钮
      $("#cancelEdit").click(function(){
-       $(".editproduct_pop_bg").fadeOut();
-       	 editHandle_Id=0;
+         $(".editproduct_pop_bg").fadeOut();
+    	 editHandle_Id=0;
+       	 productNameO = "";
+    	 originO = "";
+    	 catalogO = "";
+    	 labelO = "";
+    	 standardO = "";
+    	 marketPriceO = "";
+    	 priceO = "";
+    	 showWayO = "";
+    	 coverSUrlO = "";
+    	 coverBUrlO = "";
+    	 inventoryO = 0;
+    	 sequenceO = 0;
+    	 statusO = "";
+    	 descriptionO = "";
+    	 salesVolumeO = 0;
+    	 likesO = 0;
+    	 subdetailUrlO = "";
+    	 detailUrlO = "";
+    	 isShowO = "";
+    	 areaIdO = 0;
+    	 cityIdO = 0;
+    	 threholdO = 0;
+    	 prethreholdO =0;
+    	 restrictO = 0;
+    	 $("#uploads").attr("src", "");
+    	 $("#uploadb").attr("src", "");
+    	 $("#uploadd1").attr("src", "");
+    	 $("#uploadd2").attr("src", "");
+    	 $("#serverImgNameb").val("");
+    	 $("#serverImgNames").val("");
+    	 $("#serverImgNamed1").val("");
+    	 $("#serverImgNamed2").val("");
+       	 
+    	// window.location.reload();
        });
      });
      </script>

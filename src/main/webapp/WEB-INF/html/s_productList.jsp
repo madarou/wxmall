@@ -342,6 +342,21 @@
      $("#cancelEdit").click(function(){
        $(".editproduct_pop_bg").fadeOut();
        	 editHandle_Id=0;
+       	productNameO = "";
+    	originO = "";
+    	standardO = "";
+    	marketPriceO = "";
+    	priceO = "";
+    	coverSUrlO = "";
+    	coverBUrlO = "";
+    	descriptionO = "";
+    	subdetailUrlO = "";
+    	detailUrlO = "";
+    	$("#uploads").attr("src", "");$("#uploadb").attr("src", "");$("#uploadd1").attr("src", "");$("#uploadd2").attr("src", "");
+    	$("#serverImgNames").val("");
+    	$("#serverImgNameb").val("");
+    	$("#serverImgNamed1").val("");
+    	$("#serverImgNamed2").val("");
        });
      });
      </script>
