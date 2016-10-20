@@ -335,7 +335,7 @@
 					<!--content-->
 					<div class="small_pop_cont_input">
 						<!--以pop_cont_text分界-->
-						<div class="pop_cont_text">确认要取消该订单吗?
+						<div class="pop_cont_text">确认要取消吗?
 						</div>
 						  <section>
 						      <ul class="ulColumn2">

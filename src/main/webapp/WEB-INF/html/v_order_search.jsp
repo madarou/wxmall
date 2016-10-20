@@ -361,6 +361,7 @@
        var clickedId = $(this).attr("id");
        //orderId_toCancel = clickedId.charAt(clickedId.length-1);
        orderId_toCancel = clickedId.split("-")[1];
+       handleType = clickedId.split("-")[0];
        });
      //弹出：确认按钮
      $("#confirmCancel").click(function(){
@@ -368,6 +369,7 @@
     		 alert("请重新选择要取消的订单");
     		 return false;
     	 }
+    	 if(handleType=="cancelPopTxt"){//如果是取消订单
         	$.ajax({
     		  type: "POST",
   	          contentType: "application/json",
@@ -390,6 +392,29 @@
   	        	  }
   	          }
     	 	});
+    	 }
+    	 else if(handleType=="cancelPopTxtr"){//如果是取消退货
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/orderOff/vcancel/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"orderid":orderId_toCancel,"vcomment":$.trim($("#vcomment").val())}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  //alert("删除区域管理员账号成功");
+     	        		  alert("退货取消成功");
+     	        		  window.location.reload();//刷新页面
+     	        		  orderId_toCancel=0;
+     	        	  }else if(data.msg=="401"){
+     	        	     alert("需要重新登录");
+     	        	  }else{
+     	        		  alert("取消订单失败");
+     	        		  window.location.reload();//刷新页面
+     	        	  }
+     	          }
+       	 	});
+      	 }
        });
      //弹出：取消或关闭按钮
      $("#cancelCancel").click(function(){
@@ -405,7 +430,7 @@
 					<!--content-->
 					<div class="small_pop_cont_input">
 						<!--以pop_cont_text分界-->
-						<div class="pop_cont_text">确认要取消该订单吗?
+						<div class="pop_cont_text">确认要取消吗?
 						</div>
 						  <section>
 						      <ul class="ulColumn2">
@@ -485,6 +510,61 @@
         	          }
           	 	});
     	 }
+    	 else if(handleType=="refund"){//如果是开始退货
+    		 $.ajax({
+          		  type: "POST",
+        	          contentType: "application/json",
+        	          url: "/orderOff/vrefund/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
+        	          dataType: "json",
+        	          data: JSON.stringify({"orderid":orderId_toHandle}),
+        	          success: function(data){
+        	        	  if(data.msg=="200"){
+        	        		  //alert("删除区域管理员账号成功");
+        	        		  alert("订单开始退货");
+        	        		  window.location.reload();//刷新页面
+        	        		  orderId_toCancel=0;
+        	        	  }else if(data.msg=="401"){
+        	        	     alert("需要重新登录");
+        	        	 }
+        	          }
+          	 	});
+    	 }
+    	 else if(handleType=="finishr"){//如果是完成退货
+    		 $.ajax({
+         		  type: "POST",
+       	          contentType: "application/json",
+       	          url: "/orderOff/vfinish/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
+       	          dataType: "json",
+       	          data: JSON.stringify({"orderid":orderId_toHandle}),
+       	          success: function(data){
+       	        	  if(data.msg=="200"){
+       	        		  alert("订单退货完成");
+       	        		  window.location.reload();//刷新页面
+       	        		  orderId_toCancel=0;
+       	        	  }else if(data.msg=="401"){
+       	        		     alert("需要重新登录");
+       	        	  }
+       	          }
+         	 	});
+    	 }
+    	 else if(handleType=="processPopTxt"){//如果是立即处理
+    		 $.ajax({
+       		  type: "POST",
+     	          contentType: "application/json",
+     	          url: "/orderOn/vprocess/"+$("#loginUserId").val()+"/?token="+$("#token").val(),
+     	          dataType: "json",
+     	          data: JSON.stringify({"orderid":orderId_toHandle}),
+     	          success: function(data){
+     	        	  if(data.msg=="200"){
+     	        		  alert("订单进入待处理列表");
+     	        		  window.location.reload();//刷新页面
+     	        		  orderId_toProcess=0;
+     	        	  }else if(data.msg=="401"){
+     	        	     alert("需要重新登录");
+     	        	}
+     	          }
+       	 	});
+    	 }
         	
        $(".handle_pop_bg").fadeOut();
        });
@@ -543,18 +623,32 @@
          		<td id="orderTime-${orderOn.id}">${orderOn.orderTime}</td>
          		<td id="receiveTime-${orderOn.id}">${orderOn.receiveTime}</td>
          		<td>
-         			<%-- <c:if test="${item.status=='3'}">
-         				<button class="linkStyle handleOrder" id="distribute-${item.id}">配送</button>|
-         				<button class="linkStyle" id="finishPopTxt-${item.id}" style="color:grey;cursor:default">完成</button>
+         			<c:if test="${orderOn.status=='2'}">
+         				<button class="linkStyle handleOrder" id="processPopTxt-${orderOn.id}">立即处理</button>
          			</c:if>
-         			<c:if test="${item.status=='4'}">
-         				<button class="linkStyle" id="distributePopTxt-${item.id}" style="color:grey;cursor:default">配送</button>|
-         				<button class="linkStyle handleOrder" id="finish-${item.id}">完成</button>
-         			</c:if> --%>
+         			<c:if test="${orderOn.status=='3'}">
+         				<button class="linkStyle handleOrder" id="distribute-${orderOn.id}">配送</button>|
+         				<button class="linkStyle" id="finishPopTxt-${orderOn.id}" style="color:grey;cursor:default">完成</button>
+         			</c:if>
+         			<c:if test="${orderOn.status=='4'}">
+         				<button class="linkStyle" id="distributePopTxt-${orderOn.id}" style="color:grey;cursor:default">配送</button>|
+         				<button class="linkStyle handleOrder" id="finish-${orderOn.id}">完成</button>
+         			</c:if>
          		</td>
-		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${orderOn.id}">
-					${pageScope.orderStates[pageScope.index]}
-				</button></td>
+		        <td>
+					<c:choose> 
+		  				<c:when test="${orderOn.status=='5'}">   
+		  					<button class="linkStyle" style="cursor:default;color:grey" id="cancelPopTxt-${orderOn.id}">
+								${pageScope.orderStates[pageScope.index]}
+							</button>
+						</c:when> 
+						<c:otherwise>   
+							<button class="linkStyle cancelOrder" id="cancelPopTxt-${orderOn.id}">
+								${pageScope.orderStates[pageScope.index]}
+							</button>
+						</c:otherwise> 
+					</c:choose>		        
+		        </td>
 		        <td id="productNames-${orderOn.id}" style="display:none">${orderOn.productNames}</td>
 		        <td id="address-${orderOn.id}" style="display:none">${orderOn.address}</td>
 		         <td id="comment-${orderOn.id}" style="display:none">${orderOn.comment}</td>
@@ -573,18 +667,29 @@
          		<td id="orderTime-${orderOff.id}">${orderOff.orderTime}</td>
          		<td id="receiveTime-${orderOff.id}">${orderOff.receiveTime}</td>
          		<td>
-         			<%-- <c:if test="${item.status=='3'}">
-         				<button class="linkStyle handleOrder" id="distribute-${item.id}">配送</button>|
-         				<button class="linkStyle" id="finishPopTxt-${item.id}" style="color:grey;cursor:default">完成</button>
+         			<c:if test="${orderOff.finalStatus=='8'}">
+         				<button class="linkStyle handleOrder" id="refund-${orderOff.id}">退货</button>|
+         				<button class="linkStyle" id="finishPopTxtr-${orderOff.id}" style="color:grey;cursor:default">完成</button>
          			</c:if>
-         			<c:if test="${item.status=='4'}">
-         				<button class="linkStyle" id="distributePopTxt-${item.id}" style="color:grey;cursor:default">配送</button>|
-         				<button class="linkStyle handleOrder" id="finish-${item.id}">完成</button>
-         			</c:if> --%>
+         			<c:if test="${orderOff.finalStatus=='9'}">
+         				<button class="linkStyle" id="distributePopTxt-${orderOff.id}" style="color:grey;cursor:default">退货</button>|
+         				<button class="linkStyle handleOrder" id="finishr-${orderOff.id}">完成</button>
+         			</c:if>
          		</td>
-		        <td><button class="linkStyle cancelOrder" id="cancelPopTxt-${orderOff.id}">
-					${pageScope.orderStates[pageScope.index]}
-				</button></td>
+		        <td>
+		        	<c:choose> 
+		  				<c:when test="${orderOff.finalStatus=='6' or orderOff.finalStatus=='7' or orderOff.finalStatus=='10' or orderOff.finalStatus=='11' or orderOff.finalStatus=='12' or orderOff.finalStatus=='13'}">   
+		  					<button class="linkStyle" style="cursor:default;color:grey" id="cancelPopTxt-${orderOff.id}">
+								${pageScope.orderStates[pageScope.index]}
+							</button>
+						</c:when> 
+						<c:otherwise>   
+							 <button class="linkStyle cancelOrder" id="cancelPopTxtr-${orderOff.id}">
+								${pageScope.orderStates[pageScope.index]}
+							</button>
+						</c:otherwise> 
+					</c:choose>	
+		       </td>
 		        <td id="productNames-${orderOff.id}" style="display:none">${orderOff.productNames}</td>
 		        <td id="address-${orderOff.id}" style="display:none">${orderOff.address}</td>
 		         <td id="comment-${orderOff.id}" style="display:none">${orderOff.comment}</td>
@@ -592,13 +697,6 @@
          	</tr>
 		</c:if>
       </table>
-      <aside class="paging">
-       <a href="/orderOn/v_query_process/${id}/1?token=${token}">第一页</a>
-       <c:forEach var="item" begin="1" end="${pageCount}">
-		   <a href="/orderOn/v_query_process/${id}/${item}?token=${token}">${item}</a>
-	   </c:forEach>
-       <a href="/orderOn/v_query_process/${id}/${pageCount}?token=${token}">最后一页</a>
-      </aside>
      </section>
 	</div>
      </section>
