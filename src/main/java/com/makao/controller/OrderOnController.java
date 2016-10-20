@@ -1032,7 +1032,7 @@ public class OrderOnController {
 		Vendor vendor = this.vendorService.getById(id);
 		if(vendor!=null){
 			int res = this.orderOnService.vcommentOrder(vendor.getCityId(),orderid,vcomment);
-			if(res==0){
+			if(res!=0){
 				jsonObject.put("msg", "200");
 				return jsonObject;
 			}

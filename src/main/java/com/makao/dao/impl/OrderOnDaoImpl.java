@@ -1826,7 +1826,7 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 				+ "` SET `vcomment`='"+vComment+"' WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
-		int res = 0;
+		List<Integer> res = new ArrayList<Integer>();
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
@@ -1837,8 +1837,8 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 					PreparedStatement ps = null;
 					try {
 						ps = connection.prepareStatement(sql);
-					    ps.executeUpdate();
-						
+					    int count = ps.executeUpdate();
+						res.add(count);
 					} finally {
 						doClose(ps);
 					}
@@ -1849,12 +1849,11 @@ public class OrderOnDaoImpl implements IOrderOnDao {
 			if (null != tx)
 				tx.rollback();// 回滚
 			logger.error(e.getMessage(), e);
-			res = 1;
 		} finally {
 			if (null != session)
 				session.close();// 关闭回话
 		}
-		return res;
+		return res.size()>0?res.get(0):0;
 	}
 	
 	/* (non-Javadoc)

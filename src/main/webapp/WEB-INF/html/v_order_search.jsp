@@ -300,6 +300,8 @@
 		  	        		  alert("备注添加成功");
 		  	        	  }else if(data.msg=="401"){
 		  	        	     alert("需要重新登录");
+		  	        	}else{
+		  	        		alert("备注添加失败");
 		  	        	}
 		  	          }
 		    	 	});
