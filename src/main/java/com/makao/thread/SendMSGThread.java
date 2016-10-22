@@ -13,6 +13,7 @@ import net.sf.json.JSONObject;
 
 import com.makao.entity.OrderOff;
 import com.makao.entity.OrderOn;
+import com.makao.utils.MakaoConstants;
 import com.makao.weixin.utils.AccessTokenUtil;
 import com.makao.weixin.utils.HttpUtil;
 import com.makao.weixin.utils.WeixinConstants;
@@ -89,7 +90,7 @@ public class SendMSGThread implements Runnable {
 		JSONObject msg = new JSONObject();
 		msg.put("touser", this.toUserOpenid);
 		msg.put("template_id", WeixinConstants.ORDER_CREATED_MBMSG);
-		msg.put("url", "www.baidu.com");
+		msg.put("url", MakaoConstants.ENTRANCE);
 		JSONObject data = new JSONObject();
 		JSONObject temp = new JSONObject();
 		temp.put("value", "您的社享网订单已付款成功，请等待发货！");
@@ -138,7 +139,7 @@ public class SendMSGThread implements Runnable {
 		JSONObject msg = new JSONObject();
 		msg.put("touser", this.toUserOpenid);
 		msg.put("template_id", WeixinConstants.ORDER_SENDING_MBMSG);
-		msg.put("url", "www.baidu.com");
+		msg.put("url", MakaoConstants.ENTRANCE);
 		JSONObject data = new JSONObject();
 		JSONObject temp = new JSONObject();
 		temp.put("value", "您购买的商品即将配送，请注意查收");
@@ -188,7 +189,7 @@ public class SendMSGThread implements Runnable {
 		JSONObject msg = new JSONObject();
 		msg.put("touser", this.toUserOpenid);
 		msg.put("template_id", WeixinConstants.ORDER_FINISHED_MBMSG);
-		msg.put("url", "www.baidu.com");
+		msg.put("url", MakaoConstants.ENTRANCE);
 		JSONObject data = new JSONObject();
 		JSONObject temp = new JSONObject();
 		temp.put("value", "您好，您的商品已经配送成功！");
@@ -239,7 +240,7 @@ public class SendMSGThread implements Runnable {
 		JSONObject msg = new JSONObject();
 		msg.put("touser", this.toUserOpenid);
 		msg.put("template_id", WeixinConstants.ORDER_PREPARE_MBMSG);
-		msg.put("url", "www.baidu.com");
+		msg.put("url", "#");
 		JSONObject data = new JSONObject();
 		JSONObject temp = new JSONObject();
 		temp.put("value", "您好，近期您有一笔即将配送的订单：");
@@ -280,7 +281,7 @@ public class SendMSGThread implements Runnable {
 		JSONObject msg = new JSONObject();
 		msg.put("touser", this.toUserOpenid);
 		msg.put("template_id", WeixinConstants.ORDER_REFUND_MBMSG);
-		msg.put("url", "www.baidu.com");
+		msg.put("url", "#");
 		JSONObject data = new JSONObject();
 		JSONObject temp = new JSONObject();
 		temp.put("value", "您好，近期您有一笔需要退款的订单：");
@@ -326,7 +327,7 @@ public class SendMSGThread implements Runnable {
 		JSONObject msg = new JSONObject();
 		msg.put("touser", this.toUserOpenid);
 		msg.put("template_id", WeixinConstants.ORDER_RETURN_MBMSG);
-		msg.put("url", "www.baidu.com");
+		msg.put("url", "#");
 		JSONObject data = new JSONObject();
 		JSONObject temp = new JSONObject();
 		temp.put("value", "您好，近期您有一笔需要退货的订单：");
