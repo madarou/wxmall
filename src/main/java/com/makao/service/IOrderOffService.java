@@ -102,6 +102,7 @@ public interface IOrderOffService {
 	 * @param string
 	 * @return
 	 * 将取消或退货的的订单的inventBack字段设为1
+	 * 注意用户已退货的订单不再加回去，所以inventoryBackCanceledAndReturned只返回已取消的，不返回已退货的了
 	 */
 	List<OrderOff> inventoryBackCanceledAndReturned(String string);
 

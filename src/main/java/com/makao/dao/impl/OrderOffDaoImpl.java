@@ -1160,10 +1160,11 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	/* (non-Javadoc)
 	 * @see com.makao.dao.IOrderOffDao#inventoryBackCanceledAndReturned(java.lang.String)
 	 * 将取消或退货的的订单的inventBack字段设为1
+	 * 注意用户已退货的订单不再加回去，所以inventoryBackCanceledAndReturned只返回已取消的，不返回已退货的了
 	 */
 	@Override
 	public List<OrderOff> inventoryBackCanceledAndReturned(String tableName) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus` IN ('"+OrderState.RETURNED.getCode()+"','"+OrderState.CANCELED.getCode()+"') AND `inventBack` is null";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus`='"+OrderState.CANCELED.getCode()+"' AND `inventBack` is null";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();

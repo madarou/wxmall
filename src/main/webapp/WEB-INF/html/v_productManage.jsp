@@ -553,6 +553,12 @@ $(document).ready(function(){
     	var threholdO = 0;
     	var prethreholdO =0;
     	var restrictO = 0;
+    	//移除详情1的图片
+        $("#rmdetail1").click(function(){
+	       	$("#uploadd1").attr('src',"");
+	       	$("#serverImgNamed1").val("");
+	       	$(this).css("display","none");
+        });
     	//弹出文本性提示框
      $(".editProduct").click(function(){
        $(".editproduct_pop_bg").fadeIn();
@@ -827,7 +833,7 @@ $(document).ready(function(){
 				</div>
 				<input type="hidden" id="serverImgNameb"/>
 		       </li>
-							<li><span class="item_name" style="width: 120px;">商品详情1：</span>
+							<li><span class="item_name" style="width: 120px;">商品详情1<button class="linkStyle" style="padding:0;display:none" id="rmdetail1">(X)</button>：</span>
 								<img alt="详情1" id="uploadd1" src=""
 								style="height: 170px; width: 305px; cursor: pointer">
 								<div id="fileDivd1">
@@ -1008,6 +1014,7 @@ $(document).ready(function(){
                      //alert("图片可用");
                      $("#serverImgNamed1").val(data.imgName);
                      $("#uploadd1").attr("src", "/static/upload/"+data.imgName);
+                     $("#rmdetail1").css("display","inherit");
                  }
                  else if(data.msg=="201"){
                 	 alert("图片不符合");

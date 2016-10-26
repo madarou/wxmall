@@ -25,6 +25,8 @@ import com.makao.utils.RedisUtil;
  *
  *9月27号：
  *用户取消的订单或已退货的订单里的库存也要加回去
+ *10月26号：
+ *用户已退货的订单里的库存不再加回去
  */
 public class InventoryOptJob {
 	@Resource
@@ -42,13 +44,12 @@ public class InventoryOptJob {
 		for(City c:cities){
 			//数据库中查到所有满足条件的订单，同时删除它们，并且返回订单列表
 			List<OrderOn> orders = this.orderOnService.unPaidOrders(c.getId());
-			//找到已取消的订单列表
+			//找到已取消的订单列表,注意用户已退货的订单不再加回去，所以inventoryBackCanceledAndReturned只返回已取消的，不返回已退货的了
 			List<OrderOff> canceled = this.orderOffService.inventoryBackCanceledAndReturned("Order_"+c.getId()+"_off");
 			//遍历返回的订单列表，取出其中的(城市区域商品)-(数量)
 			//加入到对应pi_cityId_areaId_id缓存中
 			if(orders!=null)
 			{	
-				System.out.println("orders");
 				for(OrderOn o:orders){
 					int areaId = o.getAreaId();
 					String[] ids = o.getProductIds().split(",");
