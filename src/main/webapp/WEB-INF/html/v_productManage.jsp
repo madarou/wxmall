@@ -731,6 +731,7 @@ $(document).ready(function(){
     	 $("#serverImgNames").val("");
     	 $("#serverImgNamed1").val("");
     	 $("#serverImgNamed2").val("");
+    	 $("#rmdetail1").css("display","none");
        	 
     	// window.location.reload();
        });

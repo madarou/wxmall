@@ -364,6 +364,7 @@
     	$("#serverImgNameb").val("");
     	$("#serverImgNamed1").val("");
     	$("#serverImgNamed2").val("");
+    	$("#rmdetail1").css("display","none");
        });
      });
      </script>
