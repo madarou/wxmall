@@ -311,7 +311,7 @@ public class OrderOnController {
 					"pi_" + cityId + "_" + areaId
 							+ "_" + ids[i].trim(), Integer.valueOf(nums[i]));
 			// 如果某商品扣除购买数量后，库存为负，下单失败，但是要将减掉的库存加回去
-			if (((Long) rt.get(0)).intValue() <= 0) {
+			if (((Long) rt.get(0)).intValue() < 0) {
 				// 另外起一个线程来回加减掉的库存
 				AddInventoryThread ait = new AddInventoryThread("pi_"
 						+ cityId + "_" + areaId + "_"
@@ -565,7 +565,7 @@ public class OrderOnController {
 		u.setAppid(WeixinConstants.APPID);
 		u.setMch_id(WeixinConstants.MCHID);
 		u.setNonce_str(SignatureUtil.getNonceStr());
-		u.setBody("超级社区商品购买订单");
+		u.setBody("社享网购买商品");
 		u.setOut_trade_no(orderOn.getNumber());
 		String price = orderOn.getTotalPrice();
 		u.setTotal_fee(Integer.parseInt(price.split("\\.")[0]+price.split("\\.")[1]));//单位为分
