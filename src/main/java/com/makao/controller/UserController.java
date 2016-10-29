@@ -196,7 +196,7 @@ public class UserController {
 							+ "<script src=\"//cdn.bootcss.com/react/0.14.8/react.min.js\"></script>"
 						    + "<script src=\"//cdn.bootcss.com/react/0.14.8/react-dom.min.js\"></script>"
 						    + "<script src=\""+MakaoConstants.CDN_DOMAIN+"/js/lib/promise.js\"></script>"
-							+ "<script src=\""+MakaoConstants.CDN_DOMAIN+"/static/bundle.8cdfad42.js\"></script>"
+							+ "<script src=\""+MakaoConstants.CDN_DOMAIN+"/static/bundle.31e11937.js\"></script>"
 						+ "</body>"
 					+ "</html>";
 			out.write(page);
@@ -282,7 +282,7 @@ public class UserController {
 								+ "<script src=\"//cdn.bootcss.com/react/0.14.8/react.min.js\"></script>"
 							    + "<script src=\"//cdn.bootcss.com/react/0.14.8/react-dom.min.js\"></script>"
 							    + "<script src=\""+MakaoConstants.CDN_DOMAIN+"/js/lib/promise.js\"></script>"
-								+ "<script src=\""+MakaoConstants.CDN_DOMAIN+"/static/bundle.8cdfad42.js\"></script>"
+								+ "<script src=\""+MakaoConstants.CDN_DOMAIN+"/static/bundle.31e11937.js\"></script>"
 							+ "</body>"
 						+ "</html>";
 				out.write(page);
