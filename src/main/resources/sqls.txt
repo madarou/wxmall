@@ -39,7 +39,7 @@ Comment_cityId_areaId:
 				+ "` (`id` int(11) NOT NULL AUTO_INCREMENT,
 						`userName` varchar(30) NOT NULL,
 						`userId` int(11),
-						`userImgUrl` varchar(50),
+						`userImgUrl` varchar(180),
 						`date` date,
 						`likes` int(11),
 						`content` varchar(255),
