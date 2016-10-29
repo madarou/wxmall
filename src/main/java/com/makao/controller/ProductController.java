@@ -76,6 +76,11 @@ public class ProductController {
 		JSONObject jsonObject = new JSONObject();
 		logger.info("获取商品信息id=" + id);
 		Product product = (Product)this.productService.getById(id,cityId,areaId);
+		Area a = this.areaService.getById(areaId);
+		if(a!=null)
+			product.setPhone(a.getPhoneNumber());
+		else
+			product.setPhone("18817912915");
 		jsonObject.put("msg", "200");
 		jsonObject.put("product", product);//不用序列化，方便前端jquery遍历
 		return jsonObject;
@@ -474,11 +479,13 @@ public class ProductController {
 		products = this.productService.queryByCityAreaId(cityId,areaId);
 		Area a = this.areaService.getById(areaId);
 		List<String> catalog = new ArrayList<String>();
+		String areaphone = "";
 		if(a!=null&&a.getCatalogs()!=null&&!"".equals(a.getCatalogs())){
 			String[] catalogs = a.getCatalogs().split(",");
 			for(String c : catalogs){
 				catalog.add(c.split("=")[0]);
 			}
+			areaphone=a.getPhoneNumber();
 		}
 		List<Banner> banners = this.bannerService.queryByAreaId(areaId);
 		logger.info("获取城市 "+cityId+" 和区域 "+areaId+"下的所有商品信息完成");
@@ -486,6 +493,7 @@ public class ProductController {
 		jsonObject.put("products", products);//不用序列化，方便前端jquery遍历
 		jsonObject.put("catalog", catalog);
 		jsonObject.put("banners", banners);
+		jsonObject.put("areaphone",areaphone);
 		return jsonObject;
     }
 	

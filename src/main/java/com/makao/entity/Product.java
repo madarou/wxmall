@@ -31,6 +31,7 @@ public class Product {
 	private int prethrehold;//预设库存量
 	private int supply;//本次供货量，如果为0表示未供货
 	private int restrict;//一次购买的限购量
+	private String phone;//电话
 	public int getId() {
 		return id;
 	}
@@ -186,5 +187,11 @@ public class Product {
 	}
 	public void setRestrict(int restrict) {
 		this.restrict = restrict;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 }
