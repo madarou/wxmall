@@ -175,7 +175,7 @@ public class UserController {
 								+ "var token='"+token+"';"
 								
 								+ "if(getUrlParam('state')=='2'){"
-									+ "window.location=window.location.host+window.location.pathname+window.location.search+'#/me/order';"
+									+ "window.location='http://'+window.location.host+window.location.pathname+window.location.search+'#/me/order';"
 								+ "}"
 								+ "function getUrlParam(name) {"
 									+"var reg = new RegExp(\"(^|&)\" + name + \"=([^&]*)(&|$)\");"
@@ -271,7 +271,7 @@ public class UserController {
 									+ "var token='"+token+"';"
 									
 									+ "if(getUrlParam('state')=='2'){"
-									+ "window.location=window.location.host+window.location.pathname+window.location.search+'#/me/order';"
+									+ "window.location='http://'+window.location.host+window.location.pathname+window.location.search+'#/me/order';"
 									+ "}"
 									+ "function getUrlParam(name) {"
 										+"var reg = new RegExp(\"(^|&)\" + name + \"=([^&]*)(&|$)\");"
