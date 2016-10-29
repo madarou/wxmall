@@ -91,7 +91,7 @@ ul.list li .buy{position:absolute;z-index:200;width:4.2rem;height:2.4rem;border-
 ul.list li .buy.ok{font-size:1.4em;right:1rem;top:0;bottom:0;margin:auto;}
 ul.list li .buy.ok .iconfont{font-size:1.1em;}
 ul.list li .buy.ok.m{right: 4em;background: #c3d92f;}
-ul.list li .buy.not{font-size:80%;border-radius:6em;background:#aaa;right:1rem;}
+ul.list li .buy.not{font-size:80%;border-radius:6em;background:#aaa;right:1rem; bottom: 1rem;}
 ul.list li .buy.not span{position:absolute;line-height:2em;display:inline-block;left:0;width:100%;}
 ul.list li .buy.not span:first-child{top:0;}
 ul.list li .buy.not span:last-child{top:1.2em;}
