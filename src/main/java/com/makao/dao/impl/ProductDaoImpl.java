@@ -950,7 +950,7 @@ public class ProductDaoImpl implements IProductDao {
 	public int updateInventory(String tableName, String productid,
 			String inventN) {
 		String sql1 = "SELECT `threhold` FROM "+tableName+ " WHERE `id`=" + Integer.valueOf(productid);
-		logger.info("更新产品inventory(tableName-productId-inventory): "+tableName+"-"+productid+"-"+inventN);
+		//logger.info("更新产品inventory(tableName-productId-inventory): "+tableName+"-"+productid+"-"+inventN);
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
@@ -1302,7 +1302,7 @@ public class ProductDaoImpl implements IProductDao {
 
 	@Override
 	public int updateSalesVolume(String tableName, String productid, int saled) {
-		logger.info("更新销量，更新产品salesVolume(tableName-productId-saled): "+tableName+"-"+productid+"-"+saled);
+		//logger.info("更新销量，更新产品salesVolume(tableName-productId-saled): "+tableName+"-"+productid+"-"+saled);
 		
 		Session session = null;
 		Transaction tx = null;
