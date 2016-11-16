@@ -280,6 +280,7 @@
 			 	var catalog = $('input:radio[name=procatalog]:checked').val();
 			 	var label = $('input:radio[name=prolabel]:checked').val();
 			 	var standard = $.trim($("#prostandard").val());
+			 	var bid = $.trim($("#probid").val());
 			 	var price = $.trim($("#proprice").val());
 			 	var marketPrice = $.trim($("#promarketprice").val());
 			 	var inventory = $.trim($("#proinventory").val());//分库里必须有库存值，没有则为0
@@ -299,8 +300,8 @@
 			 	var coverBUrl = $("#serverImgNameb").val();
 			 	var subdetailUrl = $("#serverImgNamed1").val();
 			 	var detailUrl = $("#serverImgNamed2").val();
-			 	if(productName == "" || origin=="" || catalog=="" || catalog==undefined || standard=="" || price=="" || marketPrice=="" || inventory== "" || sequence==""){
-			 		alert("产品名称、原产地、分类、规格、价格、库存、市场价以及排序不能为空");
+			 	if(productName == "" || origin=="" || catalog=="" || catalog==undefined || standard=="" || bid=="" || price=="" || marketPrice=="" || inventory== "" || sequence==""){
+			 		alert("产品名称、原产地、分类、规格、进价、售价、库存、市场价以及排序不能为空");
 			 		return false;
 			 	}
 			 	if(coverSUrl == "" || coverBUrl == "" || detailUrl==""){
@@ -315,7 +316,7 @@
 		  	          data: JSON.stringify({"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
 		  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
 		  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold,"prethrehold":prethrehold,
-		  	        		"restrict":restrict}),
+		  	        		"restrict":restrict,"bid":bid}),
 		  	          success: function(data){
 		  	        	  if(data.msg=="200"){
 		  	        		  alert("商品添加成功");
@@ -366,6 +367,10 @@
        <li>
         <span class="item_name" style="width:120px;">商品规格：</span>
         <input type="text" id="prostandard" class=" textbox_295 length_input_30" placeholder="如'一份250克','一份足2斤'"/>
+       </li>
+        <li>
+        <span class="item_name" style="width:120px;">进价(￥)：</span>
+        <input type="text" id="probid" class=" textbox_295 price_input" placeholder="10.00"/>
        </li>
        <li>
         <span class="item_name" style="width:120px;">售价(￥)：</span>

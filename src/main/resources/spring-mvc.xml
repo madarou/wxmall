@@ -74,6 +74,8 @@
 	<mvc:resources mapping="/orderOff/s_query_refund/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/s_query_refund/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/s_queryall/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/s_querydealed/static/**" location="/WEB-INF/static/" />
+	<mvc:resources mapping="/orderOff/s_queryreturned/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOff/s_queryall/{\\d+}/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/static/**" location="/WEB-INF/static/" />
 	<mvc:resources mapping="/orderOn/v_query/static/**" location="/WEB-INF/static/" />

@@ -140,6 +140,16 @@ public class OrderOffServiceImpl implements IOrderOffService {
 	public int vcommentOrderByNumber(int cityId, String number, String vcomment) {
 		return this.orderOffDao.vcommentOrderByNumber(cityId, number, vcomment);
 	}
+	@Override
+	public List<OrderOff> queryDealed(String tableName, int areaid,
+			String fromdate, String todate) {
+		return this.orderOffDao.queryDealed(tableName, areaid, fromdate, todate);
+	}
+	@Override
+	public List<OrderOff> queryReturned(String string, int areaid,
+			String fromdate, String todate) {
+		return this.orderOffDao.queryReturned(string, areaid, fromdate, todate);
+	}
 	
 //	@Override
 //	public void testor() {

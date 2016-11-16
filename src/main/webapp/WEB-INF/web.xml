@@ -43,9 +43,9 @@
 	</filter-mapping>
   
 	<!-- 测试时，先自动清空数据库表，实际上线时去掉 -->
-	 <listener>
+	 <!-- <listener>
 		<listener-class>com.makao.utils.DropDBTablesOnInit</listener-class>
-	</listener>
+	</listener> -->
 	<!-- 创建Product商品库总表 -->
 	<listener>
 		<listener-class>com.makao.utils.CreateProductTableOnInit</listener-class>

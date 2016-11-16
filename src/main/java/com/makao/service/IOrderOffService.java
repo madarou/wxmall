@@ -140,4 +140,26 @@ public interface IOrderOffService {
 
 	int vcommentOrderByNumber(int cityId, String number, String vcomment);
 
+	/**
+	 * @param tableName
+	 * @param areaid
+	 * @param fromdate
+	 * @param todate
+	 * @return
+	 * 从orderOff表里查询区域areaid对应的时间区间fromdate到todate的已完成和已取消退货的订单
+	 */
+	List<OrderOff> queryDealed(String tableName, int areaid, String fromdate,
+			String todate);
+
+	/**
+	 * @param string
+	 * @param areaid
+	 * @param fromdate
+	 * @param todate
+	 * @return
+	 * 查找对应区域下在特定时间范围内的已退款的所有订单,注意是已退款不是已退货
+	 */
+	List<OrderOff> queryReturned(String string, int areaid, String fromdate,
+			String todate);
+
 }

@@ -471,6 +471,7 @@
 		        </td>
 		        <td style="display:none" id="pshowway-${item.id}">${item.showWay}</td>
 		        <td style="display:none" id="pstandard-${item.id}">${item.standard}</td>
+		        <td style="display:none" id="pbid-${item.id}">${item.bid}</td>
 		        <td style="display:none" id="pmarketprice-${item.id}">${item.marketPrice}</td>
 		        <td style="display:none" id="plabel-${item.id}">${item.label}</td>
 		        <td style="display:none" id="pcoverburl-${item.id}">${item.coverBUrl}</td>
@@ -535,6 +536,7 @@ $(document).ready(function(){
     	var labelO = "";
     	var standardO = "";
     	var marketPriceO = "";
+    	var bidO = "";
     	var priceO = "";
     	var showWayO = "";
     	var coverSUrlO = "";
@@ -574,6 +576,7 @@ $(document).ready(function(){
     	   labelO="无标签";
        standardO = $.trim($("#pstandard-"+editHandle_Id).text());
        marketPriceO = $.trim($("#pmarketprice-"+editHandle_Id).text());
+       bidO = $.trim($("#pbid-"+editHandle_Id).text());
        priceO = $.trim($("#pprice-"+editHandle_Id).text());
        showWayO = $.trim($("#pshowway-"+editHandle_Id).text());
        coverSUrlO = $("#pcoversurl-"+editHandle_Id).attr("src").split("/")[3];
@@ -602,6 +605,7 @@ $(document).ready(function(){
        $("#proorigin").val(originO);
        $("#prostandard").val(standardO);
        $("#promarketprice").val(marketPriceO);
+       $("#probid").val(bidO);
        $("#proprice").val(priceO);
        $("#proinventory").val(inventoryO);
        $("#prothrehold").val(threholdO);
@@ -634,6 +638,7 @@ $(document).ready(function(){
 		 	var label = $('input:radio[name=prolabel]:checked').val();
 		 	var standard = $.trim($("#prostandard").val());
 		 	var price = $.trim($("#proprice").val());
+		 	var bid = $.trim($("#probid").val());
 		 	var marketPrice = $.trim($("#promarketprice").val());
 		 	var inventory = $.trim($("#proinventorychange").val());//注意这里传到后台的是增加或减少的库存数量
 		 	var threhold = $.trim($("#prothrehold").val());
@@ -657,8 +662,8 @@ $(document).ready(function(){
 		 	var subdetailUrl = $("#serverImgNamed1").val();
 		 	var detailUrl = $("#serverImgNamed2").val();
 		 	
-		 	if(productName == "" || origin=="" || standard=="" || price=="" || marketPrice=="" || inventory== "" || sequence==""){
-		 		alert("产品名称、原产地、规格、价格、库存、市场价以及排序不能为空");
+		 	if(productName == "" || origin=="" || standard=="" || bid=="" || price=="" || marketPrice=="" || inventory== "" || sequence==""){
+		 		alert("产品名称、原产地、规格、进价、售价、库存、市场价以及排序不能为空");
 		 		return false;
 		 	}
 		 	if(coverSUrl == "" || coverBUrl == "" || detailUrl==""){
@@ -669,7 +674,7 @@ $(document).ready(function(){
 		 			marketPrice==marketPriceO && sequence==sequenceO && label==labelO &&
 		 			catalog==catalogO && isShow==isShowO && description==descriptionO && coverSUrl==coverSUrlO
 		 			&& coverBUrl==coverBUrlO && subdetailUrl==subdetailUrlO && detailUrl==detailUrlO && threhold==threholdO 
-		 			&& prethrehold==prethreholdO && restrict == restrictO && inventory==0){
+		 			&& prethrehold==prethreholdO && restrict == restrictO && inventory==0 && bid==bidO){
 		 		alert("并未做修改");
 		 		return false;
 		 	}
@@ -682,7 +687,7 @@ $(document).ready(function(){
      	          data: JSON.stringify({"id":editHandle_Id,"productName":productName,"origin":origin,"catalog":catalog,"label":label,"standard":standard,"price":price,
 	  	        		"marketPrice":marketPrice,"inventory":inventory,"isShow":isShow,"showWay":showWay,"sequence":sequence,"description":description,
 	  	        		"coverSUrl":coverSUrl,"coverBUrl":coverBUrl,"subdetailUrl":subdetailUrl,"detailUrl":detailUrl,"threhold":threhold,"prethrehold":prethrehold,
-	  	        		"restrict":restrict}),
+	  	        		"restrict":restrict,"bid":bid}),
      	          success: function(data){
      	        	  if(data.msg=="200"){
      	        		  alert("商品修改成功");
@@ -706,6 +711,7 @@ $(document).ready(function(){
     	 standardO = "";
     	 marketPriceO = "";
     	 priceO = "";
+    	 bidO="";
     	 showWayO = "";
     	 coverSUrlO = "";
     	 coverBUrlO = "";
@@ -773,6 +779,10 @@ $(document).ready(function(){
 		       <li>
 		        <span class="item_name" style="width:120px;">商品规格：</span>
 		        <input type="text" id="prostandard" class=" textbox_295 length_input_30" placeholder="如'一份250克','一份足2斤'"/>
+		       </li>
+		       <li>
+		        <span class="item_name" style="width:120px;">进价(￥)：</span>
+		        <input type="text" id="probid" class="price_input textbox_295" placeholder=""/>
 		       </li>
 		       <li>
 		        <span class="item_name" style="width:120px;">售价(￥)：</span>

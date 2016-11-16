@@ -86,6 +86,14 @@
     <dt>礼券管理</dt>
     <dd><a href="/coupon/s_queryall/${id}?token=${token}">优惠券管理</a></dd>
    </dl>
+   </li>
+   <li>
+   <dl>
+    <dt>订单统计</dt>
+    <dd><a href="/orderOff/s_querydealed/${id}?token=${token}">成交订单统计</a></dd>
+    <dd><a href="/orderOff/s_queryreturned/${id}?token=${token}">退货订单统计</a></dd>
+   </dl>
+  </li>
   <li>
    <p class="btm_infor">© 社享网 版权所有</p>
   </li>
@@ -220,5 +228,7 @@
     <!--结束：以下内容则可删除，仅为素材引用参考-->
  </div>
 </section>
+<input type="hidden" id="loginUserId" value="${id}"></input>
+<input type="hidden" id="loginToken" value="${token}"></input>
 </body>
 </html>

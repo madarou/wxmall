@@ -86,6 +86,7 @@ import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 @RequestMapping("/orderOn")
 public class OrderOnController {
 	private static final Logger logger = Logger.getLogger(OrderOnController.class);
+	private final DecimalFormat fnum = new  DecimalFormat("##0.00"); //保留两位小数   
 	@Resource
 	private IOrderOnService orderOnService;
 	@Resource
@@ -392,7 +393,6 @@ public class OrderOnController {
 		order.setReceiveTime(smallOrder.getReceiveTime());
 		order.setCouponId(smallOrder.getCouponId());
 		order.setCouponPrice(couponPrice);
-		DecimalFormat fnum = new  DecimalFormat("##0.00"); //保留两位小数   
 		totalPrice = totalPrice-Float.valueOf(couponPrice);
 		order.setTotalPrice(fnum.format(totalPrice));
 		order.setCityarea(smallOrder.getCityarea());

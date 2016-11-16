@@ -1,13 +1,29 @@
 package com.makao.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +63,8 @@ import com.makao.utils.OrderNumberUtils;
 @RequestMapping("/orderOff")
 public class OrderOffController {
 	private static final Logger logger = Logger.getLogger(OrderOffController.class);
+	private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	private final DecimalFormat fnum = new  DecimalFormat("##0.00"); //保留两位小数  
 	@Resource
 	private IOrderOffService orderOffService;
 	@Resource
@@ -363,29 +381,260 @@ public class OrderOffController {
 		return jsonObject;
     }
 	
-	@RequestMapping(value = "/s_queryall/{id:\\d+}", method = RequestMethod.GET)
-    public @ResponseBody ModelAndView query_All(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+	@RequestMapping(value = "/s_querydealed/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody ModelAndView query_Dealed(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
 		ModelAndView modelAndView = new ModelAndView();  
-		modelAndView.setViewName("s_orderOff");  
-		if(token==null){
-			return modelAndView;
-		}
-		Supervisor supervisor = this.supervisorService.getById(id);
-		List<City> cites = this.cityService.queryAll();
-		List<OrderOff> orderOffs = new LinkedList<OrderOff>();
-		if(supervisor!=null){
-			for(City c : cites){
-				List<OrderOff> os = this.orderOffService.queryAll("Order_"+c.getId()+"_off");
-				if(os!=null)
-					orderOffs.addAll(os);
-			}
-		}
-		logger.info("查询所有已完成的订单信息完成");
+		modelAndView.setViewName("s_statistic_dealed");  
+		List<City> cities = this.cityService.queryAll();
 		modelAndView.addObject("id", id);  
 		modelAndView.addObject("token", token); 
-	    modelAndView.addObject("ordersOff", orderOffs);   
+	    modelAndView.addObject("cities", cities);   
 	    return modelAndView;
     }
+	
+	@RequestMapping(value = "/s_queryreturned/{id:\\d+}", method = RequestMethod.GET)
+    public @ResponseBody ModelAndView query_Returned(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token) {
+		ModelAndView modelAndView = new ModelAndView();  
+		modelAndView.setViewName("s_statistic_returned");  
+		List<City> cities = this.cityService.queryAll();
+		modelAndView.addObject("id", id);  
+		modelAndView.addObject("token", token); 
+	    modelAndView.addObject("cities", cities);   
+	    return modelAndView;
+    }
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 查找对应区域下在特定时间范围内的已完成、和已取消退货的所有订单
+	 */
+	@RequestMapping(value = "/querydealed/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody Object queryDealed(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		JSONObject jsonObject = new JSONObject();
+		int cityid = paramObject.getIntValue("cityid");
+		int areaid = paramObject.getIntValue("areaid");
+		String fromdate = paramObject.getString("fromdate")+" 00:00:00";
+		String todate = paramObject.getString("todate")+" 23:59:59";
+		List<OrderOff> ods = this.orderOffService.queryDealed("Order_"+cityid+"_off", areaid, fromdate, todate);
+		
+		float totalT = 0.00f, totalB = 0.00f;
+		int i = 0;
+		for (; i < ods.size(); i++) {
+			OrderOff o = ods.get(i);
+			float totalPr = Float.valueOf(o.getTotalPrice());
+			float bid = 0.00f;
+			String[] ids = o.getProductIds().split(",");
+			String[] nums = o.getProductNames().split(",");
+			for(int ii=0; ii<ids.length ; ii++){
+				Product p = this.productService.getById(Integer.valueOf(ids[ii]), cityid, areaid);
+				bid = bid + Float.valueOf(p.getBid())*Float.valueOf(nums[ii].split("=")[2]);
+			}
+			totalT = totalT+totalPr;
+			totalB = totalB+(totalPr-bid);
+		}
+		
+		logger.info("查询"+cityid+"_"+areaid+"下，时间 "+fromdate+"_"+todate+" 的订单信息完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("orders", ods);
+		jsonObject.put("totalT", fnum.format(totalT));
+		jsonObject.put("totalB", fnum.format(totalB));
+		return jsonObject;
+    }
+	
+	/**
+	 * @param id
+	 * @param paramObject
+	 * @return
+	 * 查找对应区域下在特定时间范围内的已退款的所有订单,注意是已退款不是已退货
+	 */
+	@RequestMapping(value = "/queryreturned/{id:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody Object queryReturn(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
+		JSONObject jsonObject = new JSONObject();
+		int cityid = paramObject.getIntValue("cityid");
+		int areaid = paramObject.getIntValue("areaid");
+		String fromdate = paramObject.getString("fromdate")+" 00:00:00";
+		String todate = paramObject.getString("todate")+" 23:59:59";
+		List<OrderOff> ods = this.orderOffService.queryReturned("Order_"+cityid+"_off", areaid, fromdate, todate);
+		
+		float totalT = 0.00f;
+		int i = 0;
+		for (; i < ods.size(); i++) {
+			OrderOff o = ods.get(i);
+			float totalPr = Float.valueOf(o.getTotalPrice());
+			totalT = totalT+totalPr;
+		}
+		
+		logger.info("查询"+cityid+"_"+areaid+"下，时间 "+fromdate+"_"+todate+" 的订单信息完成");
+		jsonObject.put("msg", "200");
+		jsonObject.put("orders", ods);
+		jsonObject.put("totalT", fnum.format(totalT));
+		return jsonObject;
+    }
+	
+	@RequestMapping(value = "/export/{id:\\d+}", method = RequestMethod.POST)
+    public void export(@PathVariable("id") int id, HttpServletRequest request, HttpServletResponse response) {
+		int cityid = Integer.parseInt(request.getParameter("cid"));
+		int areaid = Integer.parseInt(request.getParameter("aid"));
+		String fromdate =request.getParameter("fromd")+" 00:00:00";
+		String todate = request.getParameter("tod")+" 23:59:59";
+		List<OrderOff> ods = this.orderOffService.queryDealed("Order_"+cityid+"_off", areaid, fromdate, todate);
+		if(ods!=null&&ods.size()>0){
+			String docsPath = request.getSession().getServletContext()
+					.getRealPath("exports");
+			String fileName = "orders_" + cityid+"_"+areaid+"_"+request.getAttribute("fromd")+"_"+ request.getAttribute("tod")+ ".xlsx";
+			//String filePath = docsPath + System.getProperties().getProperty("file.separator") + fileName;
+			String exportsFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/exports/";
+			//String filePath = "/Users/makao/Desktop/exports_"+ System.currentTimeMillis() + ".xlsx";
+			String filePath = exportsFolder+"orders_"+System.currentTimeMillis()+".xlsx";
+			try {
+				// 输出流
+				OutputStream os = new FileOutputStream(filePath);
+				// 工作区
+				XSSFWorkbook wb = new XSSFWorkbook();
+				XSSFSheet sheet = wb.createSheet("test");
+				XSSFRow row = sheet.createRow(0);
+				row.createCell(0).setCellValue("订单号");
+				row.createCell(1).setCellValue("总金额");
+				row.createCell(2).setCellValue("优惠券抵扣");
+				row.createCell(3).setCellValue("收货人");
+				row.createCell(4).setCellValue("联系电话");
+				row.createCell(5).setCellValue("下单时间");
+				row.createCell(6).setCellValue("完成时间");
+				row.createCell(7).setCellValue("订单状态");
+				row.createCell(8).setCellValue("去成本金额");
+				float totalT = 0.00f, totalB = 0.00f;
+				int i = 0;
+				for (; i < ods.size(); i++) {
+					OrderOff o = ods.get(i);
+					XSSFRow r = sheet.createRow(i+1);
+					float totalPr = Float.valueOf(o.getTotalPrice());
+					r.createCell(0).setCellValue(o.getNumber());
+					r.createCell(1).setCellValue(o.getTotalPrice());
+					r.createCell(2).setCellValue("-"+o.getCouponPrice());
+					r.createCell(3).setCellValue(o.getReceiverName());
+					r.createCell(4).setCellValue(o.getPhoneNumber());
+					r.createCell(5).setCellValue(df.format(o.getOrderTime()));
+					r.createCell(6).setCellValue(df.format(o.getFinalTime()));
+					r.createCell(7).setCellValue("13".equals(o.getFinalStatus())?"已完成":"已取消退货");
+					float bid = 0.00f;
+					String[] ids = o.getProductIds().split(",");
+					String[] nums = o.getProductNames().split(",");
+					for(int ii=0; ii<ids.length ; ii++){
+						Product p = this.productService.getById(Integer.valueOf(ids[ii]), cityid, areaid);
+						bid = bid + Float.valueOf(p.getBid())*Float.valueOf(nums[ii].split("=")[2]);
+					}
+					r.createCell(8).setCellValue(fnum.format(totalPr-bid));
+					totalT = totalT+totalPr;
+					totalB = totalB+(totalPr-bid);
+				}
+				XSSFRow blank = sheet.createRow(i+1);
+				XSSFRow r = sheet.createRow(i+2);
+				r.createCell(1).setCellValue("全部累积金额:");
+				r.createCell(2).setCellValue(fnum.format(totalT));
+				r.createCell(3).setCellValue("去成本累积金额:");
+				r.createCell(4).setCellValue(fnum.format(totalB));
+				// 写文件
+				wb.write(os);
+				os.flush();
+				// 关闭输出流
+				os.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			download(filePath, response);
+		}
+    }
+	
+	@RequestMapping(value = "/export2/{id:\\d+}", method = RequestMethod.POST)
+    public void export2(@PathVariable("id") int id, HttpServletRequest request, HttpServletResponse response) {
+		int cityid = Integer.parseInt(request.getParameter("cid"));
+		int areaid = Integer.parseInt(request.getParameter("aid"));
+		String fromdate =request.getParameter("fromd")+" 00:00:00";
+		String todate = request.getParameter("tod")+" 23:59:59";
+		List<OrderOff> ods = this.orderOffService.queryDealed("Order_"+cityid+"_off", areaid, fromdate, todate);
+		if(ods!=null&&ods.size()>0){
+			String docsPath = request.getSession().getServletContext()
+					.getRealPath("exports");
+			String fileName = "orders_" + cityid+"_"+areaid+"_"+request.getAttribute("fromd")+"_"+ request.getAttribute("tod")+ ".xlsx";
+			//String filePath = docsPath + System.getProperties().getProperty("file.separator") + fileName;
+			String exportsFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/exports/";
+			//String filePath = "/Users/makao/Desktop/exports_"+ System.currentTimeMillis() + ".xlsx";
+			String filePath = exportsFolder+"orders_"+System.currentTimeMillis()+".xlsx";
+			try {
+				// 输出流
+				OutputStream os = new FileOutputStream(filePath);
+				// 工作区
+				XSSFWorkbook wb = new XSSFWorkbook();
+				XSSFSheet sheet = wb.createSheet("test");
+				XSSFRow row = sheet.createRow(0);
+				row.createCell(0).setCellValue("订单号");
+				row.createCell(1).setCellValue("总金额");
+				row.createCell(2).setCellValue("优惠券抵扣");
+				row.createCell(3).setCellValue("收货人");
+				row.createCell(4).setCellValue("联系电话");
+				row.createCell(5).setCellValue("下单时间");
+				row.createCell(6).setCellValue("完成时间");
+				row.createCell(7).setCellValue("订单状态");
+				float totalT = 0.00f;
+				int i = 0;
+				for (; i < ods.size(); i++) {
+					OrderOff o = ods.get(i);
+					XSSFRow r = sheet.createRow(i+1);
+					float totalPr = Float.valueOf(o.getTotalPrice());
+					r.createCell(0).setCellValue(o.getNumber());
+					r.createCell(1).setCellValue(o.getTotalPrice());
+					r.createCell(2).setCellValue("-"+o.getCouponPrice());
+					r.createCell(3).setCellValue(o.getReceiverName());
+					r.createCell(4).setCellValue(o.getPhoneNumber());
+					r.createCell(5).setCellValue(df.format(o.getOrderTime()));
+					r.createCell(6).setCellValue(df.format(o.getFinalTime()));
+					r.createCell(7).setCellValue("13".equals(o.getFinalStatus())?"已完成":"已取消退货");
+					totalT = totalT+totalPr;
+				}
+				XSSFRow blank = sheet.createRow(i+1);
+				XSSFRow r = sheet.createRow(i+2);
+				r.createCell(1).setCellValue("全部退货金额累计:");
+				r.createCell(2).setCellValue(fnum.format(totalT));
+				// 写文件
+				wb.write(os);
+				os.flush();
+				// 关闭输出流
+				os.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			download(filePath, response);
+		}
+    }
+	
+	private void download(String path, HttpServletResponse response) {
+		try {
+			// path是指欲下载的文件的路径。
+			File file = new File(path);
+			// 取得文件名。
+			String filename = file.getName();
+			// 以流的形式下载文件。
+			InputStream fis = new BufferedInputStream(new FileInputStream(path));
+			byte[] buffer = new byte[fis.available()];
+			fis.read(buffer);
+			fis.close();
+			// 清空response
+			response.reset();
+			// 设置response的Header
+			response.addHeader("Content-Disposition", "attachment;filename="
+					+ new String(filename.getBytes()));
+			response.addHeader("Content-Length", "" + file.length());
+			OutputStream toClient = new BufferedOutputStream(
+					response.getOutputStream());
+			response.setContentType("application/vnd.ms-excel;charset=utf-8");
+			toClient.write(buffer);
+			toClient.flush();
+			toClient.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 	
 	/**
 	 * @param id

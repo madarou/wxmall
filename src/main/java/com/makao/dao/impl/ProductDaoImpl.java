@@ -45,8 +45,8 @@ public class ProductDaoImpl implements IProductDao {
 				+ "` (`productName`,`catalog`,`label`,`standard`,`price`,`marketPrice`,`inventory`,`isShow`,"
 				+ "`showWay`,`sequence`,`description`,`origin`,`status`,"
 				+ "`salesVolume`,`likes`,`coverSUrl`,`coverBUrl`,`subdetailUrl`,`detailUrl`,`areaId`,`cityId`,`threhold`,"
-				+ "`prethrehold`,`supply`,`restrict`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`prethrehold`,`supply`,`restrict`,`bid`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Session session = null;
 		Transaction tx = null;
 		List<Integer> res = new ArrayList<Integer>();// 返回0表示失败，成功则返回id
@@ -89,6 +89,7 @@ public class ProductDaoImpl implements IProductDao {
 						ps.setInt(23, product.getPrethrehold());
 						ps.setInt(24, product.getSupply());
 						ps.setInt(25, product.getRestrict());
+						ps.setString(26, product.getBid());
 						int row = ps.executeUpdate();
 						ResultSet rs = ps.getGeneratedKeys();  
 					     if ( rs.next() ) {  
@@ -162,6 +163,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
 							p.setRestrict(rs.getInt("restrict"));
+							p.setBid(rs.getString("bid"));
 							products.add(p);
 						}
 					}finally{
@@ -210,7 +212,8 @@ public class ProductDaoImpl implements IProductDao {
 																		+ "`threhold`="+product.getThrehold()+","
 																		+ "`prethrehold`="+product.getPrethrehold()+","
 																		+ "`supply`="+product.getSupply()+","
-																		+ "`restrict`="+product.getRestrict()
+																		+ "`restrict`="+product.getRestrict()+","
+																		+ "`bid`='"+product.getBid()+"'"
 																				+ " WHERE `id`=" + product.getId();
 		Session session = null;
 		Transaction tx = null;
@@ -315,6 +318,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
 							p.setRestrict(rs.getInt("restrict"));
+							p.setBid(rs.getString("bid"));
 							res.add(p);
 						}
 					}finally{
@@ -637,6 +641,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
 							p.setRestrict(rs.getInt("restrict"));
+							p.setBid(rs.getString("bid"));
 							res.add(p);
 						}
 					}finally{
@@ -1057,6 +1062,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
 							p.setRestrict(rs.getInt("restrict"));
+							p.setBid(rs.getString("bid"));
 							res.add(p);
 						}
 					}finally{
@@ -1124,6 +1130,7 @@ public class ProductDaoImpl implements IProductDao {
 							p.setPrethrehold(rs.getInt("prethrehold"));
 							p.setSupply(rs.getInt("supply"));
 							p.setRestrict(rs.getInt("restrict"));
+							p.setBid(rs.getString("bid"));
 							res.add(p);
 						}
 					}finally{

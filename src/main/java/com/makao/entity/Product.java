@@ -31,7 +31,9 @@ public class Product {
 	private int prethrehold;//预设库存量
 	private int supply;//本次供货量，如果为0表示未供货
 	private int restrict;//一次购买的限购量
-	private String phone;//电话
+	private String phone;//电话，数据库里没有
+	private String bid;//商品进价
+	
 	public int getId() {
 		return id;
 	}
@@ -193,5 +195,11 @@ public class Product {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	public String getBid() {
+		return bid;
+	}
+	public void setBid(String bid) {
+		this.bid = bid;
 	}
 }
