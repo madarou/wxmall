@@ -241,7 +241,7 @@
  		        		  }
  		        		 $("#totalT").html(data.totalT+"元");
  		        		 $.each(data.orders,function(i, val){
- 		        			 var state = val.finalStatus=="13"?"已完成":"已取消退货";
+ 		        			 var state = "已退款";
  		        			 var tr = '<tr>'
  		        			 			+'<td><button class="linkStyle viewOrder" id="viewPopTxt-'+val.id+'">'+val.number+'</button></td>'
  		        			 			+'<td id="totalPrice-'+val.id+'">'+val.totalPrice+'</td>'
