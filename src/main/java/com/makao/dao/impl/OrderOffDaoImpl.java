@@ -475,7 +475,7 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 		String history = ","+OrderState.REFUNDED.getCode()+"="+new Timestamp(System.currentTimeMillis());
 		String sql = "UPDATE `"
 				+ tableName
-				+ "` SET `refundStatus`='已退款',`history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
+				+ "` SET `refundStatus`='已退款',`finalStatus`='"+OrderState.REFUNDED.getCode()+"', `history`=concat(`history`,'"+history+"') WHERE `id`="+orderid;
 		Session session = null;
 		Transaction tx = null;
 		int res = 0;// 返回0表示成功，1表示失败
