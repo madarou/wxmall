@@ -663,12 +663,12 @@ public class OrderOffController {
 					int rc = this.orderOffService.getRecordCount(c.getId());
 					recordCount += rc;
 				}
-				pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
-				//如果要显示第showPage页，那么游标应该移动到的position的值是：
-				int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
-				int to=(orderOffs.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orderOffs.size()-1);
-				orderOffs = orderOffs.subList(from, to+1);
 			}
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
+			int to=(orderOffs.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orderOffs.size()-1);
+			orderOffs = orderOffs.subList(from, to+1);
 		}
 		logger.info("查询所有已完成的订单信息完成");
 		modelAndView.addObject("id", id);  
@@ -1006,12 +1006,12 @@ public class OrderOffController {
 					int rc = this.orderOffService.getCanceledAndReturnedRecordCount(c.getId());
 					recordCount += rc;
 				}
-				pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
-				//如果要显示第showPage页，那么游标应该移动到的position的值是：
-				int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
-				int to=(orderOffs.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orderOffs.size()-1);
-				orderOffs = orderOffs.subList(from, to+1);
 			}
+			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
+			//如果要显示第showPage页，那么游标应该移动到的position的值是：
+			int from=(showPage-1)*MakaoConstants.PAGE_SIZE;
+			int to=(orderOffs.size()-from>=MakaoConstants.PAGE_SIZE)?(from+MakaoConstants.PAGE_SIZE-1):(orderOffs.size()-1);
+			orderOffs = orderOffs.subList(from, to+1);
 		}
 	    modelAndView.addObject("id", id);  
 	    modelAndView.addObject("token", token); 
