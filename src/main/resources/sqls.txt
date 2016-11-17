@@ -30,7 +30,7 @@ Product_cityId_areaId:
 						`prethrehold` int(11),
 						`supply` int(11),
 						`restrict` int(11),
-						`bid` varchar(10),
+						`bid` varchar(10) DEFAULT '0.00',
 						PRIMARY KEY (`id`))";
 						
 
