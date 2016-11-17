@@ -340,6 +340,7 @@
 		      			<input type="hidden" name="tod" id="tod"/>
 		      			<input type="button" id="export" value="导出xls" class="link_btn" style="color:grey;cursor:default"/>
 		      		</form>
+		      		(备注:包含所有退货后已退款的订单、支付后取消且已退款的订单)
 		       </li>
 		      </ul>
 		    </section>
