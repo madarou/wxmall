@@ -549,7 +549,8 @@ public class OrderOffDaoImpl implements IOrderOffDao {
 	
 	@Override
 	public List<OrderOff> queryAllCanceledAndReturned(String tableName) {
-		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus` IN ('"+OrderState.RETURNED.getCode()+"','"+OrderState.CANCELED.getCode()+"') Order By `finalTime`";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `finalStatus` IN ('"+OrderState.RETURNED.getCode()+"','"+OrderState.CANCELED.getCode()+"')"
+				+ " AND `refundStatus` NOT IN ('无需退款','已退款') Order By `finalTime`";
 		Session session = null;
 		Transaction tx = null;
 		List<OrderOff> res = new LinkedList<OrderOff>();

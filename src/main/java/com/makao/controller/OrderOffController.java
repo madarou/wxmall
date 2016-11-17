@@ -902,6 +902,7 @@ public class OrderOffController {
 	 * @param token
 	 * @return
 	 * 查询所有已取消(卖家取消)的和已退货的订单，在退款订单里显示，因为这些是需要退款的
+	 * 另外订单的退款状态也不能是'已退款'和'无需退款'
 	 */
 	@RequestMapping(value = "/s_query_refund/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
