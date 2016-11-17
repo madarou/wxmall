@@ -240,9 +240,17 @@
  		        			 table.append('<tr><td colspan="8">没有满足条件的订单</td></tr>');return;
  		        		  }
  		        		 $("#totalT").html(data.totalT+"元");$("#totalB").html(data.totalB+"元");
+ 		        		 //设置分页
+ 		        		 var paging = $(".paging");paging.html("");
+ 		        		 var pageCount = (data.orders.length%10==0)?(parseInt(data.orders.length/10)):(parseInt(data.orders.length/10)+1);
+ 		        		 for(var j=0; j<pageCount; j++){
+ 		        			 var ap = '<a href="#" class="pager" style="margin-left:7px;" id="ap-'+j+'">'+(j+1)+'</a>';
+ 		        			 paging.append(ap);
+ 		        		 }
  		        		 $.each(data.orders,function(i, val){
  		        			 var state = val.finalStatus=="13"?"已完成":"已取消退货";
- 		        			 var tr = '<tr>'
+ 		        			 var group = parseInt(i / 10);//分页号，从0开始
+ 		        			 var tr = '<tr class="tg-'+group+'">'
  		        			 			+'<td><button class="linkStyle viewOrder" id="viewPopTxt-'+val.id+'">'+val.number+'</button></td>'
  		        			 			+'<td id="totalPrice-'+val.id+'">'+val.totalPrice+'</td>'
  		        			 			+'<td id="couponPrice-'+val.id+'">'+val.couponPrice+'</td>'
@@ -268,6 +276,15 @@
  		        			$(this).attr("disabled","true");
  		        			$(this).css('color','grey').css('cursor','default');
  		        		 });
+ 		        		 
+ 		        		 //分页切换
+ 		        		 $('.pager').click(function(){
+ 		        			var pnum = $(this).attr("id").split('-')[1];
+ 		        			$("#otable tbody").children('tr').css('display','none');
+ 		        			$("#otable tbody").children('.tg-'+pnum).css('display','');
+ 		        		 });
+ 		        		$("#otable tbody").children('tr').css('display','none');
+ 		        		$("#otable tbody").children('.tg-0').css('display','');
  		        		var orderId_toView = 0;
  		           	
  		        	     //弹出文本性提示框
@@ -379,6 +396,9 @@
          	</tr>
 		</c:forEach>  --%>
       </table>
+      <aside class="paging">
+		   <%-- <a href="#" class="pager" id="">${item}</a> --%>
+      </aside>
       </div>
      </section>
     <!--结束：以下内容则可删除，仅为素材引用参考-->
