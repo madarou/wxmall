@@ -480,10 +480,6 @@ public class OrderOffController {
 		String todate = request.getParameter("tod")+" 23:59:59";
 		List<OrderOff> ods = this.orderOffService.queryDealed("Order_"+cityid+"_off", areaid, fromdate, todate);
 		if(ods!=null&&ods.size()>0){
-			String docsPath = request.getSession().getServletContext()
-					.getRealPath("exports");
-			String fileName = "orders_" + cityid+"_"+areaid+"_"+request.getAttribute("fromd")+"_"+ request.getAttribute("tod")+ ".xlsx";
-			//String filePath = docsPath + System.getProperties().getProperty("file.separator") + fileName;
 			String exportsFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/exports/";
 			//String filePath = "/Users/makao/Desktop/exports_"+ System.currentTimeMillis() + ".xlsx";
 			String filePath = exportsFolder+"orders_"+System.currentTimeMillis()+".xlsx";
@@ -552,12 +548,8 @@ public class OrderOffController {
 		int areaid = Integer.parseInt(request.getParameter("aid"));
 		String fromdate =request.getParameter("fromd")+" 00:00:00";
 		String todate = request.getParameter("tod")+" 23:59:59";
-		List<OrderOff> ods = this.orderOffService.queryDealed("Order_"+cityid+"_off", areaid, fromdate, todate);
+		List<OrderOff> ods = this.orderOffService.queryReturned("Order_"+cityid+"_off", areaid, fromdate, todate);
 		if(ods!=null&&ods.size()>0){
-			String docsPath = request.getSession().getServletContext()
-					.getRealPath("exports");
-			String fileName = "orders_" + cityid+"_"+areaid+"_"+request.getAttribute("fromd")+"_"+ request.getAttribute("tod")+ ".xlsx";
-			//String filePath = docsPath + System.getProperties().getProperty("file.separator") + fileName;
 			String exportsFolder = request.getServletContext().getRealPath("/")+"WEB-INF/static/exports/";
 			//String filePath = "/Users/makao/Desktop/exports_"+ System.currentTimeMillis() + ".xlsx";
 			String filePath = exportsFolder+"orders_"+System.currentTimeMillis()+".xlsx";
@@ -589,7 +581,7 @@ public class OrderOffController {
 					r.createCell(4).setCellValue(o.getPhoneNumber());
 					r.createCell(5).setCellValue(df.format(o.getOrderTime()));
 					r.createCell(6).setCellValue(df.format(o.getFinalTime()));
-					r.createCell(7).setCellValue("13".equals(o.getFinalStatus())?"已完成":"已取消退货");
+					r.createCell(7).setCellValue("已退款");
 					totalT = totalT+totalPr;
 				}
 				XSSFRow blank = sheet.createRow(i+1);
