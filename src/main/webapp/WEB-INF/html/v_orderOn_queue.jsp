@@ -117,7 +117,7 @@
     	
      //弹出文本性提示框
      $(".viewOrder").click(function(){
-    	$("#productList").html('<tr><td colspan="3">购买商品信息</td></tr><tr><td>商品名称</td><td>单价</td><td>数量</td></tr>');
+     	$("#productList").html('<tr><td colspan="4">购买商品信息</td></tr><tr><td>商品名称</td><td>规格</td><td>单价</td><td>数量</td></tr>');
        $(".pop_bg").fadeIn();
        var clickedId = $(this).attr("id");
        orderId_toView = clickedId.split("-")[1];
@@ -131,13 +131,32 @@
        
      //商品详细列表
   	   var table= $("#productList");
+  	//由于商品规格没有在订单里，所以这里需要现根据cityId，areaid和商品id去商品表里查
+  	   var productIds = $("#productIds-"+orderId_toView).text();
+  	   var productIdList = productIds.split(",");
+  	   var cid = $("#cityId-"+orderId_toView).text();
+  	   var aid = $("#areaId-"+orderId_toView).text();
        var productNames = $("#productNames-"+orderId_toView).text();
        var productList = productNames.split(",");
        $.each(productList,function(index,item){
     	   var pname = item.split("=")[0];
     	   var pprice = item.split("=")[1];
     	   var pnumber = item.split("=")[2];
-    	   table.append("<tr><td>"+pname+"</td><td>"+pprice+"</td><td>"+pnumber+"</td></tr>");
+    	 //查询规格
+    	   $.ajax({
+	    		  type: "GET",
+	  	          contentType: "application/json",
+	  	          url: "/product/"+productIdList[index]+"/"+cid+"/"+aid,
+	  	          dataType: "json",
+	  	          success: function(data){
+	  	        	  if(data.msg=="200"){
+	  	        		table.append("<tr><td>"+pname+"</td><td>"+data.product.standard+"</td><td>"+pprice+"</td><td>"+pnumber+"</td></tr>");
+	  	        	  }
+	  	        	  else{
+	  	        		table.append("<tr><td>"+pname+"</td><td>默认规格</td><td>"+pprice+"</td><td>"+pnumber+"</td></tr>");
+	  	        	  }
+	  	          }
+	    	 	});
        });
        		
        });
@@ -170,8 +189,8 @@
           	<tr><td>备注</td><td colspan="2" id="ocomment"></td></tr>
           </table>
           <table class="table" id="productList">
-          	<tr><td colspan="3">购买商品信息</td></tr>
-          	<tr><td>商品名称</td><td>单价</td><td>数量</td></tr>
+          	<tr><td colspan="4">购买商品信息</td></tr>
+          	<tr><td>商品名称</td><td>规格</td><td>单价</td><td>数量</td></tr>
           </table>
           <!--以pop_cont_text分界-->
 	       <div class="pop_cont_text">
@@ -365,6 +384,9 @@
 		        <td id="productNames-${item.id}" style="display:none">${item.productNames}</td>
 		        <td id="address-${item.id}" style="display:none">${item.address}</td>
 		         <td id="comment-${item.id}" style="display:none">${item.comment}</td>
+		          <td id="cityId-${item.id}" style="display:none">${item.cityId}</td>
+		         <td id="areaId-${item.id}" style="display:none">${item.areaId}</td>
+		         <td id="productIds-${item.id}" style="display:none">${item.productIds}</td>
          	</tr>
 		</c:forEach> 
       </table>
