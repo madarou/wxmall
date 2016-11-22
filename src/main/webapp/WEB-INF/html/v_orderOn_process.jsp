@@ -215,16 +215,22 @@
          var productNames = $("#productNames-"+orderid).text();
          var productList = productNames.split(",");
          $.each(productList,function(index,item){
-      	   var pname = item.split("=")[0]+"("+$('#st-'+index).html()+")";
+      	   var pname = item.split("=")[0];
       	   var pprice = item.split("=")[1];
       	   var pnumber = item.split("=")[2];
-	       if(pname.length<=4){  
+      	   var pstandard = "("+$('#st-'+index).html()+")";
+	       /* if(pname.length<=4){  
 	             LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,pname);  
 	         }else {  
 	             //商品名字过长,其他字段需要换行  
 	             LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,pname);  
 	             hPos+=rowHeight;  
-	       }
+	       } */
+	       LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,pname);  
+           hPos+=rowHeight; 
+           LODOP.ADD_PRINT_TEXT(hPos,0,pageWidth,rowHeight,pstandard);  
+           hPos+=rowHeight; 
+           
 	       LODOP.ADD_PRINT_TEXT(hPos,70,pageWidth,rowHeight,pprice);  
            LODOP.ADD_PRINT_TEXT(hPos,115,pageWidth,rowHeight,pnumber);  
            LODOP.ADD_PRINT_TEXT(hPos,140,pageWidth,rowHeight,pprice*pnumber);  
