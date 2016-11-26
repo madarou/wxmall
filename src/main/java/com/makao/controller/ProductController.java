@@ -415,6 +415,31 @@ public class ProductController {
     }
 
 	@AuthPassport
+	@RequestMapping(value = "/sdelete/{supervisorid:\\d+}", method = RequestMethod.POST)
+    public @ResponseBody
+    Object sdelete(@PathVariable("supervisorid") int supervisorid,@RequestBody JSONObject paramObject) {
+		Supervisor supervisor = this.supervisorService.getById(supervisorid);
+		int prodcutId = paramObject.getInteger("productId");
+		JSONObject jsonObject = new JSONObject();
+		if(supervisor!=null){
+			String tableName = "Product";
+			int res = this.productService.deleteProduct(tableName,prodcutId);
+			if(res==0){
+				logger.info("商品删除成功id=" + prodcutId);
+	        	jsonObject.put("msg", "200");
+	        	return jsonObject;
+			}
+			else{
+				logger.info("商品删除失败id=" + prodcutId);
+	        	jsonObject.put("msg", "201");
+	        	return jsonObject;
+			}
+		}
+		jsonObject.put("msg", "201");
+        return jsonObject;
+    }
+	
+	@AuthPassport
 	@RequestMapping(value = "/snew/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object addBySupervisor(@PathVariable("supervisorid") int superid,@RequestBody Product product) {
