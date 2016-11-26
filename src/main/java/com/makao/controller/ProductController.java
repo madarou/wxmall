@@ -902,8 +902,11 @@ public class ProductController {
 			int recordCount = this.productService.getRecordCount();
 			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
 			//如果要显示第showPage页，那么游标应该移动到的position的值是：
-			int position=(showPage-1)*MakaoConstants.PAGE_SIZE+1;
-			ps = this.productService.queryFromToIndex(position,position+MakaoConstants.PAGE_SIZE-1);
+			//int position=(showPage-1)*MakaoConstants.PAGE_SIZE+1;
+			//ps = this.productService.queryFromToIndex(position,position+MakaoConstants.PAGE_SIZE-1);
+			//上面的方式根据id来限制查询范围，如果记录被删除后，会影响分页
+			int offset = (showPage-1)*MakaoConstants.PAGE_SIZE;
+			ps = this.productService.queryFromToIndexOffset(offset,MakaoConstants.PAGE_SIZE);
 		}
 		//这里假设放一些东西进去
 		logger.info("查询商品库信息完成");

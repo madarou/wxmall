@@ -145,4 +145,11 @@ public interface IProductDao {
 	 * 区域管理员删除商品
 	 */
 	public int deleteProduct(String tableName, int prodcutId);
+	/**
+	 * @param offset
+	 * @param pageSize
+	 * @return
+	 * 从Product表中返回第offset+1开始的pageSize条记录
+	 */
+	public List<Product> queryFromToIndexOffset(int offset, int pageSize);
 }

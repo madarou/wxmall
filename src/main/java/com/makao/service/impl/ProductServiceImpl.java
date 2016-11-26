@@ -126,6 +126,10 @@ public class ProductServiceImpl implements IProductService {
 	public int deleteProduct(String tableName, int prodcutId) {
 		return this.productDao.deleteProduct(tableName, prodcutId);
 	}
+	@Override
+	public List<Product> queryFromToIndexOffset(int offset, int pageSize) {
+		return this.productDao.queryFromToIndexOffset(offset, pageSize);
+	}
 	
 	
 //	@Override

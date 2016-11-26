@@ -152,4 +152,12 @@ public interface IProductService {
 	 */
 	int deleteProduct(String tableName, int prodcutId);
 
+	/**
+	 * @param offset
+	 * @param pageSize
+	 * @return
+	 * 从Product表中返回第offset+1开始的pageSize条记录
+	 */
+	List<Product> queryFromToIndexOffset(int offset, int pageSize);
+
 }
