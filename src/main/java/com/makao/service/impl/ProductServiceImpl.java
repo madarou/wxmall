@@ -130,6 +130,11 @@ public class ProductServiceImpl implements IProductService {
 	public List<Product> queryFromToIndexOffset(int offset, int pageSize) {
 		return this.productDao.queryFromToIndexOffset(offset, pageSize);
 	}
+	@Override
+	public List<Product> queryFromToIndexOffset(int cityId, int areaId,
+			int offset, int pageSize) {
+		return this.productDao.queryFromToIndexOffset(cityId, areaId, offset, pageSize);
+	}
 	
 	
 //	@Override

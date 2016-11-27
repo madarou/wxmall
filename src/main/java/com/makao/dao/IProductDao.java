@@ -152,4 +152,15 @@ public interface IProductDao {
 	 * 从Product表中返回第offset+1开始的pageSize条记录
 	 */
 	public List<Product> queryFromToIndexOffset(int offset, int pageSize);
+
+	/**
+	 * @param cityId
+	 * @param areaId
+	 * @param offset
+	 * @param pageSize
+	 * @return
+	 * 从Product_cityid_areaId表中返回第offset+1开始的pageSize条记录
+	 */
+	public List<Product> queryFromToIndexOffset(int cityId, int areaId,
+			int offset, int pageSize);
 }

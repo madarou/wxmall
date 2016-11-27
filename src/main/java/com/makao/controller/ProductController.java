@@ -1105,8 +1105,11 @@ public class ProductController {
 			pageCount = (recordCount%MakaoConstants.PAGE_SIZE==0)?(recordCount/MakaoConstants.PAGE_SIZE):(recordCount/MakaoConstants.PAGE_SIZE+1);
 			//int showPage = 1;
 			//如果要显示第showPage页，那么游标应该移动到的position的值是：
-			int position=(showPage-1)*MakaoConstants.PAGE_SIZE+1;
-			products = this.productService.queryFromToIndex(vendor.getCityId(),vendor.getAreaId(),position,position+MakaoConstants.PAGE_SIZE-1);
+			//int position=(showPage-1)*MakaoConstants.PAGE_SIZE+1;
+			//products = this.productService.queryFromToIndex(vendor.getCityId(),vendor.getAreaId(),position,position+MakaoConstants.PAGE_SIZE-1);
+			//上面的方式根据id来限制查询范围，如果记录被删除后，会影响分页
+			int offset = (showPage-1)*MakaoConstants.PAGE_SIZE;
+			products = this.productService.queryFromToIndexOffset(vendor.getCityId(),vendor.getAreaId(),offset,MakaoConstants.PAGE_SIZE);
 			Area area = this.areaService.getById(vendor.getAreaId());
 			if(area!=null){
 				String catalogStr = area.getCatalogs();
