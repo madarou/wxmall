@@ -274,7 +274,7 @@ public class ProductDaoImpl implements IProductDao {
 	@Override
 	public List<Product> queryByCityAreaId(int cityId, int areaId) {
 		String tableName = "Product_"+cityId+"_"+areaId;
-		String sql = "SELECT * FROM "+tableName + " WHERE `isShow`='yes' Order By `sequence` DESC";
+		String sql = "SELECT * FROM "+tableName + " WHERE `isShow`='yes' Order By `sequence`";
 		Session session = null;
 		Transaction tx = null;
 		List<Product> res = new LinkedList<Product>();
