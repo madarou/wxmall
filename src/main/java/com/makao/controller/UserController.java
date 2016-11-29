@@ -47,7 +47,7 @@ import com.makao.weixin.utils.HttpUtil;
 import com.makao.weixin.utils.JSSignatureUtil;
 import com.makao.weixin.utils.WeixinConstants;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/user")
 public class UserController {

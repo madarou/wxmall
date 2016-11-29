@@ -17,13 +17,13 @@ public class MakaoConstants {
 	public static final String DEFAULT_AREA_NAME="莱蒙城";
 	public static final int DEFAULT_CITY_ID=2;
 	public static final int DEFAULT_AREA_ID=2;
-	public static final int PRETIME = 30;//从数据库中找出需要将状态从排队中改为待处理的订单，将其状态设为待处理
+	public static final int PRETIME = 5;//从数据库中找出需要将状态从排队中改为待处理的订单，将其状态设为待处理
 											//当配送时间起点-PRETIME(min)<=当前时间时的订单满足条件(5)
 	public static final int COMFIRMTIME = -5;//完成配送的时间与当前时间的分钟差
 												//如果时间差(是负数)小于预先定义的COMFIRMTIME，系统帮助确认收货，单位为分(5)
 	public static final int REMOVETIME = -18;//数据库中查到所有15分钟内未支付或支付失败的订单，同时删除它们，并且返回订单列表
 											//下单时间与当前时间的分钟差，小于该时间则开始删除，单位为分，为负值，注意其绝对值必须大于ORDER_EXPIRE
-	public static final int RETURN_EXPIRE_TIME = -2;//从确认收货到不能申请退货的时间差，单位为分(48小时)
+	public static final int RETURN_EXPIRE_TIME = -2880;//从确认收货到不能申请退货的时间差，单位为分(48小时)
 	public static final int WEIXIN_TOKEN_EXPIRE_TIME = 110;//微信的access_token和jsapi_ticket的在缓存中的有效时间，单位为分
 	public static final int INITIAL_POINT = 500;//用户第一次进来时的默认积分
 	public static final float POINT_PROPORTION = 1.0f;//订单金额化成积分的比例(一比一四舍五入)

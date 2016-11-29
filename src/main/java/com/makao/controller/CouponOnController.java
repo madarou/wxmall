@@ -23,7 +23,7 @@ import com.makao.service.ICouponOnService;
  * @author makao
  * @date 2016年5月6日
  */
-@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/couponOn")
 public class CouponOnController {

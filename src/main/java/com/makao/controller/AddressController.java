@@ -27,7 +27,7 @@ import com.makao.service.IAreaService;
  * @author makao
  * @date 2016年5月6日
  */
-@CrossOrigin(origins = "*", maxAge = 3600)
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/address")
 public class AddressController {
