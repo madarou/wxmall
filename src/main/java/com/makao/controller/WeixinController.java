@@ -192,9 +192,12 @@ public class WeixinController {
 						message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onSubscriptionAutoReply());
 					}
 				}
+				System.out.println(message);
+				out.print(message);
 			}
-			System.out.println(message);
-			out.print(message);
+			//只在触发事件时回复，不在收到文本消息和地理位置等消息时回复
+			//System.out.println(message);
+			//out.print(message);
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		} finally {
