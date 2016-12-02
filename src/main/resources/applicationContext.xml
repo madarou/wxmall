@@ -183,6 +183,32 @@
 	    </property>
 	</bean>
 	
+	<!-- expire coupons -->
+	<bean id="expire" class="com.makao.quartz.CouponExpireJob"/>
+	<bean id="expireDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="group" value="expire"/>
+	    <property name="name" value="expire"/>
+	    <!--false表示等上一个任务执行完后再开启新的任务-->
+	    <property name="concurrent" value="false"/>
+	    <property name="targetObject">
+	        <ref bean="expire"/>
+	    </property>
+	    <property name="targetMethod">
+	        <value>execute</value>
+	    </property>
+	</bean>
+	<bean id="expireTrigger"
+	      class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="name" value="work_expire_name"/>
+	    <property name="group" value="work_expire"/>
+	    <property name="jobDetail">
+	        <ref bean="expireDetail" />
+	    </property>
+	    <property name="cronExpression">
+	        <value>0 1 0 * * ?</value>
+	    </property>
+	</bean>
+	
 	<!-- 调度工厂 -->
 	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 	    <property name="triggers">
@@ -191,6 +217,7 @@
 	            <ref bean="confirmTrigger"/>
 	            <ref bean="inventoryTrigger"/>
 	            <ref bean="terminateTrigger"/>
+	            <ref bean="expireTrigger"/>
 	        </list>
 	    </property>
 	</bean>

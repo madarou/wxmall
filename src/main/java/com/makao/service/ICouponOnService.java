@@ -28,4 +28,11 @@ public interface ICouponOnService {
 
 	CouponOn queryByCouponId(String tableName, int couponid);
 
+	/**
+	 * @param id
+	 * @return
+	 * 将当前城市下所有到期的couponOn放入couponOff中
+	 */
+	List<CouponOn> expireCoupons(int cityid);
+
 }

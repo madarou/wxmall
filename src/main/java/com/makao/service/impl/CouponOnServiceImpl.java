@@ -49,6 +49,10 @@ public class CouponOnServiceImpl implements ICouponOnService {
 	public CouponOn queryByCouponId(String tableName, int couponid) {
 		return this.couponOnDao.queryByCouponId(tableName, couponid);
 	}
+	@Override
+	public List<CouponOn> expireCoupons(int cityid) {
+		return this.couponOnDao.expireCoupons(cityid);
+	}
 	
 //	@Override
 //	public void testor() {

@@ -24,4 +24,11 @@ public interface ICouponOnDao {
 	public List<CouponOn> queryAllByUserId(String tableName, int userid);
 
 	public CouponOn queryByCouponId(String tableName, int couponid);
+
+	/**
+	 * @param cityid
+	 * @return
+	 * 将cityid对应的couponOn中要过期的coupon放入couponOff
+	 */
+	public List<CouponOn> expireCoupons(int cityid);
 }

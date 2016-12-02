@@ -1,6 +1,7 @@
 package com.makao.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -221,6 +222,89 @@ public class CouponOnDaoImpl implements ICouponOnDao {
 				logger.error(ex.getMessage(), ex);
 			}
 		}
+	}
+
+	@Override
+	public List<CouponOn> expireCoupons(int cityid) {
+		String tableName = "Coupon_"+cityid+"_on";
+		String tableName2 = "Coupon_"+cityid+"_off";
+		String sql = "SELECT * FROM "+ tableName + " WHERE `to`<CURDATE()";
+		String sql2 = "INSERT INTO `"
+				+ tableName2
+				+ "` (`name`,`amount`,`coverSUrl`,`coverBUrl`,`point`,`restrict`,`comment`,`cityName`,"
+				+ "`cityId`,`userId`,`type`,`from`,`to`,`overdueDate`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		
+		Session session = null;
+		Transaction tx = null;
+		List<CouponOn> res = new LinkedList<CouponOn>();
+		try {
+			session = sessionFactory.openSession();// 获取和数据库的回话
+			tx = session.beginTransaction();// 事务开始
+			session.doWork(new Work(){
+				@Override
+				public void execute(Connection connection) throws SQLException {
+					PreparedStatement ps = null;PreparedStatement ps2 = null;PreparedStatement ps3 = null;
+					try {
+						ps = connection.prepareStatement(sql);
+						ps2 = connection.prepareStatement(sql2);
+						ResultSet rs = ps.executeQuery();
+						//int col = rs.getMetaData().getColumnCount();
+						while(rs.next()){
+							CouponOn p = new CouponOn();
+							p.setId(rs.getInt("id"));
+							p.setName(rs.getString("name"));
+							p.setAmount(rs.getString("amount"));
+							p.setCoverSUrl(rs.getString("coverSUrl"));
+							p.setCoverBUrl(rs.getString("coverBUrl"));
+							p.setPoint(rs.getInt("point"));
+							p.setFrom(rs.getDate("from"));
+							p.setTo(rs.getDate("to"));
+							p.setRestrict(rs.getInt("restrict"));
+							p.setComment(rs.getString("comment"));
+							p.setCityName(rs.getString("cityName"));
+							p.setCityId(rs.getInt("cityId"));
+							p.setUserId(rs.getInt("userId"));
+							p.setType(rs.getString("type"));
+							res.add(p);
+							
+							//ps2 = connection.prepareStatement(sql2);
+							ps2.setString(1, p.getName());
+							ps2.setString(2, p.getAmount());
+							ps2.setString(3, p.getCoverSUrl());
+							ps2.setString(4, p.getCoverBUrl());
+							ps2.setInt(5, p.getPoint());
+							ps2.setInt(6, p.getRestrict());
+							ps2.setString(7, p.getComment());
+							ps2.setString(8, p.getCityName());
+							ps2.setInt(9, p.getCityId());
+							ps2.setInt(10, p.getUserId());
+							ps2.setString(11, p.getType());
+							ps2.setDate(12, p.getFrom());
+							ps2.setDate(13, p.getTo());
+							ps2.setDate(14, new Date(System.currentTimeMillis()));
+							ps2.executeUpdate();
+							
+							String sql3 = "DELETE FROM `"+tableName+"` WHERE `id`="+p.getId();
+							ps3 = connection.prepareStatement(sql3);
+							ps3.executeUpdate();
+						}
+					}finally{
+						doClose(ps);doClose(ps2);doClose(ps3);
+					}
+				}
+				
+			});
+			tx.commit();// 提交事务
+		} catch (HibernateException e) {
+			if (null != tx)
+				tx.rollback();// 回滚
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (null != session)
+				session.close();// 关闭回话
+		}
+		return res.size()>0 ? res : null;
 	}
 
 }
