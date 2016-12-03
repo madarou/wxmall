@@ -232,8 +232,8 @@ public class CouponOnDaoImpl implements ICouponOnDao {
 		String sql2 = "INSERT INTO `"
 				+ tableName2
 				+ "` (`name`,`amount`,`coverSUrl`,`coverBUrl`,`point`,`restrict`,`comment`,`cityName`,"
-				+ "`cityId`,`userId`,`type`,`from`,`to`,`overdueDate`)"
-				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "`cityId`,`userId`,`type`,`from`,`to`)"
+				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		
 		Session session = null;
 		Transaction tx = null;
@@ -282,7 +282,7 @@ public class CouponOnDaoImpl implements ICouponOnDao {
 							ps2.setString(11, p.getType());
 							ps2.setDate(12, p.getFrom());
 							ps2.setDate(13, p.getTo());
-							ps2.setDate(14, new Date(System.currentTimeMillis()));
+							//ps2.setDate(14, new Date(System.currentTimeMillis()));//自动过期的不设置overDueDate
 							ps2.executeUpdate();
 							
 							String sql3 = "DELETE FROM `"+tableName+"` WHERE `id`="+p.getId();
