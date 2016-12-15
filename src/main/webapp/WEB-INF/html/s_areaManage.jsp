@@ -304,6 +304,11 @@
     		 alert("请填写服务电话");
     		 return false;
     	 }
+    	 var baseLine = $.trim($("#areabaseLine").val());
+    	 if(baseLine==""){
+    		 alert("请填写起送价");
+    		 return false;
+    	 }
     	 var cityname = $("#cityselect").find("option:selected").text();//这种方式获取的是选项的text文本
     	 var longitude = $.trim($("#arealongitude").val());
     	 var latitude = $.trim($("#arealatitude").val());
@@ -312,7 +317,7 @@
 	          type: "POST",
 	          contentType: "application/json",
 	          url: "/area/new/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
-	          data: JSON.stringify({"areaName":areaname,"cityName":cityname,"cityId":cityId,"longitude":longitude,"latitude":latitude,"phoneNumber":phoneNumber}),
+	          data: JSON.stringify({"areaName":areaname,"cityName":cityname,"cityId":cityId,"longitude":longitude,"latitude":latitude,"phoneNumber":phoneNumber,"baseLine":baseLine}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
@@ -367,6 +372,10 @@
 		       <li>
 		        <span class="item_name">服务电话:</span>
 		        <input type="text" id="areaphoneNumber" class="phone_input textbox_225" placeholder="如'12345678900'"/>
+		       </li>
+		       <li>
+		        <span class="item_name">起送价格:</span>
+		        <input type="text" id="areabaseLine" class="price_input textbox_225" placeholder="如'0.00'"/>
 		       </li>
 		      </ul>
 		    </section>
@@ -492,10 +501,12 @@
 		oldLongitude = $("#longitude-"+edit_areaId).text();
 		oldLatitude = $("#latitude-"+edit_areaId).text();
 		oldPhoneNumber = $("#phoneNumber-"+edit_areaId).text();
+		oldBaseLine = $("#baseLine-"+edit_areaId).text();
 		$("#eareaName").val(oldAreaName);
 		$("#earealongitude").val(oldLongitude);
 		$("#earealatitude").val(oldLatitude);
 		$("#eareaphoneNumber").val(oldPhoneNumber);
+		$("#eareabaseLine").val(oldBaseLine);
     	 
        	$(".editarea_pop_bg").fadeIn();
        });
@@ -511,9 +522,14 @@
     		 alert("请填写服务电话");
     		 return false;
     	 }
+    	 var baseLine = $.trim($("#eareabaseLine").val());
+    	 if(baseLine==""){
+    		 alert("请填写起送价");
+    		 return false;
+    	 }
     	 var longitude = $.trim($("#earealongitude").val());
     	 var latitude = $.trim($("#earealatitude").val());
-    	 if(oldAreaName==areaname && oldLongitude==longitude && oldLatitude==latitude && oldPhoneNumber==phoneNumber){
+    	 if(oldAreaName==areaname && oldLongitude==longitude && oldLatitude==latitude && oldPhoneNumber==phoneNumber && oldBaseLine == baseLine){
     		 alert("未作修改");
     		 return false;
     	 }
@@ -522,7 +538,7 @@
 	          type: "POST",
 	          contentType: "application/json",
 	          url: "/area/edit/"+$("#loginUserId").val()+"/?token="+$("#loginToken").val(),
-	          data: JSON.stringify({"areaId":edit_areaId,"areaName":areaname,"longitude":longitude,"latitude":latitude,"phoneNumber":phoneNumber}),
+	          data: JSON.stringify({"areaId":edit_areaId,"areaName":areaname,"longitude":longitude,"latitude":latitude,"phoneNumber":phoneNumber,"baseLine":baseLine}),
 	          dataType: "json",
 	          success: function(data){
 	                  if(data.msg=="200"){
@@ -541,10 +557,12 @@
        $("#eareaphoneNumber").val("");
        $("#earealongitude").val("");
        $("#earealatitude").val("");
+       $("#eareabaseLine").val("");
  		oldAreaName = "";
   	 	oldLongitude = "";
   	 	oldLatitude = "";
   	 	oldPhoneNumber = "";
+  	 	oldBaseLine="";
        });
 
      $("#eareaCancel").click(function(){
@@ -553,10 +571,12 @@
        $("#eareaphoneNumber").val("");
        $("#earealongitude").val("");
        $("#earealatitude").val("");
+       $("#eareabaseLine").val("");
        oldAreaName = "";
  	 	oldLongitude = "";
  	 	oldLatitude = "";
  	 	oldPhoneNumber = "";
+ 	 	oldBaseLine="";
        });
      });
      </script>
@@ -591,6 +611,10 @@
 		       <li>
 		        <span class="item_name">服务电话:</span>
 		        <input type="text" id="eareaphoneNumber" class="phone_input textbox_225" placeholder="如'12345678900'"/>
+		       </li>
+		       <li>
+		        <span class="item_name">起送价格:</span>
+		        <input type="text" id="eareabaseLine" class="price_input textbox_225" placeholder="如'0.00'"/>
 		       </li>
 		      </ul>
 		    </section>
@@ -643,6 +667,7 @@
 		        <td id="latitude-${item.id}" style="display:none">${item.latitude}</td>
 		        <td id="phoneNumber-${item.id}" style="display:none">${item.phoneNumber}</td>
 		        <td id="cityid-${item.id}" style="display:none">${item.cityId}</td>
+		        <td id="baseLine-${item.id}" style="display:none">${item.baseLine}</td>
          	</tr>
 		</c:forEach> 
       </table>

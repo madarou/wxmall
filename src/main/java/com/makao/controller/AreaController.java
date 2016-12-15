@@ -124,6 +124,7 @@ public class AreaController {
 			String longitude = paramObject.getString("longitude");
 			String latitude = paramObject.getString("latitude");
 			String phoneNumber = paramObject.getString("phoneNumber");
+			String baseLine = paramObject.getString("baseLine");
 
 			Area area = this.areaService.getById(areaId);
 			if(area!=null){
@@ -131,6 +132,7 @@ public class AreaController {
 				area.setLongitude(longitude);
 				area.setLatitude(latitude);
 				area.setPhoneNumber(phoneNumber);
+				area.setBaseLine(baseLine);
 				int res = this.areaService.update(area);
 				if(res==0){
 					logger.info("修改area成功id=" + area.getId());

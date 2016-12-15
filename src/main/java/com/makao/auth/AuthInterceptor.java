@@ -51,9 +51,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
 		System.out.println("***********拦截器************");
 		
-		if (MakaoConstants.DEBUG)
+		if (MakaoConstants.DEBUG){
+			TokenModel tm = new TokenModel(1,"u","test");
+			tm.setOpenid("aaaaa");
+			request.setAttribute("tokenmodel", tm);
 			return true;
-
+		}
 		if (handler.getClass().isAssignableFrom(HandlerMethod.class)) {// 判断该请求的路径对应的方法有没有AuthPassport标注，即有没有需要验证
 			AuthPassport authPassport = ((HandlerMethod) handler)
 					.getMethodAnnotation(AuthPassport.class);

@@ -31,6 +31,7 @@ public class Area implements Serializable {
 	private String longitude;//经度
 	private String latitude;//纬度
 	private String phoneNumber;//电话
+	private String baseLine="0.00";//起送价
 	//private List<Vendor> vendors;
 	@Id
 	@GeneratedValue
@@ -102,6 +103,13 @@ public class Area implements Serializable {
 	}
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+	@Column(length=10)
+	public String getBaseLine() {
+		return baseLine;
+	}
+	public void setBaseLine(String baseLine) {
+		this.baseLine = baseLine;
 	}
 	
 //	@OneToMany(mappedBy="area")

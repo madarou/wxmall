@@ -123,6 +123,7 @@ latitude		varchar(12)		纬度
 phoneNumber 	varchar(12)		电话
 sender			varchar(30)		默认配送员姓名
 senderPhone		varchar(12)		默认配送员电话
+baseLine		varchar(10)		起送价
 
 Product_cityId_areaId
 列名				类型				注释				备注

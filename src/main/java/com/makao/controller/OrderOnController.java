@@ -289,6 +289,22 @@ public class OrderOnController {
 		int areaId = smallOrder.getAreaId();
 		String[] ids = smallOrder.getProductIds();
 		String[] nums = smallOrder.getNums();
+		//先检查是否达到起送价
+		Area area = this.areaService.getById(areaId);
+		float areaBaseline = Float.valueOf(area.getBaseLine());
+		StringBuilder sb = new StringBuilder();
+		float totalPrice = 0.00f;
+		for(int i=0; i<ids.length ; i++){
+			Product p = this.productService.getById(Integer.valueOf(ids[i]), cityId, areaId);
+			sb.append(p.getProductName()+"="+p.getPrice()+"="+nums[i]+",");
+			totalPrice = totalPrice + Float.valueOf(p.getPrice())*Float.valueOf(nums[i]);
+		}
+		String productNames = sb.substring(0, sb.length()-1);//去掉最后一个逗号
+		if(areaBaseline>totalPrice){
+			jsonObject.put("msg", "205");
+			jsonObject.put("baseLine", areaBaseline);
+			return jsonObject;
+		}
 		//依次检查当前的商品库存是否足够，有一个不够则返回失败
 		for(String id: ids){
 			Object object = redisUtil.redisQueryObject("pi_"+cityId+"_"+areaId+"_"+id.trim());
@@ -326,37 +342,7 @@ public class OrderOnController {
 				return jsonObject;
 			}
 		}
-		
-//		String[] ids = orderOn.getProductIds().split(",");
-//		for(String id: ids){
-//			Object object = redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim());
-//			if(object==null){//缓存里面如果没有，从数据库里读
-//				int inv = this.productService.getInventory(orderOn.getCityId(), orderOn.getAreaId(), id);
-//				redisUtil.redisSaveObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim(), inv);
-//			}
-//			int inventory = Integer.valueOf(redisUtil.redisQueryObject("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim()));
-//			if(inventory<=0){
-//				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+id.trim()+" 售罄");
-//				jsonObject.put("msg", "203");
-//				return jsonObject;
-//			}
-//		}
-//		//所有商品都有库存，则轮流为所有商品在缓存中减少对应数量的库存，如果中途有exec为null，循环执行
-//		String[] names = orderOn.getProductNames().split(",");
-//		for(int i=0; i<ids.length; i++){
-//			int productNum = Integer.parseInt(names[i].split("=")[2]);
-//			List<Object> rt = redisUtil.cutInventoryTx("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i].trim(), productNum);
-//			//如果某商品扣除购买数量后，库存为负，下单失败，但是要将减掉的库存加回去
-//			if(((Long)rt.get(0)).intValue()<=0){
-//				//另外起一个线程来回加减掉的库存
-//				AddInventoryThread ait = new AddInventoryThread("pi_"+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i].trim(),productNum,redisUtil);
-//				new Thread(ait,"add inventory thread").start();
-//				
-//				logger.warn("订单提交失败，商品(cityId_areaId_Id): "+orderOn.getCityId()+"_"+orderOn.getAreaId()+"_"+ids[i]+" 库存不够");
-//				jsonObject.put("msg", "204");
-//				return jsonObject;
-//			}
-//		}
+
 		OrderOn order = new OrderOn();
 		order.setNumber(OrderNumberUtils.generateOrderNumber());
 		order.setOrderTime(new Timestamp(System.currentTimeMillis()));
@@ -364,14 +350,6 @@ public class OrderOnController {
 		order.setReceiveType("送货上门");//现在只有这种收货方式
 		order.setStatus(OrderState.NOT_PAID.getCode()+"");
 		
-		StringBuilder sb = new StringBuilder();
-		float totalPrice = 0.00f;
-		for(int i=0; i<ids.length ; i++){
-			Product p = this.productService.getById(Integer.valueOf(ids[i]), cityId, areaId);
-			sb.append(p.getProductName()+"="+p.getPrice()+"="+nums[i]+",");
-			totalPrice = totalPrice + Float.valueOf(p.getPrice())*Float.valueOf(nums[i]);
-		}
-		String productNames = sb.substring(0, sb.length()-1);//去掉最后一个逗号
 		order.setProductNames(productNames);
 		StringBuilder sb2 = new StringBuilder();
 		for(String s: ids){
@@ -399,7 +377,7 @@ public class OrderOnController {
 		order.setUserId(smallOrder.getUserId());
 		order.setAreaId(areaId);
 		order.setCityId(cityId);
-		Area area = this.areaService.getById(areaId);
+
 		if(area!=null){
 			order.setSender("由社享网-"+area.getCityName()+area.getAreaName()+"随机分配");
 			order.setSenderPhone(area.getPhoneNumber());
