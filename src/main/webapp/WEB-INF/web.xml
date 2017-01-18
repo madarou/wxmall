@@ -41,6 +41,16 @@
 	    <filter-name>urlFilter</filter-name>
 	    <url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	<!-- 测试时的允许跨域，上线时去掉 -->
+    <!-- <filter>
+        <filter-name>corsFilter</filter-name>
+        <filter-class>com.makao.utils.CorsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>corsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> -->
   
 	<!-- 测试时，先自动清空数据库表，实际上线时去掉 -->
 	 <!-- <listener>
