@@ -11,11 +11,11 @@ public class WeixinConstants {
 	//优格服务号
 	//public static final String APPID = "wxe41d04b7ffb9ea2a";
 	//public static final String APPSECRET = "cc515bcc081a76e3b85bbb370c6c7b3c";
-	public static final String APPID = "wxdfbe4a14b5c766b5";
-	public static final String APPSECRET = "ca58cab704dd2477a90400feb0285bb8";
+	public static final String APPID = "wxc4c94e97f23f699f";
+	public static final String APPSECRET = "6946dab6fa2dd6f256bae3fb48456832";
 	
-	public static final String MCHID = "1367159802";//商户号，支付用
-	public static final String PAY_KEY = "shexiangvip1234567890shexiangvip";//生成支付签名时所用的商户key
+	public static final String MCHID = "1484324322";//商户号，支付用
+	public static final String PAY_KEY = "1234567890123456shygxx1234567890";//生成支付签名时所用的商户key
 	//统一下单地址，POST
 	public static final String UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	
@@ -36,7 +36,7 @@ public class WeixinConstants {
 	//网页授权登录第三步获取用户基本信息
 	public static final String AUTH_USERINFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
 	//消息发送方的username，即微信公众号的微信号
-	public static final String MSG_FROM_USERNAME = "shequvip_com";
+	public static final String MSG_FROM_USERNAME = "i-moba";
 	//模板消息发送地址
 	public static final String MUBAN_MSG_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
 	//支付成功后推送的模板消息id
