@@ -189,7 +189,7 @@ public class BannerController {
 		jsonObject.put("msg", "201");
         return jsonObject;
 	}
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vedit/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vedit(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {

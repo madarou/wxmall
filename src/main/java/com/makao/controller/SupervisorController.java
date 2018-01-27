@@ -99,7 +99,7 @@ public class SupervisorController {
 //		jsonObject.put("token",tokenstring);
 //		return jsonObject;
 	}
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value="/index/{id:\\d+}",method = RequestMethod.GET)
 	public ModelAndView index(@PathVariable("id") int id, @RequestParam(value="token", required=false) String token, HttpServletRequest request)
 	{
@@ -202,7 +202,7 @@ public class SupervisorController {
         return jsonObject;
     }
 	
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value="/changepwd/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object changePwd(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {

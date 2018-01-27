@@ -88,7 +88,7 @@ public class AreaController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"areaName":"张江","cityName":"上海","catalogs":"水果=食材=零食=省钱","cityId":1}' 'http://localhost:8080/wxmall/area/new'
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/new/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@PathVariable("id") int superid, @RequestBody Area area) {
@@ -112,7 +112,7 @@ public class AreaController {
 		jsonObject.put("msg", "201");
         return jsonObject;
     }
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/edit/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object edit(@PathVariable("id") int superid, @RequestBody JSONObject paramObject) {
@@ -266,7 +266,7 @@ public class AreaController {
 	 * @return
 	 * 增加分类
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vnewcatalog/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object addcatalog(@PathVariable("vendorid") int vendorid,@RequestBody Catalog catalog) {
@@ -313,7 +313,7 @@ public class AreaController {
 	 * 修改分类，需要遍历Product表，修改所有catalog值为oldname的，更改Area表的内容,所有工作必须放在一个事务中完成
 	 * 之所以这样设计，是因为更改Catalog的需求很低很低
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/veditcatalog/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object editcatalog(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
@@ -355,7 +355,7 @@ public class AreaController {
 	 * @return
 	 * 下线区域
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/sclose/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object sclose(@PathVariable("supervisorid") int superid,@RequestBody JSONObject paramObject,
@@ -384,7 +384,7 @@ public class AreaController {
 	 * @param token
 	 * @return
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/sopen/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object sopen(@PathVariable("supervisorid") int superid,@RequestBody JSONObject paramObject,
@@ -413,7 +413,7 @@ public class AreaController {
 	 * @return
 	 * 删除Area中的分类，同时将Product中属于该类的product值设为默认分类
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vdeletecatalog/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object deletecatalog(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {

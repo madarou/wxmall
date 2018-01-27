@@ -119,7 +119,7 @@ public class ProductController {
 	 * @return
 	 * 给商品点赞
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/like", method = RequestMethod.POST)
     public @ResponseBody
     Object like(@RequestBody JSONObject paramObject) {
@@ -144,7 +144,7 @@ public class ProductController {
 	 * @return
 	 * 超级管理员补货
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/supply/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object supply(@RequestBody JSONObject paramObject) {
@@ -170,7 +170,7 @@ public class ProductController {
 	 * @return
 	 * 区域管理员操作后完成补货
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/supplied/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object supplied(@RequestBody JSONObject paramObject) {
@@ -213,7 +213,7 @@ public class ProductController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"number":"海南千禧小番茄","catalog":"水果","price":"12.00","standard":"一份足2斤","marketPrice":"30.00","inventory":12,"sequence":3,"status":"库存紧张","origin":"海南","salesVolume":7637,"likes":3972,"areaId":1,"cityId":1}' 'http://localhost:8080/wxmall/product/new'
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vnew/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@PathVariable("vendorid") int vendorid,@RequestBody Product Product) {
@@ -247,7 +247,7 @@ public class ProductController {
 	 * @return
 	 * 修改商品信息
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vedit/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vedit(@PathVariable("vendorid") int vendorid,@RequestBody Product Product) {
@@ -296,7 +296,7 @@ public class ProductController {
 		jsonObject.put("msg", "201");
         return jsonObject;
     }
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/sedit/{superid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object sedit(@PathVariable("superid") int superid,@RequestBody Product Product) {
@@ -324,7 +324,7 @@ public class ProductController {
 	 * @return
 	 * 下架产品
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vnotshow/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vnotshow(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
@@ -355,7 +355,7 @@ public class ProductController {
 	 * @return
 	 * 上架产品
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vshow/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vshow(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
@@ -380,7 +380,7 @@ public class ProductController {
         return jsonObject;
     }
 	
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vdelete/{vendorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vdelete(@PathVariable("vendorid") int vendorid,@RequestBody JSONObject paramObject) {
@@ -414,7 +414,7 @@ public class ProductController {
         return jsonObject;
     }
 
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/sdelete/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object sdelete(@PathVariable("supervisorid") int supervisorid,@RequestBody JSONObject paramObject) {
@@ -439,7 +439,7 @@ public class ProductController {
         return jsonObject;
     }
 	
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/snew/{supervisorid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object addBySupervisor(@PathVariable("supervisorid") int superid,@RequestBody Product product) {

@@ -45,7 +45,7 @@ public class AddressController {
 		return address;
 	}
 	
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/{id:\\d+}", method = RequestMethod.DELETE)
     public @ResponseBody
     Object delete(@PathVariable("id") Integer id,@RequestParam(value="token", required=false) String token) {
@@ -62,7 +62,7 @@ public class AddressController {
         return jsonObject;
     }
 	
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestParam(value="token", required=false) String token, @RequestBody Address Address) {
@@ -109,7 +109,7 @@ public class AddressController {
 		return jsonObject;
     }
 	
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/edit/{addressid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody Object edit(@PathVariable("addressid") int addressid,@RequestParam(value="token", required=false) String token,
     		@RequestBody JSONObject paramObject) {
@@ -147,7 +147,7 @@ public class AddressController {
 	 * @return
 	 * 将地址设为默认
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/default/{addressid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody Object defaultAdress(@PathVariable("addressid") int addressid,@RequestParam(value="token", required=false) String token,
     		@RequestBody JSONObject paramObject) {

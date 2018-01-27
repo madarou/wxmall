@@ -195,7 +195,7 @@ public class OrderOffController {
 	 * @return
 	 * 用户发起退货请求，将订单状态设置为退货申请中
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/return/{cityid:\\d+}/{orderid:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     Object returnOrder(@PathVariable("cityid") int cityid, @PathVariable("orderid") int orderid,
@@ -264,7 +264,7 @@ public class OrderOffController {
 	 * @return
 	 * 处理退货订单，将其状态设置为退货中
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vrefund/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vrefund(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
@@ -292,7 +292,7 @@ public class OrderOffController {
 	 * @return
 	 * 处理需要退款的订单，将其状态设置为已退款
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/srefund/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object srefund(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
@@ -321,7 +321,7 @@ public class OrderOffController {
 	 * @return
 	 * 设置退货订单的状态从退货中变成已退货
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vfinish/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vfinish(@PathVariable("id") int id, @RequestBody JSONObject paramObject) {
