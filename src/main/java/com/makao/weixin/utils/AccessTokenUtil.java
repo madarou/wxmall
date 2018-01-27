@@ -31,6 +31,7 @@ public class AccessTokenUtil {
 			String url = WeixinConstants.ACCESS_TOKEN_URL.replace("APPID", WeixinConstants.APPID).replace("APPSECRET", WeixinConstants.APPSECRET);
 			JSONObject jsonObject = HttpUtil.doGetObject(url);
 			if(jsonObject != null){
+				System.out.println(jsonObject);
 				token.setToken(jsonObject.getString("access_token"));
 				token.setExpiresIn(jsonObject.getInt("expires_in"));
 			}
