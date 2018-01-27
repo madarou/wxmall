@@ -10,7 +10,7 @@ public class MakaoConstants {
 	public static final long TOKEN_EXPIRE = 5;//系统自定义token在缓存中保留的时间(暂设为小时)
 	public static final String SERVER_DOMAIN = "http://mall.shygxx.cn";//最后部署上线的服务器的域名，用于设置微信回调页面
 	public static final String CDN_DOMAIN="http://sx-1252349799.cosgz.myqcloud.com";//
-	public static final String ENTRANCE = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxc4c94e97f23f699f&redirect_uri=http%3a%2f%2fdemo.shygxx.cn%2fuser%2fsnsapi_userinfo&response_type=code&scope=snsapi_userinfo&state=2#wechat_redirect";
+	public static final String ENTRANCE = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx930aa432f4dbfa73&redirect_uri=http%3a%2f%2fmall.shygxx.cn%2fuser%2fsnsapi_userinfo&response_type=code&scope=snsapi_userinfo&state=2#wechat_redirect";
 	
 	public static final long ORDER_EXPIRE = 10;//下单等待支付的时间限制，单位为分(10)
 	public static final String DEFAULT_CITY_NAME="常州";
