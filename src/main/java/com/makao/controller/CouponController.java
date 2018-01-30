@@ -83,7 +83,7 @@ public class CouponController {
 //		}
 //        return jsonObject;
 //    }
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/delete/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object postdelete(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {
@@ -107,7 +107,7 @@ public class CouponController {
 		jsonObject.put("msg", "201");
         return jsonObject;
     }
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/new/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@PathVariable("id") int id, @RequestBody Coupon Coupon) {
@@ -159,7 +159,7 @@ public class CouponController {
 		return jsonObject;
     }
 	
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/exchange/{cityid:\\d+}/{couponid:\\d+}/{userid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object exchange(@PathVariable("cityid") int cityid,@PathVariable("couponid") int couponid,@PathVariable("userid") int userid,
@@ -244,7 +244,7 @@ public class CouponController {
 	 * @return
 	 * 下线优惠券
 	 */
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/sdown/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object sdown(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {
@@ -279,7 +279,7 @@ public class CouponController {
 	 * @return
 	 * 上线优惠券
 	 */
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/sup/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object sup(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {
@@ -307,7 +307,7 @@ public class CouponController {
 		jsonObject.put("msg", "201");
         return jsonObject;
 	}
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/sedit/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object sedit(@PathVariable("id") int id,@RequestBody JSONObject paramObject) {

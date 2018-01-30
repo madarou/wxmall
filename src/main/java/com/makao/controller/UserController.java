@@ -501,7 +501,7 @@ public class UserController {
 	 * curl -l -H "Content-type: application/json" -X POST -d '{"id":3,"userName":"darou","password":"test2","age":14}' 'http://localhost:8080/wxmall/user/update'
 	 * 注意update时要传id才能确定update哪个，且像age这种updatable=false的字段不会被新值修改
 	 */
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/update/{superid:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object update(@PathVariable("superid") int superid,@RequestBody JSONObject paramObject) {

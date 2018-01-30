@@ -68,7 +68,7 @@ public class TestController {
 	    return modelAndView;
 	}
 	
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value={"/index"})
 	public ModelAndView index(){
 	    

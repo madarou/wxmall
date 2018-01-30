@@ -71,7 +71,7 @@ public class CityController {
 	 * @return
 	 * curl l -H "Content-type: application/json" -X POST -d '{"cityName":"上海"}' 'http://localhost:8080/wxmall/city/new'
 	 */
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/new/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@PathVariable("id") int superid, @RequestBody City city) {

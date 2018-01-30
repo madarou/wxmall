@@ -1098,7 +1098,7 @@ public class OrderOnController {
 	 * @return
 	 * 开始配送订单，即将其状态设为配送中
 	 */
-	@AuthPassport
+	//@AuthPassport
 	@RequestMapping(value = "/vdistribute/{id:\\d+}", method = RequestMethod.POST)
     public @ResponseBody
     Object vdistribute(@PathVariable("id") int id, @RequestBody JSONObject paramObject,@RequestParam(value="token", required=false) String token) {
@@ -1170,7 +1170,7 @@ public class OrderOnController {
     	当配送时间起点-准备时间<=当前时间时的订单满足条件，
     	请求路径中的参数id是机器人id的验证,加了AuthInterceptor的话可以去掉
 	 */
-//	@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/vapproach/{id:\\d+}", method = RequestMethod.GET)
     public @ResponseBody
     Object vapproach(@PathVariable("id") int id) {

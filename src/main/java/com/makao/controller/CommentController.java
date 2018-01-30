@@ -61,7 +61,7 @@ public class CommentController {
         return jsonObject;
     }
 	
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
     public @ResponseBody
     Object add(@RequestBody Comment Comment) {
@@ -90,7 +90,7 @@ public class CommentController {
 	 * @return
 	 * 用户给评论点赞
 	 */
-	//@AuthPassport
+	@AuthPassport
 	@RequestMapping(value = "/like", method = RequestMethod.POST)
     public @ResponseBody
     Object like(@RequestBody JSONObject paramObject) {
