@@ -40,17 +40,17 @@ public class WeixinConstants {
 	//模板消息发送地址
 	public static final String MUBAN_MSG_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
 	//支付成功后推送的模板消息id
-	public static final String ORDER_CREATED_MBMSG = "D6jB60OkkbNENosVy3Nv5PqPvJP9Q0tW1ArQdCbVcMU";
+	public static final String ORDER_CREATED_MBMSG = "LNeY09SmLu9WXzsBK9oxYQKDK8Qdb6PSglAirqU01oM";
 	//开始配送订单时的模板消息id
-	public static final String ORDER_SENDING_MBMSG = "N39-YCQJJh_oZSdvisN8NCNGeTaOc3dbfR14fBxeQrw";
+	public static final String ORDER_SENDING_MBMSG = "W5aoJ02Sd3mDvSvaunxxx3EnNu3q9QVPgC8-N0UvfSc";
 	//订单完成时的模板消息id
-	public static final String ORDER_FINISHED_MBMSG = "C9PI6SI7-YrGWYO9MQabU5PEgh5OBrX-wJlWJLuwU_Q";
+	public static final String ORDER_FINISHED_MBMSG = "qjOc6PN143-B00i8bMeDVygGOyMGY6ktbAX5GJIv6No";
 	//订单配送时间要到时，提前推送的准备订单的模板消息给配送员
-	public static final String ORDER_PREPARE_MBMSG = "Npb82DM2akmPgnTRKu8OBr8UX35KF6a5cFzlR8vXTLU";
+	public static final String ORDER_PREPARE_MBMSG = "HAvGqeMVa6xRk3kH0SAk1Rm5gQsjTpCuR0vL6V2duvE";
 	//订单退货完成或付款后取消后，推送给超级管理员退款的模板消息
-	public static final String ORDER_REFUND_MBMSG = "CQVylLWcOeOWVnK8EAngsdgVp6tMabfUqQ5iTYAMAqc";
+	public static final String ORDER_REFUND_MBMSG = "iIMsCfzwPL_N6rIDHyrHRwLDc-co8fCbMygmD9gUpug";
 	//用户申请退货后，通知vendor有人要退货的模板消息
-	public static final String ORDER_RETURN_MBMSG = "pTAeze_zz3l8mhsazBuXskxo0n6H6PZsor_tSr3PWDQ";
+	public static final String ORDER_RETURN_MBMSG = "at7-0rDVQI3583iFj_RDqdigyGNtSCDphUFySkiV1UI";
 	//生成带参数的二维码
 	public static final String QR_CODE_CREATE_URL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=ACCESS_TOKEN";
 	
