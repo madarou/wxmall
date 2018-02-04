@@ -237,7 +237,7 @@ public class OrderOnController {
 		OrderOn.setCityId(smallOrder.getCityId());
 		Area area = this.areaService.getById(areaId);
 		if(area!=null){
-			OrderOn.setSender("由社享网-"+area.getCityName()+area.getAreaName()+"随机分配");
+			OrderOn.setSender("由美逆人生-"+area.getCityName()+area.getAreaName()+"随机分配");
 			OrderOn.setSenderPhone(area.getPhoneNumber());
 			OrderOn.setCityarea(area.getCityName()+area.getAreaName());
 		}
@@ -379,7 +379,7 @@ public class OrderOnController {
 		order.setCityId(cityId);
 
 		if(area!=null){
-			order.setSender("由社享网-"+area.getCityName()+area.getAreaName()+"随机分配");
+			order.setSender("由美逆人生-"+area.getCityName()+area.getAreaName()+"随机分配");
 			order.setSenderPhone(area.getPhoneNumber());
 			order.setCityarea(area.getCityName()+area.getAreaName());
 		}
@@ -543,7 +543,7 @@ public class OrderOnController {
 		u.setAppid(WeixinConstants.APPID);
 		u.setMch_id(WeixinConstants.MCHID);
 		u.setNonce_str(SignatureUtil.getNonceStr());
-		u.setBody("社享网购买商品");
+		u.setBody("美逆人生购买商品");
 		u.setOut_trade_no(orderOn.getNumber());
 		String price = orderOn.getTotalPrice();
 		u.setTotal_fee(Integer.parseInt(price.split("\\.")[0]+price.split("\\.")[1]));//单位为分

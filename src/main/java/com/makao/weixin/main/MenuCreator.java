@@ -102,7 +102,7 @@ public class MenuCreator {
 		//创建一个一级菜单，来包含scancodePushButton和locationSelectButton
 		//注意，如果是包含子菜单的一级菜单，就不用设置Type
 		Button compoundButton = new Button();
-		compoundButton.setName("社享服务");
+		compoundButton.setName("美逆服务");
 		compoundButton.setSub_button(new Button[]{marketButton,productButton,useButton});
 		
 		menu.setButton(new Button[]{mallButton,orderButton,compoundButton});

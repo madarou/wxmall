@@ -93,7 +93,7 @@ public class SendMSGThread implements Runnable {
 		msg.put("url", MakaoConstants.ENTRANCE);
 		JSONObject data = new JSONObject();
 		JSONObject temp = new JSONObject();
-		temp.put("value", "您的社享网订单已付款成功，请等待发货！");
+		temp.put("value", "您的美逆人生订单已付款成功，请等待发货！");
 		temp.put("color", "#173177");
 		data.put("first", temp);
 		temp = new JSONObject();

@@ -288,7 +288,7 @@ public class MessageUtil {
 	}
 
 	public static String onVendorSubscriptionAutoReply() {
-		return "微信号绑定社享网成功！";
+		return "微信号绑定美逆人生成功！";
 	}
 	
 }

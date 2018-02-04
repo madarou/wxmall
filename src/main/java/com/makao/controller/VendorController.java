@@ -118,7 +118,7 @@ public class VendorController {
 		   modelAndView.addObject("areaName", v.getCityName()+v.getAreaName());
 	   }
 	   else{
-		   modelAndView.addObject("areaName", "社享网");
+		   modelAndView.addObject("areaName", "美逆人生");
 	   }
 		return modelAndView;
 	}
