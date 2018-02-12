@@ -20,6 +20,8 @@ import org.dom4j.DocumentException;
 import com.makao.entity.Vendor;
 import com.makao.service.IVendorService;
 import com.makao.service.impl.VendorServiceImpl;
+import com.makao.dao.IVendorDao;
+import com.makao.dao.impl.VendorDaoImpl;
 import com.makao.weixin.po.Image;
 import com.makao.weixin.po.Music;
 import com.makao.weixin.po.News;
@@ -155,13 +157,14 @@ public class WeixinServlet extends HttpServlet {
 							int vendorid = Integer.valueOf(eventKey);
 							//根据fromUserName openid去Vender表里查
 							logger.info("vendorid : "+vendorid);
-							IVendorService vendorService = new VendorServiceImpl();
-							logger.info("vendorid2 : "+vendorid);
-							Vendor v = vendorService.getById(vendorid);
+//							IVendorService vendorService = new VendorServiceImpl();
+//							logger.info("vendorid2 : "+vendorid);
+							IVendorDao vendorDao = new VendorDaoImpl();
+							Vendor v = vendorDao.getById(vendorid);
 							logger.info("vendor: "+v.toString());
 							v.setOpenid(fromUserName);
 							logger.info("set fromUserName: "+fromUserName);
-							vendorService.update(v);
+							vendorDao.update(v);
 							logger.info("updated:  "+v.getOpenid());
 							message = MessageUtil.textMessageToXml(toUserName, fromUserName, MessageUtil.onVendorSubscriptionAutoReply());
 							logger.info("message created:  "+ message);
