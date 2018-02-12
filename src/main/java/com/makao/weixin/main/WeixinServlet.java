@@ -156,6 +156,7 @@ public class WeixinServlet extends HttpServlet {
 							//根据fromUserName openid去Vender表里查
 							logger.info("vendorid : "+vendorid);
 							IVendorService vendorService = new VendorServiceImpl();
+							logger.info("vendorid : "+vendorid);
 							Vendor v = vendorService.getById(vendorid);
 							logger.info("vendor: "+v.getUserName());
 							v.setOpenid(fromUserName);
