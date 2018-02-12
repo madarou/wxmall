@@ -55,6 +55,7 @@ public class VendorDaoImpl implements IVendorDao {
 		Session session = null;
 		Transaction tx = null;
 		Vendor res = null;
+		logger.info("VendorDaoImp getById,"+id);
 		try {
 			session = sessionFactory.openSession();// 获取和数据库的回话
 			tx = session.beginTransaction();// 事务开始

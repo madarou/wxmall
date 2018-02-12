@@ -4,17 +4,21 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.makao.dao.IVendorDao;
 import com.makao.entity.Vendor;
 import com.makao.service.IVendorService;
+import com.makao.weixin.main.WeixinServlet;
 
 @Service
 public class VendorServiceImpl implements IVendorService {
+	private static final Logger logger = Logger.getLogger(VendorServiceImpl.class);
 	@Resource
 	private IVendorDao vendorDao;
 	public Vendor getById(int id) {
+		logger.info("VendorServiceImp getById,"+id);
 		return this.vendorDao.getById(id);
 	}
 	@Override
