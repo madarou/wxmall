@@ -13,10 +13,10 @@ public class MakaoConstants {
 	public static final String ENTRANCE = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx930aa432f4dbfa73&redirect_uri=http%3a%2f%2fmall.shygxx.cn%2fuser%2fsnsapi_userinfo&response_type=code&scope=snsapi_userinfo&state=2#wechat_redirect";
 	
 	public static final long ORDER_EXPIRE = 10;//下单等待支付的时间限制，单位为分(10)
-	public static final String DEFAULT_CITY_NAME="常州";
-	public static final String DEFAULT_AREA_NAME="莱蒙城";
-	public static final int DEFAULT_CITY_ID=2;
-	public static final int DEFAULT_AREA_ID=2;
+	public static final String DEFAULT_CITY_NAME="红人馆";
+	public static final String DEFAULT_AREA_NAME="小美";
+	public static final int DEFAULT_CITY_ID=1;
+	public static final int DEFAULT_AREA_ID=1;
 	public static final int PRETIME = 5;//从数据库中找出需要将状态从排队中改为待处理的订单，将其状态设为待处理
 											//当配送时间起点-PRETIME(min)<=当前时间时的订单满足条件(5)
 	public static final int COMFIRMTIME = -5;//完成配送的时间与当前时间的分钟差
